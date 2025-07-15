@@ -33,10 +33,20 @@ export async function getUsers() {
     }
 }
 
-export async function getUserByUsername(username: string) {
+export async function getUserByUsername(username: string): Promise<UserWithProgress | null> {
     try {
         const user = await prisma.user.findUnique({
-            where: { username }
+            where: { username },
+            include: {
+                progreso: true,
+                habitaciones: {
+                    include: {
+                        configuracion: true
+                    }
+                },
+                entrenamientos: true,
+                tropas: true
+            }
         });
         return user;
     } catch (error) {
@@ -44,6 +54,7 @@ export async function getUserByUsername(username: string) {
         return null;
     }
 }
+
 
 export async function getUserWithProgressByUsername(username: string): Promise<UserWithProgress | null> {
     try {
