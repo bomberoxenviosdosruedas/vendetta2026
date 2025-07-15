@@ -137,12 +137,12 @@ async function main() {
     where: { username: 'bomberox' },
     update: {},
     create: {
-      id: 'clp2x0y0z0000v9q9h9g9e9d9',
-      name: 'El Padrino',
+      id: '1',
+      name: 'Bomberox',
       username: 'bomberox',
       password: '123456789', // En una app real, esto debería ser un hash
       title: 'Jefe de la Familia',
-      avatarUrl: 'https://placehold.co/100x100.png',
+      avatarUrl: '/img/bomberox.png',
     },
   });
 
@@ -158,55 +158,6 @@ async function main() {
     },
   });
 
-  const lucabrasi = await prisma.user.upsert({
-    where: { username: 'lucabrasi' },
-    update: {},
-    create: {
-      id: 'clp2x1y1z1111v9q9h9g9e9d1',
-      name: 'Luca Brasi',
-      username: 'lucabrasi',
-      password: 'password',
-      title: 'Sicario',
-      avatarUrl: 'https://placehold.co/100x100.png',
-    },
-  });
-
-  await prisma.progresoUsuario.upsert({
-    where: { userId: lucabrasi.id },
-    update: {},
-    create: {
-      userId: lucabrasi.id,
-      dolares: 12000,
-      armas: 50,
-      municion: 5000,
-      alcohol: 20,
-    },
-  });
-
-  const sonny = await prisma.user.upsert({
-    where: { username: 'sonny' },
-    update: {},
-    create: {
-      id: 'clp2x2y2z2222v9q9h9g9e9d2',
-      name: 'Sonny Corleone',
-      username: 'sonny',
-      password: 'password',
-      title: 'Caporegime',
-      avatarUrl: 'https://placehold.co/100x100.png',
-    },
-  });
-
-  await prisma.progresoUsuario.upsert({
-    where: { userId: sonny.id },
-    update: {},
-    create: {
-      userId: sonny.id,
-      dolares: 85000,
-      armas: 150,
-      municion: 10000,
-      alcohol: 150,
-    },
-  });
 
   console.log('✅ Usuarios y su progreso inicial cargados.');
 }
