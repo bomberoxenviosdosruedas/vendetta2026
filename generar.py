@@ -42,7 +42,7 @@ def main():
     Main function to generate the JSON files describing the 'src' directory.
     """
     src_path = 'src'
-    output_structure_only_path = 'structure.json'
+    output_structure_only_path = 'estructura.json'
     output_with_content_path = 'structure_with_content.json'
 
     if not os.path.isdir(src_path):
