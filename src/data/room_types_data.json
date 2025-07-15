@@ -1,0 +1,152 @@
+{
+    "oficina_del_jefe": {
+      "nombre": "Oficina del Jefe",
+      "desc": "El Jefe se encuentra en esta oficina, y aquí, se toman todas las las decisiones. Coordina el desarrollo y la velocidad de construcción de las otras áreas. Cuando más nivel, más rápido se desarrollan el resto.",
+      "arm": 100,
+      "mun": 200,
+      "dol": 0,
+      "duracion": 900,
+      "produccion": 0,
+      "puntos": 6
+    },
+    "escuela_especializacion": {
+      "nombre": "Escuela de especialización",
+      "desc": "Como ya dice el nombre, esta habitación permite el entrenamiento de \"los chicos\" en nuevas ténicas, permitiéndoles tener más experiencia en combate. Al igual que para la oficina de El Jefe, cuánto más rápido se haga el entrenamiento, más rápido se desarrollan las habilidades.",
+      "arm": 1000,
+      "mun": 1000,
+      "dol": 0,
+      "duracion": 2000,
+      "produccion": 0,
+      "puntos": 31.75
+    },
+    "armeria": {
+      "nombre": "Armería",
+      "desc": "Aquí, en la Armería, como dice el nombre, se guardan armas. Serán de gran necesidad para ocupar nuevos lugares, y para entrenamientos en combate. Cuanto mejor desarrollada esté, más armas podrás hacer al mismo tiempo.",
+      "arm": 12,
+      "mun": 60,
+      "dol": 0,
+      "duracion": 500,
+      "produccion": 10,
+      "puntos": 2.32
+    },
+    "almacen_de_municion": {
+      "nombre": "Almacén de munición",
+      "desc": "El almacén de munición es similar a la armería. Aquí, se manufactura la munición importante. Es necesaria, en grandes cantidades, al ocupar áreas, así como para su uso en entrenamientos. A diferencia de las armas, la munición se usa mucho más rápido.",
+      "arm": 9,
+      "mun": 15,
+      "dol": 0,
+      "duracion": 600,
+      "produccion": 10,
+      "puntos": 1.39
+    },
+    "cerveceria": {
+      "nombre": "Cervecería",
+      "desc": "Esta habitación manufactura alcohol. Desgraciadamente (¿o afortunadamente?) está prohibido y por tanto, muy demandado por la población, así que es un negocio próspero. Sin embargo, necesitarás ciertas estrategias para poder llevarlo hasta los ciudadanos.",
+      "arm": 20,
+      "mun": 20,
+      "dol": 0,
+      "duracion": 1000,
+      "produccion": 50,
+      "puntos": 1.6
+    },
+    "taberna": {
+      "nombre": "Taberna",
+      "desc": "En la taberna se consume alcohol. Aquí es donde traficas con Alcohol. Ten cuidado de no ser detectado por la Policia, o te saldrá caro. Dado que la taberna se supervisa batante mal, la conversión de alcohol es moderada.",
+      "arm": 10,
+      "mun": 50,
+      "dol": 0,
+      "duracion": 1500,
+      "produccion": 2,
+      "puntos": 2.1
+    },
+    "contrabando": {
+      "nombre": "Contrabando",
+      "desc": "Mejor que la taberna funciona el contrabando, podrás vender alcohol con un impacto mucho mayor, lo que naturalmente, beneficia a la caja de los gángsters. Desgraciadamente, esta táctica es arriesgada, y mucho más costosa.",
+      "arm": 2000,
+      "mun": 5000,
+      "dol": 500,
+      "duracion": 4000,
+      "produccion": 21,
+      "puntos": 136
+    },
+    "almacen_de_armas": {
+      "nombre": "Almacén de armas",
+      "desc": "En el almacén de armas, se guarda todo el armamento que no se necesita de inmediato. El proceso es automático, y se mantienen allí hasta que sean necesarias. Además, ningún enemigo podrá robártelas de este almacén.",
+      "arm": 100,
+      "mun": 500,
+      "dol": 0,
+      "duracion": 9000,
+      "produccion": 0,
+      "puntos": 12
+    },
+    "deposito_de_municion": {
+      "nombre": "Depósito de munición",
+      "desc": "El depósito de munición funciona de forma similar al almacén de armas. Se guardan cajas de munición y granadas que no se vayan a usar de inmediato. Además, aquí están más seguras, a salvo del enemigo.",
+      "arm": 500,
+      "mun": 600,
+      "dol": 0,
+      "duracion": 12000,
+      "produccion": 0,
+      "puntos": 18
+    },
+    "almacen_de_alcohol": {
+      "nombre": "Almacén de alcohol",
+      "desc": "Ya que la destilación de alcohol es bastante sencilla, la producción es alta. Para poder almacenarlo sin perder el exceso de producción, necesitas construir un almacén de alcohol. En el mismo, estará a salvo de los enemigos.",
+      "arm": 200,
+      "mun": 200,
+      "dol": 0,
+      "duracion": 8000,
+      "produccion": 0,
+      "puntos": 7
+    },
+    "caja_fuerte": {
+      "nombre": "Caja fuerte",
+      "desc": "Después de realizar un contrabando con éxito, conseguirás una buena cantidad de dólares. Pero, ¡presta atención!. Si no quieres tirar el dinero, debes usar esta caja, para prevenir que desaparezca, y para asegurarte liquidez.",
+      "arm": 2000,
+      "mun": 2000,
+      "dol": 1000,
+      "duracion": 16000,
+      "produccion": 0,
+      "puntos": 91
+    },
+    "campo_de_entrenamiento": {
+      "nombre": "Campo de entrenamiento",
+      "desc": "Tal y como dice el nombre, en el campo de entrenamiento, tus \"chicos\" entrenarán. El mismo, dependerá según el tipo de unidades que puedas producir, por ejemplo, simples delincuentes, asesinos, profesionales, a los que tus enemigos tendrán un respeto extremo. Dependiendo del nivel, las unidades serán creadas en menor tiempo.",
+      "arm": 1000,
+      "mun": 2500,
+      "dol": 0,
+      "duracion": 5600,
+      "produccion": 0,
+      "puntos": 61
+    },
+    "seguridad": {
+      "nombre": "Seguridad",
+      "desc": "Al igual que el entrenamiento de luchadores en el campo de entrenamiento, aquí podrás entrenar a los más jóvenes en defensa. En principio, se quedarán permanentemente, siempre en el hogar, y protegiendo sus habitaciones contra enemigos. Si tus gángsters están de vuelta, automáticamente luchan juntos.",
+      "arm": 0,
+      "mun": 0,
+      "dol": 0,
+      "duracion": 6000,
+      "produccion": 0,
+      "puntos": 45
+    },
+    "torreta_de_fuego_automatico": {
+      "nombre": "Torreta de fuego automático",
+      "desc": "A fin de aliviar un poco el trabajo de los defensores, dispones de ciertas construcciones, como esta torreta de fuego automático. Técnicamente, son muy avanzadas, y en el momento en que detecten a un enemigo, abrirán fuego de golpe.",
+      "arm": 1000,
+      "mun": 2000,
+      "dol": 200,
+      "duracion": 4500,
+      "produccion": 0,
+      "puntos": 57
+    },
+    "minas_ocultas": {
+      "nombre": "Minas ocultas",
+      "desc": "Estas minas son una ayuda incluso más \"agradable\". Tus chicos las repartirán a lo largo de la casa. Cuando algún enemigo la pise sin darse cuenta... ¡Buenas noches!",
+      "arm": 2000,
+      "mun": 2000,
+      "dol": 150,
+      "duracion": 3000,
+      "produccion": 0,
+      "puntos": 65.5
+    }
+  }
