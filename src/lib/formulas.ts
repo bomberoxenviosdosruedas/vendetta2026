@@ -42,7 +42,7 @@ export function calcularTiempoConstruccion(
   // La Oficina del Jefe tiene su propia fórmula de tiempo más simple.
   if (config.id === 'oficina_del_jefe') {
     // Tiempo aumenta un 15% por cada nivel.
-    return Math.floor(config.duracion * Math.pow(1.15, nivel - 1));
+    return Math.floor(config.duracion * Math.pow(1.5, nivel - 1));
   }
 
   // --- Lógica de cálculo para el resto de habitaciones ---
