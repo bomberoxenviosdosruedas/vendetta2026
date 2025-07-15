@@ -5,6 +5,7 @@ import { ResourceBar } from "@/components/dashboard/resource-bar";
 import { DashboardClientLayout } from "@/components/dashboard/dashboard-client-layout";
 import { obtenerEstadoJuegoActualizado } from "@/lib/actions";
 import { redirect } from "next/navigation";
+import { getSessionUser } from "@/lib/auth";
 
 
 function ResourceBarFallback() {
@@ -23,16 +24,19 @@ export default async function DashboardLayout({
   }: {
     children: React.ReactNode
   }) {
-  const user = await obtenerEstadoJuegoActualizado();
+  
+  const sessionUser = await getSessionUser();
 
-  if (!user) {
+  if (!sessionUser) {
     redirect('/');
   }
 
+  const userWithUpdatedProgress = await obtenerEstadoJuegoActualizado(sessionUser);
+
   return (
-    <DashboardClientLayout user={user}>
+    <DashboardClientLayout user={userWithUpdatedProgress}>
         <Suspense fallback={<ResourceBarFallback />}>
-            <ResourceBar user={user} />
+            <ResourceBar user={userWithUpdatedProgress} />
         </Suspense>
         <div className="flex-1 overflow-y-auto">
           <main className="p-4 md:p-6">

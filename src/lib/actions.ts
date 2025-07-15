@@ -1,13 +1,13 @@
+
 'use server';
 
-import { getSessionUser } from "./auth";
 import prisma from "./prisma/prisma";
+import type { UserWithProgress } from "./data";
 
-export async function obtenerEstadoJuegoActualizado() {
-  const user = await getSessionUser();
-
+export async function obtenerEstadoJuegoActualizado(user: UserWithProgress) {
   if (!user || !user.progreso) {
-    throw new Error("Usuario no autenticado o sin progreso inicializado.");
+    // This check is now more of a safeguard, as the layout should prevent this.
+    throw new Error("Usuario no válido o sin progreso para actualizar.");
   }
   
   const ahora = new Date();
