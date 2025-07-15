@@ -26,6 +26,8 @@
       # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
       extensions = [
         # "vscodevim.vim"
+        "ms-python.debugpy"
+        "ms-python.python"
       ];
       workspace = {
         onCreate = {
@@ -39,7 +41,7 @@
         enable = true;
         previews = {
           web = {
-            command = [ "npm" "run" "dev" "--" "--port" "$PORT" "--hostname" "0.0.0.0" ];
+            command = [ "bun" "run" "dev" "--" "--port" "$PORT" "--hostname" "0.0.0.0" ];
             manager = "web";
           };
         };
