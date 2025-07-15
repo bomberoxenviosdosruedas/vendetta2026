@@ -1,8 +1,8 @@
+
 import { PrismaClient } from '@prisma/client';
 
 // Importa los datos desde los archivos JSON
 import * as datosHabitaciones from './room_types_data.json';
-import * as datosReglasHabitaciones from './room_scaling_rules_updated.json';
 import * as datosEntrenamientos from './entrenamientos_types_data.json';
 import * as datosTropas from './tropas_types_data.json';
 
@@ -57,8 +57,8 @@ async function main() {
 
   // --- Carga de Configuraciones (Datos estáticos del juego) ---
   console.log('🏠 Cargando datos de configuración de habitaciones...');
-  for (const idHabitacion of Object.keys(datosHabitaciones)) {
-    if (idHabitacion === 'default') continue;
+  const roomConfigIds = Object.keys(datosHabitaciones).filter(id => id !== 'default');
+  for (const idHabitacion of roomConfigIds) {
     const habitacion = (datosHabitaciones as Record<string, HabitacionData>)[idHabitacion];
     await prisma.configuracionHabitacion.upsert({
       where: { id: idHabitacion },
@@ -131,13 +131,12 @@ async function main() {
   console.log('✅ Configuración de tropas cargada.');
 
   // --- Carga de Usuarios y su Progreso Inicial ---
-  console.log('👤 Cargando datos de usuarios y su progreso inicial...');
+  console.log('👤 Creando o actualizando usuario y su progreso inicial...');
   
   const bomberox = await prisma.user.upsert({
     where: { username: 'bomberox' },
     update: {},
     create: {
-      id: '1',
       name: 'Bomberox',
       username: 'bomberox',
       password: '123456789', // En una app real, esto debería ser un hash
@@ -151,15 +150,32 @@ async function main() {
     update: {},
     create: {
       userId: bomberox.id,
-      dolares: 45231.89,
-      armas: 12,
-      municion: 2350,
-      alcohol: 89,
+      dolares: 500,
+      armas: 100,
+      municion: 200,
+      alcohol: 10,
     },
   });
 
+  console.log('🏢 Asignando habitaciones iniciales al usuario...');
+  for (const roomId of roomConfigIds) {
+    await prisma.habitacionUsuario.upsert({
+      where: {
+        userId_configuracionHabitacionId: {
+          userId: bomberox.id,
+          configuracionHabitacionId: roomId,
+        },
+      },
+      update: {},
+      create: {
+        userId: bomberox.id,
+        configuracionHabitacionId: roomId,
+        nivel: roomId === 'oficina_del_jefe' ? 1 : 0, // Inicia con Oficina del Jefe en nivel 1
+      },
+    });
+  }
 
-  console.log('✅ Usuarios y su progreso inicial cargados.');
+  console.log('✅ Usuario, progreso y habitaciones iniciales cargados.');
 }
 
 main()
