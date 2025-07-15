@@ -10,7 +10,8 @@ const resourceIcons = {
 };
 
 function formatNumber(num: number) {
-    return num.toLocaleString('de-DE');
+    // Redondeamos hacia abajo para eliminar decimales antes de formatear.
+    return Math.floor(num).toLocaleString('de-DE');
 }
 
 interface ResourceBarProps {
@@ -34,7 +35,7 @@ export function ResourceBar({ user }: ResourceBarProps) {
         { name: 'ARMAS', value: progreso.armas, icon: resourceIcons.armas },
         { name: 'MUNICION', value: progreso.municion, icon: resourceIcons.municion },
         { name: 'ALCOHOL', value: progreso.alcohol, icon: resourceIcons.alcohol },
-        { name: 'DOLARES', value: progreso.dolares, icon: resourceIcons.dolares, isCurrency: true },
+        { name: 'DOLARES', value: progreso.dolares, icon: resourceIcons.dolares },
     ];
 
     return (
@@ -46,7 +47,7 @@ export function ResourceBar({ user }: ResourceBarProps) {
                             {res.icon}
                             <span className="hidden sm:inline text-xs font-semibold tracking-wider uppercase">{res.name}</span>
                             <span className="font-bold text-red-500 tabular-nums">
-                                {res.isCurrency ? `$${formatNumber(res.value)}` : formatNumber(res.value)}
+                                {formatNumber(res.value)}
                             </span>
                         </div>
                     ))}
