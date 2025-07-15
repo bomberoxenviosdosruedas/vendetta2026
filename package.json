@@ -9,7 +9,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "postinstall": "prisma generate",
     "typecheck": "tsc --noEmit"
+  },
+  "prisma": {
+  "seed": "bun --bun prisma/seed.ts"
   },
   "dependencies": {
     "@genkit-ai/googleai": "^1.14.1",

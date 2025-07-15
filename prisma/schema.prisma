@@ -1,0 +1,178 @@
+// Este es tu archivo de schema de Prisma,
+// aprende más en la documentación: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// -------------------------------------------
+// 👤 MODELOS DE USUARIO Y PROGRESO
+// -------------------------------------------
+
+// Modelo de Usuario (simple)
+model Usuario {
+  id          Int      @id @default(autoincrement())
+  nombreUsuario String   @unique
+  contrasena  String   // Guardará el hash de la contraseña
+  creadoEn    DateTime @default(now())
+
+  // Relaciones con los datos del jugador
+  recursos       RecursosUsuario?
+  habitaciones   HabitacionUsuario[]
+  entrenamientos EntrenamientoUsuario[]
+  tropas         TropaUsuario[]
+  colaEventos    EventoJuego[]
+}
+
+// Modelo para los recursos de cada usuario
+model RecursosUsuario {
+  id                  Int      @id @default(autoincrement())
+  usuarioId           Int      @unique
+  usuario             Usuario  @relation(fields: [usuarioId], references: [id])
+  
+  dolares             Float    @default(1000)
+  municion            Float    @default(500)
+  armas               Float    @default(100)
+  
+  ultimaActualizacion DateTime @updatedAt
+}
+
+
+// -------------------------------------------
+// ⚙️ MODELOS DE CONFIGURACIÓN (DATOS ESTÁTICOS DEL JUEGO)
+// -------------------------------------------
+
+// Configuración para cada tipo de habitación
+model ConfiguracionHabitacion {
+  id                  String  @id @unique // e.g., "oficina_del_jefe"
+  nombre              String
+  descripcion         String
+  urlImagen           String
+  
+  costoArmas          Int
+  costoMunicion       Int
+  costoDolares        Int
+  duracion            Int     // Duración de construcción en segundos
+  produccion          Float
+  puntos              Float
+  
+  habitacionesUsuario HabitacionUsuario[]
+}
+
+// Configuración para cada tipo de entrenamiento
+model ConfiguracionEntrenamiento {
+  id                      String  @id @unique // e.g., "rutas"
+  nombre                  String
+  urlImagen               String
+  
+  costoArmas              Int
+  costoMunicion           Int
+  costoDolares            Int
+  duracion                Int    // Duración del entrenamiento en segundos
+  puntos                  Float
+  
+  entrenamientosUsuario   EntrenamientoUsuario[]
+}
+
+// Configuración para cada tipo de tropa
+model ConfiguracionTropa {
+  id                String   @id @unique // e.g., "maton"
+  nombre            String
+  urlImagen         String
+  descripcion       String
+  
+  costoArmas        Int
+  costoMunicion     Int
+  costoDolares      Int
+  duracion          Int      // Duración de reclutamiento en segundos
+  puntos            Float
+  
+  ataque            Int
+  defensa           Int
+  capacidad         Int
+  velocidad         Int
+  salario           Int
+  
+  requisitos        String[]
+  bonusAtaque       String[]
+  bonusDefensa      String[]
+  
+  tropasUsuario     TropaUsuario[]
+}
+
+
+// -------------------------------------------
+// 📈 MODELOS DE DATOS DEL JUGADOR (DATOS DINÁMICOS)
+// -------------------------------------------
+
+// Almacena el nivel de cada habitación para un usuario
+model HabitacionUsuario {
+  id                          Int      @id @default(autoincrement())
+  nivel                       Int      @default(0)
+
+  usuario                     Usuario  @relation(fields: [usuarioId], references: [id])
+  usuarioId                   Int
+  
+  configuracionHabitacion     ConfiguracionHabitacion @relation(fields: [configuracionHabitacionId], references: [id])
+  configuracionHabitacionId   String
+
+  @@unique([usuarioId, configuracionHabitacionId])
+}
+
+// Almacena el nivel de cada entrenamiento para un usuario
+model EntrenamientoUsuario {
+  id                            Int                     @id @default(autoincrement())
+  nivel                         Int                     @default(0)
+
+  usuario                       Usuario                 @relation(fields: [usuarioId], references: [id])
+  usuarioId                     Int
+  
+  configuracionEntrenamiento    ConfiguracionEntrenamiento @relation(fields: [configuracionEntrenamientoId], references: [id])
+  configuracionEntrenamientoId  String
+
+  @@unique([usuarioId, configuracionEntrenamientoId])
+}
+
+// Almacena la cantidad de cada tropa que tiene un usuario
+model TropaUsuario {
+  id                    Int               @id @default(autoincrement())
+  cantidad              Int               @default(0)
+
+  usuario               Usuario           @relation(fields: [usuarioId], references: [id])
+  usuarioId             Int
+  
+  configuracionTropa    ConfiguracionTropa @relation(fields: [configuracionTropaId], references: [id])
+  configuracionTropaId  String
+
+  @@unique([usuarioId, configuracionTropaId])
+}
+
+
+// -------------------------------------------
+// 🕒 COLA DE EVENTOS
+// -------------------------------------------
+
+enum TipoEvento {
+  MEJORA_HABITACION
+  INICIO_ENTRENAMIENTO
+  RECLUTAMIENTO_TROPA
+}
+
+model EventoJuego {
+  id                    Int       @id @default(autoincrement())
+  tipo                  TipoEvento
+  
+  usuario               Usuario   @relation(fields: [usuarioId], references: [id])
+  usuarioId             Int
+  
+  entidadId             String    // ID de la habitación, tropa o entrenamiento
+  nivelObjetivo         Int?      // Para mejoras de habitación/entrenamiento
+  cantidad              Int?      // Para reclutamiento de tropas
+  
+  tiempoFinalizacion    DateTime
+}

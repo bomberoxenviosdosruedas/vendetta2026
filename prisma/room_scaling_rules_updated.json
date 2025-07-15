@@ -1,0 +1,73 @@
+
+{
+    "armeria": {
+      "produccion_recurso": "armas",
+      "formula_aumento_produccion": "Math.trunc(Math.pow((nivel + 1) / 2, 2) * 10)",
+      "factor_costo_por_nivel": 1.15,
+      "formula_tiempo": "((nivel * nivel) * 250) / nivel_oficina_jefe"
+    },
+    "almacen_de_municion": {
+      "produccion_recurso": "municion",
+      "formula_aumento_produccion": "Math.trunc(Math.pow((nivel + 1) / 2, 2) * 10 + 10)",
+      "factor_costo_por_nivel": 1.15,
+      "formula_tiempo": "((nivel * nivel) * 300) / nivel_oficina_jefe"
+    },
+    "cerveceria": {
+      "produccion_recurso": "alcohol",
+      "formula_aumento_produccion": "Math.trunc(produccion_base * Math.pow(1.2, nivel - 1))",
+      "factor_costo_por_nivel": 1.2,
+      "formula_tiempo": "((nivel * nivel) * 500) / nivel_oficina_jefe"
+    },
+    "taberna": {
+      "produccion_recurso": "dolares_por_alcohol",
+      "formula_aumento_produccion": "Math.trunc(Math.pow((nivel + 1) / 2, 2) * 2)",
+      "factor_costo_por_nivel": 1.18,
+      "formula_tiempo": "((nivel * nivel) * 750) / nivel_oficina_jefe"
+    },
+    "contrabando": {
+      "produccion_recurso": "dolares",
+      "formula_aumento_produccion": "Math.trunc(Math.pow((nivel + 1) / 2, 2) * 21)",
+      "factor_costo_por_nivel": 1.25,
+      "formula_tiempo": "((nivel * nivel) * 1500) / nivel_oficina_jefe"
+    },
+    "oficina_del_jefe": {
+      "factor_costo_por_nivel": 1.3,
+      "formula_tiempo": "tiempo_base * 1.5"
+    },
+    "escuela_especializacion": {
+      "factor_costo_por_nivel": 1.2,
+      "formula_tiempo": "((nivel * nivel) * 1000) / nivel_oficina_jefe"
+    },
+    "almacen_de_armas": {
+      "factor_costo_por_nivel": 1.1,
+      "formula_tiempo": "((nivel * nivel) * 1150) / nivel_oficina_jefe"
+    },
+    "deposito_de_municion": {
+      "factor_costo_por_nivel": 1.1,
+      "formula_tiempo": "((nivel * nivel) * 1350) / nivel_oficina_jefe"
+    },
+    "almacen_de_alcohol": {
+      "factor_costo_por_nivel": 1.1,
+      "formula_tiempo": "((nivel * nivel) * 750) / nivel_oficina_jefe"
+    },
+    "caja_fuerte": {
+      "factor_costo_por_nivel": 1.2,
+      "formula_tiempo": "((nivel * nivel) * 800) / nivel_oficina_jefe"
+    },
+    "campo_de_entrenamiento": {
+      "factor_costo_por_nivel": 1.2,
+      "formula_tiempo": "((nivel * nivel) * 7200) / nivel_oficina_jefe"
+    },
+    "seguridad": {
+      "factor_costo_por_nivel": 1.2,
+      "formula_tiempo": "((nivel * nivel) * 6300) / nivel_oficina_jefe"
+    },
+    "torreta_de_fuego_automatico": {
+      "factor_costo_por_nivel": 1.2,
+      "formula_tiempo": "((nivel * nivel) * 10800) / nivel_oficina_jefe"
+    },
+    "minas_ocultas": {
+      "factor_costo_por_nivel": 1.2,
+      "formula_tiempo": "((nivel * nivel) * 7200) / nivel_oficina_jefe"
+    }
+  }
