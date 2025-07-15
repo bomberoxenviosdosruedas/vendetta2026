@@ -21,6 +21,7 @@ export async function obtenerEstadoJuegoActualizado(user: UserWithProgress) {
   let produccionArmasPorSegundo = 0;
   let produccionMunicionPorSegundo = 0;
   let produccionAlcoholPorSegundo = 0;
+  let produccionDolaresPorSegundo = 0;
 
   const scalingRules = await getRoomScalingRules();
   const nivelOficinaJefe = user.habitaciones.find(h => h.configuracionHabitacionId === 'oficina_del_jefe')?.nivel || 1;
@@ -72,19 +73,23 @@ export async function obtenerEstadoJuegoActualizado(user: UserWithProgress) {
         case 'alcohol':
             produccionAlcoholPorSegundo += produccionPorSegundo;
             break;
+        case 'dolares':
+        case 'dolares_por_alcohol':
+            produccionDolaresPorSegundo += produccionPorSegundo;
+            break;
     }
   });
 
   const armasGeneradas = produccionArmasPorSegundo * segundosTranscurridos;
   const municionGenerada = produccionMunicionPorSegundo * segundosTranscurridos;
   const alcoholGenerado = produccionAlcoholPorSegundo * segundosTranscurridos;
+  const dolaresGenerados = produccionDolaresPorSegundo * segundosTranscurridos;
 
   const nuevasArmas = (user.progreso.armas || 0) + armasGeneradas;
   const nuevaMunicion = (user.progreso.municion || 0) + municionGenerada;
   const nuevoAlcohol = (user.progreso.alcohol || 0) + alcoholGenerado;
+  const nuevosDolares = (user.progreso.dolares || 0) + dolaresGenerados;
   
-  const nuevosDolares = user.progreso.dolares || 0;
-
   try {
     const progresoActualizado = await prisma.progresoUsuario.update({
         where: { userId: user.id },
