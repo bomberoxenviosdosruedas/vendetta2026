@@ -1,45 +1,30 @@
-# To learn more about how to use Nix to configure your environment
-# see: https://firebase.google.com/docs/studio/customize-workspace
-{pkgs}: {
-  # Which nixpkgs channel to use.
-  channel = "stable-25.05"; # or "unstable"
-  # Use https://search.nixos.org/packages to find packages
+
+{ pkgs, ... }: {
+  # Entorno de desarrollo para un proyecto Next.js con bun.
+  # https://nix.dev/getting-started/install-nix
+
+  # Paquetes a instalar.
+  # pkgs es el conjunto de paquetes de Nix, aquí estamos seleccionando nodejs y bun.
   packages = [
-    pkgs.nodejs
-    pkgs.openssl
-    pkgs.bun
-    pkgs.python313
+    pkgs.nodejs_20  # Entorno de ejecución de JavaScript y npm.
+    pkgs.bun        # Un toolkit de JavaScript rápido que incluye un bundler, un ejecutor y un gestor de paquetes.
   ];
-  # Sets environment variables in the workspace
-  env = {};
-  # This adds a file watcher to startup the firebase emulators. The emulators will only start if
-  # a firebase.json file is written into the user's directory
-  services.firebase.emulators = {
-    detect = true;
-    projectId = "demo-app";
-    services = ["auth" "firestore"];
-  };
-  idx = {
-    # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
-    extensions = [
-      # "vscodevim.vim"
-    ];
-    workspace = {
-      onCreate = {
-        default.openFiles = [
-          "src/app/page.tsx"
-        ];
-      };
-    };
-    # Enable previews and customize configuration
-    previews = {
-      enable = true;
-      previews = {
-        web = {
-          command = ["npm" "run" "dev" "--" "--port" "$PORT" "--hostname" "0.0.0.0"];
-          manager = "web";
-        };
-      };
-    };
-  };
+
+  # Opciones para procesos que se ejecutan en el entorno.
+  process.main.command = "npm install && npm run dev";
+
+  # Opciones para el editor.
+  # Habilita el formateador de Nix para archivos .nix.
+  # Si tienes problemas, intenta ejecutar `nix fmt` en la terminal.
+  editor.formatOnSave.enable = true;
+
+  # Configuraciones para el previsualizador de IDX.
+  # https://developers.google.com/idx/guides/preview
+  previews = [
+    {
+      # Previsualización para el servidor de desarrollo de Next.js.
+      command = ["npm", "run", "dev", "-p", "$PORT"];
+      manager = "web";
+    }
+  ];
 }
