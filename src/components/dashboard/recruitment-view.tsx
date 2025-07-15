@@ -1,4 +1,3 @@
-
 import Image from "next/image"
 import {
   Card,
@@ -14,21 +13,20 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { getTroopConfigurations } from "@/lib/data"
-import { Clock, PlusCircle } from "lucide-react"
+import { Clock, PlusCircle, Target, Boxes, DollarSign, Shield, Swords } from "lucide-react"
 import { getSessionUser } from "@/lib/auth"
 
 function formatDuration(seconds: number) {
-    if (seconds < 60) {
-        return `${seconds}s`;
-    }
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    if (minutes < 60) {
-        return `${minutes}m ${remainingSeconds}s`;
-    }
-    const hours = Math.floor(minutes / 60);
-    const remainingMinutes = minutes % 60;
-    return `${hours}h ${remainingMinutes}m`;
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = Math.round(seconds % 60);
+
+    let result = '';
+    if (hours > 0) result += `${hours}h `;
+    if (minutes > 0) result += `${minutes}m `;
+    if (remainingSeconds > 0 || result === '') result += `${remainingSeconds}s`;
+    
+    return result.trim();
 }
 
 export async function RecruitmentView() {
@@ -76,17 +74,18 @@ export async function RecruitmentView() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-24">Tropa</TableHead>
+                <TableHead className="w-[100px]">Tropa</TableHead>
                 <TableHead>Descripción</TableHead>
-                <TableHead>Costos y Estadísticas</TableHead>
-                <TableHead className="text-right">Acciones</TableHead>
+                <TableHead className="w-[200px]">Estadísticas</TableHead>
+                <TableHead className="w-[220px]">Costo</TableHead>
+                <TableHead className="text-right w-[120px]">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {troopsWithCounts.map((troop) => (
-                <TableRow key={troop.id}>
+                <TableRow key={troop.id} className="align-top">
                   <TableCell>
-                    <div className="flex flex-col items-center gap-2">
+                    <div className="flex flex-col items-center gap-1">
                         <div className="w-20 h-14 relative rounded-md overflow-hidden border">
                             <Image
                                 src={troop.urlImagen || "https://placehold.co/80x56.png"}
@@ -96,36 +95,39 @@ export async function RecruitmentView() {
                                 data-ai-hint="mafia character unit"
                             />
                         </div>
-                        <div className="font-medium text-center">{troop.nombre}</div>
+                        <div className="font-medium text-center text-sm">{troop.nombre}</div>
                         <div className="text-xs text-muted-foreground text-center">
-                            Posees: {troop.count}
+                            Posees: <span className="text-primary font-bold">{troop.count}</span>
                         </div>
                     </div>
                   </TableCell>
-                  <TableCell className="align-top">
-                     <p className="text-sm text-muted-foreground max-w-xs">{troop.descripcion}</p>
+                  <TableCell>
+                     <p className="text-sm text-muted-foreground">{troop.descripcion}</p>
                   </TableCell>
-                  <TableCell className="align-top">
-                    <div className="text-sm font-semibold">Costos de Reclutamiento</div>
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                       {troop.costoArmas > 0 && <span>{troop.costoArmas.toLocaleString()} Armas</span>}
-                       {troop.costoMunicion > 0 && <span>{troop.costoMunicion.toLocaleString()} Munición</span>}
-                       {troop.costoDolares > 0 && <span>{troop.costoDolares.toLocaleString()} Dólares</span>}
+                  <TableCell>
+                     <div className="flex flex-col gap-1 text-xs">
+                        <div className="flex items-center gap-2">
+                            <Swords className="h-4 w-4 text-red-500" /> 
+                            <span>Ataque: {troop.ataque}</span>
+                        </div>
+                         <div className="flex items-center gap-2">
+                            <Shield className="h-4 w-4 text-blue-500" />
+                            <span>Defensa: {troop.defensa}</span>
+                         </div>
+                     </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                       {troop.costoArmas > 0 && <div className="flex items-center gap-1"><Target className="h-3 w-3" /><span>{troop.costoArmas.toLocaleString()}</span></div>}
+                       {troop.costoMunicion > 0 && <div className="flex items-center gap-1"><Boxes className="h-3 w-3" /><span>{troop.costoMunicion.toLocaleString()}</span></div>}
+                       {troop.costoDolares > 0 && <div className="flex items-center gap-1"><DollarSign className="h-3 w-3" /><span>{troop.costoDolares.toLocaleString()}</span></div>}
                     </div>
-                     <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+                     <div className="flex items-center gap-1 text-xs text-muted-foreground mt-2">
                         <Clock className="h-3 w-3" />
                         <span>{formatDuration(troop.duracion)}</span>
                     </div>
-
-                    <div className="text-sm font-semibold mt-2">Estadísticas</div>
-                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                        <span>Ataque: {troop.ataque}</span>
-                        <span>Defensa: {troop.defensa}</span>
-                        <span>Velocidad: {troop.velocidad}</span>
-                     </div>
-
                   </TableCell>
-                  <TableCell className="text-right align-top">
+                  <TableCell className="text-right">
                     <Button variant="outline" size="sm">
                        <PlusCircle className="mr-2 h-4 w-4" /> Reclutar
                     </Button>

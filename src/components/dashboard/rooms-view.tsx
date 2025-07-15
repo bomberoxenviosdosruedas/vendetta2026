@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { getRoomConfigurations } from "@/lib/data"
-import { Clock, PlusCircle } from "lucide-react"
+import { Clock, PlusCircle, Target, Boxes, DollarSign } from "lucide-react"
 import { getSessionUser } from "@/lib/auth"
 import { calcularCostosNivel, calcularTiempoConstruccion } from "@/lib/formulas"
 import type { FullHabitacionUsuario } from "@/lib/data"
@@ -63,6 +63,7 @@ export async function RoomsView() {
       return {
           id: config.id,
           nombre: config.nombre,
+          descripcion: config.descripcion,
           urlImagen: config.urlImagen,
           nivel,
           costos: costosSiguienteNivel,
@@ -86,15 +87,16 @@ export async function RoomsView() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-24">Imagen</TableHead>
-                <TableHead>Edificio y Nivel</TableHead>
-                <TableHead>Costo de Ampliación</TableHead>
-                <TableHead className="text-right">Acciones</TableHead>
+                <TableHead className="w-[100px]">Imagen</TableHead>
+                <TableHead className="w-[200px]">Edificio</TableHead>
+                <TableHead>Descripción</TableHead>
+                <TableHead className="w-[220px]">Costo de Ampliación</TableHead>
+                <TableHead className="text-right w-[120px]">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {sortedRoomsData.map((room) => (
-                <TableRow key={room.id}>
+                <TableRow key={room.id} className="align-top">
                   <TableCell>
                     <div className="w-20 h-14 relative rounded-md overflow-hidden border">
                         <Image
@@ -108,18 +110,21 @@ export async function RoomsView() {
                   </TableCell>
                   <TableCell>
                     <div className="font-medium">{room.nombre}</div>
-                    <div className="text-sm text-muted-foreground">
-                      Nivel: {room.nivel}
+                    <div className="text-sm text-primary">
+                      Nivel {room.nivel}
                     </div>
                   </TableCell>
                   <TableCell>
-                    <div className="text-sm">Al Nivel: {room.nivel + 1}</div>
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                       {room.costos.armas > 0 && <span>{room.costos.armas.toLocaleString()} Armas</span>}
-                       {room.costos.municion > 0 && <span>{room.costos.municion.toLocaleString()} Munición</span>}
-                       {room.costos.dolares > 0 && <span>${room.costos.dolares.toLocaleString()}</span>}
+                     <p className="text-sm text-muted-foreground">{room.descripcion}</p>
+                  </TableCell>
+                  <TableCell>
+                    <div className="text-sm font-semibold">Al Nivel: {room.nivel + 1}</div>
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs mt-1">
+                       {room.costos.armas > 0 && <div className="flex items-center gap-1.5"><Target className="h-3 w-3" /><span>{room.costos.armas.toLocaleString()}</span></div>}
+                       {room.costos.municion > 0 && <div className="flex items-center gap-1.5"><Boxes className="h-3 w-3" /><span>{room.costos.municion.toLocaleString()}</span></div>}
+                       {room.costos.dolares > 0 && <div className="flex items-center gap-1.5"><DollarSign className="h-3 w-3" /><span>{room.costos.dolares.toLocaleString()}</span></div>}
                     </div>
-                     <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-2">
                         <Clock className="h-3 w-3" />
                         <span>{formatDuration(room.tiempo)}</span>
                     </div>
