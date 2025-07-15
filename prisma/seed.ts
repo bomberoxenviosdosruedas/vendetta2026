@@ -141,7 +141,7 @@ async function main() {
   console.log('🏋️ Cargando datos de entrenamientos...');
   for (const idEntrenamiento of Object.keys(datosEntrenamientos)) {
     if (idEntrenamiento === 'default') continue;
-    const entrenamiento = (datosEntrenamientos as Record<string, any>)[idEntrenamiento];
+    const entrenamiento = (datosEntrenamientos as Record<string, EntrenamientoData>)[idEntrenamiento];
 
     await prisma.configuracionEntrenamiento.upsert({
       where: { id: idEntrenamiento },
@@ -203,5 +203,3 @@ main()
     await prisma.$disconnect();
     process.exit(1);
   });
-
-    
