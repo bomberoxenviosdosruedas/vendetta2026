@@ -3,7 +3,7 @@
 
 import prisma from "./prisma/prisma";
 import type { UserWithProgress } from "./data";
-import { calcularProduccion } from "./formulas";
+import { calcularProduccionRecurso } from "./formulas-produccion";
 
 export async function obtenerEstadoJuegoActualizado(user: UserWithProgress) {
   if (!user || !user.progreso) {
@@ -27,8 +27,7 @@ export async function obtenerEstadoJuegoActualizado(user: UserWithProgress) {
     const config = habitacion.configuracion;
     if (!config.escalado?.produccionRecurso || habitacion.nivel === 0) return;
 
-    // Usamos la nueva función de cálculo seguro
-    const produccionPorHora = calcularProduccion(habitacion.nivel, config);
+    const produccionPorHora = calcularProduccionRecurso(config.id, habitacion.nivel);
     const produccionPorSegundo = produccionPorHora / 3600;
 
     switch (config.escalado.produccionRecurso) {
