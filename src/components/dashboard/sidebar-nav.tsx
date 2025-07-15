@@ -1,5 +1,7 @@
 "use client"
 
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import {
   SidebarMenu,
   SidebarMenuItem,
@@ -10,69 +12,54 @@ import {
 import { Home, DoorOpen, Users, Crosshair, Briefcase, BrainCircuit, Activity } from "lucide-react"
 
 interface NavItem {
-  id: string
+  href: string
   label: string
   icon: React.ReactNode
 }
 
 const mainNav: NavItem[] = [
-  { id: "overview", label: "Visión General", icon: <Home /> },
-  { id: "rooms", label: "Habitaciones", icon: <DoorOpen /> },
-  { id: "recruitment", label: "Reclutamiento", icon: <Users /> },
+  { href: "/overview", label: "Visión General", icon: <Home /> },
+  { href: "/rooms", label: "Habitaciones", icon: <DoorOpen /> },
+  { href: "/recruitment", label: "Reclutamiento", icon: <Users /> },
 ]
 
 const secondaryNav: NavItem[] = [
-    { id: "targets", label: "Objetivos", icon: <Crosshair /> },
-    { id: "operations", label: "Operaciones", icon: <Briefcase /> },
-    { id: "intel", label: "Inteligencia", icon: <BrainCircuit /> },
-    { id: "status", label: "Estado", icon: <Activity /> },
+    { href: "/targets", label: "Objetivos", icon: <Crosshair /> },
+    { href: "/operations", label: "Operaciones", icon: <Briefcase /> },
+    { href: "/intel", label: "Inteligencia", icon: <BrainCircuit /> },
+    { href: "/status", label: "Estado", icon: <Activity /> },
 ]
 
-interface SidebarNavProps {
-  activeView: string
-  setActiveView: (view: string) => void
-}
+export function SidebarNav() {
+  const pathname = usePathname()
 
-export function SidebarNav({ activeView, setActiveView }: SidebarNavProps) {
-  const handleNavClick = (view: string) => (e: React.MouseEvent) => {
-    setActiveView(view);
-  };
+  const renderNav = (items: NavItem[]) => (
+    <SidebarMenu>
+      {items.map((item) => (
+        <SidebarMenuItem key={item.href}>
+            <Link href={item.href} passHref legacyBehavior>
+                <SidebarMenuButton
+                    isActive={pathname.startsWith(item.href)}
+                    tooltip={item.label}
+                >
+                    {item.icon}
+                    <span>{item.label}</span>
+                </SidebarMenuButton>
+            </Link>
+        </SidebarMenuItem>
+      ))}
+    </SidebarMenu>
+  )
 
   return (
     <>
       <SidebarGroup>
-        <SidebarMenu>
-          {mainNav.map((item) => (
-            <SidebarMenuItem key={item.label}>
-              <SidebarMenuButton
-                onClick={handleNavClick(item.id)}
-                isActive={activeView === item.id}
-                tooltip={item.label}
-              >
-                {item.icon}
-                <span>{item.label}</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
+        {renderNav(mainNav)}
       </SidebarGroup>
 
       <SidebarGroup>
         <SidebarGroupLabel>Inteligencia</SidebarGroupLabel>
-        <SidebarMenu>
-          {secondaryNav.map((item) => (
-            <SidebarMenuItem key={item.label}>
-              <SidebarMenuButton
-                onClick={handleNavClick(item.id)}
-                isActive={activeView === item.id}
-                tooltip={item.label}
-              >
-                {item.icon}
-                <span>{item.label}</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
+        {renderNav(secondaryNav)}
       </SidebarGroup>
     </>
   )

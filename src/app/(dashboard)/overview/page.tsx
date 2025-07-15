@@ -1,8 +1,7 @@
-// This component is no longer used and can be removed. I will keep it for now to avoid breaking changes, but it can be deleted.
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import Image from "next/image"
 
-export function Overview() {
+export default function OverviewPage() {
   return (
     <div className="flex-1 space-y-4">
       <h2 className="text-3xl font-bold tracking-tight">Visión General</h2>
