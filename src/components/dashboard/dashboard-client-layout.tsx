@@ -15,13 +15,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 import { LogOut } from "lucide-react"
-import type { User } from "@prisma/client"
+import type { UserWithProgress } from "@/lib/data"
 
 export function DashboardClientLayout({
     user,
     children,
   }: {
-    user: User | null;
+    user: UserWithProgress | null;
     children: React.ReactNode
   }) {
 

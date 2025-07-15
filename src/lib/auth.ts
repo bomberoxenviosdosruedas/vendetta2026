@@ -1,7 +1,7 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { getUserByUsername } from '@/lib/data';
+import { getUserWithProgressByUsername } from '@/lib/data';
 
 // This is a simplified session management for demo purposes.
 // In a real application, you should use a robust authentication library like NextAuth.js or Clerk.
@@ -27,7 +27,7 @@ export async function getSessionUser() {
     return null;
   }
   try {
-    const user = await getUserByUsername(username);
+    const user = await getUserWithProgressByUsername(username);
     return user;
   } catch (error) {
     console.error("Failed to fetch session user:", error);

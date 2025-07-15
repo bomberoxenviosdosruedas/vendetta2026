@@ -1,8 +1,6 @@
-
-import { getSessionUser } from "@/lib/auth";
-import { Boxes, DollarSign, Droplets, Target, Clock, Bot } from 'lucide-react';
+import { Boxes, DollarSign, Droplets, Target } from 'lucide-react';
 import { LiveClock } from "./live-clock";
-import type { User } from "@prisma/client";
+import type { UserWithProgress } from '@/lib/data';
 
 const resourceIcons = {
     armas: <Target className="h-5 w-5" />,
@@ -16,11 +14,11 @@ function formatNumber(num: number) {
 }
 
 interface ResourceBarProps {
-    user: User | null;
+    user: UserWithProgress | null;
 }
 
 export function ResourceBar({ user }: ResourceBarProps) {
-    if (!user) {
+    if (!user || !user.progreso) {
         return (
             <div className="w-full bg-gray-800 text-white p-2">
                 <div className="container mx-auto flex items-center justify-center">
@@ -30,11 +28,13 @@ export function ResourceBar({ user }: ResourceBarProps) {
         );
     }
     
+    const { progreso } = user;
+
     const resources = [
-        { name: 'ARMAS', value: user.armas, icon: resourceIcons.armas },
-        { name: 'MUNICION', value: user.municion, icon: resourceIcons.municion },
-        { name: 'ALCOHOL', value: user.alcohol, icon: resourceIcons.alcohol },
-        { name: 'DOLARES', value: user.ingresos, icon: resourceIcons.dolares, isCurrency: true },
+        { name: 'ARMAS', value: progreso.armas, icon: resourceIcons.armas },
+        { name: 'MUNICION', value: progreso.municion, icon: resourceIcons.municion },
+        { name: 'ALCOHOL', value: progreso.alcohol, icon: resourceIcons.alcohol },
+        { name: 'DOLARES', value: progreso.dolares, icon: resourceIcons.dolares, isCurrency: true },
     ];
 
     return (

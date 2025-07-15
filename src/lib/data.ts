@@ -1,9 +1,16 @@
 "use server"
 
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario } from '@prisma/client'
 import { withAccelerate } from '@prisma/extension-accelerate'
 
 const prisma = new PrismaClient().$extends(withAccelerate())
+
+export type UserWithProgress = User & {
+    progreso: ProgresoUsuario | null;
+    habitaciones: HabitacionUsuario[];
+    entrenamientos: EntrenamientoUsuario[];
+    tropas: TropaUsuario[];
+};
 
 export async function getRoomConfigurations() {
   try {
@@ -29,6 +36,18 @@ export async function getUsers() {
 export async function getUserByUsername(username: string) {
     try {
         const user = await prisma.user.findUnique({
+            where: { username }
+        });
+        return user;
+    } catch (error) {
+        console.error(`Error fetching user ${username}:`, error);
+        return null;
+    }
+}
+
+export async function getUserWithProgressByUsername(username: string): Promise<UserWithProgress | null> {
+    try {
+        const user = await prisma.user.findUnique({
             where: { username },
             include: {
                 progreso: true,
@@ -39,7 +58,7 @@ export async function getUserByUsername(username: string) {
         });
         return user;
     } catch (error) {
-        console.error(`Error fetching user ${username}:`, error);
+        console.error(`Error fetching user ${username} with progress:`, error);
         return null;
     }
 }

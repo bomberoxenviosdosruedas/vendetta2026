@@ -2,9 +2,6 @@ import Image from "next/image"
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card"
 import {
   Table,
@@ -15,8 +12,9 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import { getRoomConfigurations } from "@/lib/data"
+import { getRoomConfigurations, getUserWithProgressByUsername } from "@/lib/data"
 import { Clock, PlusCircle } from "lucide-react"
+import { getSessionUser } from "@/lib/auth"
 
 function formatDuration(seconds: number) {
     if (seconds < 60) {
@@ -34,7 +32,10 @@ function formatDuration(seconds: number) {
 
 
 export async function RoomsView() {
-  const rooms = await getRoomConfigurations()
+  const [roomConfigs, user] = await Promise.all([
+    getRoomConfigurations(),
+    getSessionUser()
+  ]);
 
   const desiredOrder = [
     'oficina_del_jefe',
@@ -54,21 +55,24 @@ export async function RoomsView() {
     'minas_ocultas'
   ];
 
-  const sortedRooms = [...rooms].sort((a, b) => {
+  const sortedRooms = [...roomConfigs].sort((a, b) => {
     const indexA = desiredOrder.indexOf(a.id);
     const indexB = desiredOrder.indexOf(b.id);
-    // If an element is not in desiredOrder, it will be placed at the end.
     if (indexA === -1) return 1;
     if (indexB === -1) return -1;
     return indexA - indexB;
   });
 
+  const userRoomsMap = new Map(user?.habitaciones.map(h => [h.configuracionHabitacionId, h]));
 
-  // For now we assume all rooms are at level 0
-  const userRooms = sortedRooms.map(room => ({
-    ...room,
-    level: 0,
-  }))
+  const roomsWithLevels = sortedRooms.map(config => {
+    const userRoom = userRoomsMap.get(config.id);
+    return {
+      ...config,
+      level: userRoom ? userRoom.nivel : 0,
+    }
+  });
+
 
   return (
     <div className="space-y-4">
@@ -92,7 +96,7 @@ export async function RoomsView() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {userRooms.map((room) => (
+              {roomsWithLevels.map((room) => (
                 <TableRow key={room.id}>
                   <TableCell>
                     <div className="w-20 h-14 relative rounded-md overflow-hidden">
