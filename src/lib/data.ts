@@ -26,6 +26,16 @@ export async function getRoomConfigurations() {
   }
 }
 
+export async function getTroopConfigurations() {
+    try {
+        const troopConfigurations = await prisma.configuracionTropa.findMany();
+        return troopConfigurations;
+    } catch (error) {
+        console.error("Error fetching troop configurations:", error);
+        return [];
+    }
+}
+
 export async function getRoomScalingRules() {
     return datosReglasHabitaciones as Record<string, any>;
 }
