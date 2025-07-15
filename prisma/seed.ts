@@ -80,8 +80,8 @@ async function main() {
   console.log('✅ Configuración de habitaciones cargada.');
 
   console.log('🏋️ Cargando datos de configuración de entrenamientos...');
-  for (const idEntrenamiento of Object.keys(datosEntrenamientos)) {
-    if (idEntrenamiento === 'default') continue;
+  const trainingConfigIds = Object.keys(datosEntrenamientos).filter(id => id !== 'default');
+  for (const idEntrenamiento of trainingConfigIds) {
     const entrenamiento = (datosEntrenamientos as Record<string, EntrenamientoData>)[idEntrenamiento];
     await prisma.configuracionEntrenamiento.upsert({
       where: { id: idEntrenamiento },
@@ -101,8 +101,8 @@ async function main() {
   console.log('✅ Configuración de entrenamientos cargada.');
 
   console.log('🛡️ Cargando datos de configuración de tropas...');
-  for (const idTropa of Object.keys(datosTropas)) {
-    if (idTropa === 'default') continue;
+  const troopConfigIds = Object.keys(datosTropas).filter(id => id !== 'default');
+  for (const idTropa of troopConfigIds) {
     const tropa = (datosTropas as Record<string, TropaData>)[idTropa];
     await prisma.configuracionTropa.upsert({
       where: { id: tropa.id },
