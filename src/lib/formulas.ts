@@ -35,26 +35,31 @@ export function calcularTiempoConstruccion(
   config: FullConfiguracionHabitacion,
   nivelOficinaJefe: number
 ): number {
-    const tiempoBase = config.duracion;
-    if (nivel <= 1) {
-        return tiempoBase;
-    }
+  if (nivel <= 0) {
+    return config.duracion;
+  }
 
-    const formula = config.escalado?.formulaTiempo;
-    if (formula) {
-        try {
-            const formulaReemplazada = formula
-                .replace(/nivel/g, String(nivel))
-                .replace(/tiempo_base/g, String(tiempoBase))
-                .replace(/nivel_oficina_jefe/g, String(Math.max(1, nivelOficinaJefe)));
-            
-            const tiempoCalculado = new Function(`return ${formulaReemplazada}`)();
-            return Math.floor(tiempoCalculado);
-        } catch (error) {
-            console.error(`Error al evaluar la fórmula de tiempo para ${config.id}:`, error);
-            return Math.floor(tiempoBase * Math.pow(1.5, nivel - 1) / Math.max(1, nivelOficinaJefe));
-        }
-    }
+  // La Oficina del Jefe tiene su propia fórmula de tiempo más simple.
+  if (config.id === 'oficina_del_jefe') {
+    // Tiempo aumenta un 15% por cada nivel.
+    return Math.floor(config.duracion * Math.pow(1.15, nivel - 1));
+  }
 
-    return Math.floor(tiempoBase * Math.pow(1.5, nivel - 1));
+  // --- Lógica de cálculo para el resto de habitaciones ---
+
+  // Paso 1: Calcular el Tiempo Base
+  const tiempoBase = nivel * 60;
+
+  // Paso 2: Determinar el Factor Multiplicador
+  const factorMultiplicador = 1.2 + Math.floor((nivel - 1) / 10) * 0.1;
+
+  // Paso 3: Calcular el Tiempo Final de Aumento (antes del bonus)
+  const tiempoFinalAumento = tiempoBase * factorMultiplicador;
+
+  // Paso 4: Aplicar el bonus de la Oficina del Jefe
+  // Cada nivel de la oficina reduce el tiempo un 2%, con un máximo de 50% de reducción.
+  const bonusReduccion = Math.min(nivelOficinaJefe * 0.02, 0.5); 
+  const tiempoFinalConBonus = tiempoFinalAumento * (1 - bonusReduccion);
+
+  return Math.max(5, Math.floor(tiempoFinalConBonus)); // Aseguramos un tiempo mínimo de construcción.
 }
