@@ -7,19 +7,17 @@ import { getRoomScalingRules } from "./data";
 
 export async function obtenerEstadoJuegoActualizado(user: UserWithProgress) {
   if (!user || !user.progreso) {
-    // This check is now more of a safeguard, as the layout should prevent this.
     throw new Error("Usuario no válido o sin progreso para actualizar.");
   }
   
   const ahora = new Date();
   const ultimaActualizacion = new Date(user.progreso.ultimaActualizacion);
-  const segundosTranscurridos = Math.floor((ahora.getTime() - ultimaActualizacion.getTime()) / 1000);
+  const segundosTranscurridos = Math.max(0, Math.floor((ahora.getTime() - ultimaActualizacion.getTime()) / 1000));
 
   if (segundosTranscurridos <= 0) {
     return user;
   }
   
-  // Calcular producción por segundo
   let produccionArmasPorSegundo = 0;
   let produccionMunicionPorSegundo = 0;
   let produccionAlcoholPorSegundo = 0;
@@ -31,16 +29,34 @@ export async function obtenerEstadoJuegoActualizado(user: UserWithProgress) {
     const config = habitacion.configuracion;
     const rules = scalingRules[config.id];
     
-    if (!rules || !rules.produccion_recurso) return;
+    if (!rules || !rules.produccion_recurso || habitacion.nivel === 0) return;
 
     let produccionBase = 0;
     try {
-      // Usar eval de forma segura para calcular la producción basada en fórmulas
       const nivel = habitacion.nivel;
-      produccionBase = eval(rules.formula_aumento_produccion.replace(/nivel/g, nivel.toString()).replace(/nivel_oficina_jefe/g, nivelOficinaJefe.toString()).replace('produccion_base', config.produccion.toString()));
+      // Reemplazamos eval con cálculos seguros
+      switch (config.id) {
+        case 'armeria':
+          produccionBase = Math.trunc(Math.pow((nivel + 1) / 2, 2) * 10);
+          break;
+        case 'almacen_de_municion':
+            produccionBase = Math.trunc(Math.pow((nivel + 1) / 2, 2) * 10 + 10);
+          break;
+        case 'cerveceria':
+            produccionBase = Math.trunc(config.produccion * Math.pow(1.2, nivel - 1));
+          break;
+        case 'taberna':
+            produccionBase = Math.trunc(Math.pow((nivel + 1) / 2, 2) * 2);
+            break;
+        case 'contrabando':
+            produccionBase = Math.trunc(Math.pow((nivel + 1) / 2, 2) * 21);
+          break;
+        default:
+          produccionBase = config.produccion * nivel;
+      }
     } catch (e) {
-      console.error(`Error evaluando formula para ${config.id}: ${e}`);
-      produccionBase = config.produccion * habitacion.nivel;
+      console.error(`Error calculando produccion para ${config.id}: ${e}`);
+      produccionBase = config.produccion * habitacion.nivel; // Fallback
     }
     
     const produccionPorHora = produccionBase;
@@ -63,11 +79,11 @@ export async function obtenerEstadoJuegoActualizado(user: UserWithProgress) {
   const municionGenerada = produccionMunicionPorSegundo * segundosTranscurridos;
   const alcoholGenerado = produccionAlcoholPorSegundo * segundosTranscurridos;
 
-  const nuevasArmas = user.progreso.armas + armasGeneradas;
-  const nuevaMunicion = user.progreso.municion + municionGenerada;
-  const nuevoAlcohol = user.progreso.alcohol + alcoholGenerado;
+  const nuevasArmas = (user.progreso.armas || 0) + armasGeneradas;
+  const nuevaMunicion = (user.progreso.municion || 0) + municionGenerada;
+  const nuevoAlcohol = (user.progreso.alcohol || 0) + alcoholGenerado;
   
-  const nuevosDolares = user.progreso.dolares;
+  const nuevosDolares = user.progreso.dolares || 0;
 
   try {
     const progresoActualizado = await prisma.progresoUsuario.update({

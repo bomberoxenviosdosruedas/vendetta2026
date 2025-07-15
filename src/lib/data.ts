@@ -17,6 +17,7 @@ export type UserWithProgress = User & {
 export async function getRoomConfigurations() {
   try {
     const roomConfigurations = await prisma.configuracionHabitacion.findMany({
+      orderBy: { id: 'asc' },
     });
     return roomConfigurations;
   } catch (error) {
@@ -26,7 +27,6 @@ export async function getRoomConfigurations() {
 }
 
 export async function getRoomScalingRules() {
-    // Esto podría ser cacheado en una aplicación real
     return datosReglasHabitaciones as Record<string, any>;
 }
 
@@ -49,6 +49,9 @@ export async function getUserByUsername(username: string): Promise<UserWithProgr
                 habitaciones: {
                     include: {
                         configuracion: true
+                    },
+                    orderBy: {
+                        configuracionHabitacionId: 'asc'
                     }
                 },
                 entrenamientos: true,
