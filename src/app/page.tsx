@@ -13,6 +13,7 @@ import {
 import { DashboardHeader } from "@/components/dashboard/header"
 import { SidebarNav } from "@/components/dashboard/sidebar-nav"
 import { Overview } from "@/components/dashboard/overview"
+import { RoomsView } from "@/components/dashboard/rooms-view"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
@@ -25,6 +26,8 @@ export default function DashboardPage() {
     switch (activeView) {
       case "overview":
         return <Overview />
+      case "rooms":
+        return <RoomsView />
       default:
         return (
             <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm p-8">
