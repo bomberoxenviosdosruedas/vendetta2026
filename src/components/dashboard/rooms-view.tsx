@@ -36,8 +36,36 @@ function formatDuration(seconds: number) {
 export async function RoomsView() {
   const rooms = await getRoomConfigurations()
 
+  const desiredOrder = [
+    'oficina_del_jefe',
+    'escuela_especializacion',
+    'armeria',
+    'almacen_de_municion',
+    'cerveceria',
+    'taberna',
+    'contrabando',
+    'almacen_de_armas',
+    'deposito_de_municion',
+    'almacen_de_alcohol',
+    'caja_fuerte',
+    'campo_de_entrenamiento',
+    'seguridad',
+    'torreta_de_fuego_automatico',
+    'minas_ocultas'
+  ];
+
+  const sortedRooms = [...rooms].sort((a, b) => {
+    const indexA = desiredOrder.indexOf(a.id);
+    const indexB = desiredOrder.indexOf(b.id);
+    // If an element is not in desiredOrder, it will be placed at the end.
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    return indexA - indexB;
+  });
+
+
   // For now we assume all rooms are at level 0
-  const userRooms = rooms.map(room => ({
+  const userRooms = sortedRooms.map(room => ({
     ...room,
     level: 0,
   }))
@@ -85,7 +113,7 @@ export async function RoomsView() {
                   </TableCell>
                   <TableCell>
                     <div className="text-sm">Al Nivel: {room.level + 1}</div>
-                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
                        {room.costoArmas > 0 && <span>{room.costoArmas.toLocaleString()} Armas</span>}
                        {room.costoMunicion > 0 && <span>{room.costoMunicion.toLocaleString()} Munición</span>}
                        {room.costoDolares > 0 && <span>${room.costoDolares.toLocaleString()}</span>}
