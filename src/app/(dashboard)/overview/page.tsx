@@ -1,31 +1,40 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import Image from "next/image"
+import { OverviewView } from "@/components/dashboard/overview-view";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Suspense } from "react";
+
+function OverviewLoading() {
+    return (
+        <div className="grid h-full gap-4 p-4 md:grid-cols-4 md:grid-rows-3 md:p-6">
+            <div className="md:col-span-1 md:row-span-1">
+                <Skeleton className="h-full w-full rounded-lg" />
+            </div>
+            <div className="md:col-span-2 md:row-span-2">
+                 <Skeleton className="h-full w-full rounded-lg" />
+            </div>
+            <div className="md:col-span-1 md:row-span-2">
+                 <Skeleton className="h-full w-full rounded-lg" />
+            </div>
+            <div className="md:col-span-2 md:row-span-1">
+                 <Skeleton className="h-full w-full rounded-lg" />
+            </div>
+            <div className="md:col-span-1 md:row-span-1">
+                 <Skeleton className="h-full w-full rounded-lg" />
+            </div>
+            <div className="md:col-span-1 md:row-span-1">
+                 <Skeleton className="h-full w-full rounded-lg" />
+            </div>
+             <div className="md:col-span-4">
+                <Skeleton className="h-16 w-full rounded-lg" />
+            </div>
+        </div>
+    )
+}
+
 
 export default function OverviewPage() {
   return (
-    <div className="flex flex-col space-y-4">
-      <h2 className="text-3xl font-bold tracking-tight">Visión General</h2>
-      <Card className="col-span-1 lg:col-span-3">
-        <CardHeader>
-          <CardTitle>Bienvenido a tu imperio</CardTitle>
-          <CardDescription>
-            Desde aquí puedes gestionar todos los aspectos de tus operaciones.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-            <p>Selecciona una opción del menú lateral para empezar a planificar tu próximo movimiento.</p>
-            <div className="rounded-lg border overflow-hidden">
-                <Image
-                    src="https://placehold.co/1200x400.png"
-                    alt="Placeholder de mapa de la ciudad"
-                    width={1200}
-                    height={400}
-                    className="object-cover w-full h-auto"
-                    data-ai-hint="dark city map"
-                />
-            </div>
-        </CardContent>
-      </Card>
-    </div>
+    <Suspense fallback={<OverviewLoading/>}>
+        <OverviewView />
+    </Suspense>
   )
 }

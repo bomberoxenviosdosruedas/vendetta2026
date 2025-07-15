@@ -39,7 +39,7 @@ export function ResourceBar({ user }: ResourceBarProps) {
     ];
 
     return (
-        <header className="w-full bg-gray-900 text-white shadow-md z-20">
+        <header className="w-full bg-black/80 backdrop-blur-sm text-white shadow-md z-20 sticky top-0">
             <div className="container mx-auto flex h-full items-center justify-between p-2">
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-2 md:flex md:items-center md:gap-x-6 w-full">
                     {resources.map((res) => (
