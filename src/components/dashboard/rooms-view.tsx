@@ -3,33 +3,67 @@ import {
   Card,
   CardContent,
 } from "@/components/ui/card"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { getRoomConfigurations } from "@/lib/data"
-import { Clock, PlusCircle, Target, Boxes, DollarSign } from "lucide-react"
+import { Clock, PlusCircle, Target, Boxes, DollarSign, Terminal } from "lucide-react"
 import { getSessionUser } from "@/lib/auth"
 import { calcularCostosNivel, calcularTiempoConstruccion } from "@/lib/formulas"
-import type { FullHabitacionUsuario } from "@/lib/data"
+import { iniciarAmpliacion } from "@/lib/actions"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { revalidatePath } from "next/cache"
+
+function formatNumber(num: number): string {
+  if (num < 1000) {
+    return num.toString();
+  }
+  const suffixes = ["", "K", "M", "B", "T"];
+  const i = Math.floor(Math.log10(num) / 3);
+  const shortValue = (num / Math.pow(1000, i));
+  return shortValue.toFixed(i > 0 ? 2 : 0) + suffixes[i];
+}
+
 
 function formatDuration(seconds: number) {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = Math.round(seconds % 60);
+    if (seconds <= 0) return "0s";
 
+    const units = [
+        { name: 'a', seconds: 31536000 }, // año
+        { name: 'mes', seconds: 2592000 },
+        { name: 'd', seconds: 86400 }, // día
+        { name: 'h', seconds: 3600 },
+        { name: 'm', seconds: 60 },
+        { name: 's', seconds: 1 }
+    ];
+
+    let remainingSeconds = seconds;
     let result = '';
-    if (hours > 0) result += `${hours}h `;
-    if (minutes > 0) result += `${minutes}m `;
-    if (remainingSeconds > 0 || result === '') result += `${remainingSeconds}s`;
-    
-    return result.trim();
+    let parts = 0;
+
+    for (const unit of units) {
+        if (remainingSeconds >= unit.seconds && parts < 3) {
+            const amount = Math.floor(remainingSeconds / unit.seconds);
+            result += `${amount}${unit.name} `;
+            remainingSeconds %= unit.seconds;
+            parts++;
+        }
+    }
+
+    return result.trim() || '0s';
 }
+
+
+async function handleAmpliacion(habitacionId: string, nivel: number) {
+  'use server'
+  console.log(`Iniciando ampliación para ${habitacionId} al nivel ${nivel + 1}`);
+  const resultado = await iniciarAmpliacion(habitacionId);
+  if (resultado?.error) {
+    console.error(resultado.error);
+  } else {
+    revalidatePath('/rooms');
+  }
+  return resultado;
+}
+
 
 export async function RoomsView() {
   const user = await getSessionUser()
@@ -84,60 +118,61 @@ export async function RoomsView() {
        </div>
       <Card>
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[100px]">Imagen</TableHead>
-                <TableHead className="w-[200px]">Edificio</TableHead>
-                <TableHead>Descripción</TableHead>
-                <TableHead className="w-[220px]">Costo de Ampliación</TableHead>
-                <TableHead className="text-right w-[120px]">Acciones</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+          <div className="divide-y divide-border">
               {sortedRoomsData.map((room) => (
-                <TableRow key={room.id} className="align-top">
-                  <TableCell>
-                    <div className="w-20 h-14 relative rounded-md overflow-hidden border">
-                        <Image
-                            src={room.urlImagen || "https://placehold.co/80x56.png"}
-                            alt={room.nombre}
-                            fill
-                            className="object-cover"
-                            data-ai-hint="game building"
-                        />
+                <div key={room.id} className="p-4 grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+                    {/* Imagen y Nombre */}
+                    <div className="md:col-span-3 flex items-start gap-4">
+                        <div className="w-20 h-16 relative rounded-md overflow-hidden border flex-shrink-0">
+                            <Image
+                                src={room.urlImagen || "https://placehold.co/80x56.png"}
+                                alt={room.nombre}
+                                fill
+                                className="object-cover"
+                                data-ai-hint="game building"
+                            />
+                        </div>
+                        <div>
+                            <div className="font-bold">{room.nombre}</div>
+                            <div className="text-sm text-primary">
+                            Nivel {room.nivel}
+                            </div>
+                        </div>
                     </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="font-medium">{room.nombre}</div>
-                    <div className="text-sm text-primary">
-                      Nivel {room.nivel}
+                    {/* Descripción */}
+                    <div className="md:col-span-4">
+                        <p className="text-sm text-muted-foreground">{room.descripcion}</p>
                     </div>
-                  </TableCell>
-                  <TableCell>
-                     <p className="text-sm text-muted-foreground">{room.descripcion}</p>
-                  </TableCell>
-                  <TableCell>
-                    <div className="text-sm font-semibold">Al Nivel: {room.nivel + 1}</div>
-                    <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs mt-1">
-                       {room.costos.armas > 0 && <div className="flex items-center gap-1.5"><Target className="h-3 w-3" /><span>{room.costos.armas.toLocaleString()}</span></div>}
-                       {room.costos.municion > 0 && <div className="flex items-center gap-1.5"><Boxes className="h-3 w-3" /><span>{room.costos.municion.toLocaleString()}</span></div>}
-                       {room.costos.dolares > 0 && <div className="flex items-center gap-1.5"><DollarSign className="h-3 w-3" /><span>{room.costos.dolares.toLocaleString()}</span></div>}
+                    {/* Costos y Acciones */}
+                    <div className="md:col-span-5">
+                       <div className="font-semibold text-sm mb-2">Ampliación a Nivel: {room.nivel + 1}</div>
+                        <div className="flex flex-wrap gap-x-4 gap-y-2 items-center">
+                            <div className="flex flex-col gap-1 text-sm flex-grow">
+                                <div className="grid grid-cols-3 gap-x-3">
+                                    {room.costos.armas > 0 && <div className="flex items-center gap-1.5" title={`${room.costos.armas.toLocaleString()} Armas`}><Target className="h-4 w-4" /><span>{formatNumber(room.costos.armas)}</span></div>}
+                                    {room.costos.municion > 0 && <div className="flex items-center gap-1.5" title={`${room.costos.municion.toLocaleString()} Munición`}><Boxes className="h-4 w-4" /><span>{formatNumber(room.costos.municion)}</span></div>}
+                                    {room.costos.dolares > 0 && <div className="flex items-center gap-1.5" title={`${room.costos.dolares.toLocaleString()} Dólares`}><DollarSign className="h-4 w-4" /><span>{formatNumber(room.costos.dolares)}</span></div>}
+                                </div>
+                                <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
+                                    <Clock className="h-3 w-3" />
+                                    <span>{formatDuration(room.tiempo)}</span>
+                                </div>
+                            </div>
+                            <form action={async () => {
+                                'use server';
+                                const result = await handleAmpliacion(room.id, room.nivel);
+                                // Aquí podrías manejar el resultado si es necesario, por ejemplo, mostrar un toast.
+                                // Por ahora, el revalidate se maneja dentro de la acción.
+                            }}>
+                                <Button type="submit" variant="outline" size="sm">
+                                    <PlusCircle className="mr-2 h-4 w-4" /> Ampliar
+                                </Button>
+                            </form>
+                        </div>
                     </div>
-                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-2">
-                        <Clock className="h-3 w-3" />
-                        <span>{formatDuration(room.tiempo)}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="outline" size="sm">
-                       <PlusCircle className="mr-2 h-4 w-4" /> Ampliar
-                    </Button>
-                  </TableCell>
-                </TableRow>
+                </div>
               ))}
-            </TableBody>
-          </Table>
+          </div>
         </CardContent>
       </Card>
     </div>
