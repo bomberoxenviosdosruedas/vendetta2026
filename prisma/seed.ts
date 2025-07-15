@@ -1,5 +1,5 @@
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client/edge';
 
 // Importa los datos desde los archivos JSON
 import * as datosHabitaciones from './room_types_data.json';

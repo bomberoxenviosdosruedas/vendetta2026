@@ -1,7 +1,7 @@
 
 "use server"
 
-import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion } from '@prisma/client'
+import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 import * as datosReglasHabitaciones from '@/data/room_scaling_rules_updated.json';
 
