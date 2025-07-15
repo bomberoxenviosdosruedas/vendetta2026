@@ -1,7 +1,7 @@
 
 "use server"
 
-import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion } from '@prisma/client/edge'
+import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion, ConfiguracionEntrenamiento } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 
 const prisma = new PrismaClient().$extends(withAccelerate())
@@ -17,7 +17,7 @@ export type FullHabitacionUsuario = HabitacionUsuario & {
 export type UserWithProgress = User & {
     progreso: ProgresoUsuario | null;
     habitaciones: FullHabitacionUsuario[];
-    entrenamientos: EntrenamientoUsuario[];
+    entrenamientos: (EntrenamientoUsuario & { configuracion: ConfiguracionEntrenamiento })[];
     tropas: TropaUsuario[];
 };
 
@@ -45,6 +45,17 @@ export async function getTroopConfigurations() {
         return [];
     }
 }
+
+export async function getTrainingConfigurations() {
+    try {
+        const trainingConfigurations = await prisma.configuracionEntrenamiento.findMany();
+        return trainingConfigurations;
+    } catch (error) {
+        console.error("Error fetching training configurations:", error);
+        return [];
+    }
+}
+
 
 export async function getUsers() {
     try {
@@ -74,7 +85,14 @@ export async function getUserByUsername(username: string): Promise<UserWithProgr
                         configuracionHabitacionId: 'asc'
                     }
                 },
-                entrenamientos: true,
+                entrenamientos: {
+                    include: {
+                        configuracion: true
+                    },
+                    orderBy: {
+                        configuracionEntrenamientoId: 'asc'
+                    }
+                },
                 tropas: true
             }
         });
@@ -104,7 +122,14 @@ export async function getUserWithProgressByUsername(username: string): Promise<U
                         configuracionHabitacionId: 'asc'
                     }
                 },
-                entrenamientos: true,
+                entrenamientos: {
+                    include: {
+                        configuracion: true
+                    },
+                     orderBy: {
+                        configuracionEntrenamientoId: 'asc'
+                    }
+                },
                 tropas: true
             }
         });

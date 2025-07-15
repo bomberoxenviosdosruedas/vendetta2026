@@ -1,0 +1,136 @@
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Modelo para el jugador
+model User {
+  id             String                 @id @default(cuid())
+  name           String
+  username       String                 @unique
+  password       String // Se debe hashear en una aplicación real
+  title          String?
+  avatarUrl      String?
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+  progreso       ProgresoUsuario?
+  habitaciones   HabitacionUsuario[]
+  entrenamientos EntrenamientoUsuario[]
+  tropas         TropaUsuario[]
+}
+
+// Modelo para el progreso y recursos del jugador
+model ProgresoUsuario {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  user                User     @relation(fields: [userId], references: [id])
+  dolares             Float    @default(500)
+  armas               Float    @default(100)
+  municion            Float    @default(200)
+  alcohol             Float    @default(10)
+  ultimaActualizacion DateTime @default(now())
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+// Modelos de Configuración (datos estáticos del juego)
+model ConfiguracionHabitacion {
+  id            String             @id
+  nombre        String
+  descripcion   String
+  urlImagen     String
+  costoArmas    Int
+  costoMunicion Int
+  costoDolares  Int
+  duracion      Int // en segundos
+  produccion    Float
+  puntos        Float
+  usuarios      HabitacionUsuario[]
+  escalado      ConfiguracionEscaladoHabitacion?
+}
+
+model ConfiguracionEscaladoHabitacion {
+  id                        String   @id
+  configuracionHabitacion   ConfiguracionHabitacion @relation(fields: [id], references: [id])
+  produccionRecurso         String?
+  formulaAumentoProduccion  String?
+  factorCostoPorNivel       Float
+  formulaTiempo             String?
+}
+
+model ConfiguracionEntrenamiento {
+  id            String                 @id
+  nombre        String
+  urlImagen     String
+  costoArmas    Int
+  costoMunicion Int
+  costoDolares  Int
+  duracion      Int // en segundos
+  puntos        Float
+  usuarios      EntrenamientoUsuario[]
+}
+
+model ConfiguracionTropa {
+  id            String         @id
+  nombre        String
+  urlImagen     String
+  descripcion   String
+  costoArmas    Int
+  costoMunicion Int
+  costoDolares  Int
+  duracion      Int // en segundos
+  puntos        Float
+  ataque        Int
+  defensa       Int
+  capacidad     Int
+  velocidad     Int
+  salario       Int
+  requisitos    String[]
+  bonusAtaque   String[]
+  bonusDefensa  String[]
+  usuarios      TropaUsuario[]
+}
+
+// Modelos de Progreso del Jugador (datos dinámicos)
+model HabitacionUsuario {
+  userId                      String
+  user                        User                      @relation(fields: [userId], references: [id])
+  configuracionHabitacionId    String
+  configuracion               ConfiguracionHabitacion   @relation(fields: [configuracionHabitacionId], references: [id])
+  nivel                       Int                       @default(0)
+  createdAt                   DateTime                  @default(now())
+  updatedAt                   DateTime                  @updatedAt
+
+  @@id([userId, configuracionHabitacionId])
+}
+
+model EntrenamientoUsuario {
+  userId                       String
+  user                         User                       @relation(fields: [userId], references: [id])
+  configuracionEntrenamientoId String
+  configuracion                ConfiguracionEntrenamiento @relation(fields: [configuracionEntrenamientoId], references: [id])
+  nivel                        Int                        @default(0)
+  createdAt                    DateTime                   @default(now())
+  updatedAt                    DateTime                   @updatedAt
+
+  @@id([userId, configuracionEntrenamientoId])
+}
+
+model TropaUsuario {
+  userId                 String
+  user                   User             @relation(fields: [userId], references: [id])
+  configuracionTropaId   String
+  configuracion          ConfiguracionTropa @relation(fields: [configuracionTropaId], references: [id])
+  cantidad               Int
+  createdAt              DateTime         @default(now())
+  updatedAt              DateTime         @updatedAt
+
+  @@id([userId, configuracionTropaId])
+}
