@@ -1,9 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { DashboardHeader } from "@/components/dashboard/header"
 import Image from "next/image"
 
 export default function OverviewPage() {
   return (
-    <div className="flex-1 space-y-4">
+    <div className="flex flex-col space-y-4">
+      <DashboardHeader />
       <h2 className="text-3xl font-bold tracking-tight">Visión General</h2>
       <Card className="col-span-1 lg:col-span-3">
         <CardHeader>

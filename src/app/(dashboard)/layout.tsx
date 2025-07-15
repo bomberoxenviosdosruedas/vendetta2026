@@ -56,7 +56,6 @@ export default function DashboardLayout({
             <div className="flex-1" />
         </div>
         <div className="flex-1 overflow-y-auto">
-          <DashboardHeader />
           <main className="p-4 md:p-6">
             {children}
           </main>
