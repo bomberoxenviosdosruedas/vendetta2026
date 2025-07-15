@@ -3,8 +3,8 @@
 
 import prisma from "./prisma/prisma";
 import type { UserWithProgress, FullConfiguracionHabitacion } from "./data";
-import { calcularProduccionRecurso } from "./formulas-produccion";
-import { getSessionUser, getUserWithProgressByUsername } from "./auth";
+import { calcularProduccionTotalPorSegundo } from "./formulas-produccion";
+import { getSessionUser } from "./auth";
 import { revalidatePath } from "next/cache";
 import { calcularCostosNivel } from "./formulas";
 
@@ -21,39 +21,12 @@ export async function obtenerEstadoJuegoActualizado(user: UserWithProgress) {
     return user;
   }
   
-  let produccionArmasPorSegundo = 0;
-  let produccionMunicionPorSegundo = 0;
-  let produccionAlcoholPorSegundo = 0;
-  let produccionDolaresPorSegundo = 0;
+  const produccionPorSegundo = calcularProduccionTotalPorSegundo(user);
 
-  user.habitaciones.forEach(habitacion => {
-    const config = habitacion.configuracion;
-    if (!config.escalado?.produccionRecurso || habitacion.nivel === 0) return;
-
-    const produccionPorHora = calcularProduccionRecurso(config.id, habitacion.nivel);
-    const produccionPorSegundo = produccionPorHora / 3600;
-
-    switch (config.escalado.produccionRecurso) {
-        case 'armas':
-            produccionArmasPorSegundo += produccionPorSegundo;
-            break;
-        case 'municion':
-            produccionMunicionPorSegundo += produccionPorSegundo;
-            break;
-        case 'alcohol':
-            produccionAlcoholPorSegundo += produccionPorSegundo;
-            break;
-        case 'dolares':
-        case 'dolares_por_alcohol':
-            produccionDolaresPorSegundo += produccionPorSegundo;
-            break;
-    }
-  });
-
-  const armasGeneradas = produccionArmasPorSegundo * segundosTranscurridos;
-  const municionGenerada = produccionMunicionPorSegundo * segundosTranscurridos;
-  const alcoholGenerado = produccionAlcoholPorSegundo * segundosTranscurridos;
-  const dolaresGenerados = produccionDolaresPorSegundo * segundosTranscurridos;
+  const armasGeneradas = produccionPorSegundo.armas * segundosTranscurridos;
+  const municionGenerada = produccionPorSegundo.municion * segundosTranscurridos;
+  const alcoholGenerado = produccionPorSegundo.alcohol * segundosTranscurridos;
+  const dolaresGenerados = produccionPorSegundo.dolares * segundosTranscurridos;
 
   const nuevasArmas = (user.progreso.armas || 0) + armasGeneradas;
   const nuevaMunicion = (user.progreso.municion || 0) + municionGenerada;
@@ -114,7 +87,7 @@ export async function iniciarAmpliacion(habitacionId: string) {
   // Lógica de la cola (placeholder por ahora, se hace la mejora instantánea)
   try {
     // Descontar recursos y aumentar el nivel de la habitación
-    const [, updatedProgreso] = await prisma.$transaction([
+    await prisma.$transaction([
       prisma.progresoUsuario.update({
         where: { userId: user.id },
         data: {

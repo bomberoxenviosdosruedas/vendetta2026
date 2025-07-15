@@ -1,4 +1,6 @@
 
+import type { UserWithProgress } from "./data";
+
 /**
  * Producción de la Armería.
  * Equivalente a: =ENTERO(10*SUMA.CUADRADOS((nivel+1)/2))
@@ -72,4 +74,47 @@ export function calcularProduccionRecurso(idHabitacion: string, nivel: number): 
     default:
       return 0; // O un valor base si otras habitaciones producen algo.
   }
+}
+
+/**
+ * Calcula la producción total por segundo para todos los recursos del usuario.
+ * @param user - El objeto de usuario con su progreso y habitaciones.
+ * @returns Un objeto con la producción por segundo de cada recurso.
+ */
+export function calcularProduccionTotalPorSegundo(user: UserWithProgress): { armas: number, municion: number, alcohol: number, dolares: number } {
+  let produccionArmasPorSegundo = 0;
+  let produccionMunicionPorSegundo = 0;
+  let produccionAlcoholPorSegundo = 0;
+  let produccionDolaresPorSegundo = 0;
+
+  user.habitaciones.forEach(habitacion => {
+    const config = habitacion.configuracion;
+    if (!config.escalado?.produccionRecurso || habitacion.nivel === 0) return;
+
+    const produccionPorHora = calcularProduccionRecurso(config.id, habitacion.nivel);
+    const produccionPorSegundo = produccionPorHora / 3600;
+
+    switch (config.escalado.produccionRecurso) {
+        case 'armas':
+            produccionArmasPorSegundo += produccionPorSegundo;
+            break;
+        case 'municion':
+            produccionMunicionPorSegundo += produccionPorSegundo;
+            break;
+        case 'alcohol':
+            produccionAlcoholPorSegundo += produccionPorSegundo;
+            break;
+        case 'dolares':
+        case 'dolares_por_alcohol': // Ambos contribuyen a dólares
+            produccionDolaresPorSegundo += produccionPorSegundo;
+            break;
+    }
+  });
+
+  return {
+    armas: produccionArmasPorSegundo,
+    municion: produccionMunicionPorSegundo,
+    alcohol: produccionAlcoholPorSegundo,
+    dolares: produccionDolaresPorSegundo,
+  };
 }
