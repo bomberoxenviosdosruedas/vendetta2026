@@ -3,6 +3,7 @@ import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ResourceBar } from "@/components/dashboard/resource-bar";
 import { DashboardClientLayout } from "@/components/dashboard/dashboard-client-layout";
+import { getSessionUser } from "@/lib/auth";
 
 
 function ResourceBarFallback() {
@@ -16,16 +17,17 @@ function ResourceBarFallback() {
 }
 
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
     children,
   }: {
     children: React.ReactNode
   }) {
+  const user = await getSessionUser();
 
   return (
-    <DashboardClientLayout>
+    <DashboardClientLayout user={user}>
         <Suspense fallback={<ResourceBarFallback />}>
-            <ResourceBar />
+            <ResourceBar user={user} />
         </Suspense>
         <div className="flex-1 overflow-y-auto">
           <main className="p-4 md:p-6">

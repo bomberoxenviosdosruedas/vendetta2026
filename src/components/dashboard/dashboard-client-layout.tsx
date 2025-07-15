@@ -15,10 +15,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 import { LogOut } from "lucide-react"
+import type { User } from "@prisma/client"
 
 export function DashboardClientLayout({
+    user,
     children,
   }: {
+    user: User | null;
     children: React.ReactNode
   }) {
 
@@ -35,12 +38,12 @@ export function DashboardClientLayout({
         <SidebarFooter>
           <div className="flex items-center gap-2 p-2">
             <Avatar className="h-9 w-9">
-              <AvatarImage src="https://placehold.co/40x40.png" alt="@boss" data-ai-hint="mafia boss" />
-              <AvatarFallback>BO</AvatarFallback>
+              <AvatarImage src={user?.avatarUrl || "https://placehold.co/40x40.png"} alt={user?.name || "Boss"} data-ai-hint="mafia boss" />
+              <AvatarFallback>{user?.name?.charAt(0).toUpperCase() || 'V'}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col truncate">
-                <span className="font-semibold">El Padrino</span>
-                <span className="text-xs text-muted-foreground">Jefe</span>
+                <span className="font-semibold">{user?.name || "El Padrino"}</span>
+                <span className="text-xs text-muted-foreground">{user?.title || "Jefe"}</span>
             </div>
             <Button variant="ghost" size="icon" className="ml-auto">
                 <LogOut />

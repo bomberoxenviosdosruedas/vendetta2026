@@ -2,6 +2,7 @@
 import { getSessionUser } from "@/lib/auth";
 import { Boxes, DollarSign, Droplets, Target, Clock, Bot } from 'lucide-react';
 import { LiveClock } from "./live-clock";
+import type { User } from "@prisma/client";
 
 const resourceIcons = {
     armas: <Target className="h-5 w-5" />,
@@ -14,9 +15,11 @@ function formatNumber(num: number) {
     return num.toLocaleString('de-DE');
 }
 
-export async function ResourceBar() {
-    const user = await getSessionUser();
+interface ResourceBarProps {
+    user: User | null;
+}
 
+export function ResourceBar({ user }: ResourceBarProps) {
     if (!user) {
         return (
             <div className="w-full bg-gray-800 text-white p-2">
