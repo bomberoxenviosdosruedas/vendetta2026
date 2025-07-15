@@ -1,3 +1,4 @@
+// This component is no longer used and can be deleted.
 "use client";
 
 import { useRouter } from 'next/navigation';
