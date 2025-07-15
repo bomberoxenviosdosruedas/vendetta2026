@@ -8,15 +8,10 @@ const prisma = new PrismaClient().$extends(withAccelerate())
 export async function getRoomConfigurations() {
   try {
     const roomConfigurations = await prisma.configuracionHabitacion.findMany({
-      // You can add ordering if needed, e.g. by points or name
-      // orderBy: {
-      //   puntos: 'asc'
-      // }
     });
     return roomConfigurations;
   } catch (error) {
     console.error("Error fetching room configurations:", error);
-    // In a real app, you'd want more robust error handling
     return [];
   }
 }
@@ -35,6 +30,12 @@ export async function getUserByUsername(username: string) {
     try {
         const user = await prisma.user.findUnique({
             where: { username },
+            include: {
+                progreso: true,
+                habitaciones: true,
+                entrenamientos: true,
+                tropas: true
+            }
         });
         return user;
     } catch (error) {
@@ -42,5 +43,3 @@ export async function getUserByUsername(username: string) {
         return null;
     }
 }
-
-    

@@ -55,69 +55,11 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Iniciando el proceso de seeding...');
 
-  // --- Carga de Usuarios ---
-  console.log('👤 Cargando datos de usuarios...');
-  await prisma.user.upsert({
-    where: { username: 'bomberox' },
-    update: {},
-    create: {
-      id: 'clp2x0y0z0000v9q9h9g9e9d9',
-      name: 'El Padrino',
-      username: 'bomberox',
-      password: '123456789', // En una app real, esto debería ser un hash
-      title: 'Jefe de la Familia',
-      avatarUrl: 'https://placehold.co/100x100.png',
-      armas: 12,
-      municion: 2350,
-      alcohol: 89,
-      ingresos: 45231.89,
-      ingresosAnterior: 37650.00,
-    },
-  });
-  await prisma.user.upsert({
-    where: { username: 'lucabrasi' },
-    update: {},
-    create: {
-      id: 'clp2x1y1z1111v9q9h9g9e9d1',
-      name: 'Luca Brasi',
-      username: 'lucabrasi',
-      password: 'password',
-      title: 'Sicario',
-      avatarUrl: 'https://placehold.co/100x100.png',
-      armas: 50,
-      municion: 5000,
-      alcohol: 20,
-      ingresos: 12000,
-      ingresosAnterior: 11000,
-    },
-  });
-  await prisma.user.upsert({
-    where: { username: 'sonny' },
-    update: {},
-    create: {
-      id: 'clp2x2y2z2222v9q9h9g9e9d2',
-      name: 'Sonny Corleone',
-      username: 'sonny',
-      password: 'password',
-      title: 'Caporegime',
-      avatarUrl: 'https://placehold.co/100x100.png',
-      armas: 150,
-      municion: 10000,
-      alcohol: 150,
-      ingresos: 85000,
-      ingresosAnterior: 92000,
-    },
-  });
-  console.log('✅ Usuarios cargados.');
-
-  // --- Carga de Habitaciones ---
-  console.log('🏠 Cargando datos de habitaciones...');
+  // --- Carga de Configuraciones (Datos estáticos del juego) ---
+  console.log('🏠 Cargando datos de configuración de habitaciones...');
   for (const idHabitacion of Object.keys(datosHabitaciones)) {
     if (idHabitacion === 'default') continue;
-
     const habitacion = (datosHabitaciones as Record<string, HabitacionData>)[idHabitacion];
-    const regla = (datosReglasHabitaciones as Record<string, any>)[idHabitacion];
-
     await prisma.configuracionHabitacion.upsert({
       where: { id: idHabitacion },
       update: {}, 
@@ -135,14 +77,12 @@ async function main() {
       },
     });
   }
-  console.log('✅ Habitaciones cargadas.');
+  console.log('✅ Configuración de habitaciones cargada.');
 
-  // --- Carga de Entrenamientos ---
-  console.log('🏋️ Cargando datos de entrenamientos...');
+  console.log('🏋️ Cargando datos de configuración de entrenamientos...');
   for (const idEntrenamiento of Object.keys(datosEntrenamientos)) {
     if (idEntrenamiento === 'default') continue;
     const entrenamiento = (datosEntrenamientos as Record<string, EntrenamientoData>)[idEntrenamiento];
-
     await prisma.configuracionEntrenamiento.upsert({
       where: { id: idEntrenamiento },
       update: {},
@@ -158,14 +98,12 @@ async function main() {
       },
     });
   }
-  console.log('✅ Entrenamientos cargados.');
+  console.log('✅ Configuración de entrenamientos cargada.');
 
-  // --- Carga de Tropas ---
-  console.log('🛡️ Cargando datos de tropas...');
+  console.log('🛡️ Cargando datos de configuración de tropas...');
   for (const idTropa of Object.keys(datosTropas)) {
     if (idTropa === 'default') continue;
     const tropa = (datosTropas as Record<string, TropaData>)[idTropa];
-
     await prisma.configuracionTropa.upsert({
       where: { id: tropa.id },
       update: {},
@@ -190,7 +128,87 @@ async function main() {
       },
     });
   }
-  console.log('✅ Tropas cargadas.');
+  console.log('✅ Configuración de tropas cargada.');
+
+  // --- Carga de Usuarios y su Progreso Inicial ---
+  console.log('👤 Cargando datos de usuarios y su progreso inicial...');
+  
+  const bomberox = await prisma.user.upsert({
+    where: { username: 'bomberox' },
+    update: {},
+    create: {
+      id: 'clp2x0y0z0000v9q9h9g9e9d9',
+      name: 'El Padrino',
+      username: 'bomberox',
+      password: '123456789', // En una app real, esto debería ser un hash
+      title: 'Jefe de la Familia',
+      avatarUrl: 'https://placehold.co/100x100.png',
+    },
+  });
+
+  await prisma.progresoUsuario.upsert({
+    where: { userId: bomberox.id },
+    update: {},
+    create: {
+      userId: bomberox.id,
+      dolares: 45231.89,
+      armas: 12,
+      municion: 2350,
+      alcohol: 89,
+    },
+  });
+
+  const lucabrasi = await prisma.user.upsert({
+    where: { username: 'lucabrasi' },
+    update: {},
+    create: {
+      id: 'clp2x1y1z1111v9q9h9g9e9d1',
+      name: 'Luca Brasi',
+      username: 'lucabrasi',
+      password: 'password',
+      title: 'Sicario',
+      avatarUrl: 'https://placehold.co/100x100.png',
+    },
+  });
+
+  await prisma.progresoUsuario.upsert({
+    where: { userId: lucabrasi.id },
+    update: {},
+    create: {
+      userId: lucabrasi.id,
+      dolares: 12000,
+      armas: 50,
+      municion: 5000,
+      alcohol: 20,
+    },
+  });
+
+  const sonny = await prisma.user.upsert({
+    where: { username: 'sonny' },
+    update: {},
+    create: {
+      id: 'clp2x2y2z2222v9q9h9g9e9d2',
+      name: 'Sonny Corleone',
+      username: 'sonny',
+      password: 'password',
+      title: 'Caporegime',
+      avatarUrl: 'https://placehold.co/100x100.png',
+    },
+  });
+
+  await prisma.progresoUsuario.upsert({
+    where: { userId: sonny.id },
+    update: {},
+    create: {
+      userId: sonny.id,
+      dolares: 85000,
+      armas: 150,
+      municion: 10000,
+      alcohol: 150,
+    },
+  });
+
+  console.log('✅ Usuarios y su progreso inicial cargados.');
 }
 
 main()

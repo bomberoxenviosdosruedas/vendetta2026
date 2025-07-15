@@ -6,96 +6,118 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-// -------------------------------------------
-// 👤 MODELOS DE IDENTIDAD Y PROGRESO
-// -------------------------------------------
+// ===============================================
+//           MODELOS DE IDENTIDAD Y PROGRESO
+// ===============================================
 
-// Modelo de Usuario (solo identidad)
-model Usuario {
-  id            String  @id @default(cuid())
-  nombre        String
-  nombreUsuario String? @unique
-  contrasena    String?
-  titulo        String?
-  urlAvatar     String?
-
-  // Relaciones con los datos de juego del usuario
-  progreso       ProgresoUsuario?
-  habitaciones   HabitacionUsuario[]
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  username      String    @unique
+  password      String // En una aplicación real, esto debería ser un hash
+  title         String?
+  avatarUrl     String?
+  createdAt     DateTime  @default(now())
+  
+  progreso      ProgresoUsuario?
+  habitaciones  HabitacionUsuario[]
   entrenamientos EntrenamientoUsuario[]
-  tropas         TropaUsuario[]
-  colaEventos    EventoJuego[]
+  tropas        TropaUsuario[]
 }
 
-// Modelo para los recursos y el estado del juego de cada usuario
 model ProgresoUsuario {
-  id        Int      @id @default(autoincrement())
-  usuarioId String   @unique
-  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  user                User     @relation(fields: [userId], references: [id])
+  
+  dolares             Float    @default(500)
+  armas               Float    @default(500)
+  municion            Float    @default(2000)
+  alcohol             Float    @default(100)
+  
+  capacidadAlmacenDolares  Int @default(10000)
+  capacidadAlmacenArmas    Int @default(10000)
+  capacidadAlmacenMunicion Int @default(10000)
+  capacidadAlmacenAlcohol  Int @default(10000)
 
-  // Recursos del jugador
-  dolares   Float    @default(1000)
-  armas     Float    @default(100)
-  municion  Float    @default(500)
-  alcohol   Float    @default(20)
-
-  // Columna clave para la generación de recursos por tiempo
   ultimaActualizacion DateTime @default(now())
 }
 
-// -------------------------------------------
-// 📈 MODELOS DE ENLACE (PROGRESO DEL JUGADOR)
-// -------------------------------------------
-
-// Almacena el nivel de cada habitación para un usuario
 model HabitacionUsuario {
-  id                        Int      @id @default(autoincrement())
-  nivel                     Int      @default(0)
-  usuarioId                 String
+  id                    String   @id @default(cuid())
+  userId                String
+  user                  User     @relation(fields: [userId], references: [id])
   configuracionHabitacionId String
-
-  usuario                   Usuario                 @relation(fields: [usuarioId], references: [id])
-  configuracionHabitacion   ConfiguracionHabitacion @relation(fields: [configuracionHabitacionId], references: [id])
-
-  @@unique([usuarioId, configuracionHabitacionId])
+  configuracionHabitacion ConfiguracionHabitacion @relation(fields: [configuracionHabitacionId], references: [id])
+  
+  nivel                 Int      @default(0)
+  
+  @@unique([userId, configuracionHabitacionId])
 }
 
-// Almacena el nivel de cada entrenamiento para un usuario
 model EntrenamientoUsuario {
-  id                           Int      @id @default(autoincrement())
-  nivel                        Int      @default(0)
-  usuarioId                    String
+  id                       String   @id @default(cuid())
+  userId                   String
+  user                     User     @relation(fields: [userId], references: [id])
   configuracionEntrenamientoId String
+  configuracionEntrenamiento ConfiguracionEntrenamiento @relation(fields: [configuracionEntrenamientoId], references: [id])
+  
+  nivel                    Int      @default(0)
 
-  usuario                      Usuario                    @relation(fields: [usuarioId], references: [id])
-  configuracionEntrenamiento   ConfiguracionEntrenamiento @relation(fields: [configuracionEntrenamientoId], references: [id])
-
-  @@unique([usuarioId, configuracionEntrenamientoId])
+  @@unique([userId, configuracionEntrenamientoId])
 }
 
-// Almacena la cantidad de cada tropa que tiene un usuario
 model TropaUsuario {
-  id                   Int      @id @default(autoincrement())
-  cantidad             Int      @default(0)
-  usuarioId            String
+  id                String   @id @default(cuid())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id])
   configuracionTropaId String
+  configuracionTropa ConfiguracionTropa @relation(fields: [configuracionTropaId], references: [id])
 
-  usuario              Usuario            @relation(fields: [usuarioId], references: [id])
-  configuracionTropa   ConfiguracionTropa @relation(fields: [configuracionTropaId], references: [id])
+  cantidad          Int      @default(0)
 
-  @@unique([usuarioId, configuracionTropaId])
+  @@unique([userId, configuracionTropaId])
 }
 
-// -------------------------------------------
-// ⚙️ MODELOS DE CONFIGURACIÓN (REGLAS DEL JUEGO)
-// -------------------------------------------
+// ===============================================
+//           MODELOS DE CONFIGURACIÓN ESTÁTICA
+// ===============================================
 
 model ConfiguracionHabitacion {
-  id            String  @id
+  id            String   @id
+  nombre        String
+  descripcion   String
+  urlImagen     String?
+  costoArmas    Int
+  costoMunicion Int
+  costoDolares  Int
+  duracion      Int // en segundos
+  produccion    Float
+  puntos        Float
+  
+  usuarios      HabitacionUsuario[]
+}
+
+model ConfiguracionEntrenamiento {
+  id            String   @id
+  nombre        String
+  urlImagen     String?
+  costoArmas    Int
+  costoMunicion Int
+  costoDolares  Int
+  duracion      Int // en segundos
+  puntos        Float
+
+  usuarios      EntrenamientoUsuario[]
+}
+
+model ConfiguracionTropa {
+  id            String   @id
   nombre        String
   descripcion   String
   urlImagen     String?
@@ -103,68 +125,15 @@ model ConfiguracionHabitacion {
   costoMunicion Int
   costoDolares  Int
   duracion      Int
-  produccion    Float
   puntos        Float
+  ataque        Int
+  defensa       Int
+  capacidad     Int
+  velocidad     Int
+  salario       Int
+  requisitos    String[]
+  bonusAtaque   String[]
+  bonusDefensa  String[]
 
-  // Relación inversa
-  usuarios HabitacionUsuario[]
-}
-
-model ConfiguracionEntrenamiento {
-  id            String  @id
-  nombre        String
-  urlImagen     String?
-  costoArmas    Int
-  costoMunicion Int
-  costoDolares  Int
-  duracion      Int
-  puntos        Float
-
-  // Relación inversa
-  usuarios EntrenamientoUsuario[]
-}
-
-model ConfiguracionTropa {
-  id             String   @id
-  nombre         String
-  urlImagen      String?
-  descripcion    String
-  costoArmas     Int
-  costoMunicion  Int
-  costoDolares   Int
-  duracion       Int
-  puntos         Float
-  ataque         Int
-  defensa        Int
-  capacidad      Int
-  velocidad      Int
-  salario        Int
-  requisitos     String[]
-  bonusAtaque    String[]
-  bonusDefensa   String[]
-
-  // Relación inversa
-  usuarios TropaUsuario[]
-}
-
-// -------------------------------------------
-// 🕒 COLA DE EVENTOS (FUTURA IMPLEMENTACIÓN)
-// -------------------------------------------
-
-enum TipoEvento {
-  MEJORA_HABITACION
-  INICIO_ENTRENAMIENTO
-  RECLUTAMIENTO_TROPA
-}
-
-model EventoJuego {
-  id                 Int        @id @default(autoincrement())
-  tipo               TipoEvento
-  usuarioId          String
-  entidadId          String    // ID de la habitación, tropa o entrenamiento
-  nivelObjetivo      Int?      // Para mejoras de habitación/entrenamiento
-  cantidad           Int?      // Para reclutamiento de tropas
-  tiempoFinalizacion DateTime
-
-  usuario Usuario @relation(fields: [usuarioId], references: [id])
+  usuarios      TropaUsuario[]
 }
