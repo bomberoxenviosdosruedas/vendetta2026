@@ -1,22 +1,32 @@
 
 "use server"
 
-import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion } from '@prisma/client/edge'
+import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
-import * as datosReglasHabitaciones from '@/data/room_scaling_rules_updated.json';
 
 const prisma = new PrismaClient().$extends(withAccelerate())
 
+export type FullConfiguracionHabitacion = ConfiguracionHabitacion & {
+  escalado: ConfiguracionEscaladoHabitacion | null;
+};
+
+export type FullHabitacionUsuario = HabitacionUsuario & { 
+  configuracion: FullConfiguracionHabitacion 
+};
+
 export type UserWithProgress = User & {
     progreso: ProgresoUsuario | null;
-    habitaciones: (HabitacionUsuario & { configuracion: ConfiguracionHabitacion })[];
+    habitaciones: FullHabitacionUsuario[];
     entrenamientos: EntrenamientoUsuario[];
     tropas: TropaUsuario[];
 };
 
-export async function getRoomConfigurations() {
+export async function getRoomConfigurations(): Promise<FullConfiguracionHabitacion[]> {
   try {
     const roomConfigurations = await prisma.configuracionHabitacion.findMany({
+      include: {
+        escalado: true,
+      },
       orderBy: { id: 'asc' },
     });
     return roomConfigurations;
@@ -34,10 +44,6 @@ export async function getTroopConfigurations() {
         console.error("Error fetching troop configurations:", error);
         return [];
     }
-}
-
-export async function getRoomScalingRules() {
-    return datosReglasHabitaciones as Record<string, any>;
 }
 
 export async function getUsers() {
@@ -58,7 +64,11 @@ export async function getUserByUsername(username: string): Promise<UserWithProgr
                 progreso: true,
                 habitaciones: {
                     include: {
-                        configuracion: true
+                        configuracion: {
+                          include: {
+                            escalado: true
+                          }
+                        }
                     },
                     orderBy: {
                         configuracionHabitacionId: 'asc'
@@ -68,7 +78,7 @@ export async function getUserByUsername(username: string): Promise<UserWithProgr
                 tropas: true
             }
         });
-        return user;
+        return user as UserWithProgress | null;
     } catch (error) {
         console.error(`Error fetching user ${username}:`, error);
         return null;
@@ -84,7 +94,11 @@ export async function getUserWithProgressByUsername(username: string): Promise<U
                 progreso: true,
                 habitaciones: {
                     include: {
-                        configuracion: true
+                        configuracion: {
+                          include: {
+                            escalado: true,
+                          }
+                        }
                     },
                     orderBy: {
                         configuracionHabitacionId: 'asc'
@@ -94,7 +108,7 @@ export async function getUserWithProgressByUsername(username: string): Promise<U
                 tropas: true
             }
         });
-        return user;
+        return user as UserWithProgress | null;
     } catch (error) {
         console.error(`Error fetching user ${username} with progress:`, error);
         return null;

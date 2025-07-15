@@ -1,12 +1,11 @@
 
 import { PrismaClient } from '@prisma/client/edge';
 
-// Importa los datos desde los archivos JSON
 import * as datosHabitaciones from './room_types_data.json';
+import * as datosEscalado from './room_scaling_rules_updated.json';
 import * as datosEntrenamientos from './entrenamientos_types_data.json';
 import * as datosTropas from './tropas_types_data.json';
 
-// Define interfaces for your data structures to ensure type safety
 interface HabitacionData {
   nombre: string;
   desc: string;
@@ -17,6 +16,13 @@ interface HabitacionData {
   duracion: number;
   produccion: number;
   puntos: number;
+}
+
+interface EscaladoData {
+    produccion_recurso?: string;
+    formula_aumento_produccion?: string;
+    factor_costo_por_nivel: number;
+    formula_tiempo?: string;
 }
 
 interface EntrenamientoData {
@@ -49,17 +55,17 @@ interface TropaData {
     bonificacionesD: string[];
 }
 
-// Inicializa el cliente de Prisma
 const prisma = new PrismaClient();
 
 async function main() {
   console.log('🌱 Iniciando el proceso de seeding...');
 
-  // --- Carga de Configuraciones (Datos estáticos del juego) ---
-  console.log('🏠 Cargando datos de configuración de habitaciones...');
+  console.log('🏠 Cargando datos de configuración de habitaciones y escalado...');
   const roomConfigIds = Object.keys(datosHabitaciones).filter(id => id !== 'default');
   for (const idHabitacion of roomConfigIds) {
     const habitacion = (datosHabitaciones as Record<string, HabitacionData>)[idHabitacion];
+    const escalado = (datosEscalado as Record<string, EscaladoData>)[idHabitacion];
+
     await prisma.configuracionHabitacion.upsert({
       where: { id: idHabitacion },
       update: {}, 
@@ -76,8 +82,23 @@ async function main() {
         puntos: habitacion.puntos,
       },
     });
+
+    if (escalado) {
+        await prisma.configuracionEscaladoHabitacion.upsert({
+            where: { id: idHabitacion },
+            update: {},
+            create: {
+                id: idHabitacion,
+                produccionRecurso: escalado.produccion_recurso,
+                formulaAumentoProduccion: escalado.formula_aumento_produccion,
+                factorCostoPorNivel: escalado.factor_costo_por_nivel,
+                formulaTiempo: escalado.formula_tiempo,
+            }
+        });
+    }
   }
-  console.log('✅ Configuración de habitaciones cargada.');
+  console.log('✅ Configuración de habitaciones y escalado cargada.');
+
 
   console.log('🏋️ Cargando datos de configuración de entrenamientos...');
   const trainingConfigIds = Object.keys(datosEntrenamientos).filter(id => id !== 'default');
@@ -130,7 +151,6 @@ async function main() {
   }
   console.log('✅ Configuración de tropas cargada.');
 
-  // --- Carga de Usuarios y su Progreso Inicial ---
   console.log('👤 Creando o actualizando usuario y su progreso inicial...');
   
   const bomberox = await prisma.user.upsert({
@@ -139,7 +159,7 @@ async function main() {
     create: {
       name: 'Bomberox',
       username: 'bomberox',
-      password: '123456789', // En una app real, esto debería ser un hash
+      password: '123456789',
       title: 'Jefe de la Familia',
       avatarUrl: '/img/bomberox.png',
     },
@@ -170,7 +190,7 @@ async function main() {
       create: {
         userId: bomberox.id,
         configuracionHabitacionId: roomId,
-        nivel: roomId === 'oficina_del_jefe' ? 1 : 0, // Inicia con Oficina del Jefe en nivel 1
+        nivel: roomId === 'oficina_del_jefe' ? 1 : 0,
       },
     });
   }

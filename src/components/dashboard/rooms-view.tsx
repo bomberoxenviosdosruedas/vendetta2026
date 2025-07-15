@@ -12,66 +12,63 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import { getRoomConfigurations, getUserWithProgressByUsername } from "@/lib/data"
+import { getRoomConfigurations } from "@/lib/data"
 import { Clock, PlusCircle } from "lucide-react"
 import { getSessionUser } from "@/lib/auth"
+import { calcularCostosNivel, calcularTiempoConstruccion } from "@/lib/formulas"
+import type { FullHabitacionUsuario } from "@/lib/data"
 
 function formatDuration(seconds: number) {
-    if (seconds < 60) {
-        return `${seconds}s`;
-    }
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    if (minutes < 60) {
-        return `${minutes}m ${remainingSeconds}s`;
-    }
-    const hours = Math.floor(minutes / 60);
-    const remainingMinutes = minutes % 60;
-    return `${hours}h ${remainingMinutes}m`;
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = Math.round(seconds % 60);
+
+    let result = '';
+    if (hours > 0) result += `${hours}h `;
+    if (minutes > 0) result += `${minutes}m `;
+    if (remainingSeconds > 0 || result === '') result += `${remainingSeconds}s`;
+    
+    return result.trim();
 }
 
-
 export async function RoomsView() {
-  const [roomConfigs, user] = await Promise.all([
-    getRoomConfigurations(),
-    getSessionUser()
-  ]);
+  const user = await getSessionUser()
+
+  if (!user) {
+    return <div>Usuario no encontrado</div>
+  }
+
+  const userRoomsMap = new Map(user.habitaciones.map(h => [h.configuracionHabitacionId, h]));
+
+  const allRoomConfigs = await getRoomConfigurations();
 
   const desiredOrder = [
-    'oficina_del_jefe',
-    'escuela_especializacion',
-    'armeria',
-    'almacen_de_municion',
-    'cerveceria',
-    'taberna',
-    'contrabando',
-    'almacen_de_armas',
-    'deposito_de_municion',
-    'almacen_de_alcohol',
-    'caja_fuerte',
-    'campo_de_entrenamiento',
-    'seguridad',
-    'torreta_de_fuego_automatico',
-    'minas_ocultas'
+    'oficina_del_jefe', 'escuela_especializacion', 'armeria', 'almacen_de_municion',
+    'cerveceria', 'taberna', 'contrabando', 'almacen_de_armas', 'deposito_de_municion',
+    'almacen_de_alcohol', 'caja_fuerte', 'campo_de_entrenamiento', 'seguridad',
+    'torreta_de_fuego_automatico', 'minas_ocultas'
   ];
 
-  const sortedRooms = [...roomConfigs].sort((a, b) => {
-    const indexA = desiredOrder.indexOf(a.id);
-    const indexB = desiredOrder.indexOf(b.id);
-    if (indexA === -1) return 1;
-    if (indexB === -1) return -1;
-    return indexA - indexB;
-  });
+  const sortedRoomsData = desiredOrder.map(id => {
+      const config = allRoomConfigs.find(c => c.id === id);
+      if (!config) return null;
 
-  const userRoomsMap = new Map(user?.habitaciones.map(h => [h.configuracionHabitacionId, h]));
+      const userRoom = userRoomsMap.get(id);
+      const nivel = userRoom ? userRoom.nivel : 0;
+      const nivelOficinaJefe = userRoomsMap.get('oficina_del_jefe')?.nivel || 1;
 
-  const roomsWithLevels = sortedRooms.map(config => {
-    const userRoom = userRoomsMap.get(config.id);
-    return {
-      ...config,
-      level: userRoom ? userRoom.nivel : 0,
-    }
-  });
+      const costosSiguienteNivel = calcularCostosNivel(nivel + 1, config);
+      const tiempoSiguienteNivel = calcularTiempoConstruccion(nivel + 1, config, nivelOficinaJefe);
+      
+      return {
+          id: config.id,
+          nombre: config.nombre,
+          urlImagen: config.urlImagen,
+          nivel,
+          costos: costosSiguienteNivel,
+          tiempo: tiempoSiguienteNivel,
+      };
+  }).filter(Boolean);
 
 
   return (
@@ -96,10 +93,10 @@ export async function RoomsView() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {roomsWithLevels.map((room) => (
+              {sortedRoomsData.map((room) => (
                 <TableRow key={room.id}>
                   <TableCell>
-                    <div className="w-20 h-14 relative rounded-md overflow-hidden">
+                    <div className="w-20 h-14 relative rounded-md overflow-hidden border">
                         <Image
                             src={room.urlImagen || "https://placehold.co/80x56.png"}
                             alt={room.nombre}
@@ -112,19 +109,19 @@ export async function RoomsView() {
                   <TableCell>
                     <div className="font-medium">{room.nombre}</div>
                     <div className="text-sm text-muted-foreground">
-                      Nivel: {room.level}
+                      Nivel: {room.nivel}
                     </div>
                   </TableCell>
                   <TableCell>
-                    <div className="text-sm">Al Nivel: {room.level + 1}</div>
+                    <div className="text-sm">Al Nivel: {room.nivel + 1}</div>
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                       {room.costoArmas > 0 && <span>{room.costoArmas.toLocaleString()} Armas</span>}
-                       {room.costoMunicion > 0 && <span>{room.costoMunicion.toLocaleString()} Munición</span>}
-                       {room.costoDolares > 0 && <span>${room.costoDolares.toLocaleString()}</span>}
+                       {room.costos.armas > 0 && <span>{room.costos.armas.toLocaleString()} Armas</span>}
+                       {room.costos.municion > 0 && <span>{room.costos.municion.toLocaleString()} Munición</span>}
+                       {room.costos.dolares > 0 && <span>${room.costos.dolares.toLocaleString()}</span>}
                     </div>
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+                     <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
                         <Clock className="h-3 w-3" />
-                        <span>{formatDuration(room.duracion)}</span>
+                        <span>{formatDuration(room.tiempo)}</span>
                     </div>
                   </TableCell>
                   <TableCell className="text-right">

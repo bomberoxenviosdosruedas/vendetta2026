@@ -3,7 +3,7 @@
 
 import prisma from "./prisma/prisma";
 import type { UserWithProgress } from "./data";
-import { getRoomScalingRules } from "./data";
+import { calcularProduccion } from "./formulas";
 
 export async function obtenerEstadoJuegoActualizado(user: UserWithProgress) {
   if (!user || !user.progreso) {
@@ -23,47 +23,15 @@ export async function obtenerEstadoJuegoActualizado(user: UserWithProgress) {
   let produccionAlcoholPorSegundo = 0;
   let produccionDolaresPorSegundo = 0;
 
-  const scalingRules = await getRoomScalingRules();
-  const nivelOficinaJefe = user.habitaciones.find(h => h.configuracionHabitacionId === 'oficina_del_jefe')?.nivel || 1;
-
   user.habitaciones.forEach(habitacion => {
     const config = habitacion.configuracion;
-    const rules = scalingRules[config.id];
-    
-    if (!rules || !rules.produccion_recurso || habitacion.nivel === 0) return;
+    if (!config.escalado?.produccionRecurso || habitacion.nivel === 0) return;
 
-    let produccionBase = 0;
-    try {
-      const nivel = habitacion.nivel;
-      // Reemplazamos eval con cálculos seguros
-      switch (config.id) {
-        case 'armeria':
-          produccionBase = Math.trunc(Math.pow((nivel + 1) / 2, 2) * 10);
-          break;
-        case 'almacen_de_municion':
-            produccionBase = Math.trunc(Math.pow((nivel + 1) / 2, 2) * 10 + 10);
-          break;
-        case 'cerveceria':
-            produccionBase = Math.trunc(config.produccion * Math.pow(1.2, nivel - 1));
-          break;
-        case 'taberna':
-            produccionBase = Math.trunc(Math.pow((nivel + 1) / 2, 2) * 2);
-            break;
-        case 'contrabando':
-            produccionBase = Math.trunc(Math.pow((nivel + 1) / 2, 2) * 21);
-          break;
-        default:
-          produccionBase = config.produccion * nivel;
-      }
-    } catch (e) {
-      console.error(`Error calculando produccion para ${config.id}: ${e}`);
-      produccionBase = config.produccion * habitacion.nivel; // Fallback
-    }
-    
-    const produccionPorHora = produccionBase;
+    // Usamos la nueva función de cálculo seguro
+    const produccionPorHora = calcularProduccion(habitacion.nivel, config);
     const produccionPorSegundo = produccionPorHora / 3600;
 
-    switch (rules.produccion_recurso) {
+    switch (config.escalado.produccionRecurso) {
         case 'armas':
             produccionArmasPorSegundo += produccionPorSegundo;
             break;

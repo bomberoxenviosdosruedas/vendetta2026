@@ -2,111 +2,84 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-// ---------------------
-// Modelos de Identidad y Progreso
-// ---------------------
-
+// =================================================
+// 1. Modelo de Usuario y Autenticación
+// =================================================
 model User {
-  id              String        @id @default(cuid())
-  name            String
-  username        String        @unique
-  password        String
-  title           String?
-  avatarUrl       String?
-  createdAt       DateTime      @default(now())
+  id        String   @id @default(cuid())
+  name      String
+  username  String   @unique
+  password  String // En una app real, esto debería ser un hash
+  title     String?
+  avatarUrl String?
 
-  // Relaciones
-  progreso        ProgresoUsuario?
-  habitaciones    HabitacionUsuario[]
-  entrenamientos  EntrenamientoUsuario[]
-  tropas          TropaUsuario[]
+  progreso       ProgresoUsuario?
+  habitaciones   HabitacionUsuario[]
+  entrenamientos EntrenamientoUsuario[]
+  tropas         TropaUsuario[]
 
-  @@map("users")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
+// =================================================
+// 2. Modelo de Progreso del Jugador
+// =================================================
 model ProgresoUsuario {
   id                  String   @id @default(cuid())
-  userId              String   @unique
   user                User     @relation(fields: [userId], references: [id])
-  
-  dolares             Float    @default(0)
-  armas               Float    @default(0)
-  municion            Float    @default(0)
-  alcohol             Float    @default(0)
-  
-  ultimaActualizacion DateTime @updatedAt
-
-  @@map("user_progress")
+  userId              String   @unique
+  dolares             Float
+  armas               Float
+  municion            Float
+  alcohol             Float
+  ultimaActualizacion DateTime @default(now()) @updatedAt
 }
 
-// ---------------------
-// Modelos de Enlace (Progreso del Usuario)
-// ---------------------
+// =================================================
+// 3. Modelos de Juego (Configuraciones Estáticas)
+// =================================================
 
-model HabitacionUsuario {
-  userId                      String
-  user                        User     @relation(fields: [userId], references: [id])
-  configuracionHabitacionId   String
-  configuracion               ConfiguracionHabitacion @relation(fields: [configuracionHabitacionId], references: [id])
-  nivel                       Int      @default(0)
-  
-  @@id([userId, configuracionHabitacionId])
-  @@map("user_rooms")
-}
-
-model EntrenamientoUsuario {
-  userId                        String
-  user                          User     @relation(fields: [userId], references: [id])
-  configuracionEntrenamientoId  String
-  configuracion                 ConfiguracionEntrenamiento @relation(fields: [configuracionEntrenamientoId], references: [id])
-  nivel                         Int      @default(0)
-  
-  @@id([userId, configuracionEntrenamientoId])
-  @@map("user_trainings")
-}
-
-model TropaUsuario {
-  userId                String
-  user                  User     @relation(fields: [userId], references: [id])
-  configuracionTropaId  String
-  configuracion         ConfiguracionTropa @relation(fields: [configuracionTropaId], references: [id])
-  cantidad              Int      @default(0)
-  
-  @@id([userId, configuracionTropaId])
-  @@map("user_troops")
-}
-
-
-// ---------------------
-// Modelos de Configuración (Datos estáticos del juego)
-// ---------------------
-
+// Define las propiedades base de cada tipo de edificio.
+// Se puebla con datos de `room_types_data.json`
 model ConfiguracionHabitacion {
-  id            String   @id
-  nombre        String
-  descripcion   String
-  urlImagen     String
-  costoArmas    Int
-  costoMunicion Int
-  costoDolares  Int
-  duracion      Int
-  produccion    Float
-  puntos        Float
+  id              String      @id
+  nombre          String
+  descripcion     String      @db.Text
+  urlImagen       String
+  costoArmas      Int
+  costoMunicion   Int
+  costoDolares    Int
+  duracion        Int // Duración base en segundos
+  produccion      Float? // Producción base por hora
+  puntos          Float
   
-  usuarios      HabitacionUsuario[] // Relación inversa
-
-  @@map("room_configurations")
+  // Relaciones
+  habitacionesUsuario HabitacionUsuario[]
+  escalado            ConfiguracionEscaladoHabitacion?
 }
 
+// Nuevo modelo para las reglas de escalado
+model ConfiguracionEscaladoHabitacion {
+  id                       String  @id
+  configuracionHabitacion  ConfiguracionHabitacion @relation(fields: [id], references: [id])
+  
+  produccionRecurso        String? // ej: "armas", "municion", "alcohol", "dolares"
+  formulaAumentoProduccion String?
+  factorCostoPorNivel      Float
+  formulaTiempo            String?
+}
+
+// Define las propiedades de cada tipo de entrenamiento.
+// Se puebla con datos de `entrenamientos_types_data.json`
 model ConfiguracionEntrenamiento {
   id            String   @id
   nombre        String
@@ -114,34 +87,74 @@ model ConfiguracionEntrenamiento {
   costoArmas    Int
   costoMunicion Int
   costoDolares  Int
-  duracion      Int
+  duracion      Int // en segundos
   puntos        Float
 
-  usuarios      EntrenamientoUsuario[] // Relación inversa
-
-  @@map("training_configurations")
+  // Relaciones
+  entrenamientosUsuario EntrenamientoUsuario[]
 }
 
+// Define las propiedades de cada tipo de tropa.
+// Se puebla con datos de `tropas_types_data.json`
 model ConfiguracionTropa {
   id            String   @id
   nombre        String
   urlImagen     String
-  descripcion   String
+  descripcion   String   @db.Text
   costoArmas    Int
   costoMunicion Int
   costoDolares  Int
-  duracion      Int
+  duracion      Int // en segundos
   puntos        Float
   ataque        Int
   defensa       Int
   capacidad     Int
   velocidad     Int
-  salario       Int
+  salario       Float
   requisitos    String[]
   bonusAtaque   String[]
   bonusDefensa  String[]
 
-  usuarios      TropaUsuario[] // Relación inversa
+  // Relaciones
+  tropasUsuario TropaUsuario[]
+}
 
-  @@map("troop_configurations")
+// =================================================
+// 4. Modelos de Estado del Jugador (Tablas de enlace)
+// =================================================
+
+// Representa el nivel de una habitación para un usuario específico.
+model HabitacionUsuario {
+  id         String @id @default(cuid())
+  user       User   @relation(fields: [userId], references: [id])
+  userId     String
+  configuracion ConfiguracionHabitacion @relation(fields: [configuracionHabitacionId], references: [id])
+  configuracionHabitacionId String
+  nivel      Int    @default(0)
+
+  @@unique([userId, configuracionHabitacionId])
+}
+
+// Representa el nivel de un entrenamiento para un usuario.
+model EntrenamientoUsuario {
+  id               String                   @id @default(cuid())
+  user             User                     @relation(fields: [userId], references: [id])
+  userId           String
+  configuracion    ConfiguracionEntrenamiento @relation(fields: [configuracionEntrenamientoId], references: [id])
+  configuracionEntrenamientoId String
+  nivel            Int                      @default(0)
+
+  @@unique([userId, configuracionEntrenamientoId])
+}
+
+// Representa la cantidad de tropas de un tipo que posee un usuario.
+model TropaUsuario {
+  id             String             @id @default(cuid())
+  user           User               @relation(fields: [userId], references: [id])
+  userId         String
+  configuracion  ConfiguracionTropa @relation(fields: [configuracionTropaId], references: [id])
+  configuracionTropaId String
+  cantidad       Int                @default(0)
+
+  @@unique([userId, configuracionTropaId])
 }
