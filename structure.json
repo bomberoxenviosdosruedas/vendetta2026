@@ -1,0 +1,314 @@
+{
+  "name": "src",
+  "type": "directory",
+  "children": [
+    {
+      "name": "ai",
+      "type": "directory",
+      "children": [
+        {
+          "name": "dev.ts",
+          "type": "file"
+        },
+        {
+          "name": "genkit.ts",
+          "type": "file"
+        }
+      ]
+    },
+    {
+      "name": "app",
+      "type": "directory",
+      "children": [
+        {
+          "name": "(dashboard)",
+          "type": "directory",
+          "children": [
+            {
+              "name": "layout.tsx",
+              "type": "file"
+            },
+            {
+              "name": "overview",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "page.tsx",
+                  "type": "file"
+                }
+              ]
+            },
+            {
+              "name": "rooms",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "page.tsx",
+                  "type": "file"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "favicon.ico",
+          "type": "file"
+        },
+        {
+          "name": "globals.css",
+          "type": "file"
+        },
+        {
+          "name": "layout.tsx",
+          "type": "file"
+        },
+        {
+          "name": "page.tsx",
+          "type": "file"
+        }
+      ]
+    },
+    {
+      "name": "components",
+      "type": "directory",
+      "children": [
+        {
+          "name": "dashboard",
+          "type": "directory",
+          "children": [
+            {
+              "name": "live-clock.tsx",
+              "type": "file"
+            },
+            {
+              "name": "overview.tsx",
+              "type": "file"
+            },
+            {
+              "name": "resource-bar.tsx",
+              "type": "file"
+            },
+            {
+              "name": "rooms-view.tsx",
+              "type": "file"
+            },
+            {
+              "name": "sidebar-nav.tsx",
+              "type": "file"
+            }
+          ]
+        },
+        {
+          "name": "login-form.tsx",
+          "type": "file"
+        },
+        {
+          "name": "ui",
+          "type": "directory",
+          "children": [
+            {
+              "name": "accordion.tsx",
+              "type": "file"
+            },
+            {
+              "name": "alert-dialog.tsx",
+              "type": "file"
+            },
+            {
+              "name": "alert.tsx",
+              "type": "file"
+            },
+            {
+              "name": "avatar.tsx",
+              "type": "file"
+            },
+            {
+              "name": "badge.tsx",
+              "type": "file"
+            },
+            {
+              "name": "button.tsx",
+              "type": "file"
+            },
+            {
+              "name": "calendar.tsx",
+              "type": "file"
+            },
+            {
+              "name": "card.tsx",
+              "type": "file"
+            },
+            {
+              "name": "carousel.tsx",
+              "type": "file"
+            },
+            {
+              "name": "chart.tsx",
+              "type": "file"
+            },
+            {
+              "name": "checkbox.tsx",
+              "type": "file"
+            },
+            {
+              "name": "collapsible.tsx",
+              "type": "file"
+            },
+            {
+              "name": "dialog.tsx",
+              "type": "file"
+            },
+            {
+              "name": "dropdown-menu.tsx",
+              "type": "file"
+            },
+            {
+              "name": "form.tsx",
+              "type": "file"
+            },
+            {
+              "name": "input.tsx",
+              "type": "file"
+            },
+            {
+              "name": "label.tsx",
+              "type": "file"
+            },
+            {
+              "name": "menubar.tsx",
+              "type": "file"
+            },
+            {
+              "name": "popover.tsx",
+              "type": "file"
+            },
+            {
+              "name": "progress.tsx",
+              "type": "file"
+            },
+            {
+              "name": "radio-group.tsx",
+              "type": "file"
+            },
+            {
+              "name": "scroll-area.tsx",
+              "type": "file"
+            },
+            {
+              "name": "select.tsx",
+              "type": "file"
+            },
+            {
+              "name": "separator.tsx",
+              "type": "file"
+            },
+            {
+              "name": "sheet.tsx",
+              "type": "file"
+            },
+            {
+              "name": "sidebar.tsx",
+              "type": "file"
+            },
+            {
+              "name": "skeleton.tsx",
+              "type": "file"
+            },
+            {
+              "name": "slider.tsx",
+              "type": "file"
+            },
+            {
+              "name": "switch.tsx",
+              "type": "file"
+            },
+            {
+              "name": "table.tsx",
+              "type": "file"
+            },
+            {
+              "name": "tabs.tsx",
+              "type": "file"
+            },
+            {
+              "name": "textarea.tsx",
+              "type": "file"
+            },
+            {
+              "name": "toast.tsx",
+              "type": "file"
+            },
+            {
+              "name": "toaster.tsx",
+              "type": "file"
+            },
+            {
+              "name": "tooltip.tsx",
+              "type": "file"
+            }
+          ]
+        },
+        {
+          "name": "user-selection.tsx",
+          "type": "file"
+        }
+      ]
+    },
+    {
+      "name": "data",
+      "type": "directory",
+      "children": [
+        {
+          "name": "room_scaling_rules_updated.json",
+          "type": "file"
+        },
+        {
+          "name": "room_types_data.json",
+          "type": "file"
+        }
+      ]
+    },
+    {
+      "name": "hooks",
+      "type": "directory",
+      "children": [
+        {
+          "name": "use-mobile.tsx",
+          "type": "file"
+        },
+        {
+          "name": "use-toast.ts",
+          "type": "file"
+        }
+      ]
+    },
+    {
+      "name": "lib",
+      "type": "directory",
+      "children": [
+        {
+          "name": "auth.ts",
+          "type": "file"
+        },
+        {
+          "name": "data.ts",
+          "type": "file"
+        },
+        {
+          "name": "prisma",
+          "type": "directory",
+          "children": [
+            {
+              "name": "prisma.ts",
+              "type": "file"
+            }
+          ]
+        },
+        {
+          "name": "utils.ts",
+          "type": "file"
+        }
+      ]
+    }
+  ]
+}
