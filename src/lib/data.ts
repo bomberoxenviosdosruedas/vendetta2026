@@ -20,3 +20,13 @@ export async function getRoomConfigurations() {
     return [];
   }
 }
+
+export async function getUsers() {
+    try {
+        const users = await prisma.user.findMany();
+        return users;
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        return [];
+    }
+}

@@ -55,6 +55,40 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Iniciando el proceso de seeding...');
 
+  // --- Carga de Usuarios ---
+  console.log('👤 Cargando datos de usuarios...');
+  await prisma.user.upsert({
+    where: { id: 'clp2x0y0z0000v9q9h9g9e9d9' },
+    update: {},
+    create: {
+      id: 'clp2x0y0z0000v9q9h9g9e9d9',
+      name: 'El Padrino',
+      title: 'Jefe de la Familia',
+      avatarUrl: 'https://placehold.co/100x100.png',
+    },
+  });
+  await prisma.user.upsert({
+    where: { id: 'clp2x1y1z1111v9q9h9g9e9d1' },
+    update: {},
+    create: {
+      id: 'clp2x1y1z1111v9q9h9g9e9d1',
+      name: 'Luca Brasi',
+      title: 'Sicario',
+      avatarUrl: 'https://placehold.co/100x100.png',
+    },
+  });
+  await prisma.user.upsert({
+    where: { id: 'clp2x2y2z2222v9q9h9g9e9d2' },
+    update: {},
+    create: {
+      id: 'clp2x2y2z2222v9q9h9g9e9d2',
+      name: 'Sonny Corleone',
+      title: 'Caporegime',
+      avatarUrl: 'https://placehold.co/100x100.png',
+    },
+  });
+  console.log('✅ Usuarios cargados.');
+
   // --- Carga de Habitaciones ---
   console.log('🏠 Cargando datos de habitaciones...');
   for (const idHabitacion of Object.keys(datosHabitaciones)) {
@@ -90,7 +124,7 @@ async function main() {
   console.log('🏋️ Cargando datos de entrenamientos...');
   for (const idEntrenamiento of Object.keys(datosEntrenamientos)) {
     if (idEntrenamiento === 'default') continue;
-    const entrenamiento = (datosEntrenamientos as Record<string, EntrenamientoData>)[idEntrenamiento];
+    const entrenamiento = (datosEntrenamientos as Record<string, any>)[idEntrenamiento];
 
     await prisma.configuracionEntrenamiento.upsert({
       where: { id: idEntrenamiento },
