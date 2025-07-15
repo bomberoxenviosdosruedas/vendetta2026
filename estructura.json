@@ -291,6 +291,10 @@
       "type": "directory",
       "children": [
         {
+          "name": "actions.ts",
+          "type": "file"
+        },
+        {
           "name": "auth.ts",
           "type": "file"
         },

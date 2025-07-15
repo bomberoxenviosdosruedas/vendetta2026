@@ -14,7 +14,7 @@
     "generate": "prisma generate"
   },
   "prisma": {
-    "seed": "bunx prisma/seed.ts"
+    "seed": "bun prisma/seed.ts"
   },
   "dependencies": {
     "@genkit-ai/googleai": "^1.14.1",
