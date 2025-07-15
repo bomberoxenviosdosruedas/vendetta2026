@@ -16,6 +16,8 @@ import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 import { LogOut } from "lucide-react"
 import type { UserWithProgress } from "@/lib/data"
+import { logout } from "@/lib/auth"
+import { useRouter } from "next/navigation"
 
 export function DashboardClientLayout({
     user,
@@ -24,6 +26,13 @@ export function DashboardClientLayout({
     user: UserWithProgress | null;
     children: React.ReactNode
   }) {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await logout();
+    router.push('/');
+    router.refresh();
+  }
 
   return (
     <SidebarProvider>
@@ -45,7 +54,7 @@ export function DashboardClientLayout({
                 <span className="font-semibold">{user?.name || "El Padrino"}</span>
                 <span className="text-xs text-muted-foreground">{user?.title || "Jefe"}</span>
             </div>
-            <Button variant="ghost" size="icon" className="ml-auto">
+            <Button variant="ghost" size="icon" className="ml-auto" onClick={handleLogout}>
                 <LogOut />
                 <span className="sr-only">Cerrar Sesión</span>
             </Button>

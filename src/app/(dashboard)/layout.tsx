@@ -4,6 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { ResourceBar } from "@/components/dashboard/resource-bar";
 import { DashboardClientLayout } from "@/components/dashboard/dashboard-client-layout";
 import { obtenerEstadoJuegoActualizado } from "@/lib/actions";
+import { redirect } from "next/navigation";
 
 
 function ResourceBarFallback() {
@@ -23,6 +24,10 @@ export default async function DashboardLayout({
     children: React.ReactNode
   }) {
   const user = await obtenerEstadoJuegoActualizado();
+
+  if (!user) {
+    redirect('/');
+  }
 
   return (
     <DashboardClientLayout user={user}>

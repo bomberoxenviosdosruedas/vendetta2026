@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -15,7 +16,7 @@ import { getUserByUsername } from '@/lib/data';
 export function LoginForm() {
   const router = useRouter();
   const { toast } = useToast();
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState('bomberox');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -25,31 +26,33 @@ export function LoginForm() {
     setError('');
     setIsLoading(true);
 
-    // In a real app, you'd fetch the user and verify the password hash.
-    // Here we do a simple check.
-    if (username === 'bomberox' && password === '123456789') {
-        try {
-            await login(username);
-            toast({
-                title: "Inicio de sesión exitoso",
-                description: "Bienvenido de nuevo, Jefe.",
-            });
-            router.push('/overview');
-            router.refresh(); // Refresh server components
-        } catch (err) {
-            setError('Ocurrió un error en el servidor.');
+    try {
+        const user = await getUserByUsername(username);
+
+        if (!user) {
+            setError('Usuario no encontrado. Solo el usuario "bomberox" está permitido.');
+            setIsLoading(false);
+            return;
         }
-    } else {
-      setError('Usuario o contraseña incorrectos. Inténtalo de nuevo.');
+
+        await login(username);
+        toast({
+            title: "Inicio de sesión exitoso",
+            description: "Bienvenido de nuevo, Jefe.",
+        });
+        router.push('/overview');
+        router.refresh(); // Refresh server components
+    } catch (err) {
+        setError('Ocurrió un error en el servidor.');
+        setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl">Iniciar Sesión</CardTitle>
-        <CardDescription>Introduce tus credenciales para acceder a tu imperio.</CardDescription>
+        <CardDescription>Introduce tu nombre de usuario para acceder a tu imperio.</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleLogin} className="space-y-6">
@@ -70,7 +73,7 @@ export function LoginForm() {
             <Input
               id="password"
               type="password"
-              placeholder="Tu contraseña secreta"
+              placeholder="Cualquier contraseña funcionará"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -94,5 +97,3 @@ export function LoginForm() {
     </Card>
   );
 }
-
-    
