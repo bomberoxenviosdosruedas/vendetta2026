@@ -9,6 +9,7 @@
     pkgs.openssl
     pkgs.bun
     pkgs.python313
+    pkgs.prisma
   ];
   # Sets environment variables in the workspace
   env = {
