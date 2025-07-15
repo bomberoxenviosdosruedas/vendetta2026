@@ -13,7 +13,7 @@
   ];
   # Sets environment variables in the workspace
   env = {
-    DATABASE_URL = "prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3RfaWQiOjEsInNlY3VyZV9rZXkiOiJza180RFp1ZGlhWldrOEpBSXA1V3NmS3YiLCJhcGlfa2V5IjoiMDFLMDYyQVMwM0ZWVkFOWUpYS004WkU2M1ciLCJ0ZW5hbnRfaWQiOiI5YmUxYTk0MDgwNGZkNzc4ZTkxZGNmYmEzMjc5ZmY1OWY3ZjUyNTc0YjlkYzRkMDA0YTc0MGFiNDRjOGZlNThjIiwiaW50ZXJuYWxfc2VjcmV0IjoiZTYxMTljOTEtZGMwNS00M2RiLWIyN2EtMGY2MzYyYjc2MTYxIn0.Xx0zloGB6Q1MS67-ac8i3L_gxElEUUYu7Yov6u1w27o";
+   DATABASE_URL="prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3RfaWQiOjEsInNlY3VyZV9rZXkiOiJza19NdUJQaGJDZkE0YUZOMElOb2VnbWwiLCJhcGlfa2V5IjoiMDFLMDYzUUQ0TktOR0pLMDVQQkIwV1NFMFMiLCJ0ZW5hbnRfaWQiOiJkYmNkMTU4NTdjZWI1ZGJiODZiYWY3MDg4OGI4ZGYzY2M1YTYzNWM4MmI3MWUyZGEyM2ViYmE5NDJmMDNmZWYzIiwiaW50ZXJuYWxfc2VjcmV0IjoiNTc4MmUxZWItNjdlZS00MDQ5LTlmNmEtYTMxOTcyYWY1ZjAyIn0.3KpxZ4Y6fCPXmY1cznWJGdNVBM3OBEH2-3gaw38n96Q";
     };
     # This adds a file watcher to startup the firebase emulators. The emulators will only start if
     # a firebase.json file is written into the user's directory

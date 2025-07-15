@@ -10,8 +10,9 @@ export function LiveClock() {
     useEffect(() => {
         const timer = setInterval(() => {
             const now = new Date();
-            const date = now.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' });
-            const time = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const timeZone = 'Africa/Nouakchott';
+            const date = now.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit', timeZone });
+            const time = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone, hour12: false });
             setCurrentTime(`${date}, ${time}`);
         }, 1000);
 
