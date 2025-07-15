@@ -1,6 +1,4 @@
 
-'use server';
-
 import type { FullConfiguracionHabitacion } from './data';
 
 /**
