@@ -3,6 +3,7 @@
 
 import prisma from "./prisma/prisma";
 import type { UserWithProgress } from "./data";
+import { getRoomScalingRules } from "./data";
 
 export async function obtenerEstadoJuegoActualizado(user: UserWithProgress) {
   if (!user || !user.progreso) {
@@ -23,23 +24,38 @@ export async function obtenerEstadoJuegoActualizado(user: UserWithProgress) {
   let produccionMunicionPorSegundo = 0;
   let produccionAlcoholPorSegundo = 0;
 
+  const scalingRules = await getRoomScalingRules();
+  const nivelOficinaJefe = user.habitaciones.find(h => h.configuracionHabitacionId === 'oficina_del_jefe')?.nivel || 1;
+
   user.habitaciones.forEach(habitacion => {
-    // Aquí asumimos que la producción en la configuración es por hora.
-    // Lo convertimos a producción por segundo.
-    const produccionPorHora = habitacion.configuracion.produccion;
+    const config = habitacion.configuracion;
+    const rules = scalingRules[config.id];
+    
+    if (!rules || !rules.produccion_recurso) return;
+
+    let produccionBase = 0;
+    try {
+      // Usar eval de forma segura para calcular la producción basada en fórmulas
+      const nivel = habitacion.nivel;
+      produccionBase = eval(rules.formula_aumento_produccion.replace(/nivel/g, nivel.toString()).replace(/nivel_oficina_jefe/g, nivelOficinaJefe.toString()).replace('produccion_base', config.produccion.toString()));
+    } catch (e) {
+      console.error(`Error evaluando formula para ${config.id}: ${e}`);
+      produccionBase = config.produccion * habitacion.nivel;
+    }
+    
+    const produccionPorHora = produccionBase;
     const produccionPorSegundo = produccionPorHora / 3600;
 
-    switch (habitacion.configuracion.id) {
-        case 'armeria':
-            produccionArmasPorSegundo += produccionPorSegundo * habitacion.nivel;
+    switch (rules.produccion_recurso) {
+        case 'armas':
+            produccionArmasPorSegundo += produccionPorSegundo;
             break;
-        case 'almacen_de_municion':
-            produccionMunicionPorSegundo += produccionPorSegundo * habitacion.nivel;
+        case 'municion':
+            produccionMunicionPorSegundo += produccionPorSegundo;
             break;
-        case 'cerveceria':
-            produccionAlcoholPorSegundo += produccionPorSegundo * habitacion.nivel;
+        case 'alcohol':
+            produccionAlcoholPorSegundo += produccionPorSegundo;
             break;
-        // Agrega más casos para otras habitaciones productivas si las hay
     }
   });
 
@@ -51,10 +67,8 @@ export async function obtenerEstadoJuegoActualizado(user: UserWithProgress) {
   const nuevaMunicion = user.progreso.municion + municionGenerada;
   const nuevoAlcohol = user.progreso.alcohol + alcoholGenerado;
   
-  // Por ahora, los dólares no se generan pasivamente de la misma manera
   const nuevosDolares = user.progreso.dolares;
 
-  // Actualizar en una transacción
   try {
     const progresoActualizado = await prisma.progresoUsuario.update({
         where: { userId: user.id },
@@ -67,14 +81,12 @@ export async function obtenerEstadoJuegoActualizado(user: UserWithProgress) {
         }
     });
 
-    // Devolver el estado del usuario actualizado
     return {
         ...user,
         progreso: progresoActualizado,
     };
   } catch (error) {
     console.error("Error al actualizar el progreso del usuario:", error);
-    // Si falla la transacción, devolvemos el usuario sin actualizar para no romper la UI
     return user;
   }
 }

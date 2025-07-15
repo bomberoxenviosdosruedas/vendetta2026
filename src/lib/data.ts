@@ -1,7 +1,9 @@
+
 "use server"
 
 import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion } from '@prisma/client'
 import { withAccelerate } from '@prisma/extension-accelerate'
+import * as datosReglasHabitaciones from '@/data/room_scaling_rules_updated.json';
 
 const prisma = new PrismaClient().$extends(withAccelerate())
 
@@ -21,6 +23,11 @@ export async function getRoomConfigurations() {
     console.error("Error fetching room configurations:", error);
     return [];
   }
+}
+
+export async function getRoomScalingRules() {
+    // Esto podría ser cacheado en una aplicación real
+    return datosReglasHabitaciones as Record<string, any>;
 }
 
 export async function getUsers() {
@@ -65,6 +72,9 @@ export async function getUserWithProgressByUsername(username: string): Promise<U
                 habitaciones: {
                     include: {
                         configuracion: true
+                    },
+                    orderBy: {
+                        configuracionHabitacionId: 'asc'
                     }
                 },
                 entrenamientos: true,
