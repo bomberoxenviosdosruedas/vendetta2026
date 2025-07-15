@@ -10,12 +10,25 @@ import {
   SidebarTrigger,
   SidebarInset,
 } from "@/components/ui/sidebar"
-import { DashboardHeader } from "@/components/dashboard/header"
+import { ResourceBar } from "@/components/dashboard/resource-bar"
 import { SidebarNav } from "@/components/dashboard/sidebar-nav"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 import { LogOut } from "lucide-react"
+import { Suspense } from "react"
+import { Skeleton } from "@/components/ui/skeleton"
+
+function ResourceBarFallback() {
+    return (
+        <div className="w-full bg-gray-900 text-white p-2">
+            <div className="container mx-auto flex items-center justify-between h-8">
+                <Skeleton className="h-5 w-full bg-gray-700" />
+            </div>
+        </div>
+    )
+}
+
 
 export default function DashboardLayout({
     children,
@@ -51,6 +64,9 @@ export default function DashboardLayout({
         </SidebarFooter>
       </Sidebar>
       <SidebarInset className="flex flex-col">
+        <Suspense fallback={<ResourceBarFallback />}>
+            <ResourceBar />
+        </Suspense>
         <div className="flex items-center justify-between border-b p-2 md:p-1 md:pl-3">
             <SidebarTrigger className="md:hidden" />
             <div className="flex-1" />

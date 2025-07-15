@@ -1,7 +1,6 @@
 import { RoomsView } from "@/components/dashboard/rooms-view"
 import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
-import { DashboardHeader } from "@/components/dashboard/header"
 
 function RoomsLoading() {
     return (
@@ -31,7 +30,6 @@ function RoomsLoading() {
 export default function RoomsPage() {
   return (
     <div className="flex flex-col space-y-4">
-      <DashboardHeader />
       <Suspense fallback={<RoomsLoading />}>
           <RoomsView />
       </Suspense>
