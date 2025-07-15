@@ -3,7 +3,7 @@ import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ResourceBar } from "@/components/dashboard/resource-bar";
 import { DashboardClientLayout } from "@/components/dashboard/dashboard-client-layout";
-import { getSessionUser } from "@/lib/auth";
+import { obtenerEstadoJuegoActualizado } from "@/lib/actions";
 
 
 function ResourceBarFallback() {
@@ -22,7 +22,7 @@ export default async function DashboardLayout({
   }: {
     children: React.ReactNode
   }) {
-  const user = await getSessionUser();
+  const user = await obtenerEstadoJuegoActualizado();
 
   return (
     <DashboardClientLayout user={user}>

@@ -1,13 +1,13 @@
 "use server"
 
-import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario } from '@prisma/client'
+import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion } from '@prisma/client'
 import { withAccelerate } from '@prisma/extension-accelerate'
 
 const prisma = new PrismaClient().$extends(withAccelerate())
 
 export type UserWithProgress = User & {
     progreso: ProgresoUsuario | null;
-    habitaciones: HabitacionUsuario[];
+    habitaciones: (HabitacionUsuario & { configuracion: ConfiguracionHabitacion })[];
     entrenamientos: EntrenamientoUsuario[];
     tropas: TropaUsuario[];
 };
@@ -51,7 +51,11 @@ export async function getUserWithProgressByUsername(username: string): Promise<U
             where: { username },
             include: {
                 progreso: true,
-                habitaciones: true,
+                habitaciones: {
+                    include: {
+                        configuracion: true
+                    }
+                },
                 entrenamientos: true,
                 tropas: true
             }
