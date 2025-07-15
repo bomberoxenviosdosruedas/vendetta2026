@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,12 +11,17 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  title     String
-  avatarUrl String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String  @id @default(cuid())
+  name            String
+  username        String? @unique
+  password        String?
+  title           String?
+  avatarUrl       String?
+  armas           Int     @default(0)
+  municion        Int     @default(0)
+  alcohol         Int     @default(0)
+  ingresos        Float   @default(0)
+  ingresosAnterior Float   @default(0)
 }
 
 model ConfiguracionHabitacion {
@@ -31,7 +33,7 @@ model ConfiguracionHabitacion {
   costoMunicion Int
   costoDolares  Int
   duracion      Int
-  produccion    Int
+  produccion    Float
   puntos        Float
 }
 
@@ -65,3 +67,5 @@ model ConfiguracionTropa {
   bonusAtaque   String[]
   bonusDefensa  String[]
 }
+
+    

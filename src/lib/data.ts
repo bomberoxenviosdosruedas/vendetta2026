@@ -30,3 +30,17 @@ export async function getUsers() {
         return [];
     }
 }
+
+export async function getUserByUsername(username: string) {
+    try {
+        const user = await prisma.user.findUnique({
+            where: { username },
+        });
+        return user;
+    } catch (error) {
+        console.error(`Error fetching user ${username}:`, error);
+        return null;
+    }
+}
+
+    

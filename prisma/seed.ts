@@ -58,33 +58,54 @@ async function main() {
   // --- Carga de Usuarios ---
   console.log('👤 Cargando datos de usuarios...');
   await prisma.user.upsert({
-    where: { id: 'clp2x0y0z0000v9q9h9g9e9d9' },
+    where: { username: 'bomberox' },
     update: {},
     create: {
       id: 'clp2x0y0z0000v9q9h9g9e9d9',
       name: 'El Padrino',
+      username: 'bomberox',
+      password: '123456789', // En una app real, esto debería ser un hash
       title: 'Jefe de la Familia',
       avatarUrl: 'https://placehold.co/100x100.png',
+      armas: 12,
+      municion: 2350,
+      alcohol: 89,
+      ingresos: 45231.89,
+      ingresosAnterior: 37650.00,
     },
   });
   await prisma.user.upsert({
-    where: { id: 'clp2x1y1z1111v9q9h9g9e9d1' },
+    where: { username: 'lucabrasi' },
     update: {},
     create: {
       id: 'clp2x1y1z1111v9q9h9g9e9d1',
       name: 'Luca Brasi',
+      username: 'lucabrasi',
+      password: 'password',
       title: 'Sicario',
       avatarUrl: 'https://placehold.co/100x100.png',
+      armas: 50,
+      municion: 5000,
+      alcohol: 20,
+      ingresos: 12000,
+      ingresosAnterior: 11000,
     },
   });
   await prisma.user.upsert({
-    where: { id: 'clp2x2y2z2222v9q9h9g9e9d2' },
+    where: { username: 'sonny' },
     update: {},
     create: {
       id: 'clp2x2y2z2222v9q9h9g9e9d2',
       name: 'Sonny Corleone',
+      username: 'sonny',
+      password: 'password',
       title: 'Caporegime',
       avatarUrl: 'https://placehold.co/100x100.png',
+      armas: 150,
+      municion: 10000,
+      alcohol: 150,
+      ingresos: 85000,
+      ingresosAnterior: 92000,
     },
   });
   console.log('✅ Usuarios cargados.');
@@ -92,16 +113,14 @@ async function main() {
   // --- Carga de Habitaciones ---
   console.log('🏠 Cargando datos de habitaciones...');
   for (const idHabitacion of Object.keys(datosHabitaciones)) {
-    // La clave "default" puede aparecer si el JSON no está bien estructurado en ES Modules
     if (idHabitacion === 'default') continue;
 
     const habitacion = (datosHabitaciones as Record<string, HabitacionData>)[idHabitacion];
-    // Las reglas no están en la misma estructura, accedemos directamente por la clave
     const regla = (datosReglasHabitaciones as Record<string, any>)[idHabitacion];
 
     await prisma.configuracionHabitacion.upsert({
       where: { id: idHabitacion },
-      update: {}, // No actualizamos nada si ya existe, solo la creamos.
+      update: {}, 
       create: {
         id: idHabitacion,
         nombre: habitacion.nombre,
@@ -113,8 +132,6 @@ async function main() {
         duracion: habitacion.duracion,
         produccion: habitacion.produccion,
         puntos: habitacion.puntos,
-        // Nota: Las fórmulas y factores de coste más complejos se deben manejar en la lógica de tu aplicación,
-        // ya que el schema actual no los almacena como strings.
       },
     });
   }
@@ -186,3 +203,5 @@ main()
     await prisma.$disconnect();
     process.exit(1);
   });
+
+    
