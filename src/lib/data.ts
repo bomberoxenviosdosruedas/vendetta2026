@@ -2,7 +2,7 @@
 
 "use server"
 
-import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad } from '@prisma/client/edge'
+import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 
 const prisma = new PrismaClient().$extends(withAccelerate())
@@ -27,9 +27,10 @@ export type UserWithProgress = User & {
     progreso: ProgresoUsuario | null;
     propiedades: FullPropiedad[];
     entrenamientos: (EntrenamientoUsuario & { configuracion: ConfiguracionEntrenamiento })[];
-    tropas: TropaUsuario[];
+    tropas: (TropaUsuario & { configuracion: ConfiguracionTropa })[];
     colaConstruccion: ColaConstruccion | null;
     colaReclutamiento: FullColaReclutamiento | null;
+    puntuacion: PuntuacionUsuario | null;
 };
 
 export async function getRoomConfigurations(): Promise<FullConfiguracionHabitacion[]> {
@@ -104,13 +105,18 @@ const userInclude = {
             configuracionEntrenamientoId: 'asc'
         }
     },
-    tropas: true,
+    tropas: {
+      include: {
+        configuracion: true
+      }
+    },
     colaConstruccion: true,
     colaReclutamiento: {
       include: {
         tropaConfig: true
       }
     },
+    puntuacion: true,
 };
 
 export async function getUserByUsername(username: string): Promise<UserWithProgress | null> {

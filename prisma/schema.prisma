@@ -1,154 +1,109 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id             String        @id @default(cuid())
-  name           String
-  username       String        @unique
-  password       String
-  title          String?
-  avatarUrl      String?
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  progreso       ProgresoUsuario?
-  propiedades    Propiedad[]
-  entrenamientos EntrenamientoUsuario[]
-  tropas         TropaUsuario[]
-  colaConstruccion  ColaConstruccion?
+  id               String            @id @default(cuid())
+  name             String
+  username         String            @unique
+  password         String
+  title            String?
+  avatarUrl        String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  progreso         ProgresoUsuario?
+  propiedades      Propiedad[]
+  entrenamientos   EntrenamientoUsuario[]
+  tropas           TropaUsuario[]
+  colaConstruccion ColaConstruccion?
   colaReclutamiento ColaReclutamiento?
+  puntuacion       PuntuacionUsuario?
 }
 
 model ProgresoUsuario {
   id                  String   @id @default(cuid())
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId              String   @unique
-  user                User     @relation(fields: [userId], references: [id])
-  dolares             Float    @default(0)
-  armas               Float    @default(0)
-  municion            Float    @default(0)
-  alcohol             Float    @default(0)
+  dolares             Float
+  armas               Float
+  municion            Float
+  alcohol             Float
   ultimaActualizacion DateTime @default(now())
 }
 
 model Propiedad {
-  id         String     @id @default(cuid())
+  id         String            @id @default(cuid())
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String
-  user       User       @relation(fields: [userId], references: [id])
-  nombre     String     @default("Propiedad Principal")
+  nombre     String
   ciudad     Int
   barrio     Int
   edificio   Int
   habitaciones HabitacionUsuario[]
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
 
   @@unique([ciudad, barrio, edificio])
 }
 
-
 model HabitacionUsuario {
-  id                          String      @id @default(cuid())
+  id                          String                  @id @default(cuid())
+  propiedad                   Propiedad               @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
   propiedadId                 String
-  propiedad                   Propiedad   @relation(fields: [propiedadId], references: [id])
-  configuracionHabitacionId   String
   configuracion               ConfiguracionHabitacion @relation(fields: [configuracionHabitacionId], references: [id])
+  configuracionHabitacionId   String
   nivel                       Int
-  
+
   @@unique([propiedadId, configuracionHabitacionId])
 }
 
 model EntrenamientoUsuario {
-  id                             String      @id @default(cuid())
+  id                             String                     @id @default(cuid())
+  user                           User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId                         String
-  user                           User        @relation(fields: [userId], references: [id])
-  configuracionEntrenamientoId   String
   configuracion                  ConfiguracionEntrenamiento @relation(fields: [configuracionEntrenamientoId], references: [id])
+  configuracionEntrenamientoId   String
   nivel                          Int
 
   @@unique([userId, configuracionEntrenamientoId])
 }
 
 model TropaUsuario {
-  id                      String      @id @default(cuid())
-  userId                  String
-  user                    User        @relation(fields: [userId], references: [id])
-  configuracionTropaId    String
-  configuracion           ConfiguracionTropa @relation(fields: [configuracionTropaId], references: [id])
-  cantidad                Int
+  id                    String             @id @default(cuid())
+  user                  User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                String
+  configuracion         ConfiguracionTropa @relation(fields: [configuracionTropaId], references: [id])
+  configuracionTropaId  String
+  cantidad              Int
 
   @@unique([userId, configuracionTropaId])
 }
 
-model ConfiguracionHabitacion {
-  id            String      @id
-  nombre        String
-  descripcion   String
-  urlImagen     String?
-  costoArmas    Int
-  costoMunicion Int
-  costoDolares  Int
-  duracion      Int
-  produccion    Float
-  puntos        Float
-  habitaciones  HabitacionUsuario[]
-  escalado      ConfiguracionEscaladoHabitacion?
+model PuntuacionUsuario {
+  id                     String   @id @default(cuid())
+  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                 String   @unique
+  puntosHabitaciones    Float
+  puntosTropas           Float
+  puntosEntrenamientos   Float
+  puntosTotales          Float
+  updatedAt              DateTime @updatedAt
 }
 
-model ConfiguracionEscaladoHabitacion {
-  id                        String      @id
-  configuracion             ConfiguracionHabitacion @relation(fields: [id], references: [id])
-  produccionRecurso         String?
-  formulaAumentoProduccion  String?
-  factorCostoPorNivel       Float
-  formulaTiempo             String?
-}
-
-model ConfiguracionEntrenamiento {
-  id              String      @id
-  nombre          String
-  urlImagen       String?
-  costoArmas      Int
-  costoMunicion   Int
-  costoDolares    Int
-  duracion        Int
-  puntos          Float
-  entrenamientos  EntrenamientoUsuario[]
-}
-
-model ConfiguracionTropa {
-  id            String      @id
-  nombre        String
-  urlImagen     String?
-  descripcion   String
-  costoArmas    Int
-  costoMunicion Int
-  costoDolares  Int
-  duracion      Int
-  puntos        Float
-  ataque        Int
-  defensa       Int
-  capacidad     Int
-  velocidad     Int
-  salario       Int
-  requisitos    String[]
-  bonusAtaque   String[]
-  bonusDefensa  String[]
-  tropas        TropaUsuario[]
-  colaReclutamiento ColaReclutamiento[]
-}
+// --- COLAS ---
 
 model ColaConstruccion {
-  userId            String   @unique
-  user              User     @relation(fields: [userId], references: [id])
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String    @unique
   habitacionId      String
   nivelDestino      Int
   fechaInicio       DateTime
@@ -156,11 +111,73 @@ model ColaConstruccion {
 }
 
 model ColaReclutamiento {
-  userId            String   @unique
-  user              User     @relation(fields: [userId], references: [id])
-  tropaId           String
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String             @unique
   tropaConfig       ConfiguracionTropa @relation(fields: [tropaId], references: [id])
+  tropaId           String
   cantidad          Int
   fechaInicio       DateTime
   fechaFinalizacion DateTime
+}
+
+
+// --- CONFIGURACIONES ESTATICAS ---
+
+model ConfiguracionHabitacion {
+  id               String                         @id @unique
+  nombre           String
+  descripcion      String
+  urlImagen        String
+  costoArmas       Int
+  costoMunicion    Int
+  costoDolares     Int
+  duracion         Int // Segundos
+  produccion       Float
+  puntos           Float
+  habitaciones     HabitacionUsuario[]
+  escalado         ConfiguracionEscaladoHabitacion?
+}
+
+model ConfiguracionEscaladoHabitacion {
+  id                         String                  @id @unique
+  configuracion              ConfiguracionHabitacion @relation(fields: [id], references: [id], onDelete: Cascade)
+  produccionRecurso          String?
+  formulaAumentoProduccion   String?
+  factorCostoPorNivel        Float
+  formulaTiempo              String?
+}
+
+
+model ConfiguracionEntrenamiento {
+  id              String                   @id @unique
+  nombre          String
+  urlImagen       String
+  costoArmas      Int
+  costoMunicion   Int
+  costoDolares    Int
+  duracion        Int // Segundos
+  puntos          Float
+  entrenamientos  EntrenamientoUsuario[]
+}
+
+model ConfiguracionTropa {
+  id              String              @id @unique
+  nombre          String
+  urlImagen       String
+  descripcion     String
+  costoArmas      Int
+  costoMunicion   Int
+  costoDolares    Int
+  duracion        Int // Segundos por unidad
+  puntos          Float
+  ataque          Int
+  defensa         Int
+  capacidad       Int
+  velocidad       Int
+  salario         Int
+  requisitos      String[]
+  bonusAtaque     String[]
+  bonusDefensa    String[]
+  tropas          TropaUsuario[]
+  colasReclutamiento ColaReclutamiento[]
 }

@@ -5,6 +5,7 @@ import prisma from "../prisma/prisma";
 import type { UserWithProgress } from "../data";
 import { calcularProduccionTotalPorSegundo } from "../formulas/room-formulas";
 import { revalidatePath } from "next/cache";
+import { calcularPuntosEntrenamientos, calcularPuntosHabitaciones, calcularPuntosTropas } from "../formulas/score-formulas";
 
 export async function obtenerEstadoJuegoActualizado(user: UserWithProgress) {
   if (!user || !user.progreso) {
@@ -89,13 +90,14 @@ export async function verificarYFinalizarConstruccion(user: UserWithProgress) {
               progreso: true,
               propiedades: { include: { habitaciones: { include: { configuracion: { include: { escalado: true } } } } } },
               entrenamientos: { include: { configuracion: true } },
-              tropas: true,
+              tropas: { include: { configuracion: true } },
               colaConstruccion: true,
               colaReclutamiento: {
                 include: {
                   tropaConfig: true
                 }
               },
+              puntuacion: true,
             }
         });
     });
@@ -159,13 +161,14 @@ export async function verificarYFinalizarReclutamiento(user: UserWithProgress): 
                     progreso: true,
                     propiedades: { include: { habitaciones: { include: { configuracion: { include: { escalado: true } } } } } },
                     entrenamientos: { include: { configuracion: true } },
-                    tropas: true,
+                    tropas: { include: { configuracion: true } },
                     colaConstruccion: true,
                     colaReclutamiento: {
                       include: {
                         tropaConfig: true
                       }
                     },
+                    puntuacion: true,
                 }
             });
         });
@@ -178,4 +181,36 @@ export async function verificarYFinalizarReclutamiento(user: UserWithProgress): 
       console.error("Error finalizando el reclutamiento:", error);
       return user;
     }
+}
+
+
+export async function actualizarPuntuacionUsuario(user: UserWithProgress): Promise<UserWithProgress> {
+  const puntosHabitaciones = calcularPuntosHabitaciones(user);
+  const puntosTropas = calcularPuntosTropas(user);
+  const puntosEntrenamientos = calcularPuntosEntrenamientos(user);
+  const puntosTotales = puntosHabitaciones + puntosTropas + puntosEntrenamientos;
+
+  try {
+    const puntuacionActualizada = await prisma.puntuacionUsuario.upsert({
+      where: { userId: user.id },
+      create: {
+        userId: user.id,
+        puntosHabitaciones,
+        puntosTropas,
+        puntosEntrenamientos,
+        puntosTotales,
+      },
+      update: {
+        puntosHabitaciones,
+        puntosTropas,
+        puntosEntrenamientos,
+        puntosTotales,
+      },
+    });
+
+    return { ...user, puntuacion: puntuacionActualizada };
+  } catch (error) {
+    console.error("Error actualizando la puntuación del usuario:", error);
+    return user;
+  }
 }

@@ -1,6 +1,6 @@
 
 import { getSessionUser, type UserWithProgress } from "@/lib/auth";
-import { calcularProduccionTotalPorSegundo } from "@/lib/formulas-produccion";
+import { calcularProduccionTotalPorSegundo } from "@/lib/formulas/room-formulas";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Boxes, DollarSign, Droplets, Target } from 'lucide-react';

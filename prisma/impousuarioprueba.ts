@@ -76,6 +76,19 @@ async function main() {
               alcohol: 10000,
           }
       });
+      
+      // 3.1 Crear puntuación inicial del usuario
+      await prisma.puntuacionUsuario.upsert({
+          where: { userId: user.id },
+          update: {},
+          create: {
+              userId: user.id,
+              puntosHabitaciones: 0,
+              puntosTropas: 0,
+              puntosEntrenamientos: 0,
+              puntosTotales: 0,
+          }
+      });
 
       console.log('🏠 Asignando todas las habitaciones en Nivel 1...');
       for (const habitacion of habitaciones) {

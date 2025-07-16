@@ -31,12 +31,19 @@ async function ActionIcons() {
     )
 }
 
+function formatPoints(points: number | null | undefined): string {
+    if (points === null || points === undefined) return "0";
+    return Math.floor(points).toLocaleString('de-DE');
+}
+
 export async function OverviewView() {
     const user = await getSessionUser();
 
     if (!user) {
         return <div>Usuario no encontrado.</div>
     }
+
+    const { puntuacion } = user;
 
     return (
         <div className="flex-grow p-4 md:p-6 space-y-4">
@@ -129,11 +136,11 @@ export async function OverviewView() {
                     </Card>
                     <Card>
                         <CardHeader>
-                             <CardTitle className="text-base">Entrenamiento</CardTitle>
+                             <CardTitle className="text-base">Puntuación Total</CardTitle>
                         </CardHeader>
                         <CardContent>
-                             <p className="text-2xl font-bold">3/5 Unidades</p>
-                             <p className="text-xs text-muted-foreground">Entrenando sicarios...</p>
+                             <p className="text-2xl font-bold">{formatPoints(puntuacion?.puntosTotales)}</p>
+                             <p className="text-xs text-muted-foreground">Clasificación: #1</p>
                         </CardContent>
                     </Card>
                 </div>
@@ -144,22 +151,22 @@ export async function OverviewView() {
                 <CardContent className="p-3 grid grid-cols-2 md:grid-cols-5 gap-y-2 gap-x-4 items-center justify-items-center">
                     <div className="text-center">
                         <p className="text-xs text-muted-foreground">Puntos (Entrenamiento)</p>
-                        <p className="font-bold text-lg">686</p>
+                        <p className="font-bold text-lg">{formatPoints(puntuacion?.puntosEntrenamientos)}</p>
                     </div>
                      <Separator orientation="vertical" className="h-8 hidden md:block" />
                     <div className="text-center">
                         <p className="text-xs text-muted-foreground">Puntos (Edificios)</p>
-                        <p className="font-bold text-lg">63</p>
+                        <p className="font-bold text-lg">{formatPoints(puntuacion?.puntosHabitaciones)}</p>
                     </div>
                      <Separator orientation="vertical" className="h-8 hidden md:block" />
                     <div className="text-center">
                         <p className="text-xs text-muted-foreground">Puntos (Tropas)</p>
-                        <p className="font-bold text-lg">74</p>
+                        <p className="font-bold text-lg">{formatPoints(puntuacion?.puntosTropas)}</p>
                     </div>
                     <Separator orientation="vertical" className="h-8 hidden md:block" />
                     <div className="text-center">
                         <p className="text-xs text-muted-foreground">Edificios</p>
-                        <p className="font-bold text-lg">1</p>
+                        <p className="font-bold text-lg">{user.propiedades.length}</p>
                     </div>
                     <Separator orientation="vertical" className="h-8 hidden md:block" />
                     <div className="text-center">
