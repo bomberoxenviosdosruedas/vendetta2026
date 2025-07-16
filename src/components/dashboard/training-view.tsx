@@ -12,13 +12,7 @@ import { calcularCostosEntrenamiento, calcularTiempoEntrenamiento } from "@/lib/
 import { iniciarEntrenamiento } from "@/lib/actions/training.actions"
 
 function formatNumber(num: number): string {
-  if (num < 1000) {
-    return num.toString();
-  }
-  const suffixes = ["", "K", "M", "B", "T"];
-  const i = Math.floor(Math.log10(num) / 3);
-  const shortValue = (num / Math.pow(1000, i));
-  return shortValue.toFixed(i > 0 ? 2 : 0) + suffixes[i];
+    return num.toLocaleString('de-DE');
 }
 
 
@@ -138,9 +132,9 @@ export async function TrainingView() {
                         <div className="flex flex-wrap gap-x-4 gap-y-2 items-center">
                             <div className="flex flex-col gap-1 text-sm flex-grow">
                                 <div className="grid grid-cols-3 gap-x-3">
-                                    {training.costos.armas > 0 && <div className="flex items-center gap-1.5" title={`${training.costos.armas.toLocaleString()} Armas`}><Target className="h-4 w-4" /><span>{formatNumber(training.costos.armas)}</span></div>}
-                                    {training.costos.municion > 0 && <div className="flex items-center gap-1.5" title={`${training.costos.municion.toLocaleString()} Munición`}><Boxes className="h-4 w-4" /><span>{formatNumber(training.costos.municion)}</span></div>}
-                                    {training.costos.dolares > 0 && <div className="flex items-center gap-1.5" title={`${training.costos.dolares.toLocaleString()} Dólares`}><DollarSign className="h-4 w-4" /><span>{formatNumber(training.costos.dolares)}</span></div>}
+                                    {training.costos.armas > 0 && <div className="flex items-center gap-1.5" title={`${training.costos.armas.toLocaleString('de-DE')} Armas`}><Target className="h-4 w-4" /><span>{formatNumber(training.costos.armas)}</span></div>}
+                                    {training.costos.municion > 0 && <div className="flex items-center gap-1.5" title={`${training.costos.municion.toLocaleString('de-DE')} Munición`}><Boxes className="h-4 w-4" /><span>{formatNumber(training.costos.municion)}</span></div>}
+                                    {training.costos.dolares > 0 && <div className="flex items-center gap-1.5" title={`${training.costos.dolares.toLocaleString('de-DE')} Dólares`}><DollarSign className="h-4 w-4" /><span>{formatNumber(training.costos.dolares)}</span></div>}
                                 </div>
                                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
                                     <Clock className="h-3 w-3" />

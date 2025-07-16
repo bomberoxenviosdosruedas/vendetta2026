@@ -17,13 +17,7 @@ import { Input } from "../ui/input"
 import type { UserWithProgress } from "@/lib/data"
 
 function formatNumber(num: number): string {
-  if (num < 1000) {
-    return num.toString();
-  }
-  const suffixes = ["", "K", "M", "B", "T"];
-  const i = Math.floor(Math.log10(num) / 3);
-  const shortValue = (num / Math.pow(1000, i));
-  return shortValue.toFixed(i > 0 ? 2 : 0) + suffixes[i];
+    return num.toLocaleString('de-DE');
 }
 
 function formatDuration(seconds: number): string {
@@ -218,9 +212,9 @@ export function RecruitmentView({ user, troopConfigs }: RecruitmentViewProps) {
                                   </div>
                               </div>
                               <div className="grid grid-cols-3 gap-x-3">
-                                  {troop.costoArmas > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoArmas.toLocaleString()} Armas`}><Target className="h-4 w-4" /><span>{formatNumber(troop.costoArmas)}</span></div>}
-                                  {troop.costoMunicion > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoMunicion.toLocaleString()} Munición`}><Boxes className="h-4 w-4" /><span>{formatNumber(troop.costoMunicion)}</span></div>}
-                                  {troop.costoDolares > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoDolares.toLocaleString()} Dólares`}><DollarSign className="h-4 w-4" /><span>{formatNumber(troop.costoDolares)}</span></div>}
+                                  {troop.costoArmas > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoArmas.toLocaleString('de-DE')} Armas`}><Target className="h-4 w-4" /><span>{formatNumber(troop.costoArmas)}</span></div>}
+                                  {troop.costoMunicion > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoMunicion.toLocaleString('de-DE')} Munición`}><Boxes className="h-4 w-4" /><span>{formatNumber(troop.costoMunicion)}</span></div>}
+                                  {troop.costoDolares > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoDolares.toLocaleString('de-DE')} Dólares`}><DollarSign className="h-4 w-4" /><span>{formatNumber(troop.costoDolares)}</span></div>}
                               </div>
                               <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
                                   <Clock className="h-3 w-3" />

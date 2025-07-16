@@ -83,7 +83,7 @@ export function SidebarNav({ user }: SidebarNavProps) {
           <SidebarMenuButton
             as={Link}
             href={item.href}
-            isActive={pathname === item.href}
+            isActive={pathname.startsWith(item.href)}
             tooltip={item.label}
             onClick={handleClick}
           >
