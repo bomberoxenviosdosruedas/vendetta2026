@@ -1,1 +1,98 @@
-[]
+[
+  {
+    "id": "cmd5gradz0012zt0wi08c97s8",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionEntrenamientoId": "honor",
+    "nivel": 1
+  },
+  {
+    "id": "cmd5gram00014zt0wmfh6fbjo",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionEntrenamientoId": "rutas",
+    "nivel": 1
+  },
+  {
+    "id": "cmd5grau70016zt0w71wf5dus",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionEntrenamientoId": "extorsion",
+    "nivel": 1
+  },
+  {
+    "id": "cmd5grb290018zt0w0ydssn0j",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionEntrenamientoId": "encargos",
+    "nivel": 1
+  },
+  {
+    "id": "cmd5grbbw001azt0w5zaozhgo",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionEntrenamientoId": "explosivos",
+    "nivel": 1
+  },
+  {
+    "id": "cmd5grbjv001czt0w9m1eshr0",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionEntrenamientoId": "seguridad",
+    "nivel": 1
+  },
+  {
+    "id": "cmd5grbs2001ezt0wxjdh9jej",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionEntrenamientoId": "espionaje",
+    "nivel": 1
+  },
+  {
+    "id": "cmd5grbzx001gzt0w4ple15ff",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionEntrenamientoId": "quimico",
+    "nivel": 1
+  },
+  {
+    "id": "cmd5grc81001izt0wr3csm4vq",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionEntrenamientoId": "guerrilla",
+    "nivel": 1
+  },
+  {
+    "id": "cmd5grcga001kzt0wojzf7mey",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionEntrenamientoId": "psicologico",
+    "nivel": 1
+  },
+  {
+    "id": "cmd5grcob001mzt0wb4hksoym",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionEntrenamientoId": "proteccion",
+    "nivel": 1
+  },
+  {
+    "id": "cmd5grcwa001ozt0wd46rqamp",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionEntrenamientoId": "armas",
+    "nivel": 1
+  },
+  {
+    "id": "cmd5grd4k001qzt0whectqtvq",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionEntrenamientoId": "combate",
+    "nivel": 1
+  },
+  {
+    "id": "cmd5grdcs001szt0w54zgtv78",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionEntrenamientoId": "administracion",
+    "nivel": 1
+  },
+  {
+    "id": "cmd5grdla001uzt0wg6thxu1f",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionEntrenamientoId": "contrabando",
+    "nivel": 1
+  },
+  {
+    "id": "cmd5grdu3001wzt0w0pqub1hw",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionEntrenamientoId": "tiro",
+    "nivel": 1
+  }
+]

@@ -1,0 +1,162 @@
+[
+  {
+    "id": "honor",
+    "nombre": "Honor",
+    "urlImagen": "/img/F16K.gif",
+    "costoArmas": 0,
+    "costoMunicion": 0,
+    "costoDolares": 280000,
+    "duracion": 92000,
+    "puntos": 4201
+  },
+  {
+    "id": "rutas",
+    "nombre": "Planificacion de rutas",
+    "urlImagen": "/img/F1K.gif",
+    "costoArmas": 250,
+    "costoMunicion": 600,
+    "costoDolares": 0,
+    "duracion": 2000,
+    "puntos": 15.5
+  },
+  {
+    "id": "extorsion",
+    "nombre": "Extorsion",
+    "urlImagen": "/img/F3K.gif",
+    "costoArmas": 500,
+    "costoMunicion": 1000,
+    "costoDolares": 0,
+    "duracion": 3000,
+    "puntos": 26
+  },
+  {
+    "id": "encargos",
+    "nombre": "Planificacion de encargos",
+    "urlImagen": "/img/F2K.gif",
+    "costoArmas": 500,
+    "costoMunicion": 1250,
+    "costoDolares": 500,
+    "duracion": 5000,
+    "puntos": 46
+  },
+  {
+    "id": "explosivos",
+    "nombre": "Fabricación de explosivos",
+    "urlImagen": "/img/F12K.gif",
+    "costoArmas": 5000,
+    "costoMunicion": 10000,
+    "costoDolares": 7500,
+    "duracion": 42000,
+    "puntos": 471
+  },
+  {
+    "id": "seguridad",
+    "nombre": "Seguridad",
+    "urlImagen": "/img/F7K.gif",
+    "costoArmas": 500,
+    "costoMunicion": 2000,
+    "costoDolares": 500,
+    "duracion": 4000,
+    "puntos": 61
+  },
+  {
+    "id": "espionaje",
+    "nombre": "Espionaje",
+    "urlImagen": "/img/F6K.gif",
+    "costoArmas": 250,
+    "costoMunicion": 250,
+    "costoDolares": 150,
+    "duracion": 4200,
+    "puntos": 13
+  },
+  {
+    "id": "quimico",
+    "nombre": "Entrenamiento químico",
+    "urlImagen": "/img/F15K.gif",
+    "costoArmas": 2000,
+    "costoMunicion": 6000,
+    "costoDolares": 6000,
+    "duracion": 14400,
+    "puntos": 0
+  },
+  {
+    "id": "guerrilla",
+    "nombre": "Entrenamiento de guerrilla",
+    "urlImagen": "/img/F13K.gif",
+    "costoArmas": 4000,
+    "costoMunicion": 5000,
+    "costoDolares": 6000,
+    "duracion": 20000,
+    "puntos": 321
+  },
+  {
+    "id": "psicologico",
+    "nombre": "Entrenamiento psicologico",
+    "urlImagen": "/img/F14K.gif",
+    "costoArmas": 1000,
+    "costoMunicion": 2500,
+    "costoDolares": 8000,
+    "duracion": 26000,
+    "puntos": 301
+  },
+  {
+    "id": "proteccion",
+    "nombre": "Proteccion de grupo",
+    "urlImagen": "/img/F8K.gif",
+    "costoArmas": 1500,
+    "costoMunicion": 2500,
+    "costoDolares": 1000,
+    "duracion": 5000,
+    "puntos": 96
+  },
+  {
+    "id": "armas",
+    "nombre": "Combate de armas a corta distancia",
+    "urlImagen": "/img/F10K.gif",
+    "costoArmas": 500,
+    "costoMunicion": 100,
+    "costoDolares": 1500,
+    "duracion": 5100,
+    "puntos": 53
+  },
+  {
+    "id": "combate",
+    "nombre": "Combate cuerpo a cuerpo",
+    "urlImagen": "/img/F9K.gif",
+    "costoArmas": 1000,
+    "costoMunicion": 1000,
+    "costoDolares": 1500,
+    "duracion": 6200,
+    "puntos": 76
+  },
+  {
+    "id": "administracion",
+    "nombre": "Administración de base",
+    "urlImagen": "/img/F4K.gif",
+    "costoArmas": 0,
+    "costoMunicion": 0,
+    "costoDolares": 2500,
+    "duracion": 14400,
+    "puntos": 76
+  },
+  {
+    "id": "contrabando",
+    "nombre": "Contrabando",
+    "urlImagen": "/img/F5K.gif",
+    "costoArmas": 0,
+    "costoMunicion": 0,
+    "costoDolares": 750,
+    "duracion": 9600,
+    "puntos": 23.5
+  },
+  {
+    "id": "tiro",
+    "nombre": "Entrenamiento de Tiro",
+    "urlImagen": "/img/F11K.gif",
+    "costoArmas": 2500,
+    "costoMunicion": 6000,
+    "costoDolares": 5000,
+    "duracion": 19200,
+    "puntos": 296
+  }
+]

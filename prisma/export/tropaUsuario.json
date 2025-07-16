@@ -1,1 +1,86 @@
-[]
+[
+  {
+    "id": "cmd5gre2p001yzt0w5ckvsq0c",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionTropaId": "acuchillador",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd5greba0020zt0wt4yvvefj",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionTropaId": "asesino",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd5grejh0022zt0wf3kmmx1h",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionTropaId": "cia",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd5grerb0024zt0wwgu6acc8",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionTropaId": "espia",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd5grezo0026zt0wmfec8n8s",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionTropaId": "fbi",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd5grf7o0028zt0w7thg1kw8",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionTropaId": "francotirador",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd5grffi002azt0w3flsb35m",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionTropaId": "maton",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd5grfnd002czt0wyouhafym",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionTropaId": "mercenario",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd5grfvb002ezt0wu3o892mq",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionTropaId": "ninja",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd5grg3w002gzt0wxxx28wfn",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionTropaId": "ocupacion",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd5grgbi002izt0wkng6t75k",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionTropaId": "pistolero",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd5grgjs002kzt0w7ahl8fwy",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionTropaId": "porteador",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd5grgrg002mzt0wazjizs24",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionTropaId": "portero",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd5grgzf002ozt0wfibxsydj",
+    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "configuracionTropaId": "transportista",
+    "cantidad": 1
+  }
+]

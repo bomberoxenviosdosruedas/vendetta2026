@@ -1,12 +1,13 @@
 'use client'
 
 import Image from "next/image"
+import { Dialog, DialogTrigger } from "@/components/ui/dialog"
 import {
   Card,
   CardContent,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Clock, PlusCircle, Target, Boxes, DollarSign, Ban } from "lucide-react"
+import { Clock, PlusCircle, Target, Boxes, DollarSign, Ban, Info } from "lucide-react"
 import { calcularCostosNivel, calcularTiempoConstruccion } from "@/lib/formulas/room-formulas"
 import { iniciarAmpliacion } from "@/lib/actions/room.actions"
 import { ConstructionQueue } from "./construction-queue"
@@ -14,6 +15,7 @@ import { FullConfiguracionHabitacion, UserWithProgress } from "@/lib/data"
 import { useEffect, useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
+import { RoomDetailsModal } from "./room-details-modal"
 
 function formatNumber(num: number): string {
   if (num < 1000) {
@@ -156,50 +158,61 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
                 <CardContent className="p-0">
                     <div className="divide-y divide-border">
                         {sortedRoomsData.map((room) => (
-                            <div key={room.id} className="p-4 grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
-                                <div className="md:col-span-3 flex items-start gap-4">
-                                    <div className="w-20 h-16 relative rounded-md overflow-hidden border flex-shrink-0">
-                                        <Image
-                                            src={room.urlImagen || "https://placehold.co/80x56.png"}
-                                            alt={room.nombre}
-                                            fill
-                                            className="object-cover"
-                                            data-ai-hint="game building"
-                                        />
+                             <Dialog key={room.id}>
+                                <div className="p-4 grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+                                    <div className="md:col-span-3 flex items-start gap-4">
+                                        <div className="w-20 h-16 relative rounded-md overflow-hidden border flex-shrink-0">
+                                            <Image
+                                                src={room.urlImagen || "https://placehold.co/80x56.png"}
+                                                alt={room.nombre}
+                                                fill
+                                                className="object-cover"
+                                                data-ai-hint="game building"
+                                            />
+                                        </div>
+                                        <div>
+                                            <div className="font-bold">{room.nombre}</div>
+                                            <div className="text-sm text-primary">
+                                                Nivel {room.nivel} {room.enConstruccion ? '(Mejorando...)' : ''}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <div className="font-bold">{room.nombre}</div>
-                                        <div className="text-sm text-primary">
-                                            Nivel {room.nivel} {room.enConstruccion ? '(Mejorando...)' : ''}
+                                    <div className="md:col-span-4">
+                                        <p className="text-sm text-muted-foreground">{room.descripcion}</p>
+                                    </div>
+                                    <div className="md:col-span-5">
+                                        <div className="font-semibold text-sm mb-2">Ampliación a Nivel: {room.nivel + 1}</div>
+                                        <div className="flex flex-wrap gap-x-4 gap-y-2 items-center">
+                                            <div className="flex flex-col gap-1 text-sm flex-grow">
+                                                <div className="grid grid-cols-3 gap-x-3">
+                                                    {room.costos.armas > 0 && <div className="flex items-center gap-1.5" title={`${room.costos.armas.toString()} Armas`}><Target className="h-4 w-4" /><span>{formatNumber(room.costos.armas)}</span></div>}
+                                                    {room.costos.municion > 0 && <div className="flex items-center gap-1.5" title={`${room.costos.municion.toString()} Munición`}><Boxes className="h-4 w-4" /><span>{formatNumber(room.costos.municion)}</span></div>}
+                                                    {room.costos.dolares > 0 && <div className="flex items-center gap-1.5" title={`${room.costos.dolares.toString()} Dólares`}><DollarSign className="h-4 w-4" /><span>{formatNumber(room.costos.dolares)}</span></div>}
+                                                </div>
+                                                <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
+                                                    <Clock className="h-3 w-3" />
+                                                    <span>{formatDuration(room.tiempo)}</span>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <DialogTrigger asChild>
+                                                    <Button variant="ghost" size="icon" className="h-9 w-9">
+                                                        <Info className="h-5 w-5" />
+                                                        <span className="sr-only">Detalles</span>
+                                                    </Button>
+                                                </DialogTrigger>
+                                                <form action={() => handleAmpliacion(room.id)}>
+                                                    <Button type="submit" variant="outline" size="sm" disabled={!!construccionActiva || isSubmitting === room.id}>
+                                                        {construccionActiva ? <Ban className="mr-2 h-4 w-4" /> : <PlusCircle className="mr-2 h-4 w-4" />}
+                                                        {isSubmitting === room.id ? 'Enviando...' : (construccionActiva ? 'En cola...' : 'Ampliar')}
+                                                    </Button>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="md:col-span-4">
-                                    <p className="text-sm text-muted-foreground">{room.descripcion}</p>
-                                </div>
-                                <div className="md:col-span-5">
-                                    <div className="font-semibold text-sm mb-2">Ampliación a Nivel: {room.nivel + 1}</div>
-                                    <div className="flex flex-wrap gap-x-4 gap-y-2 items-center">
-                                        <div className="flex flex-col gap-1 text-sm flex-grow">
-                                            <div className="grid grid-cols-3 gap-x-3">
-                                                {room.costos.armas > 0 && <div className="flex items-center gap-1.5" title={`${room.costos.armas.toString()} Armas`}><Target className="h-4 w-4" /><span>{formatNumber(room.costos.armas)}</span></div>}
-                                                {room.costos.municion > 0 && <div className="flex items-center gap-1.5" title={`${room.costos.municion.toString()} Munición`}><Boxes className="h-4 w-4" /><span>{formatNumber(room.costos.municion)}</span></div>}
-                                                {room.costos.dolares > 0 && <div className="flex items-center gap-1.5" title={`${room.costos.dolares.toString()} Dólares`}><DollarSign className="h-4 w-4" /><span>{formatNumber(room.costos.dolares)}</span></div>}
-                                            </div>
-                                            <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
-                                                <Clock className="h-3 w-3" />
-                                                <span>{formatDuration(room.tiempo)}</span>
-                                            </div>
-                                        </div>
-                                        <form action={() => handleAmpliacion(room.id)}>
-                                            <Button type="submit" variant="outline" size="sm" disabled={!!construccionActiva || isSubmitting === room.id}>
-                                                {construccionActiva ? <Ban className="mr-2 h-4 w-4" /> : <PlusCircle className="mr-2 h-4 w-4" />}
-                                                {isSubmitting === room.id ? 'Enviando...' : (construccionActiva ? 'En cola...' : 'Ampliar')}
-                                            </Button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+                                 <RoomDetailsModal room={room} />
+                            </Dialog>
                         ))}
                     </div>
                 </CardContent>
