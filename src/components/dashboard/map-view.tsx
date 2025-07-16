@@ -16,6 +16,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
+import Image from 'next/image';
 
 type PropertyWithOwner = Propiedad & { user: PrismaUser | null };
 
@@ -27,38 +28,47 @@ const BuildingGrid = ({ properties, currentUser }: { properties: PropertyWithOwn
     });
 
     return (
-        <div className="grid grid-cols-15 gap-0.5 bg-card p-1 md:p-2 rounded-lg border">
-            {buildings.map(({ edificio, property }) => {
-                const isOwnedByCurrentUser = property?.userId === currentUser.id;
-                const hasOwner = !!property;
-                
-                return (
-                    <TooltipProvider key={edificio} delayDuration={0}>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <div className={cn(
-                                    "aspect-square flex items-center justify-center rounded-sm text-[8px] md:text-xs font-bold transition-colors",
-                                    isOwnedByCurrentUser ? "bg-primary text-primary-foreground hover:bg-primary/90" : 
-                                    hasOwner ? "bg-destructive text-destructive-foreground hover:bg-destructive/90" : 
-                                    "bg-muted hover:bg-muted/80"
-                                )}>
-                                    <span>{edificio}</span>
-                                </div>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                {property ? (
-                                    <div>
-                                        <p>Jugador: <span className="font-bold">{property.user?.name || 'Desconocido'}</span></p>
-                                        <p>Coordenadas: <span className="font-bold">{`${property.ciudad}:${property.barrio}:${property.edificio}`}</span></p>
+        <div className="relative w-full aspect-square rounded-lg border overflow-hidden">
+             <Image
+                src="/img/map.png"
+                alt="Mapa de la ciudad"
+                fill
+                className="object-cover z-0"
+                data-ai-hint="city map background"
+            />
+            <div className="absolute inset-0 grid grid-cols-15 gap-0.5 p-1 md:p-2 z-10">
+                {buildings.map(({ edificio, property }) => {
+                    const isOwnedByCurrentUser = property?.userId === currentUser.id;
+                    const hasOwner = !!property;
+                    
+                    return (
+                        <TooltipProvider key={edificio} delayDuration={0}>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <div className={cn(
+                                        "aspect-square flex items-center justify-center rounded-sm text-[8px] md:text-xs font-bold transition-colors",
+                                        isOwnedByCurrentUser ? "bg-primary/80 text-primary-foreground hover:bg-primary/90" : 
+                                        hasOwner ? "bg-destructive/80 text-destructive-foreground hover:bg-destructive/90" : 
+                                        "bg-muted/50 hover:bg-muted/80"
+                                    )}>
+                                        <span>{edificio}</span>
                                     </div>
-                                ) : (
-                                    <p>Solar Vacío</p>
-                                )}
-                            </TooltipContent>
-                        </Tooltip>
-                    </TooltipProvider>
-                );
-            })}
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    {property ? (
+                                        <div>
+                                            <p>Jugador: <span className="font-bold">{property.user?.name || 'Desconocido'}</span></p>
+                                            <p>Coordenadas: <span className="font-bold">{`${property.ciudad}:${property.barrio}:${property.edificio}`}</span></p>
+                                        </div>
+                                    ) : (
+                                        <p>Solar Vacío</p>
+                                    )}
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                    );
+                })}
+            </div>
         </div>
     );
 };
@@ -133,7 +143,7 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
     return (
         <Card>
             <CardContent className="p-4 space-y-4">
-                <div className="flex flex-row justify-center items-end gap-2 p-2 rounded-lg bg-muted border flex-wrap">
+                <div className="flex flex-row flex-wrap justify-center items-end gap-2 p-2 rounded-lg bg-muted border">
                     <CoordinateInput label="Ciudad" value={ciudad} onChange={setCiudad} />
                     <CoordinateInput label="Barrio" value={barrio} onChange={setBarrio} />
                     <Button onClick={updateMap} disabled={isLoading} size="sm" className="h-8">
@@ -144,7 +154,7 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
 
                 <div className="relative">
                     {isLoading && (
-                        <div className="absolute inset-0 bg-background/80 flex items-center justify-center rounded-lg z-10">
+                        <div className="absolute inset-0 bg-background/80 flex items-center justify-center rounded-lg z-20">
                             <Loader2 className="h-8 w-8 animate-spin text-primary" />
                         </div>
                     )}
