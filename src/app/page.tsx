@@ -1,6 +1,8 @@
+
 import { LoginForm } from "@/components/login-form";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import Image from "next/image";
 
 function LoginLoading() {
   return (
@@ -29,7 +31,15 @@ function LoginLoading() {
 
 export default async function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-gray-900">
+    <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-gray-900 space-y-8">
+        <Image 
+            src="/logo.jpg"
+            alt="Vendetta Logo"
+            width={400}
+            height={200}
+            className="object-contain"
+            priority
+        />
       <Suspense fallback={<LoginLoading />}>
         <LoginForm />
       </Suspense>
