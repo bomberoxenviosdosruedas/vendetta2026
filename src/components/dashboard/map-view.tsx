@@ -37,12 +37,12 @@ const BuildingGrid = ({ properties, currentUser }: { properties: PropertyWithOwn
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <div className={cn(
-                                    "aspect-square flex items-center justify-center rounded-sm text-xs font-bold transition-colors",
+                                    "aspect-square flex items-center justify-center rounded-sm text-[8px] md:text-xs font-bold transition-colors",
                                     isOwnedByCurrentUser ? "bg-primary text-primary-foreground hover:bg-primary/90" : 
                                     hasOwner ? "bg-destructive text-destructive-foreground hover:bg-destructive/90" : 
                                     "bg-muted hover:bg-muted/80"
                                 )}>
-                                    <span className="scale-75 md:scale-100">{edificio}</span>
+                                    <span>{edificio}</span>
                                 </div>
                             </TooltipTrigger>
                             <TooltipContent>
@@ -142,7 +142,7 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
                     </Button>
                 </div>
 
-                <div className="relative max-w-4xl mx-auto">
+                <div className="relative">
                     {isLoading && (
                         <div className="absolute inset-0 bg-background/80 flex items-center justify-center rounded-lg z-10">
                             <Loader2 className="h-8 w-8 animate-spin text-primary" />
