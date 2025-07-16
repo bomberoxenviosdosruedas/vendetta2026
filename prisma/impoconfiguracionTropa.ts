@@ -1,5 +1,5 @@
 
-import { PrismaClient } from '@prisma/client/edge';
+import { PrismaClient, TipoTropa } from '@prisma/client/edge';
 import * as datosTropas from './importar/configuracionTropa.json';
 
 const prisma = new PrismaClient();
@@ -19,6 +19,7 @@ interface TropaData {
     capacidad: number;
     velocidad: number;
     salario: number;
+    tipo: TipoTropa;
     requisitos: string[];
     bonusAtaque: string[];
     bonusDefensa: string[];
@@ -47,6 +48,7 @@ async function main() {
           capacidad: tropa.capacidad,
           velocidad: tropa.velocidad,
           salario: tropa.salario,
+          tipo: tropa.tipo || TipoTropa.ATAQUE, // Default a ATAQUE si no se especifica
           requisitos: tropa.requisitos,
           bonusAtaque: tropa.bonusAtaque,
           bonusDefensa: tropa.bonusDefensa,
@@ -66,6 +68,7 @@ async function main() {
           capacidad: tropa.capacidad,
           velocidad: tropa.velocidad,
           salario: tropa.salario,
+          tipo: tropa.tipo || TipoTropa.ATAQUE, // Default a ATAQUE si no se especifica
           requisitos: tropa.requisitos,
           bonusAtaque: tropa.bonusAtaque,
           bonusDefensa: tropa.bonusDefensa,

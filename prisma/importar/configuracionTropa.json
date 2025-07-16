@@ -1,3 +1,4 @@
+
 [
   {
     "id": "acuchillador",
@@ -14,6 +15,7 @@
     "capacidad": 300,
     "velocidad": 2500,
     "salario": 1,
+    "tipo": "ATAQUE",
     "requisitos": [],
     "bonusAtaque": [
       "extorsion",
@@ -39,6 +41,7 @@
     "capacidad": 2000,
     "velocidad": 6500,
     "salario": 50,
+    "tipo": "ATAQUE",
     "requisitos": [],
     "bonusAtaque": [
       "seguridad",
@@ -70,6 +73,7 @@
     "capacidad": 3000,
     "velocidad": 3400,
     "salario": 30,
+    "tipo": "ATAQUE",
     "requisitos": [],
     "bonusAtaque": [
       "armas",
@@ -96,6 +100,7 @@
     "capacidad": 50,
     "velocidad": 400000,
     "salario": 1,
+    "tipo": "ATAQUE",
     "requisitos": [],
     "bonusAtaque": [
       "espionaje"
@@ -119,6 +124,7 @@
     "capacidad": 2000,
     "velocidad": 3000,
     "salario": 20,
+    "tipo": "ATAQUE",
     "requisitos": [],
     "bonusAtaque": [
       "proteccion",
@@ -144,6 +150,7 @@
     "capacidad": 1000,
     "velocidad": 6000,
     "salario": 20,
+    "tipo": "ATAQUE",
     "requisitos": [],
     "bonusAtaque": [
       "seguridad",
@@ -172,6 +179,7 @@
     "capacidad": 200,
     "velocidad": 1600,
     "salario": 1,
+    "tipo": "ATAQUE",
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": []
@@ -191,6 +199,7 @@
     "capacidad": 12000,
     "velocidad": 4500,
     "salario": 300,
+    "tipo": "ATAQUE",
     "requisitos": [],
     "bonusAtaque": [
       "espionaje",
@@ -228,6 +237,7 @@
     "capacidad": 5000,
     "velocidad": 8000,
     "salario": 60,
+    "tipo": "ATAQUE",
     "requisitos": [],
     "bonusAtaque": [
       "combate",
@@ -257,6 +267,7 @@
     "capacidad": 3000,
     "velocidad": 2000,
     "salario": 500,
+    "tipo": "OCUPAR",
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": []
@@ -276,6 +287,7 @@
     "capacidad": 500,
     "velocidad": 2400,
     "salario": 2,
+    "tipo": "ATAQUE",
     "requisitos": [],
     "bonusAtaque": [
       "tiro"
@@ -300,6 +312,7 @@
     "capacidad": 10000,
     "velocidad": 2400,
     "salario": 5,
+    "tipo": "ATAQUE",
     "requisitos": [],
     "bonusAtaque": [
       "combate"
@@ -323,6 +336,7 @@
     "capacidad": 400,
     "velocidad": 2000,
     "salario": 1,
+    "tipo": "ATAQUE",
     "requisitos": [],
     "bonusAtaque": [
       "extorsion"
@@ -347,6 +361,7 @@
     "capacidad": 40000,
     "velocidad": 5000,
     "salario": 10,
+    "tipo": "ATAQUE",
     "requisitos": [],
     "bonusAtaque": [
       "psicologico"
