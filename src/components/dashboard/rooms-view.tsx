@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { getRoomConfigurations } from "@/lib/data"
-import { Clock, PlusCircle, Target, Boxes, DollarSign, Terminal } from "lucide-react"
+import { Clock, PlusCircle, Target, Boxes, DollarSign } from "lucide-react"
 import { getSessionUser } from "@/lib/auth"
 import { calcularCostosNivel, calcularTiempoConstruccion } from "@/lib/formulas/room-formulas"
 import { iniciarAmpliacion } from "@/lib/actions/room.actions"
@@ -26,9 +26,9 @@ function formatDuration(seconds: number) {
     if (seconds <= 0) return "0s";
 
     const units = [
-        { name: 'a', seconds: 31536000 }, // año
+        { name: 'a', seconds: 31536000 },
         { name: 'mes', seconds: 2592000 },
-        { name: 'd', seconds: 86400 }, // día
+        { name: 'd', seconds: 86400 },
         { name: 'h', seconds: 3600 },
         { name: 'm', seconds: 60 },
         { name: 's', seconds: 1 }
@@ -56,7 +56,6 @@ async function handleAmpliacion(habitacionId: string) {
   const resultado = await iniciarAmpliacion(habitacionId);
   if (resultado?.error) {
     console.error(resultado.error);
-    // Idealmente, aquí se mostraría un toast al usuario
   } else {
     revalidatePath('/rooms');
     revalidatePath('/(dashboard)/layout', 'layout');
@@ -158,7 +157,7 @@ export async function RoomsView() {
                                     <span>{formatDuration(room.tiempo)}</span>
                                 </div>
                             </div>
-                            <form action={handleAmpliacion.bind(null, room.id)}>
+                             <form action={handleAmpliacion.bind(null, room.id)}>
                                 <Button type="submit" variant="outline" size="sm">
                                     <PlusCircle className="mr-2 h-4 w-4" /> Ampliar
                                 </Button>

@@ -56,7 +56,6 @@ async function handleEntrenamiento(trainingId: string) {
     const result = await iniciarEntrenamiento(trainingId);
     if (result?.error) {
         console.error(result.error);
-        // Toast
     } else {
         revalidatePath('/training');
     }
