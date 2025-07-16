@@ -43,7 +43,7 @@ def main():
     """
     src_path = 'src'
     output_structure_only_path = 'estructura.json'
-    output_with_content_path = 'structure_with_content.json'
+    output_with_content_path = 'estructura_y_contenido.json'
 
     if not os.path.isdir(src_path):
         print(f"Error: Source directory '{src_path}' not found in the current location.")
