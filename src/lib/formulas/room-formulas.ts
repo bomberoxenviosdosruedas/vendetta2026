@@ -41,7 +41,7 @@ export function calcularTiempoConstruccion(
 
   // La Oficina del Jefe tiene su propia fórmula de tiempo más simple para no depender de sí misma.
   if (config.id === 'oficina_del_jefe') {
-    return Math.floor(config.duracion * Math.pow(1.5, nivel - 1));
+    return Math.floor(config.duracion * Math.pow(1.15, nivel - 1));
   }
 
   // Aseguramos que el nivel de la oficina sea como mínimo 1 para evitar división por cero.
