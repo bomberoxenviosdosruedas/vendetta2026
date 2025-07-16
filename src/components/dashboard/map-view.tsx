@@ -46,12 +46,12 @@ const BuildingGrid = ({ properties, currentUser }: { properties: PropertyWithOwn
                             <Tooltip>
                                 <TooltipTrigger asChild>
                                     <div className={cn(
-                                        "aspect-square flex items-center justify-center rounded-sm text-[8px] md:text-xs font-bold transition-colors",
-                                        isOwnedByCurrentUser ? "bg-primary/80 text-primary-foreground hover:bg-primary/90" : 
-                                        hasOwner ? "bg-destructive/80 text-destructive-foreground hover:bg-destructive/90" : 
-                                        "bg-muted/50 hover:bg-muted/80"
+                                        "aspect-square flex items-center justify-center rounded-sm text-xs font-bold transition-colors",
+                                        isOwnedByCurrentUser ? "bg-primary/90 text-primary-foreground hover:bg-primary" : 
+                                        hasOwner ? "bg-destructive/90 text-destructive-foreground hover:bg-destructive" : 
+                                        "bg-black/40 hover:bg-black/60"
                                     )}>
-                                        <span>{edificio}</span>
+                                        {hasOwner && <span>{edificio}</span>}
                                     </div>
                                 </TooltipTrigger>
                                 <TooltipContent>
@@ -61,7 +61,7 @@ const BuildingGrid = ({ properties, currentUser }: { properties: PropertyWithOwn
                                             <p>Coordenadas: <span className="font-bold">{`${property.ciudad}:${property.barrio}:${property.edificio}`}</span></p>
                                         </div>
                                     ) : (
-                                        <p>Solar Vacío</p>
+                                        <p>Solar Vacío [{edificio}]</p>
                                     )}
                                 </TooltipContent>
                             </Tooltip>
