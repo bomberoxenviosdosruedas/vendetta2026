@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 export const metadata: Metadata = {
   title: 'Vendetta Dashboard',
   description: 'Gestiona tu imperio.',
+  themeColor: '#09090b',
 };
 
 export default function RootLayout({
