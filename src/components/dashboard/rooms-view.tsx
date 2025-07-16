@@ -1,4 +1,3 @@
-
 'use client'
 
 import Image from "next/image"
@@ -7,12 +6,9 @@ import {
   CardContent,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { getRoomConfigurations } from "@/lib/data"
 import { Clock, PlusCircle, Target, Boxes, DollarSign, Ban } from "lucide-react"
-import { getSessionUser } from "@/lib/auth"
 import { calcularCostosNivel, calcularTiempoConstruccion } from "@/lib/formulas/room-formulas"
 import { iniciarAmpliacion } from "@/lib/actions/room.actions"
-import { revalidatePath } from "next/cache"
 import { ConstructionQueue } from "./construction-queue"
 import { FullConfiguracionHabitacion, UserWithProgress } from "@/lib/data"
 import { useState } from "react"
