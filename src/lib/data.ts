@@ -1,5 +1,6 @@
 
 
+
 "use server"
 
 import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario } from '@prisma/client/edge'
@@ -37,6 +38,24 @@ export type UserForRanking = User & {
     puntuacion: PuntuacionUsuario | null;
     _count: {
         propiedades: number;
+    }
+}
+
+export async function getPropertiesByLocation(ciudad: number, barrio: number) {
+    try {
+        const properties = await prisma.propiedad.findMany({
+            where: {
+                ciudad,
+                barrio,
+            },
+            include: {
+                user: true // Incluimos la información del usuario propietario
+            }
+        });
+        return properties;
+    } catch (error) {
+        console.error("Error fetching properties by location:", error);
+        return [];
     }
 }
 
