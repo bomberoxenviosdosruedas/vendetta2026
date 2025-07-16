@@ -3,7 +3,7 @@
 
 import prisma from "../prisma/prisma";
 import type { UserWithProgress } from "../data";
-import { calcularProduccionTotalPorSegundo } from "../formulas/room-formulas";
+import { calcularProduccionTotalPorSegundo, calcularTiempoConstruccion } from "../formulas/room-formulas";
 import { revalidatePath } from "next/cache";
 import { calcularPuntosEntrenamientos, calcularPuntosHabitaciones, calcularPuntosTropas } from "../formulas/score-formulas";
 
@@ -56,56 +56,92 @@ export async function obtenerEstadoJuegoActualizado(user: UserWithProgress) {
 
 async function verificarYFinalizarConstruccionDePropiedad(user: UserWithProgress, propiedadId: string): Promise<UserWithProgress> {
   const propiedad = user.propiedades.find(p => p.id === propiedadId);
-  const construccionActiva = propiedad?.colaConstruccion;
+  if (!propiedad) return user;
+  
+  const cola = [...propiedad.colaConstruccion].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  if (cola.length === 0) return user;
 
-  if (!construccionActiva || new Date() < new Date(construccionActiva.fechaFinalizacion)) {
-    return user;
+  const construccionActiva = cola[0];
+  let seHizoUnCambio = false;
+
+  // Si la construcción activa ya ha terminado
+  if (construccionActiva.fechaFinalizacion && new Date() >= new Date(construccionActiva.fechaFinalizacion)) {
+    try {
+        await prisma.$transaction(async (tx) => {
+            // Actualizar nivel de la habitación
+            await tx.habitacionUsuario.update({
+                where: {
+                    propiedadId_configuracionHabitacionId: {
+                        propiedadId: propiedadId,
+                        configuracionHabitacionId: construccionActiva.habitacionId,
+                    },
+                },
+                data: {
+                    nivel: construccionActiva.nivelDestino,
+                },
+            });
+            // Eliminar de la cola
+            await tx.colaConstruccion.delete({
+                where: { id: construccionActiva.id },
+            });
+        });
+        seHizoUnCambio = true;
+    } catch (error) {
+        console.error(`Error finalizando construcción ${construccionActiva.id}:`, error);
+    }
   }
 
-  try {
-    await prisma.$transaction(async (tx) => {
-      await tx.habitacionUsuario.update({
-        where: {
-          propiedadId_configuracionHabitacionId: {
-            propiedadId: propiedadId,
-            configuracionHabitacionId: construccionActiva.habitacionId,
-          },
-        },
-        data: {
-          nivel: construccionActiva.nivelDestino,
-        },
+  // Si se finalizó una, o si la primera de la cola aún no ha comenzado, intentamos activar la siguiente.
+  if (seHizoUnCambio || !construccionActiva.fechaFinalizacion) {
+      // Re-fetch de la propiedad para obtener el estado de la cola actualizado
+      const propiedadActualizada = await prisma.propiedad.findUnique({
+          where: { id: propiedadId },
+          include: { colaConstruccion: { orderBy: { createdAt: 'asc' } }, habitaciones: { include: { configuracion: true }} },
       });
-      await tx.colaConstruccion.delete({
-        where: {
-          id: construccionActiva.id,
-        },
-      });
-    });
 
-    // Re-fetch the user to get the most up-to-date state after the transaction
+      if (propiedadActualizada && propiedadActualizada.colaConstruccion.length > 0) {
+          const proximaConstruccion = propiedadActualizada.colaConstruccion[0];
+          // Si no tiene fecha de finalización, es la que hay que activar
+          if (!proximaConstruccion.fechaFinalizacion) {
+            const configHabitacion = propiedad.habitaciones.find(h => h.configuracionHabitacionId === proximaConstruccion.habitacionId)?.configuracion;
+            if (configHabitacion) {
+              const nivelOficinaJefe = propiedad.habitaciones.find(h => h.configuracionHabitacionId === 'oficina_del_jefe')?.nivel || 1;
+              const tiempo = calcularTiempoConstruccion(proximaConstruccion.nivelDestino, configHabitacion, nivelOficinaJefe);
+              const fechaInicio = new Date();
+              const fechaFinalizacion = new Date(fechaInicio.getTime() + tiempo * 1000);
+              
+              await prisma.colaConstruccion.update({
+                where: { id: proximaConstruccion.id },
+                data: { fechaInicio, fechaFinalizacion },
+              });
+              seHizoUnCambio = true;
+            }
+          }
+      }
+  }
+
+  if (seHizoUnCambio) {
     const updatedUser = await prisma.user.findUnique({
       where: { id: user.id },
       include: {
         progreso: true,
-        propiedades: { include: { habitaciones: { include: { configuracion: { include: { escalado: true } } } }, colaConstruccion: true, colaReclutamiento: { include: { tropaConfig: true } } } },
+        propiedades: { include: { habitaciones: { include: { configuracion: { include: { escalado: true } } } }, colaConstruccion: { orderBy: { createdAt: 'asc' } }, colaReclutamiento: { include: { tropaConfig: true } } } },
         entrenamientos: { include: { configuracion: true } },
         tropas: { include: { configuracion: true } },
         puntuacion: true,
       }
     });
-
     return updatedUser as UserWithProgress;
-
-  } catch (error) {
-    console.error(`Error finalizando la construcción en la propiedad ${propiedadId}:`, error);
-    return user;
   }
+
+  return user;
 }
+
 
 export async function verificarYFinalizarConstruccion(user: UserWithProgress): Promise<UserWithProgress> {
     let userActualizado = user;
     for (const propiedad of user.propiedades) {
-        if (propiedad.colaConstruccion) {
+        if (propiedad.colaConstruccion.length > 0) {
             userActualizado = await verificarYFinalizarConstruccionDePropiedad(userActualizado, propiedad.id);
         }
     }
@@ -162,7 +198,7 @@ async function verificarYFinalizarReclutamientoDePropiedad(user: UserWithProgres
             where: { id: user.id },
             include: {
                 progreso: true,
-                propiedades: { include: { habitaciones: { include: { configuracion: { include: { escalado: true } } } }, colaConstruccion: true, colaReclutamiento: { include: { tropaConfig: true } } } },
+                propiedades: { include: { habitaciones: { include: { configuracion: { include: { escalado: true } } } }, colaConstruccion: { orderBy: { createdAt: 'asc' } }, colaReclutamiento: { include: { tropaConfig: true } } } },
                 entrenamientos: { include: { configuracion: true } },
                 tropas: { include: { configuracion: true } },
                 puntuacion: true,
@@ -221,5 +257,3 @@ export async function actualizarPuntuacionUsuario(user: UserWithProgress): Promi
     return user;
   }
 }
-
-    

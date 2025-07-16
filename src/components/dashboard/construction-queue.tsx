@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
+import { X, Hourglass, CheckCircle } from 'lucide-react';
 import type { FullPropiedad } from '@/lib/data';
 import { useRouter } from 'next/navigation';
 
@@ -25,10 +25,12 @@ type ConstructionQueueProps = {
 export function ConstructionQueue({ propiedad, allRooms }: ConstructionQueueProps) {
     const router = useRouter();
     const [tiempoRestante, setTiempoRestante] = useState<number>(0);
-    const construccionActiva = propiedad.colaConstruccion;
     
+    const construccionesEnCola = propiedad.colaConstruccion;
+    const construccionActiva = construccionesEnCola.length > 0 ? construccionesEnCola[0] : null;
+
     useEffect(() => {
-        if (!construccionActiva) return;
+        if (!construccionActiva?.fechaFinalizacion) return;
 
         const fin = new Date(construccionActiva.fechaFinalizacion).getTime();
 
@@ -41,29 +43,32 @@ export function ConstructionQueue({ propiedad, allRooms }: ConstructionQueueProp
             }
         };
 
-        updateTimer(); // Initial call
+        updateTimer();
         const intervalId = setInterval(updateTimer, 1000);
 
         return () => clearInterval(intervalId);
     }, [construccionActiva, router]);
 
-    if (!construccionActiva || tiempoRestante <= 0) {
+    if (!construccionActiva) {
         return null;
     }
-
-    const roomConfig = allRooms.find(r => r.id === construccionActiva.habitacionId);
+    
+    const roomConfigActiva = allRooms.find(r => r.id === construccionActiva.habitacionId);
 
     return (
         <Card className="mb-4">
             <CardHeader>
-                <CardTitle className="text-primary">En Construcción ({propiedad.nombre})</CardTitle>
-                <CardDescription>Finalización de la construcción actual.</CardDescription>
+                <CardTitle className="text-primary">Cola de Construcción ({propiedad.nombre})</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-2">
+                {/* Construcción Activa */}
                 <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                    <p className="font-semibold">
-                        {roomConfig?.nombre || 'Habitación'} Nivel {construccionActiva.nivelDestino}
-                    </p>
+                    <div className="flex items-center gap-2">
+                        <CheckCircle className="h-5 w-5 text-green-500 animate-pulse" />
+                        <p className="font-semibold">
+                            {roomConfigActiva?.nombre || 'Habitación'} Nivel {construccionActiva.nivelDestino}
+                        </p>
+                    </div>
                     <div className="flex items-center gap-4">
                         <span className="font-mono text-lg font-bold text-primary">
                             {formatTime(tiempoRestante)}
@@ -74,6 +79,25 @@ export function ConstructionQueue({ propiedad, allRooms }: ConstructionQueueProp
                         </Button>
                     </div>
                 </div>
+
+                {/* Construcciones en Espera */}
+                {construccionesEnCola.slice(1).map((colaItem, index) => {
+                    const roomConfigEspera = allRooms.find(r => r.id === colaItem.habitacionId);
+                    return (
+                        <div key={colaItem.id} className="flex items-center justify-between p-3 bg-muted/20 rounded-lg text-sm">
+                            <div className="flex items-center gap-2">
+                                <Hourglass className="h-4 w-4 text-amber-500" />
+                                <p className="text-muted-foreground">
+                                   {index + 1}. {roomConfigEspera?.nombre || 'Habitación'} Nivel {colaItem.nivelDestino}
+                                </p>
+                            </div>
+                            <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive">
+                               <X className="h-4 w-4" />
+                               <span className="sr-only">Cancelar</span>
+                            </Button>
+                        </div>
+                    );
+                })}
             </CardContent>
         </Card>
     );

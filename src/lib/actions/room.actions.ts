@@ -19,8 +19,10 @@ export async function iniciarAmpliacion(propiedadId: string, habitacionId: strin
         return { error: 'Propiedad no encontrada para este usuario.' };
     }
 
-    if (propiedadActual.colaConstruccion) {
-        return { error: 'Ya hay una construcción en progreso en esta propiedad.' };
+    const construccionesEnCola = propiedadActual.colaConstruccion;
+
+    if (construccionesEnCola.length >= 5) {
+        return { error: 'La cola de construcción está llena (máximo 5).' };
     }
 
     const habitacionUsuario = propiedadActual.habitaciones.find(h => h.configuracionHabitacionId === habitacionId);
@@ -33,13 +35,15 @@ export async function iniciarAmpliacion(propiedadId: string, habitacionId: strin
     if (!config) {
         return { error: 'Configuración de la habitación no encontrada.'}
     }
+    
+    // Nivel a construir = Nivel Base en DB + mejoras ya encoladas + 1
+    const nivelBase = habitacionUsuario.nivel;
+    const mejorasEnCola = construccionesEnCola.filter(c => c.habitacionId === habitacionId).length;
+    const nivelSiguiente = nivelBase + mejorasEnCola + 1;
 
-    const nivelActual = habitacionUsuario.nivel;
-    const nivelSiguiente = nivelActual + 1;
     const nivelOficinaJefe = propiedadActual.habitaciones.find(h => h.configuracionHabitacionId === 'oficina_del_jefe')?.nivel || 1;
   
     const costos = calcularCostosNivel(nivelSiguiente, config as FullConfiguracionHabitacion);
-    const tiempo = calcularTiempoConstruccion(nivelSiguiente, config as FullConfiguracionHabitacion, nivelOficinaJefe);
   
     if (
       user.progreso.armas < costos.armas ||
@@ -50,9 +54,6 @@ export async function iniciarAmpliacion(propiedadId: string, habitacionId: strin
     }
   
     try {
-      const fechaInicio = new Date();
-      const fechaFinalizacion = new Date(fechaInicio.getTime() + tiempo * 1000);
-
       await prisma.$transaction([
         prisma.progresoUsuario.update({
           where: { userId: user.id },
@@ -67,8 +68,9 @@ export async function iniciarAmpliacion(propiedadId: string, habitacionId: strin
                 propiedadId: propiedadId,
                 habitacionId: habitacionId,
                 nivelDestino: nivelSiguiente,
-                fechaInicio: fechaInicio,
-                fechaFinalizacion: fechaFinalizacion
+                // fechaInicio y fechaFinalizacion se calcularán cuando la construcción se active
+                fechaInicio: null,
+                fechaFinalizacion: null,
             }
         })
       ]);
@@ -77,9 +79,9 @@ export async function iniciarAmpliacion(propiedadId: string, habitacionId: strin
       revalidatePath('/overview'); 
       revalidatePath('/(dashboard)/layout', 'layout');
   
-      return { success: `¡La ampliación de ${config.nombre} a nivel ${nivelSiguiente} ha comenzado!` };
+      return { success: `¡${config.nombre} añadido a la cola de construcción!` };
     } catch (error) {
       console.error('Error durante la transacción de ampliación:', error);
       return { error: 'Ocurrió un error en el servidor al intentar ampliar.' };
     }
-  }
+}

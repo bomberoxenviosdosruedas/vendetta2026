@@ -21,7 +21,7 @@ export type FullColaReclutamiento = ColaReclutamiento & {
 
 export type FullPropiedad = Propiedad & {
     habitaciones: FullHabitacionUsuario[];
-    colaConstruccion: ColaConstruccion | null;
+    colaConstruccion: ColaConstruccion[];
     colaReclutamiento: FullColaReclutamiento | null;
 }
 
@@ -142,7 +142,11 @@ const userInclude = {
                     configuracionHabitacionId: 'asc'
                 }
             },
-            colaConstruccion: true,
+            colaConstruccion: {
+                orderBy: {
+                    createdAt: 'asc'
+                }
+            },
             colaReclutamiento: {
                 include: {
                     tropaConfig: true

@@ -8,7 +8,7 @@ import {
   CardContent,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Clock, PlusCircle, Target, Boxes, DollarSign, Ban, Info } from "lucide-react"
+import { Clock, PlusCircle, Target, Boxes, DollarSign, Ban, Info, Hourglass } from "lucide-react"
 import { calcularCostosNivel, calcularTiempoConstruccion } from "@/lib/formulas/room-formulas"
 import { iniciarAmpliacion } from "@/lib/actions/room.actions"
 import { ConstructionQueue } from "./construction-queue"
@@ -78,10 +78,14 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
     }
 
     const userRoomsMap = new Map(propiedadActual.habitaciones.map(h => [h.configuracionHabitacionId, h]));
-    const construccionActiva = propiedadActual.colaConstruccion;
+    const construccionEnCola = propiedadActual.colaConstruccion;
 
     useEffect(() => {
-        if (!construccionActiva) return;
+        if (!construccionEnCola || construccionEnCola.length === 0) return;
+        
+        const construccionActiva = construccionEnCola[0];
+        if (!construccionActiva.fechaFinalizacion) return;
+
         const fin = new Date(construccionActiva.fechaFinalizacion).getTime();
         const interval = setInterval(() => {
             const ahora = new Date().getTime();
@@ -92,7 +96,7 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [construccionActiva, router]);
+    }, [construccionEnCola, router]);
 
     const desiredOrder = [
         'oficina_del_jefe', 'escuela_especializacion', 'armeria', 'almacen_de_municion',
@@ -100,26 +104,33 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
         'almacen_de_alcohol', 'caja_fuerte', 'campo_de_entrenamiento', 'seguridad',
         'torreta_de_fuego_automatico', 'minas_ocultas'
     ];
+    
+    const isQueueFull = construccionEnCola.length >= 5;
 
     const sortedRoomsData = desiredOrder.map(id => {
         const config = allRoomConfigs.find(c => c.id === id);
         if (!config) return null;
 
         const userRoom = userRoomsMap.get(id);
-        let nivel = userRoom ? userRoom.nivel : 0;
+        const nivelBase = userRoom ? userRoom.nivel : 0;
+        
+        // El nivel real a mostrar es el nivel base + las mejoras encoladas
+        const mejorasEnCola = construccionEnCola.filter(c => c.habitacionId === id).length;
+        const nivelProyectado = nivelBase + mejorasEnCola;
+        const nivelSiguiente = nivelProyectado + 1;
+
         const nivelOficinaJefe = userRoomsMap.get('oficina_del_jefe')?.nivel || 1;
         
-        let enConstruccion = false;
-        if (construccionActiva && construccionActiva.habitacionId === id) {
-            enConstruccion = true;
-        }
+        const enConstruccion = construccionEnCola.some(c => c.habitacionId === id);
 
-        const costosSiguienteNivel = calcularCostosNivel(nivel + 1, config);
-        const tiempoSiguienteNivel = calcularTiempoConstruccion(nivel + 1, config, nivelOficinaJefe);
+        const costosSiguienteNivel = calcularCostosNivel(nivelSiguiente, config);
+        const tiempoSiguienteNivel = calcularTiempoConstruccion(nivelSiguiente, config, nivelOficinaJefe);
         
         return {
             ...config,
-            nivel,
+            nivel: nivelBase,
+            nivelProyectado,
+            nivelSiguiente,
             costos: costosSiguienteNivel,
             tiempo: tiempoSiguienteNivel,
             enConstruccion,
@@ -177,15 +188,16 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
                                         <div>
                                             <div className="font-bold">{room.nombre}</div>
                                             <div className="text-sm text-primary">
-                                                Nivel {room.nivel} {room.enConstruccion ? '(Mejorando...)' : ''}
+                                                Nivel {room.nivelProyectado}
                                             </div>
+                                             {room.enConstruccion && <div className="text-xs text-amber-500 flex items-center gap-1"><Hourglass className="h-3 w-3" /> En cola</div>}
                                         </div>
                                     </div>
                                     <div className="md:col-span-4">
                                         <p className="text-sm text-muted-foreground">{room.descripcion}</p>
                                     </div>
                                     <div className="md:col-span-5">
-                                        <div className="font-semibold text-sm mb-2">Ampliación a Nivel: {room.nivel + 1}</div>
+                                        <div className="font-semibold text-sm mb-2">Ampliación a Nivel: {room.nivelSiguiente}</div>
                                         <div className="flex flex-wrap gap-x-4 gap-y-2 items-center">
                                             <div className="flex flex-col gap-1 text-sm flex-grow">
                                                 <div className="grid grid-cols-3 gap-x-3">
@@ -206,16 +218,16 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
                                                     </Button>
                                                 </DialogTrigger>
                                                 <form action={() => handleAmpliacion(room.id)}>
-                                                    <Button type="submit" variant="outline" size="sm" disabled={!!construccionActiva || isSubmitting === room.id}>
-                                                        {construccionActiva ? <Ban className="mr-2 h-4 w-4" /> : <PlusCircle className="mr-2 h-4 w-4" />}
-                                                        {isSubmitting === room.id ? 'Enviando...' : (construccionActiva ? 'En cola...' : 'Ampliar')}
+                                                    <Button type="submit" variant="outline" size="sm" disabled={isQueueFull || isSubmitting === room.id}>
+                                                        {isQueueFull ? <Ban className="mr-2 h-4 w-4" /> : <PlusCircle className="mr-2 h-4 w-4" />}
+                                                        {isSubmitting === room.id ? 'Enviando...' : (isQueueFull ? 'Cola llena' : 'Ampliar')}
                                                     </Button>
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                 <RoomDetailsModal room={room} />
+                                 <RoomDetailsModal room={{...room, nivel: room.nivelProyectado}} />
                             </Dialog>
                         ))}
                     </div>
