@@ -1,230 +1,69 @@
 
-import { PrismaClient } from '@prisma/client/edge';
+import { execSync } from 'child_process';
+import path from 'path';
 
-import * as datosHabitaciones from './room_types_data.json';
-import * as datosEscalado from './room_scaling_rules_updated.json';
-import * as datosEntrenamientos from './entrenamientos_types_data.json';
-import * as datosTropas from './tropas_types_data.json';
+// --- CONFIGURACIÓN ---
+// Define la lista de scripts a ejecutar en el orden deseado.
+const scriptsToRun = [
+  'impoconfiguracionHabitacion.ts',
+  'impoconfiguracionEntrenamiento.ts',
+  'impoconfiguracionTropa.ts',
+  'impousuarioprueba.ts'
+];
+// ---------------------
 
-interface HabitacionData {
-  nombre: string;
-  desc: string;
-  imagen: string;
-  arm: number;
-  mun: number;
-  dol: number;
-  duracion: number;
-  produccion: number;
-  puntos: number;
+// --- HELPERS DE LOGGING ---
+const colors = {
+  reset: "\x1b[0m",
+  bold: "\x1b[1m",
+  green: "\x1b[32m",
+  cyan: "\x1b[36m",
+  red: "\x1b[31m",
+  magenta: "\x1b[35m",
+};
+
+function logHeader(message: string) {
+  console.log(`\n${colors.magenta}${colors.bold}🌱 --- ${message} --- 🌱${colors.reset}`);
 }
 
-interface EscaladoData {
-    produccion_recurso?: string;
-    formula_aumento_produccion?: string;
-    factor_costo_por_nivel: number;
-    formula_tiempo?: string;
+function logStep(message: string) {
+  console.log(`${colors.cyan}🔹 ${message}${colors.reset}`);
 }
 
-interface EntrenamientoData {
-    nombre: string;
-    imagen: string;
-    arm: number;
-    mun: number;
-    dol: number;
-    duracion: number;
-    puntos: number;
+function logSuccess(message: string) {
+  console.log(`${colors.green}✅ ${message}${colors.reset}`);
 }
 
-interface TropaData {
-    id: string;
-    nombre: string;
-    imagen: string;
-    desc: string;
-    arm: number;
-    mun: number;
-    dol: number;
-    duracion: number;
-    puntos: number;
-    ataque: number;
-    defensa: number;
-    capacidad: number;
-    velocidad: number;
-    salario: number;
-    requisitos: string[];
-    bonificacionesA: string[];
-    bonificacionesD: string[];
+function logError(message: string, error: any) {
+  console.error(`${colors.red}❌ ${message}${colors.reset}`);
+  console.error(error);
 }
 
-const prisma = new PrismaClient();
-
+// --- FUNCIÓN PRINCIPAL ---
 async function main() {
-  console.log('🌱 Iniciando el proceso de seeding...');
+  logHeader('INICIANDO PROCESO DE SEEDING COMPLETO');
 
-  console.log('🏠 Cargando datos de configuración de habitaciones y escalado...');
-  const roomConfigIds = Object.keys(datosHabitaciones).filter(id => id !== 'default');
-  for (const idHabitacion of roomConfigIds) {
-    const habitacion = (datosHabitaciones as Record<string, HabitacionData>)[idHabitacion];
-    const escalado = (datosEscalado as Record<string, EscaladoData>)[idHabitacion];
+  const prismaDir = __dirname; 
 
-    await prisma.configuracionHabitacion.upsert({
-      where: { id: idHabitacion },
-      update: {}, 
-      create: {
-        id: idHabitacion,
-        nombre: habitacion.nombre,
-        descripcion: habitacion.desc,
-        urlImagen: habitacion.imagen,
-        costoArmas: habitacion.arm,
-        costoMunicion: habitacion.mun,
-        costoDolares: habitacion.dol,
-        duracion: habitacion.duracion,
-        produccion: habitacion.produccion,
-        puntos: habitacion.puntos,
-      },
-    });
-
-    if (escalado) {
-        await prisma.configuracionEscaladoHabitacion.upsert({
-            where: { id: idHabitacion },
-            update: {},
-            create: {
-                id: idHabitacion,
-                produccionRecurso: escalado.produccion_recurso,
-                formulaAumentoProduccion: escalado.formula_aumento_produccion,
-                factorCostoPorNivel: escalado.factor_costo_por_nivel,
-                formulaTiempo: escalado.formula_tiempo,
-            }
-        });
+  for (const scriptName of scriptsToRun) {
+    const scriptPath = path.join(prismaDir, scriptName);
+    logStep(`Ejecutando script: ${scriptName}...`);
+    
+    try {
+      // Usamos 'bun' para ejecutar los scripts, como está definido en package.json
+      execSync(`bun ${scriptPath}`, { stdio: 'inherit' });
+      logSuccess(`Script ${scriptName} finalizado exitosamente.`);
+    } catch (error) {
+      logError(`Ocurrió un error al ejecutar ${scriptName}. El proceso de seeding se detendrá.`, error);
+      // Detenemos la ejecución si un script falla para evitar inconsistencias.
+      process.exit(1);
     }
   }
-  console.log('✅ Configuración de habitaciones y escalado cargada.');
 
-
-  console.log('🏋️ Cargando datos de configuración de entrenamientos...');
-  const trainingConfigIds = Object.keys(datosEntrenamientos).filter(id => id !== 'default');
-  for (const idEntrenamiento of trainingConfigIds) {
-    const entrenamiento = (datosEntrenamientos as Record<string, EntrenamientoData>)[idEntrenamiento];
-    await prisma.configuracionEntrenamiento.upsert({
-      where: { id: idEntrenamiento },
-      update: {},
-      create: {
-        id: idEntrenamiento,
-        nombre: entrenamiento.nombre,
-        urlImagen: entrenamiento.imagen,
-        costoArmas: entrenamiento.arm,
-        costoMunicion: entrenamiento.mun,
-        costoDolares: entrenamiento.dol,
-        duracion: entrenamiento.duracion,
-        puntos: entrenamiento.puntos,
-      },
-    });
-  }
-  console.log('✅ Configuración de entrenamientos cargada.');
-
-  console.log('🛡️ Cargando datos de configuración de tropas...');
-  const troopConfigIds = Object.keys(datosTropas).filter(id => id !== 'default');
-  for (const idTropa of troopConfigIds) {
-    const tropa = (datosTropas as Record<string, TropaData>)[idTropa];
-    await prisma.configuracionTropa.upsert({
-      where: { id: tropa.id },
-      update: {},
-      create: {
-        id: tropa.id,
-        nombre: tropa.nombre,
-        urlImagen: tropa.imagen,
-        descripcion: tropa.desc,
-        costoArmas: tropa.arm,
-        costoMunicion: tropa.mun,
-        costoDolares: tropa.dol,
-        duracion: tropa.duracion,
-        puntos: tropa.puntos,
-        ataque: tropa.ataque,
-        defensa: tropa.defensa,
-        capacidad: tropa.capacidad,
-        velocidad: tropa.velocidad,
-        salario: tropa.salario,
-        requisitos: tropa.requisitos,
-        bonusAtaque: tropa.bonificacionesA,
-        bonusDefensa: tropa.bonificacionesD,
-      },
-    });
-  }
-  console.log('✅ Configuración de tropas cargada.');
-
-  console.log('👤 Creando o actualizando usuario y datos iniciales...');
-  
-  const bomberox = await prisma.user.upsert({
-    where: { username: 'bomberox' },
-    update: {},
-    create: {
-      name: 'Bomberox',
-      username: 'bomberox',
-      password: '123456789',
-      title: 'Jefe de la Familia',
-      avatarUrl: '/img/bomberox.png',
-    },
-  });
-
-  await prisma.progresoUsuario.upsert({
-    where: { userId: bomberox.id },
-    update: {},
-    create: {
-      userId: bomberox.id,
-      dolares: 500,
-      armas: 100,
-      municion: 200,
-      alcohol: 10,
-    },
-  });
-
-  const propiedadPrincipal = await prisma.propiedad.upsert({
-    where: { 
-      ciudad_barrio_edificio: {
-        ciudad: 1,
-        barrio: 1,
-        edificio: 1
-      }
-    },
-    update: {
-      userId: bomberox.id
-    },
-    create: {
-      userId: bomberox.id,
-      nombre: 'Propiedad Principal',
-      ciudad: 1,
-      barrio: 1,
-      edificio: 1
-    }
-  })
-
-  console.log('🏢 Asignando habitaciones iniciales a la propiedad principal...');
-  for (const roomId of roomConfigIds) {
-    await prisma.habitacionUsuario.upsert({
-      where: {
-        propiedadId_configuracionHabitacionId: {
-            propiedadId: propiedadPrincipal.id,
-            configuracionHabitacionId: roomId,
-        }
-      },
-      update: {},
-      create: {
-        propiedadId: propiedadPrincipal.id,
-        configuracionHabitacionId: roomId,
-        nivel: roomId === 'oficina_del_jefe' ? 1 : 0,
-      },
-    });
-  }
-
-  console.log('✅ Usuario, progreso y habitaciones iniciales cargados.');
+  logHeader('PROCESO DE SEEDING FINALIZADO EXITOSAMENTE');
 }
 
-main()
-  .then(async () => {
-    console.log('🎉 Seeding finalizado exitosamente.');
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error('❌ Error durante el proceso de seeding:', e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+main().catch((e) => {
+  logError('Ocurrió un error inesperado en el orquestador del seed.', e);
+  process.exit(1);
+});
