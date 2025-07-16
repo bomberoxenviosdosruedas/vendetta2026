@@ -79,7 +79,7 @@ export async function verificarYFinalizarConstruccion(user: UserWithProgress) {
         });
         await tx.colaConstruccion.delete({
           where: {
-            userId: user.id,
+            id: construccionActiva.id,
           },
         });
   
@@ -152,7 +152,7 @@ export async function verificarYFinalizarReclutamiento(user: UserWithProgress): 
             }
 
             await tx.colaReclutamiento.delete({
-                where: { userId: user.id }
+                where: { id: reclutamientoActivo.id }
             });
 
             return await tx.user.findUnique({
