@@ -7,15 +7,14 @@ import {
   CardContent,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { getTroopConfigurations } from "@/lib/data"
 import { Clock, PlusCircle, Target, Boxes, DollarSign, Shield, Swords, Ban } from "lucide-react"
-import { getSessionUser } from "@/lib/auth"
 import { iniciarReclutamiento } from "@/lib/actions/troop.actions"
 import { useEffect, useState } from "react"
-import type { ConfiguracionTropa, UserWithProgress } from "@prisma/client/edge"
+import type { ConfiguracionTropa } from "@prisma/client"
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
 import { Terminal } from "lucide-react"
 import { Input } from "../ui/input"
+import type { UserWithProgress } from "@/lib/data"
 
 function formatNumber(num: number): string {
   if (num < 1000) {
@@ -56,7 +55,7 @@ function formatDuration(seconds: number) {
 }
 
 type RecruitmentViewProps = {
-    troopConfigs: (ConfiguracionTropa & { count: number })[];
+    troopConfigs: ConfiguracionTropa[];
     user: UserWithProgress;
 }
 
@@ -127,11 +126,7 @@ function TroopForm({ troop, user }: { troop: ConfiguracionTropa, user: UserWithP
     )
 }
 
-export async function RecruitmentView() {
-  const [troopConfigs, user] = await Promise.all([
-    getTroopConfigurations(),
-    getSessionUser()
-  ]);
+export function RecruitmentView({ user, troopConfigs }: RecruitmentViewProps) {
 
   if (!user || !user.propiedades || user.propiedades.length === 0) {
     return <div>Error al cargar datos de usuario o propiedad.</div>

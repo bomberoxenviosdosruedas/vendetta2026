@@ -2,6 +2,9 @@
 import { RecruitmentView } from "@/components/dashboard/recruitment-view"
 import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
+import { getTroopConfigurations, UserWithProgress } from "@/lib/data"
+import { getSessionUser } from "@/lib/auth"
+import { redirect } from "next/navigation"
 
 function RecruitmentLoading() {
     return (
@@ -28,11 +31,18 @@ function RecruitmentLoading() {
     )
   }
 
-export default function RecruitmentPage() {
+export default async function RecruitmentPage() {
+  const user = await getSessionUser();
+  if (!user) {
+    redirect('/');
+  }
+
+  const troopConfigs = await getTroopConfigurations();
+
   return (
     <div className="flex flex-col space-y-4">
       <Suspense fallback={<RecruitmentLoading />}>
-          <RecruitmentView />
+          <RecruitmentView user={user} troopConfigs={troopConfigs} />
       </Suspense>
     </div>
   )
