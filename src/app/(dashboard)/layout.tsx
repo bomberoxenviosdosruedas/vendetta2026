@@ -1,4 +1,5 @@
 
+
 import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ResourceBar } from "@/components/dashboard/resource-bar";
@@ -10,9 +11,9 @@ import { getSessionUser } from "@/lib/auth";
 
 function ResourceBarFallback() {
     return (
-        <div className="w-full bg-gray-900 text-white p-2">
+        <div className="w-full bg-black/80 text-white p-2">
             <div className="container mx-auto flex items-center justify-between h-8">
-                <Skeleton className="h-5 w-full bg-gray-700" />
+                <Skeleton className="h-5 w-full bg-muted" />
             </div>
         </div>
     )
@@ -31,14 +32,11 @@ export default async function DashboardLayout({
     redirect('/');
   }
 
-  // Verificar finalización de colas en orden
   const userAfterConstructionCheck = await verificarYFinalizarConstruccion(sessionUser);
   const userAfterRecruitmentCheck = await verificarYFinalizarReclutamiento(userAfterConstructionCheck);
   
-  // Actualizar recursos generados
   const userWithUpdatedProgress = await obtenerEstadoJuegoActualizado(userAfterRecruitmentCheck);
   
-  // Actualizar la puntuación del usuario
   const finalUser = await actualizarPuntuacionUsuario(userWithUpdatedProgress);
 
 

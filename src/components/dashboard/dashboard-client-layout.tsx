@@ -14,7 +14,7 @@ import { SidebarNav } from "@/components/dashboard/sidebar-nav"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
-import { LogOut } from "lucide-react"
+import { LogOut, Swords } from "lucide-react"
 import type { UserWithProgress } from "@/lib/data"
 import { logout } from "@/lib/auth"
 import { useRouter } from "next/navigation"
@@ -38,7 +38,10 @@ export function DashboardClientLayout({
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
-           <h2 className="p-2 text-lg font-semibold tracking-tight text-primary">Vendetta</h2>
+           <div className="flex items-center gap-2 p-2">
+            <Swords className="h-6 w-6 text-primary" />
+            <h2 className="text-lg font-semibold tracking-tight text-foreground">Vendetta</h2>
+           </div>
         </SidebarHeader>
         <SidebarContent>
           <SidebarNav user={user} />
@@ -62,10 +65,15 @@ export function DashboardClientLayout({
         </SidebarFooter>
       </Sidebar>
       <SidebarInset className="flex flex-col">
-        <div className="flex items-center justify-between border-b p-2 md:p-1 md:pl-3">
+        {/* Main Header */}
+        <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:h-16 sm:px-6">
+            <div className="flex items-center gap-2 md:hidden">
+                <Swords className="h-6 w-6 text-primary" />
+                <span className="font-semibold text-lg">Vendetta</span>
+            </div>
+             <div className="flex-1" />
             <SidebarTrigger className="md:hidden" />
-            <div className="flex-1" />
-        </div>
+        </header>
         {children}
       </SidebarInset>
     </SidebarProvider>
