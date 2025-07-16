@@ -72,15 +72,15 @@ const CoordinateInput = ({ label, value, onChange }: { label: string, value: num
     }
     
     return (
-        <div className="flex flex-col items-center gap-2">
-            <span className="text-sm font-medium">{label}</span>
+        <div className="flex flex-col items-center gap-1">
+            <span className="text-xs font-medium">{label}</span>
             <div className="flex items-center gap-1">
                 <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => handleChange(-1)}>
                     <ChevronLeft className="h-4 w-4" />
                 </Button>
                 <Input 
                     type="number" 
-                    className="w-20 h-8 text-center" 
+                    className="w-16 h-8 text-center" 
                     value={value}
                     onChange={(e) => onChange(parseInt(e.target.value, 10) || 1)}
                 />
@@ -133,10 +133,10 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
     return (
         <Card>
             <CardContent className="p-4 space-y-4">
-                <div className="flex flex-col sm:flex-row justify-center items-center gap-4 p-2 rounded-lg bg-muted border">
+                <div className="flex flex-row justify-center items-end gap-2 p-2 rounded-lg bg-muted border flex-wrap">
                     <CoordinateInput label="Ciudad" value={ciudad} onChange={setCiudad} />
                     <CoordinateInput label="Barrio" value={barrio} onChange={setBarrio} />
-                    <Button onClick={updateMap} disabled={isLoading} className="mt-auto">
+                    <Button onClick={updateMap} disabled={isLoading} size="sm" className="h-8">
                         {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                         Ir
                     </Button>
