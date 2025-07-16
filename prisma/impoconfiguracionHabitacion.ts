@@ -1,0 +1,73 @@
+
+import { PrismaClient } from '@prisma/client/edge';
+import * as datosHabitaciones from './importar/configuracionHabitacion.json';
+
+const prisma = new PrismaClient();
+
+interface HabitacionData {
+  id: string;
+  nombre: string;
+  descripcion: string;
+  urlImagen: string;
+  costoArmas: number;
+  costoMunicion: number;
+  costoDolares: number;
+  duracion: number;
+  produccion: number;
+  puntos: number;
+}
+
+async function main() {
+  console.log('🏠 Iniciando la importación de configuración de habitaciones...');
+
+  // El archivo JSON es un array, por lo que podemos iterar directamente
+  const habitaciones: HabitacionData[] = datosHabitaciones;
+
+  for (const habitacion of habitaciones) {
+    try {
+      await prisma.configuracionHabitacion.upsert({
+        where: { id: habitacion.id },
+        update: {
+          nombre: habitacion.nombre,
+          descripcion: habitacion.descripcion,
+          urlImagen: habitacion.urlImagen,
+          costoArmas: habitacion.costoArmas,
+          costoMunicion: habitacion.costoMunicion,
+          costoDolares: habitacion.costoDolares,
+          duracion: habitacion.duracion,
+          produccion: habitacion.produccion,
+          puntos: habitacion.puntos,
+        },
+        create: {
+          id: habitacion.id,
+          nombre: habitacion.nombre,
+          descripcion: habitacion.descripcion,
+          urlImagen: habitacion.urlImagen,
+          costoArmas: habitacion.costoArmas,
+          costoMunicion: habitacion.costoMunicion,
+          costoDolares: habitacion.costoDolares,
+          duracion: habitacion.duracion,
+          produccion: habitacion.produccion,
+          puntos: habitacion.puntos,
+        },
+      });
+      console.log(`✅ Configuración para '${habitacion.nombre}' procesada.`);
+    } catch (error) {
+      console.error(`❌ Error procesando '${habitacion.nombre}':`, error);
+    }
+  }
+
+  console.log('🎉 Importación de configuración de habitaciones finalizada.');
+}
+
+main()
+  .catch(async (e) => {
+    console.error('❌ Error general en el script de importación:', e);
+    await prisma.$disconnect();
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
+
+    
