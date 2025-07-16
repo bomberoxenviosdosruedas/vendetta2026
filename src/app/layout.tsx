@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 const APP_NAME = "Vendetta";
-const APP_DEFAULT_TITLE = "Vendetta - Tu Imperio Mafioso";
+const APP_DEFAULT_TITLE = "Vendetta tu familia Vendettera";
 const APP_TITLE_TEMPLATE = "%s | Vendetta";
 const APP_DESCRIPTION = "Gestiona tu imperio mafioso, construye edificios, recluta tropas y domina la ciudad en Vendetta, un juego de estrategia en tiempo real.";
 
