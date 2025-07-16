@@ -52,6 +52,9 @@ export async function iniciarAmpliacion(propiedadId: string, habitacionId: strin
     ) {
       return { error: 'No tienes suficientes recursos para esta ampliación.' };
     }
+
+    // Calcular la duración de esta construcción específica
+    const duracion = calcularTiempoConstruccion(nivelSiguiente, config, nivelOficinaJefe);
   
     try {
       await prisma.$transaction([
@@ -68,6 +71,7 @@ export async function iniciarAmpliacion(propiedadId: string, habitacionId: strin
                 propiedadId: propiedadId,
                 habitacionId: habitacionId,
                 nivelDestino: nivelSiguiente,
+                duracion: duracion, // Guardar la duración
                 // fechaInicio y fechaFinalizacion se calcularán cuando la construcción se active
                 fechaInicio: null,
                 fechaFinalizacion: null,

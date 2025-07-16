@@ -3,7 +3,7 @@
 
 import prisma from "../prisma/prisma";
 import type { UserWithProgress } from "../data";
-import { calcularProduccionTotalPorSegundo, calcularTiempoConstruccion } from "../formulas/room-formulas";
+import { calcularProduccionTotalPorSegundo } from "../formulas/room-formulas";
 import { revalidatePath } from "next/cache";
 import { calcularPuntosEntrenamientos, calcularPuntosHabitaciones, calcularPuntosTropas } from "../formulas/score-formulas";
 
@@ -61,66 +61,78 @@ async function verificarYFinalizarConstruccionDePropiedad(user: UserWithProgress
   const cola = [...propiedad.colaConstruccion].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
   if (cola.length === 0) return user;
 
-  const construccionActiva = cola[0];
   let seHizoUnCambio = false;
+  let ultimaFechaFinalizacion = new Date(); // Inicia con la hora actual por si no hay nada activo
 
-  // Si la construcción activa ya ha terminado
-  if (construccionActiva.fechaFinalizacion && new Date() >= new Date(construccionActiva.fechaFinalizacion)) {
+  // Buscar la construcción activa (si la hay)
+  const construccionActiva = cola.find(c => c.fechaFinalizacion && new Date() < new Date(c.fechaFinalizacion));
+  if (construccionActiva) {
+    ultimaFechaFinalizacion = new Date(construccionActiva.fechaFinalizacion);
+  }
+
+  // Procesar construcciones terminadas
+  const construccionesTerminadas = cola.filter(c => c.fechaFinalizacion && new Date() >= new Date(c.fechaFinalizacion));
+  
+  if (construccionesTerminadas.length > 0) {
     try {
         await prisma.$transaction(async (tx) => {
-            // Actualizar nivel de la habitación
-            await tx.habitacionUsuario.update({
-                where: {
-                    propiedadId_configuracionHabitacionId: {
-                        propiedadId: propiedadId,
-                        configuracionHabitacionId: construccionActiva.habitacionId,
+            for (const terminada of construccionesTerminadas) {
+                // Actualizar nivel de la habitación
+                await tx.habitacionUsuario.update({
+                    where: {
+                        propiedadId_configuracionHabitacionId: {
+                            propiedadId: propiedadId,
+                            configuracionHabitacionId: terminada.habitacionId,
+                        },
                     },
-                },
-                data: {
-                    nivel: construccionActiva.nivelDestino,
-                },
-            });
-            // Eliminar de la cola
-            await tx.colaConstruccion.delete({
-                where: { id: construccionActiva.id },
-            });
+                    data: {
+                        nivel: terminada.nivelDestino,
+                    },
+                });
+                // Eliminar de la cola
+                await tx.colaConstruccion.delete({
+                    where: { id: terminada.id },
+                });
+            }
         });
         seHizoUnCambio = true;
     } catch (error) {
-        console.error(`Error finalizando construcción ${construccionActiva.id}:`, error);
+        console.error(`Error finalizando construcciones:`, error);
     }
   }
 
-  // Si se finalizó una, o si la primera de la cola aún no ha comenzado, intentamos activar la siguiente.
-  if (seHizoUnCambio || !construccionActiva.fechaFinalizacion) {
-      // Re-fetch de la propiedad para obtener el estado de la cola actualizado
+  // Activar la siguiente construcción en la cola si es necesario
+  if (seHizoUnCambio || !construccionActiva) {
       const propiedadActualizada = await prisma.propiedad.findUnique({
           where: { id: propiedadId },
-          include: { colaConstruccion: { orderBy: { createdAt: 'asc' } }, habitaciones: { include: { configuracion: true }} },
+          include: { colaConstruccion: { orderBy: { createdAt: 'asc' } } },
       });
 
       if (propiedadActualizada && propiedadActualizada.colaConstruccion.length > 0) {
-          const proximaConstruccion = propiedadActualizada.colaConstruccion[0];
-          // Si no tiene fecha de finalización, es la que hay que activar
-          if (!proximaConstruccion.fechaFinalizacion) {
-            const configHabitacion = propiedad.habitaciones.find(h => h.configuracionHabitacionId === proximaConstruccion.habitacionId)?.configuracion;
-            if (configHabitacion) {
-              const nivelOficinaJefe = propiedad.habitaciones.find(h => h.configuracionHabitacionId === 'oficina_del_jefe')?.nivel || 1;
-              const tiempo = calcularTiempoConstruccion(proximaConstruccion.nivelDestino, configHabitacion, nivelOficinaJefe);
-              const fechaInicio = new Date();
-              const fechaFinalizacion = new Date(fechaInicio.getTime() + tiempo * 1000);
-              
-              await prisma.colaConstruccion.update({
-                where: { id: proximaConstruccion.id },
+        let proximaFechaInicio = new Date();
+        const ultimaConstruccionActiva = cola.find(c => c.fechaFinalizacion);
+        if(ultimaConstruccionActiva && ultimaConstruccionActiva.fechaFinalizacion) {
+          proximaFechaInicio = new Date(ultimaConstruccionActiva.fechaFinalizacion);
+        }
+
+        const colaParaActivar = propiedadActualizada.colaConstruccion.filter(c => !c.fechaFinalizacion);
+        
+        for (const construccion of colaParaActivar) {
+            const fechaInicio = new Date(proximaFechaInicio);
+            const fechaFinalizacion = new Date(fechaInicio.getTime() + construccion.duracion * 1000);
+
+            await prisma.colaConstruccion.update({
+                where: { id: construccion.id },
                 data: { fechaInicio, fechaFinalizacion },
-              });
-              seHizoUnCambio = true;
-            }
-          }
+            });
+            proximaFechaInicio = fechaFinalizacion; // La siguiente comienza cuando esta termina
+            seHizoUnCambio = true;
+        }
       }
   }
 
   if (seHizoUnCambio) {
+    // Re-fetch para devolver el estado más actualizado
     const updatedUser = await prisma.user.findUnique({
       where: { id: user.id },
       include: {
@@ -141,9 +153,7 @@ async function verificarYFinalizarConstruccionDePropiedad(user: UserWithProgress
 export async function verificarYFinalizarConstruccion(user: UserWithProgress): Promise<UserWithProgress> {
     let userActualizado = user;
     for (const propiedad of user.propiedades) {
-        if (propiedad.colaConstruccion.length > 0) {
-            userActualizado = await verificarYFinalizarConstruccionDePropiedad(userActualizado, propiedad.id);
-        }
+        userActualizado = await verificarYFinalizarConstruccionDePropiedad(userActualizado, propiedad.id);
     }
     return userActualizado;
 }

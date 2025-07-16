@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { X, Hourglass, CheckCircle } from 'lucide-react';
+import { X, Hourglass, CheckCircle, Timer } from 'lucide-react';
 import type { FullPropiedad } from '@/lib/data';
 import { useRouter } from 'next/navigation';
 
@@ -24,21 +24,23 @@ type ConstructionQueueProps = {
 
 export function ConstructionQueue({ propiedad, allRooms }: ConstructionQueueProps) {
     const router = useRouter();
-    const [tiempoRestante, setTiempoRestante] = useState<number>(0);
+    const [tiempoRestanteTotal, setTiempoRestanteTotal] = useState<number>(0);
     
     const construccionesEnCola = propiedad.colaConstruccion;
-    const construccionActiva = construccionesEnCola.length > 0 ? construccionesEnCola[0] : null;
 
     useEffect(() => {
-        if (!construccionActiva?.fechaFinalizacion) return;
+        if (construccionesEnCola.length === 0) return;
 
-        const fin = new Date(construccionActiva.fechaFinalizacion).getTime();
+        const ultimaConstruccion = construccionesEnCola[construccionesEnCola.length - 1];
+        if (!ultimaConstruccion.fechaFinalizacion) return;
+
+        const finTotal = new Date(ultimaConstruccion.fechaFinalizacion).getTime();
 
         const updateTimer = () => {
             const ahora = new Date().getTime();
-            const diferencia = Math.floor((fin - ahora) / 1000);
-            setTiempoRestante(diferencia);
-            if (diferencia < 0) {
+            const diferencia = Math.floor((finTotal - ahora) / 1000);
+            setTiempoRestanteTotal(diferencia);
+            if (diferencia < -1) { // Pequeño margen para refrescar
                 router.refresh();
             }
         };
@@ -47,54 +49,45 @@ export function ConstructionQueue({ propiedad, allRooms }: ConstructionQueueProp
         const intervalId = setInterval(updateTimer, 1000);
 
         return () => clearInterval(intervalId);
-    }, [construccionActiva, router]);
+    }, [construccionesEnCola, router]);
 
-    if (!construccionActiva) {
+    if (construccionesEnCola.length === 0) {
         return null;
     }
     
-    const roomConfigActiva = allRooms.find(r => r.id === construccionActiva.habitacionId);
+    const construccionActiva = construccionesEnCola.find(c => c.fechaFinalizacion && new Date(c.fechaFinalizacion) > new Date());
 
     return (
         <Card className="mb-4">
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-primary">Cola de Construcción ({propiedad.nombre})</CardTitle>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Timer className="h-4 w-4" />
+                    <span>Total:</span>
+                    <span className="font-mono font-bold text-foreground">{formatTime(tiempoRestanteTotal)}</span>
+                </div>
             </CardHeader>
             <CardContent className="space-y-2">
-                {/* Construcción Activa */}
-                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                    <div className="flex items-center gap-2">
-                        <CheckCircle className="h-5 w-5 text-green-500 animate-pulse" />
-                        <p className="font-semibold">
-                            {roomConfigActiva?.nombre || 'Habitación'} Nivel {construccionActiva.nivelDestino}
-                        </p>
-                    </div>
-                    <div className="flex items-center gap-4">
-                        <span className="font-mono text-lg font-bold text-primary">
-                            {formatTime(tiempoRestante)}
-                        </span>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive">
-                           <X className="h-5 w-5" />
-                           <span className="sr-only">Cancelar</span>
-                        </Button>
-                    </div>
-                </div>
-
-                {/* Construcciones en Espera */}
-                {construccionesEnCola.slice(1).map((colaItem, index) => {
-                    const roomConfigEspera = allRooms.find(r => r.id === colaItem.habitacionId);
+                {construccionesEnCola.map((colaItem, index) => {
+                    const roomConfig = allRooms.find(r => r.id === colaItem.habitacionId);
+                    const esActiva = colaItem.id === construccionActiva?.id;
                     return (
-                        <div key={colaItem.id} className="flex items-center justify-between p-3 bg-muted/20 rounded-lg text-sm">
-                            <div className="flex items-center gap-2">
-                                <Hourglass className="h-4 w-4 text-amber-500" />
-                                <p className="text-muted-foreground">
-                                   {index + 1}. {roomConfigEspera?.nombre || 'Habitación'} Nivel {colaItem.nivelDestino}
+                         <div key={colaItem.id} className={`flex items-center justify-between p-3 rounded-lg ${esActiva ? 'bg-muted/50' : 'bg-muted/20'}`}>
+                            <div className="flex items-center gap-3">
+                                {esActiva ? <CheckCircle className="h-5 w-5 text-green-500 animate-pulse" /> : <Hourglass className="h-5 w-5 text-amber-500" />}
+                                <p className="font-semibold">
+                                    {index + 1}. {roomConfig?.nombre || 'Habitación'} Nivel {colaItem.nivelDestino}
                                 </p>
                             </div>
-                            <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive">
-                               <X className="h-4 w-4" />
-                               <span className="sr-only">Cancelar</span>
-                            </Button>
+                            <div className="flex items-center gap-4">
+                                <span className="font-mono text-sm font-bold text-primary">
+                                    {formatTime(colaItem.duracion)}
+                                </span>
+                                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive">
+                                   <X className="h-5 w-5" />
+                                   <span className="sr-only">Cancelar</span>
+                                </Button>
+                            </div>
                         </div>
                     );
                 })}
