@@ -1,8 +1,11 @@
 
-import { LoginForm } from "@/components/login-form";
-import { Suspense } from "react";
+'use client'
+
+import { Suspense, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
+import { LoginForm } from "@/components/login-form";
+import { RegisterForm } from "@/components/register-form";
 
 function LoginLoading() {
   return (
@@ -29,7 +32,9 @@ function LoginLoading() {
 }
 
 
-export default async function Home() {
+export default function Home() {
+  const [showRegister, setShowRegister] = useState(false);
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-gray-900 space-y-8">
         <Image 
@@ -41,7 +46,11 @@ export default async function Home() {
             priority
         />
       <Suspense fallback={<LoginLoading />}>
-        <LoginForm />
+        {showRegister ? (
+          <RegisterForm onSwitchToLogin={() => setShowRegister(false)} />
+        ) : (
+          <LoginForm onSwitchToRegister={() => setShowRegister(true)} />
+        )}
       </Suspense>
     </main>
   );
