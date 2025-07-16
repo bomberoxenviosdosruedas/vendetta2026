@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { revalidatePath } from "next/cache";
@@ -30,7 +31,8 @@ export async function iniciarReclutamiento(tropaId: string, cantidad: number) {
          return { error: 'Configuración de tropa no encontrada.' };
     }
 
-    const nivelCampoEntrenamiento = user.habitaciones.find(h => h.configuracionHabitacionId === 'campo_de_entrenamiento')?.nivel || 1;
+    const propiedadActual = user.propiedades[0];
+    const nivelCampoEntrenamiento = propiedadActual.habitaciones.find(h => h.configuracionHabitacionId === 'campo_de_entrenamiento')?.nivel || 1;
 
     const costoArmasTotal = config.costoArmas * cantidad;
     const costoMunicionTotal = config.costoMunicion * cantidad;

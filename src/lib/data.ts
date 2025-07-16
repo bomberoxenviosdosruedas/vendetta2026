@@ -2,7 +2,7 @@
 
 "use server"
 
-import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa } from '@prisma/client/edge'
+import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 
 const prisma = new PrismaClient().$extends(withAccelerate())
@@ -19,9 +19,13 @@ export type FullColaReclutamiento = ColaReclutamiento & {
   tropaConfig: ConfiguracionTropa;
 };
 
+export type FullPropiedad = Propiedad & {
+    habitaciones: FullHabitacionUsuario[];
+}
+
 export type UserWithProgress = User & {
     progreso: ProgresoUsuario | null;
-    habitaciones: FullHabitacionUsuario[];
+    propiedades: FullPropiedad[];
     entrenamientos: (EntrenamientoUsuario & { configuracion: ConfiguracionEntrenamiento })[];
     tropas: TropaUsuario[];
     colaConstruccion: ColaConstruccion | null;
@@ -74,40 +78,46 @@ export async function getUsers() {
     }
 }
 
+const userInclude = {
+    progreso: true,
+    propiedades: {
+        include: {
+            habitaciones: {
+                include: {
+                    configuracion: {
+                      include: {
+                        escalado: true
+                      }
+                    }
+                },
+                 orderBy: {
+                    configuracionHabitacionId: 'asc'
+                }
+            }
+        }
+    },
+    entrenamientos: {
+        include: {
+            configuracion: true
+        },
+        orderBy: {
+            configuracionEntrenamientoId: 'asc'
+        }
+    },
+    tropas: true,
+    colaConstruccion: true,
+    colaReclutamiento: {
+      include: {
+        tropaConfig: true
+      }
+    },
+};
+
 export async function getUserByUsername(username: string): Promise<UserWithProgress | null> {
     try {
         const user = await prisma.user.findUnique({
             where: { username },
-            include: {
-                progreso: true,
-                habitaciones: {
-                    include: {
-                        configuracion: {
-                          include: {
-                            escalado: true
-                          }
-                        }
-                    },
-                    orderBy: {
-                        configuracionHabitacionId: 'asc'
-                    }
-                },
-                entrenamientos: {
-                    include: {
-                        configuracion: true
-                    },
-                    orderBy: {
-                        configuracionEntrenamientoId: 'asc'
-                    }
-                },
-                tropas: true,
-                colaConstruccion: true,
-                colaReclutamiento: {
-                  include: {
-                    tropaConfig: true
-                  }
-                },
-            }
+            include: userInclude
         });
         return user as UserWithProgress | null;
     } catch (error) {
@@ -121,36 +131,7 @@ export async function getUserWithProgressByUsername(username: string): Promise<U
     try {
         const user = await prisma.user.findUnique({
             where: { username },
-            include: {
-                progreso: true,
-                habitaciones: {
-                    include: {
-                        configuracion: {
-                          include: {
-                            escalado: true,
-                          }
-                        }
-                    },
-                    orderBy: {
-                        configuracionHabitacionId: 'asc'
-                    }
-                },
-                entrenamientos: {
-                    include: {
-                        configuracion: true
-                    },
-                     orderBy: {
-                        configuracionEntrenamientoId: 'asc'
-                    }
-                },
-                tropas: true,
-                colaConstruccion: true,
-                colaReclutamiento: {
-                  include: {
-                    tropaConfig: true
-                  }
-                },
-            }
+            include: userInclude
         });
         return user as UserWithProgress | null;
     } catch (error) {

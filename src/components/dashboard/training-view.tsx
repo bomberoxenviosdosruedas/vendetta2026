@@ -54,12 +54,14 @@ function formatDuration(seconds: number) {
 export async function TrainingView() {
   const user = await getSessionUser();
 
-  if (!user) {
-    return <div>Usuario no encontrado</div>
+  if (!user || !user.propiedades || user.propiedades.length === 0) {
+    return <div>Usuario o propiedad no encontrado</div>
   }
 
+  // Asumimos que la escuela de especialización está en la primera propiedad.
+  const propiedadActual = user.propiedades[0];
   const userTrainingsMap = new Map(user.entrenamientos.map(t => [t.configuracionEntrenamientoId, t]));
-  const nivelEscuela = user.habitaciones.find(h => h.configuracionHabitacionId === 'escuela_especializacion')?.nivel || 0;
+  const nivelEscuela = propiedadActual.habitaciones.find(h => h.configuracionHabitacionId === 'escuela_especializacion')?.nivel || 0;
 
   const allTrainingConfigs = await getTrainingConfigurations();
   

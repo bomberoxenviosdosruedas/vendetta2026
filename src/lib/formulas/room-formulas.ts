@@ -130,7 +130,7 @@ export function calcularProduccionRecurso(idHabitacion: string, nivel: number): 
 
 /**
  * Calcula la producción total por segundo para todos los recursos del usuario.
- * @param user - El objeto de usuario con su progreso y habitaciones.
+ * @param user - El objeto de usuario con su progreso y propiedades.
  * @returns Un objeto con la producción por segundo de cada recurso.
  */
 export function calcularProduccionTotalPorSegundo(user: UserWithProgress): { armas: number, municion: number, alcohol: number, dolares: number } {
@@ -139,29 +139,31 @@ export function calcularProduccionTotalPorSegundo(user: UserWithProgress): { arm
   let produccionAlcoholPorSegundo = 0;
   let produccionDolaresPorSegundo = 0;
 
-  user.habitaciones.forEach(habitacion => {
-    const config = habitacion.configuracion;
-    if (!config.escalado?.produccionRecurso || habitacion.nivel === 0) return;
+  user.propiedades.forEach(propiedad => {
+    propiedad.habitaciones.forEach(habitacion => {
+        const config = habitacion.configuracion;
+        if (!config.escalado?.produccionRecurso || habitacion.nivel === 0) return;
 
-    const produccionPorHora = calcularProduccionRecurso(config.id, habitacion.nivel);
-    const produccionPorSegundo = produccionPorHora / 3600;
+        const produccionPorHora = calcularProduccionRecurso(config.id, habitacion.nivel);
+        const produccionPorSegundo = produccionPorHora / 3600;
 
-    switch (config.escalado.produccionRecurso) {
-        case 'armas':
-            produccionArmasPorSegundo += produccionPorSegundo;
-            break;
-        case 'municion':
-            produccionMunicionPorSegundo += produccionPorSegundo;
-            break;
-        case 'alcohol':
-            produccionAlcoholPorSegundo += produccionPorSegundo;
-            break;
-        case 'dolares':
-        case 'dolares_por_alcohol': // Ambos contribuyen a dólares
-            produccionDolaresPorSegundo += produccionPorSegundo;
-            break;
-    }
-  });
+        switch (config.escalado.produccionRecurso) {
+            case 'armas':
+                produccionArmasPorSegundo += produccionPorSegundo;
+                break;
+            case 'municion':
+                produccionMunicionPorSegundo += produccionPorSegundo;
+                break;
+            case 'alcohol':
+                produccionAlcoholPorSegundo += produccionPorSegundo;
+                break;
+            case 'dolares':
+            case 'dolares_por_alcohol': // Ambos contribuyen a dólares
+                produccionDolaresPorSegundo += produccionPorSegundo;
+                break;
+        }
+    });
+  })
 
   return {
     armas: produccionArmasPorSegundo,

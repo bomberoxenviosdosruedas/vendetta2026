@@ -17,6 +17,7 @@ async function main() {
   const models: (keyof PrismaClient)[] = [
     'user',
     'progresoUsuario',
+    'propiedad',
     'habitacionUsuario',
     'entrenamientoUsuario',
     'tropaUsuario',

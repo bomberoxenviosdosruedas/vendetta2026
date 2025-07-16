@@ -133,8 +133,8 @@ export async function RecruitmentView() {
     getSessionUser()
   ]);
 
-  if (!user) {
-    return <div>Error al cargar datos de usuario.</div>
+  if (!user || !user.propiedades || user.propiedades.length === 0) {
+    return <div>Error al cargar datos de usuario o propiedad.</div>
   }
 
   const desiredOrder = [

@@ -68,11 +68,13 @@ async function handleAmpliacion(habitacionId: string) {
 export async function RoomsView() {
   const user = await getSessionUser()
 
-  if (!user) {
-    return <div>Usuario no encontrado</div>
+  if (!user || !user.propiedades || user.propiedades.length === 0) {
+    return <div>Usuario o propiedad no encontrado</div>
   }
 
-  const userRoomsMap = new Map(user.habitaciones.map(h => [h.configuracionHabitacionId, h]));
+  // Por ahora trabajamos con la primera propiedad
+  const propiedadActual = user.propiedades[0];
+  const userRoomsMap = new Map(propiedadActual.habitaciones.map(h => [h.configuracionHabitacionId, h]));
   const construccionActiva = user.colaConstruccion;
 
   const allRoomConfigs = await getRoomConfigurations();

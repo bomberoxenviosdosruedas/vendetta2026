@@ -151,7 +151,7 @@ async function main() {
   }
   console.log('✅ Configuración de tropas cargada.');
 
-  console.log('👤 Creando o actualizando usuario y su progreso inicial...');
+  console.log('👤 Creando o actualizando usuario y datos iniciales...');
   
   const bomberox = await prisma.user.upsert({
     where: { username: 'bomberox' },
@@ -177,18 +177,38 @@ async function main() {
     },
   });
 
-  console.log('🏢 Asignando habitaciones iniciales al usuario...');
+  const propiedadPrincipal = await prisma.propiedad.upsert({
+    where: { 
+      ciudad_barrio_edificio: {
+        ciudad: 1,
+        barrio: 1,
+        edificio: 1
+      }
+    },
+    update: {
+      userId: bomberox.id
+    },
+    create: {
+      userId: bomberox.id,
+      nombre: 'Propiedad Principal',
+      ciudad: 1,
+      barrio: 1,
+      edificio: 1
+    }
+  })
+
+  console.log('🏢 Asignando habitaciones iniciales a la propiedad principal...');
   for (const roomId of roomConfigIds) {
     await prisma.habitacionUsuario.upsert({
       where: {
-        userId_configuracionHabitacionId: {
-          userId: bomberox.id,
-          configuracionHabitacionId: roomId,
-        },
+        propiedadId_configuracionHabitacionId: {
+            propiedadId: propiedadPrincipal.id,
+            configuracionHabitacionId: roomId,
+        }
       },
       update: {},
       create: {
-        userId: bomberox.id,
+        propiedadId: propiedadPrincipal.id,
         configuracionHabitacionId: roomId,
         nivel: roomId === 'oficina_del_jefe' ? 1 : 0,
       },

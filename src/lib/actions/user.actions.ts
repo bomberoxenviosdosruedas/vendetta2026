@@ -61,10 +61,14 @@ export async function verificarYFinalizarConstruccion(user: UserWithProgress) {
 
   try {
     const userActualizado = await prisma.$transaction(async (tx) => {
+        // Asumimos que la construcción se realiza en la primera propiedad.
+        // Esto deberá cambiar cuando se implemente la selección de propiedades.
+        const propiedadId = user.propiedades[0].id;
+
         await tx.habitacionUsuario.update({
           where: {
-            userId_configuracionHabitacionId: {
-              userId: user.id,
+            propiedadId_configuracionHabitacionId: {
+              propiedadId: propiedadId,
               configuracionHabitacionId: construccionActiva.habitacionId,
             },
           },
@@ -83,7 +87,7 @@ export async function verificarYFinalizarConstruccion(user: UserWithProgress) {
             where: { id: user.id },
             include: {
               progreso: true,
-              habitaciones: { include: { configuracion: { include: { escalado: true } } } },
+              propiedades: { include: { habitaciones: { include: { configuracion: { include: { escalado: true } } } } } },
               entrenamientos: { include: { configuracion: true } },
               tropas: true,
               colaConstruccion: true,
@@ -153,7 +157,7 @@ export async function verificarYFinalizarReclutamiento(user: UserWithProgress): 
                 where: { id: user.id },
                 include: {
                     progreso: true,
-                    habitaciones: { include: { configuracion: { include: { escalado: true } } } },
+                    propiedades: { include: { habitaciones: { include: { configuracion: { include: { escalado: true } } } } } },
                     entrenamientos: { include: { configuracion: true } },
                     tropas: true,
                     colaConstruccion: true,
