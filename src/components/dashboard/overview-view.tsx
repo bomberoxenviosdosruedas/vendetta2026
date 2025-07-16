@@ -13,10 +13,10 @@ import { getRoomConfigurations } from "@/lib/data";
 async function ActionIcons() {
     // Estas son acciones placeholder, puedes darles funcionalidad en el futuro
     const actions = [
-        { icon: <Bell className="h-5 w-5" />, notification: 5, label: "Notificaciones" },
-        { icon: <MessageSquare className="h-5 w-5" />, notification: 12, label: "Mensajes" },
-        { icon: <Briefcase className="h-5 w-5" />, notification: 2, label: "Operaciones" },
-        { icon: <UserPlus className="h-5 w-5" />, notification: 1, label: "Invitaciones" },
+        { icon: <Bell className="h-5 w-5" />, notification: 0, label: "Notificaciones" },
+        { icon: <MessageSquare className="h-5 w-5" />, notification: 0, label: "Mensajes" },
+        { icon: <Briefcase className="h-5 w-5" />, notification: 0, label: "Operaciones" },
+        { icon: <UserPlus className="h-5 w-5" />, notification: 0, label: "Invitaciones" },
     ]
     return (
         <div className="absolute top-4 right-4 flex flex-col items-center gap-3">
