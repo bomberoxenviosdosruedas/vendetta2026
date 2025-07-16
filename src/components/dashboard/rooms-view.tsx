@@ -1,3 +1,4 @@
+
 'use client'
 
 import Image from "next/image"
@@ -28,12 +29,12 @@ function formatNumber(num: number): string {
 }
 
 
-function formatDuration(seconds: number) {
+function formatDuration(seconds: number): string {
     if (seconds <= 0) return "0s";
 
-    const units = [
-        { name: 'a', seconds: 31536000 },
-        { name: 'mes', seconds: 2592000 },
+    const units: {name: string, seconds: number}[] = [
+        { name: 'año', seconds: 31536000 },
+        { name: 'sem', seconds: 604800 },
         { name: 'd', seconds: 86400 },
         { name: 'h', seconds: 3600 },
         { name: 'm', seconds: 60 },
@@ -45,16 +46,19 @@ function formatDuration(seconds: number) {
     let parts = 0;
 
     for (const unit of units) {
-        if (remainingSeconds >= unit.seconds && parts < 2) {
+        if (remainingSeconds >= unit.seconds && parts < 3) {
             const amount = Math.floor(remainingSeconds / unit.seconds);
-            result += `${amount}${unit.name} `;
-            remainingSeconds %= unit.seconds;
-            parts++;
+            if (amount > 0) {
+                result += `${amount}${unit.name} `;
+                remainingSeconds %= unit.seconds;
+                parts++;
+            }
         }
     }
 
     return result.trim() || '0s';
 }
+
 
 
 type RoomsViewProps = {
