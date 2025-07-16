@@ -27,13 +27,13 @@ const BuildingGrid = ({ properties, currentUser }: { properties: PropertyWithOwn
     });
 
     return (
-        <div className="grid grid-cols-15 gap-1 bg-card p-2 rounded-lg border">
+        <div className="grid grid-cols-15 gap-0.5 bg-card p-1 md:p-2 rounded-lg border">
             {buildings.map(({ edificio, property }) => {
                 const isOwnedByCurrentUser = property?.userId === currentUser.id;
                 const hasOwner = !!property;
                 
                 return (
-                    <TooltipProvider key={edificio}>
+                    <TooltipProvider key={edificio} delayDuration={0}>
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <div className={cn(
@@ -42,7 +42,7 @@ const BuildingGrid = ({ properties, currentUser }: { properties: PropertyWithOwn
                                     hasOwner ? "bg-destructive text-destructive-foreground hover:bg-destructive/90" : 
                                     "bg-muted hover:bg-muted/80"
                                 )}>
-                                    {edificio}
+                                    <span className="scale-75 md:scale-100">{edificio}</span>
                                 </div>
                             </TooltipTrigger>
                             <TooltipContent>
@@ -107,7 +107,6 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
         router.push(`${pathname}?${params.toString()}`);
     }
 
-    // Effect to refetch data when ciudad/barrio changes via router params
     const searchParams = useSearchParams();
     useEffect(() => {
         const ciudadParam = searchParams.get('ciudad');
@@ -143,7 +142,7 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
                     </Button>
                 </div>
 
-                <div className="relative">
+                <div className="relative max-w-4xl mx-auto">
                     {isLoading && (
                         <div className="absolute inset-0 bg-background/80 flex items-center justify-center rounded-lg z-10">
                             <Loader2 className="h-8 w-8 animate-spin text-primary" />
