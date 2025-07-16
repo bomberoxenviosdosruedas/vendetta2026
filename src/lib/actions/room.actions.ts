@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import prisma from "../prisma/prisma";
 import { getSessionUser } from "../auth";
 import { FullConfiguracionHabitacion } from "../data";
-import { calcularCostosNivel } from "../formulas/room-formulas";
+import { calcularCostosNivel, calcularTiempoConstruccion } from "../formulas/room-formulas";
 
 
 export async function iniciarAmpliacion(habitacionId: string) {
@@ -12,6 +12,10 @@ export async function iniciarAmpliacion(habitacionId: string) {
   
     if (!user || !user.progreso) {
       return { error: 'Usuario no autenticado.' };
+    }
+
+    if (user.colaConstruccion) {
+        return { error: 'Ya hay una construcción en progreso.' };
     }
 
     const habitacionUsuario = user.habitaciones.find(h => h.configuracionHabitacionId === habitacionId);
@@ -27,8 +31,10 @@ export async function iniciarAmpliacion(habitacionId: string) {
 
     const nivelActual = habitacionUsuario.nivel;
     const nivelSiguiente = nivelActual + 1;
+    const nivelOficinaJefe = user.habitaciones.find(h => h.configuracionHabitacionId === 'oficina_del_jefe')?.nivel || 1;
   
     const costos = calcularCostosNivel(nivelSiguiente, config as FullConfiguracionHabitacion);
+    const tiempo = calcularTiempoConstruccion(nivelSiguiente, config as FullConfiguracionHabitacion, nivelOficinaJefe);
   
     if (
       user.progreso.armas < costos.armas ||
@@ -39,6 +45,9 @@ export async function iniciarAmpliacion(habitacionId: string) {
     }
   
     try {
+      const fechaInicio = new Date();
+      const fechaFinalizacion = new Date(fechaInicio.getTime() + tiempo * 1000);
+
       await prisma.$transaction([
         prisma.progresoUsuario.update({
           where: { userId: user.id },
@@ -48,23 +57,22 @@ export async function iniciarAmpliacion(habitacionId: string) {
             dolares: { decrement: costos.dolares },
           },
         }),
-        prisma.habitacionUsuario.update({
-            where: {
-                userId_configuracionHabitacionId: {
-                    userId: user.id,
-                    configuracionHabitacionId: habitacionId,
-                }
-            },
+        prisma.colaConstruccion.create({
             data: {
-                nivel: { increment: 1 },
+                userId: user.id,
+                habitacionId: habitacionId,
+                nivelDestino: nivelSiguiente,
+                fechaInicio: fechaInicio,
+                fechaFinalizacion: fechaFinalizacion
             }
         })
       ]);
   
       revalidatePath('/rooms');
       revalidatePath('/overview'); 
+      revalidatePath('/(dashboard)/layout', 'layout');
   
-      return { success: `¡${config.nombre} ampliado a nivel ${nivelSiguiente}!` };
+      return { success: `¡La ampliación de ${config.nombre} a nivel ${nivelSiguiente} ha comenzado!` };
     } catch (error) {
       console.error('Error durante la transacción de ampliación:', error);
       return { error: 'Ocurrió un error en el servidor al intentar ampliar.' };

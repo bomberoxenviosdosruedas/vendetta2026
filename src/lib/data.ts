@@ -1,7 +1,7 @@
 
 "use server"
 
-import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion, ConfiguracionEntrenamiento } from '@prisma/client/edge'
+import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion, ConfiguracionEntrenamiento, ColaConstruccion } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 
 const prisma = new PrismaClient().$extends(withAccelerate())
@@ -19,6 +19,7 @@ export type UserWithProgress = User & {
     habitaciones: FullHabitacionUsuario[];
     entrenamientos: (EntrenamientoUsuario & { configuracion: ConfiguracionEntrenamiento })[];
     tropas: TropaUsuario[];
+    colaConstruccion: ColaConstruccion | null;
 };
 
 export async function getRoomConfigurations(): Promise<FullConfiguracionHabitacion[]> {
@@ -93,7 +94,8 @@ export async function getUserByUsername(username: string): Promise<UserWithProgr
                         configuracionEntrenamientoId: 'asc'
                     }
                 },
-                tropas: true
+                tropas: true,
+                colaConstruccion: true,
             }
         });
         return user as UserWithProgress | null;
@@ -130,7 +132,8 @@ export async function getUserWithProgressByUsername(username: string): Promise<U
                         configuracionEntrenamientoId: 'asc'
                     }
                 },
-                tropas: true
+                tropas: true,
+                colaConstruccion: true,
             }
         });
         return user as UserWithProgress | null;

@@ -3,7 +3,7 @@ import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ResourceBar } from "@/components/dashboard/resource-bar";
 import { DashboardClientLayout } from "@/components/dashboard/dashboard-client-layout";
-import { obtenerEstadoJuegoActualizado } from "@/lib/actions/user.actions";
+import { obtenerEstadoJuegoActualizado, verificarYFinalizarConstruccion } from "@/lib/actions/user.actions";
 import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth";
 
@@ -25,13 +25,18 @@ export default async function DashboardLayout({
     children: React.ReactNode
   }) {
   
-  const sessionUser = await getSessionUser();
+  let sessionUser = await getSessionUser();
 
   if (!sessionUser) {
     redirect('/');
   }
 
-  const userWithUpdatedProgress = await obtenerEstadoJuegoActualizado(sessionUser);
+  // Primero, verificar si alguna construcción ha finalizado
+  const userAfterConstructionCheck = await verificarYFinalizarConstruccion(sessionUser);
+
+  // Luego, actualizar los recursos generados con el tiempo
+  const userWithUpdatedProgress = await obtenerEstadoJuegoActualizado(userAfterConstructionCheck);
+
 
   return (
     <DashboardClientLayout user={userWithUpdatedProgress}>

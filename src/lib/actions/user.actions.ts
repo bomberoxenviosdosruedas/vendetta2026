@@ -3,6 +3,7 @@
 import prisma from "../prisma/prisma";
 import type { UserWithProgress } from "../data";
 import { calcularProduccionTotalPorSegundo } from "../formulas/room-formulas";
+import { revalidatePath } from "next/cache";
 
 export async function obtenerEstadoJuegoActualizado(user: UserWithProgress) {
   if (!user || !user.progreso) {
@@ -47,6 +48,58 @@ export async function obtenerEstadoJuegoActualizado(user: UserWithProgress) {
     };
   } catch (error) {
     console.error("Error al actualizar el progreso del usuario:", error);
+    return user;
+  }
+}
+
+export async function verificarYFinalizarConstruccion(user: UserWithProgress) {
+  const construccionActiva = user.colaConstruccion;
+  if (!construccionActiva || new Date() < new Date(construccionActiva.fechaFinalizacion)) {
+    return user;
+  }
+
+  try {
+    await prisma.$transaction([
+      prisma.habitacionUsuario.update({
+        where: {
+          userId_configuracionHabitacionId: {
+            userId: user.id,
+            configuracionHabitacionId: construccionActiva.habitacionId,
+          },
+        },
+        data: {
+          nivel: construccionActiva.nivelDestino,
+        },
+      }),
+      prisma.colaConstruccion.delete({
+        where: {
+          userId: user.id,
+        },
+      }),
+    ]);
+    
+    // Forzar revalidación de datos en las rutas afectadas
+    revalidatePath('/rooms');
+    revalidatePath('/overview');
+    revalidatePath('/(dashboard)/layout', 'layout');
+
+    // Volver a obtener el usuario con los datos actualizados
+    const userActualizado = await prisma.user.findUnique({
+      where: { id: user.id },
+      include: {
+        progreso: true,
+        habitaciones: { include: { configuracion: { include: { escalado: true } } } },
+        entrenamientos: { include: { configuracion: true } },
+        tropas: true,
+        colaConstruccion: true,
+      }
+    });
+
+    return userActualizado as UserWithProgress;
+
+  } catch (error) {
+    console.error("Error finalizando la construcción:", error);
+    // Si falla, simplemente devolvemos el usuario original
     return user;
   }
 }

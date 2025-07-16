@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { getRoomConfigurations } from "@/lib/data"
-import { Clock, PlusCircle, Target, Boxes, DollarSign } from "lucide-react"
+import { Clock, PlusCircle, Target, Boxes, DollarSign, Ban } from "lucide-react"
 import { getSessionUser } from "@/lib/auth"
 import { calcularCostosNivel, calcularTiempoConstruccion } from "@/lib/formulas/room-formulas"
 import { iniciarAmpliacion } from "@/lib/actions/room.actions"
@@ -55,6 +55,7 @@ async function handleAmpliacion(habitacionId: string) {
   'use server'
   const resultado = await iniciarAmpliacion(habitacionId);
   if (resultado?.error) {
+    // Idealmente, mostrar un toast de error aquí
     console.error(resultado.error);
   } else {
     revalidatePath('/rooms');
@@ -72,6 +73,7 @@ export async function RoomsView() {
   }
 
   const userRoomsMap = new Map(user.habitaciones.map(h => [h.configuracionHabitacionId, h]));
+  const construccionActiva = user.colaConstruccion;
 
   const allRoomConfigs = await getRoomConfigurations();
 
@@ -87,8 +89,13 @@ export async function RoomsView() {
       if (!config) return null;
 
       const userRoom = userRoomsMap.get(id);
-      const nivel = userRoom ? userRoom.nivel : 0;
+      let nivel = userRoom ? userRoom.nivel : 0;
       const nivelOficinaJefe = userRoomsMap.get('oficina_del_jefe')?.nivel || 1;
+      
+      let enConstruccion = false;
+      if (construccionActiva && construccionActiva.habitacionId === id) {
+        enConstruccion = true;
+      }
 
       const costosSiguienteNivel = calcularCostosNivel(nivel + 1, config);
       const tiempoSiguienteNivel = calcularTiempoConstruccion(nivel + 1, config, nivelOficinaJefe);
@@ -101,6 +108,7 @@ export async function RoomsView() {
           nivel,
           costos: costosSiguienteNivel,
           tiempo: tiempoSiguienteNivel,
+          enConstruccion,
       };
   }).filter(Boolean);
 
@@ -134,7 +142,7 @@ export async function RoomsView() {
                         <div>
                             <div className="font-bold">{room.nombre}</div>
                             <div className="text-sm text-primary">
-                            Nivel {room.nivel}
+                             Nivel {room.nivel} {room.enConstruccion ? '(Mejorando...)' : ''}
                             </div>
                         </div>
                     </div>
@@ -158,8 +166,9 @@ export async function RoomsView() {
                                 </div>
                             </div>
                              <form action={handleAmpliacion.bind(null, room.id)}>
-                                <Button type="submit" variant="outline" size="sm">
-                                    <PlusCircle className="mr-2 h-4 w-4" /> Ampliar
+                                <Button type="submit" variant="outline" size="sm" disabled={!!construccionActiva}>
+                                    {construccionActiva ? <Ban className="mr-2 h-4 w-4" /> : <PlusCircle className="mr-2 h-4 w-4" />}
+                                    {construccionActiva ? 'En cola...' : 'Ampliar'}
                                 </Button>
                             </form>
                         </div>

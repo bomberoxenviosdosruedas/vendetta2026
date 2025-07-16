@@ -1,160 +1,140 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-// =================================================
-// 1. Modelo de Usuario y Autenticación
-// =================================================
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  username  String   @unique
-  password  String // En una app real, esto debería ser un hash
-  title     String?
-  avatarUrl String?
-
-  progreso       ProgresoUsuario?
-  habitaciones   HabitacionUsuario[]
-  entrenamientos EntrenamientoUsuario[]
-  tropas         TropaUsuario[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               String          @id @default(cuid())
+  name             String
+  username         String          @unique
+  password         String
+  title            String
+  avatarUrl        String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  progreso         ProgresoUsuario?
+  habitaciones     HabitacionUsuario[]
+  entrenamientos   EntrenamientoUsuario[]
+  tropas           TropaUsuario[]
+  colaConstruccion ColaConstruccion?
 }
 
-// =================================================
-// 2. Modelo de Progreso del Jugador
-// =================================================
 model ProgresoUsuario {
   id                  String   @id @default(cuid())
-  user                User     @relation(fields: [userId], references: [id])
   userId              String   @unique
-  dolares             Float
-  armas               Float
-  municion            Float
-  alcohol             Float
-  ultimaActualizacion DateTime @default(now()) @updatedAt
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dolares             Float    @default(0)
+  armas               Float    @default(0)
+  municion            Float    @default(0)
+  alcohol             Float    @default(0)
+  ultimaActualizacion DateTime @default(now())
 }
 
-// =================================================
-// 3. Modelos de Juego (Configuraciones Estáticas)
-// =================================================
+model HabitacionUsuario {
+  id                          String                  @id @default(cuid())
+  userId                      String
+  user                        User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  configuracionHabitacionId   String
+  configuracion               ConfiguracionHabitacion @relation(fields: [configuracionHabitacionId], references: [id])
+  nivel                       Int                     @default(0)
 
-// Define las propiedades base de cada tipo de edificio.
-// Se puebla con datos de `room_types_data.json`
+  @@unique([userId, configuracionHabitacionId])
+}
+
+model EntrenamientoUsuario {
+  id                             String                     @id @default(cuid())
+  userId                         String
+  user                           User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  configuracionEntrenamientoId   String
+  configuracion                  ConfiguracionEntrenamiento @relation(fields: [configuracionEntrenamientoId], references: [id])
+  nivel                          Int                        @default(0)
+
+  @@unique([userId, configuracionEntrenamientoId])
+}
+
+model TropaUsuario {
+  id                   String             @id @default(cuid())
+  userId               String
+  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  configuracionTropaId String
+  configuracion        ConfiguracionTropa @relation(fields: [configuracionTropaId], references: [id])
+  cantidad             Int                @default(0)
+
+  @@unique([userId, configuracionTropaId])
+}
+
+model ColaConstruccion {
+  id                String     @id @default(cuid())
+  userId            String     @unique
+  user              User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  habitacionId      String
+  nivelDestino      Int
+  fechaInicio       DateTime
+  fechaFinalizacion DateTime
+
+  @@index([userId])
+}
+
+// --- Tablas de Configuración (Datos estáticos del juego) ---
+
 model ConfiguracionHabitacion {
-  id              String      @id
-  nombre          String
-  descripcion     String      @db.Text
-  urlImagen       String
-  costoArmas      Int
-  costoMunicion   Int
-  costoDolares    Int
-  duracion        Int // Duración base en segundos
-  produccion      Float? // Producción base por hora
-  puntos          Float
-  
-  // Relaciones
-  habitacionesUsuario HabitacionUsuario[]
-  escalado            ConfiguracionEscaladoHabitacion?
+  id             String                          @id @unique
+  nombre         String
+  descripcion    String
+  urlImagen      String?
+  costoArmas     Int
+  costoMunicion  Int
+  costoDolares   Int
+  duracion       Int // en segundos
+  produccion     Float
+  puntos         Float
+  HabitacionUsuario    HabitacionUsuario[]
+  escalado       ConfiguracionEscaladoHabitacion? @relation(fields: [id], references: [id])
 }
 
-// Nuevo modelo para las reglas de escalado
 model ConfiguracionEscaladoHabitacion {
-  id                       String  @id
-  configuracionHabitacion  ConfiguracionHabitacion @relation(fields: [id], references: [id])
-  
-  produccionRecurso        String? // ej: "armas", "municion", "alcohol", "dolares"
-  formulaAumentoProduccion String?
-  factorCostoPorNivel      Float
-  formulaTiempo            String?
+  id                        String  @id @unique
+  produccionRecurso         String?
+  formulaAumentoProduccion  String?
+  factorCostoPorNivel       Float
+  formulaTiempo             String?
 }
 
-// Define las propiedades de cada tipo de entrenamiento.
-// Se puebla con datos de `entrenamientos_types_data.json`
 model ConfiguracionEntrenamiento {
-  id            String   @id
-  nombre        String
-  urlImagen     String
-  costoArmas    Int
-  costoMunicion Int
-  costoDolares  Int
-  duracion      Int // en segundos
-  puntos        Float
-
-  // Relaciones
-  entrenamientosUsuario EntrenamientoUsuario[]
+  id                String                 @id @unique
+  nombre            String
+  urlImagen         String?
+  costoArmas        Int
+  costoMunicion     Int
+  costoDolares      Int
+  duracion          Int
+  puntos            Float
+  EntrenamientoUsuario  EntrenamientoUsuario[]
 }
 
-// Define las propiedades de cada tipo de tropa.
-// Se puebla con datos de `tropas_types_data.json`
 model ConfiguracionTropa {
-  id            String   @id
+  id            String         @id @unique
   nombre        String
-  urlImagen     String
-  descripcion   String   @db.Text
+  urlImagen     String?
+  descripcion   String
   costoArmas    Int
   costoMunicion Int
   costoDolares  Int
-  duracion      Int // en segundos
+  duracion      Int
   puntos        Float
   ataque        Int
   defensa       Int
   capacidad     Int
   velocidad     Int
-  salario       Float
+  salario       Int
   requisitos    String[]
   bonusAtaque   String[]
   bonusDefensa  String[]
-
-  // Relaciones
-  tropasUsuario TropaUsuario[]
-}
-
-// =================================================
-// 4. Modelos de Estado del Jugador (Tablas de enlace)
-// =================================================
-
-// Representa el nivel de una habitación para un usuario específico.
-model HabitacionUsuario {
-  id         String @id @default(cuid())
-  user       User   @relation(fields: [userId], references: [id])
-  userId     String
-  configuracion ConfiguracionHabitacion @relation(fields: [configuracionHabitacionId], references: [id])
-  configuracionHabitacionId String
-  nivel      Int    @default(0)
-
-  @@unique([userId, configuracionHabitacionId])
-}
-
-// Representa el nivel de un entrenamiento para un usuario.
-model EntrenamientoUsuario {
-  id               String                   @id @default(cuid())
-  user             User                     @relation(fields: [userId], references: [id])
-  userId           String
-  configuracion    ConfiguracionEntrenamiento @relation(fields: [configuracionEntrenamientoId], references: [id])
-  configuracionEntrenamientoId String
-  nivel            Int                      @default(0)
-
-  @@unique([userId, configuracionEntrenamientoId])
-}
-
-// Representa la cantidad de tropas de un tipo que posee un usuario.
-model TropaUsuario {
-  id             String             @id @default(cuid())
-  user           User               @relation(fields: [userId], references: [id])
-  userId         String
-  configuracion  ConfiguracionTropa @relation(fields: [configuracionTropaId], references: [id])
-  configuracionTropaId String
-  cantidad       Int                @default(0)
-
-  @@unique([userId, configuracionTropaId])
+  TropaUsuario      TropaUsuario[]
 }
