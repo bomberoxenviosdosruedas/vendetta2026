@@ -8,6 +8,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarGroup,
+  useSidebar,
 } from "@/components/ui/sidebar"
 import { 
     Home, 
@@ -67,6 +68,13 @@ const tertiaryNav: NavItem[] = [
 
 export function SidebarNav({ user }: SidebarNavProps) {
   const pathname = usePathname()
+  const { setOpenMobile, isMobile } = useSidebar()
+
+  const handleClick = () => {
+    if (isMobile) {
+        setOpenMobile(false)
+    }
+  }
 
   const renderNav = (items: NavItem[]) => (
     <SidebarMenu>
@@ -77,6 +85,7 @@ export function SidebarNav({ user }: SidebarNavProps) {
             href={item.href}
             isActive={pathname === item.href}
             tooltip={item.label}
+            onClick={handleClick}
           >
             {item.icon}
             <span>{item.label}</span>
