@@ -59,46 +59,51 @@ type RecruitmentViewProps = {
     user: UserWithProgress;
 }
 
-function RecruitmentQueueAlert({ user }: { user: UserWithProgress }) {
+function RecruitmentQueueAlert({ user, propiedadId }: { user: UserWithProgress, propiedadId: string }) {
     const [tiempoRestante, setTiempoRestante] = useState("");
+    const propiedad = user.propiedades.find(p => p.id === propiedadId);
+    const colaReclutamiento = propiedad?.colaReclutamiento;
 
     useEffect(() => {
-        if (!user.colaReclutamiento) return;
+        if (!colaReclutamiento) return;
 
         const interval = setInterval(() => {
             const ahora = new Date().getTime();
-            const fin = new Date(user.colaReclutamiento.fechaFinalizacion).getTime();
+            const fin = new Date(colaReclutamiento.fechaFinalizacion).getTime();
             const diferencia = Math.max(0, fin - ahora);
             setTiempoRestante(formatDuration(Math.floor(diferencia / 1000)));
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [user.colaReclutamiento]);
+    }, [colaReclutamiento]);
 
-    if (!user.colaReclutamiento) return null;
+    if (!colaReclutamiento) return null;
 
     return (
         <Alert>
             <Terminal className="h-4 w-4" />
-            <AlertTitle>Reclutamiento en curso</AlertTitle>
+            <AlertTitle>Reclutamiento en curso en {propiedad?.nombre}</AlertTitle>
             <AlertDescription>
-                Reclutando {user.colaReclutamiento.cantidad} x {user.colaReclutamiento.tropaConfig.nombre}. Tiempo restante: {tiempoRestante}
+                Reclutando {colaReclutamiento.cantidad} x {colaReclutamiento.tropaConfig.nombre}. Tiempo restante: {tiempoRestante}
             </AlertDescription>
         </Alert>
     )
 }
 
-function TroopForm({ troop, user }: { troop: ConfiguracionTropa, user: UserWithProgress }) {
+function TroopForm({ troop, user, propiedadId }: { troop: ConfiguracionTropa, user: UserWithProgress, propiedadId: string }) {
     const [cantidad, setCantidad] = useState(1);
     const [error, setError] = useState('');
     const [isPending, setIsPending] = useState(false);
+    
+    const propiedad = user.propiedades.find(p => p.id === propiedadId);
+    const colaReclutamientoActiva = !!propiedad?.colaReclutamiento;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
         setIsPending(true);
 
-        const result = await iniciarReclutamiento(troop.id, cantidad);
+        const result = await iniciarReclutamiento(propiedadId, troop.id, cantidad);
         
         if (result?.error) {
             setError(result.error);
@@ -115,11 +120,11 @@ function TroopForm({ troop, user }: { troop: ConfiguracionTropa, user: UserWithP
                 value={cantidad}
                 onChange={(e) => setCantidad(Number(e.target.value))}
                 className="w-20 h-9"
-                disabled={!!user.colaReclutamiento || isPending}
+                disabled={colaReclutamientoActiva || isPending}
             />
-            <Button type="submit" variant="outline" size="sm" disabled={!!user.colaReclutamiento || isPending}>
-                {user.colaReclutamiento ? <Ban className="mr-2 h-4 w-4" /> : <PlusCircle className="mr-2 h-4 w-4" />}
-                {isPending ? 'Enviando...' : (user.colaReclutamiento ? 'En cola' : 'Reclutar')}
+            <Button type="submit" variant="outline" size="sm" disabled={colaReclutamientoActiva || isPending}>
+                {colaReclutamientoActiva ? <Ban className="mr-2 h-4 w-4" /> : <PlusCircle className="mr-2 h-4 w-4" />}
+                {isPending ? 'Enviando...' : (colaReclutamientoActiva ? 'En cola' : 'Reclutar')}
             </Button>
             {error && <p className="text-xs text-destructive">{error}</p>}
         </form>
@@ -128,7 +133,9 @@ function TroopForm({ troop, user }: { troop: ConfiguracionTropa, user: UserWithP
 
 export function RecruitmentView({ user, troopConfigs }: RecruitmentViewProps) {
 
-  if (!user || !user.propiedades || user.propiedades.length === 0) {
+  const propiedadActual = user.propiedades[0];
+
+  if (!user || !propiedadActual) {
     return <div>Error al cargar datos de usuario o propiedad.</div>
   }
 
@@ -162,11 +169,11 @@ export function RecruitmentView({ user, troopConfigs }: RecruitmentViewProps) {
             <div>
                 <h2 className="text-3xl font-bold tracking-tight">Reclutamiento de Tropas</h2>
                 <p className="text-muted-foreground">
-                    Entrena a tus unidades para expandir tu imperio.
+                    Reclutando en: {propiedadActual.nombre}.
                 </p>
             </div>
        </div>
-        <RecruitmentQueueAlert user={user} />
+        <RecruitmentQueueAlert user={user} propiedadId={propiedadActual.id} />
       <Card>
         <CardContent className="p-0">
           <div className="divide-y divide-border">
@@ -217,7 +224,7 @@ export function RecruitmentView({ user, troopConfigs }: RecruitmentViewProps) {
                                   <span>{formatDuration(troop.duracion)} por unidad</span>
                               </div>
                           </div>
-                          <TroopForm troop={troop} user={user} />
+                          <TroopForm troop={troop} user={user} propiedadId={propiedadActual.id} />
                       </div>
                   </div>
                 </div>

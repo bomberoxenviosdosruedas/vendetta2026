@@ -5,11 +5,11 @@
 import { revalidatePath } from "next/cache";
 import prisma from "../prisma/prisma";
 import { getSessionUser } from "../auth";
-import { getTroopConfigurations, getUserWithProgressByUsername } from "../data";
+import { getTroopConfigurations } from "../data";
 import { calcularTiempoReclutamiento } from "../formulas/troop-formulas";
 
 
-export async function iniciarReclutamiento(tropaId: string, cantidad: number) {
+export async function iniciarReclutamiento(propiedadId: string, tropaId: string, cantidad: number) {
     const user = await getSessionUser();
   
     if (!user || !user.progreso) {
@@ -19,9 +19,14 @@ export async function iniciarReclutamiento(tropaId: string, cantidad: number) {
     if (cantidad <= 0) {
         return { error: 'La cantidad debe ser mayor que cero.' };
     }
+    
+    const propiedadActual = user.propiedades.find(p => p.id === propiedadId);
+    if (!propiedadActual) {
+        return { error: 'Propiedad no encontrada para este usuario.' };
+    }
 
-    if (user.colaReclutamiento) {
-        return { error: 'Ya hay un reclutamiento en progreso.' };
+    if (propiedadActual.colaReclutamiento) {
+        return { error: 'Ya hay un reclutamiento en progreso en esta propiedad.' };
     }
 
     const troopConfigs = await getTroopConfigurations();
@@ -31,7 +36,6 @@ export async function iniciarReclutamiento(tropaId: string, cantidad: number) {
          return { error: 'Configuración de tropa no encontrada.' };
     }
 
-    const propiedadActual = user.propiedades[0];
     const nivelCampoEntrenamiento = propiedadActual.habitaciones.find(h => h.configuracionHabitacionId === 'campo_de_entrenamiento')?.nivel || 1;
 
     const costoArmasTotal = config.costoArmas * cantidad;
@@ -63,7 +67,7 @@ export async function iniciarReclutamiento(tropaId: string, cantidad: number) {
         }),
         prisma.colaReclutamiento.create({
             data: {
-                userId: user.id,
+                propiedadId: propiedadId,
                 tropaId: tropaId,
                 cantidad: cantidad,
                 fechaInicio: fechaInicio,

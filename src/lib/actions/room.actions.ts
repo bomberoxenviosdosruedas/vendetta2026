@@ -7,21 +7,20 @@ import { FullConfiguracionHabitacion } from "../data";
 import { calcularCostosNivel, calcularTiempoConstruccion } from "../formulas/room-formulas";
 
 
-export async function iniciarAmpliacion(habitacionId: string) {
+export async function iniciarAmpliacion(propiedadId: string, habitacionId: string) {
     const user = await getSessionUser();
   
     if (!user || !user.progreso) {
       return { error: 'Usuario no autenticado.' };
     }
-
-    if (user.colaConstruccion) {
-        return { error: 'Ya hay una construcción en progreso.' };
-    }
     
-    // CORRECCIÓN: Acceder a las habitaciones a través de la primera propiedad del usuario.
-    const propiedadActual = user.propiedades[0];
+    const propiedadActual = user.propiedades.find(p => p.id === propiedadId);
     if (!propiedadActual) {
-        return { error: 'El usuario no tiene una propiedad asignada.' };
+        return { error: 'Propiedad no encontrada para este usuario.' };
+    }
+
+    if (propiedadActual.colaConstruccion) {
+        return { error: 'Ya hay una construcción en progreso en esta propiedad.' };
     }
 
     const habitacionUsuario = propiedadActual.habitaciones.find(h => h.configuracionHabitacionId === habitacionId);
@@ -65,7 +64,7 @@ export async function iniciarAmpliacion(habitacionId: string) {
         }),
         prisma.colaConstruccion.create({
             data: {
-                userId: user.id,
+                propiedadId: propiedadId,
                 habitacionId: habitacionId,
                 nivelDestino: nivelSiguiente,
                 fechaInicio: fechaInicio,

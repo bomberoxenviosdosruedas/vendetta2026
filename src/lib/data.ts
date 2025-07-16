@@ -1,6 +1,5 @@
 
 
-
 "use server"
 
 import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario } from '@prisma/client/edge'
@@ -22,6 +21,8 @@ export type FullColaReclutamiento = ColaReclutamiento & {
 
 export type FullPropiedad = Propiedad & {
     habitaciones: FullHabitacionUsuario[];
+    colaConstruccion: ColaConstruccion | null;
+    colaReclutamiento: FullColaReclutamiento | null;
 }
 
 export type UserWithProgress = User & {
@@ -29,8 +30,6 @@ export type UserWithProgress = User & {
     propiedades: FullPropiedad[];
     entrenamientos: (EntrenamientoUsuario & { configuracion: ConfiguracionEntrenamiento })[];
     tropas: (TropaUsuario & { configuracion: ConfiguracionTropa })[];
-    colaConstruccion: ColaConstruccion | null;
-    colaReclutamiento: FullColaReclutamiento | null;
     puntuacion: PuntuacionUsuario | null;
 };
 
@@ -142,6 +141,12 @@ const userInclude = {
                  orderBy: {
                     configuracionHabitacionId: 'asc'
                 }
+            },
+            colaConstruccion: true,
+            colaReclutamiento: {
+                include: {
+                    tropaConfig: true
+                }
             }
         }
     },
@@ -156,12 +161,6 @@ const userInclude = {
     tropas: {
       include: {
         configuracion: true
-      }
-    },
-    colaConstruccion: true,
-    colaReclutamiento: {
-      include: {
-        tropaConfig: true
       }
     },
     puntuacion: true,

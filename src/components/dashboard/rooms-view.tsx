@@ -1,4 +1,5 @@
 
+
 'use client'
 
 import Image from "next/image"
@@ -64,13 +65,14 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
     const [isSubmitting, setIsSubmitting] = useState<string | null>(null);
     const { toast } = useToast();
 
-    if (!user || !user.propiedades || user.propiedades.length === 0) {
+    // Por ahora, trabajaremos con la primera propiedad del usuario.
+    const propiedadActual = user.propiedades[0];
+    if (!propiedadActual) {
         return <div>Usuario o propiedad no encontrado</div>
     }
 
-    const propiedadActual = user.propiedades[0];
     const userRoomsMap = new Map(propiedadActual.habitaciones.map(h => [h.configuracionHabitacionId, h]));
-    const construccionActiva = user.colaConstruccion;
+    const construccionActiva = propiedadActual.colaConstruccion;
 
     const desiredOrder = [
         'oficina_del_jefe', 'escuela_especializacion', 'armeria', 'almacen_de_municion',
@@ -107,7 +109,7 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
 
     const handleAmpliacion = async (habitacionId: string) => {
         setIsSubmitting(habitacionId);
-        const resultado = await iniciarAmpliacion(habitacionId);
+        const resultado = await iniciarAmpliacion(propiedadActual.id, habitacionId);
         if (resultado?.error) {
             toast({
                 title: "Error al ampliar",
@@ -127,12 +129,12 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
 
     return (
         <div className="space-y-4">
-            <ConstructionQueue user={user} allRooms={simpleRoomConfigs} />
+            <ConstructionQueue propiedad={propiedadActual} allRooms={simpleRoomConfigs} />
             <div className="flex items-center justify-between">
                 <div>
                     <h2 className="text-3xl font-bold tracking-tight">Gestión de Habitaciones</h2>
                     <p className="text-muted-foreground">
-                        Amplía y gestiona los edificios de tu propiedad.
+                        Amplía y gestiona los edificios de tu propiedad: {propiedadActual.nombre}.
                     </p>
                 </div>
             </div>

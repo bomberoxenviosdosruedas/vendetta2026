@@ -1,32 +1,33 @@
 
+
 'use client';
 
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
-import type { UserWithProgress } from '@/lib/data';
+import type { FullPropiedad, UserWithProgress } from '@/lib/data';
 import { useRouter } from 'next/navigation';
 
 function formatTime(totalSeconds: number) {
     if (totalSeconds < 0) totalSeconds = 0;
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
+    const seconds = Math.floor(totalSeconds % 60);
     return [hours, minutes, seconds]
         .map(v => v.toString().padStart(2, '0'))
         .join(':');
 }
 
 type ConstructionQueueProps = {
-    user: UserWithProgress;
+    propiedad: FullPropiedad;
     allRooms: { id: string; nombre: string; }[];
 };
 
-export function ConstructionQueue({ user, allRooms }: ConstructionQueueProps) {
+export function ConstructionQueue({ propiedad, allRooms }: ConstructionQueueProps) {
     const router = useRouter();
     const [tiempoRestante, setTiempoRestante] = useState<number>(0);
-    const construccionActiva = user.colaConstruccion;
+    const construccionActiva = propiedad.colaConstruccion;
     
     useEffect(() => {
         if (!construccionActiva) return;
@@ -38,7 +39,6 @@ export function ConstructionQueue({ user, allRooms }: ConstructionQueueProps) {
             const diferencia = Math.floor((fin - ahora) / 1000);
             setTiempoRestante(diferencia);
             if (diferencia <= 0) {
-                // Forzar una recarga para que el layout del servidor procese la finalización
                 router.refresh();
             }
         };
@@ -58,7 +58,7 @@ export function ConstructionQueue({ user, allRooms }: ConstructionQueueProps) {
     return (
         <Card className="mb-4">
             <CardHeader>
-                <CardTitle className="text-primary">En Construcción</CardTitle>
+                <CardTitle className="text-primary">En Construcción ({propiedad.nombre})</CardTitle>
                 <CardDescription>Finalización de la construcción actual.</CardDescription>
             </CardHeader>
             <CardContent>

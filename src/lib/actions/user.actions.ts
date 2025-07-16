@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import prisma from "../prisma/prisma";
@@ -54,72 +55,75 @@ export async function obtenerEstadoJuegoActualizado(user: UserWithProgress) {
   }
 }
 
-export async function verificarYFinalizarConstruccion(user: UserWithProgress) {
-  const construccionActiva = user.colaConstruccion;
+async function verificarYFinalizarConstruccionDePropiedad(user: UserWithProgress, propiedadId: string): Promise<UserWithProgress> {
+  const propiedad = user.propiedades.find(p => p.id === propiedadId);
+  const construccionActiva = propiedad?.colaConstruccion;
+
   if (!construccionActiva || new Date() < new Date(construccionActiva.fechaFinalizacion)) {
     return user;
   }
 
   try {
-    const userActualizado = await prisma.$transaction(async (tx) => {
-        // Asumimos que la construcción se realiza en la primera propiedad.
-        // Esto deberá cambiar cuando se implemente la selección de propiedades.
-        const propiedadId = user.propiedades[0].id;
-
-        await tx.habitacionUsuario.update({
-          where: {
-            propiedadId_configuracionHabitacionId: {
-              propiedadId: propiedadId,
-              configuracionHabitacionId: construccionActiva.habitacionId,
-            },
+    await prisma.$transaction(async (tx) => {
+      await tx.habitacionUsuario.update({
+        where: {
+          propiedadId_configuracionHabitacionId: {
+            propiedadId: propiedadId,
+            configuracionHabitacionId: construccionActiva.habitacionId,
           },
-          data: {
-            nivel: construccionActiva.nivelDestino,
-          },
-        });
-        await tx.colaConstruccion.delete({
-          where: {
-            id: construccionActiva.id,
-          },
-        });
-  
-        // Devolver el usuario actualizado dentro de la transacción
-        return await tx.user.findUnique({
-            where: { id: user.id },
-            include: {
-              progreso: true,
-              propiedades: { include: { habitaciones: { include: { configuracion: { include: { escalado: true } } } } } },
-              entrenamientos: { include: { configuracion: true } },
-              tropas: { include: { configuracion: true } },
-              colaConstruccion: true,
-              colaReclutamiento: {
-                include: {
-                  tropaConfig: true
-                }
-              },
-              puntuacion: true,
-            }
-        });
+        },
+        data: {
+          nivel: construccionActiva.nivelDestino,
+        },
+      });
+      await tx.colaConstruccion.delete({
+        where: {
+          id: construccionActiva.id,
+        },
+      });
     });
-    
-    revalidatePath('/(dashboard)', 'layout');
 
-    return userActualizado as UserWithProgress;
+    // Re-fetch the user to get the most up-to-date state after the transaction
+    const updatedUser = await prisma.user.findUnique({
+      where: { id: user.id },
+      include: {
+        progreso: true,
+        propiedades: { include: { habitaciones: { include: { configuracion: { include: { escalado: true } } } }, colaConstruccion: true, colaReclutamiento: { include: { tropaConfig: true } } } },
+        entrenamientos: { include: { configuracion: true } },
+        tropas: { include: { configuracion: true } },
+        puntuacion: true,
+      }
+    });
+
+    revalidatePath('/(dashboard)', 'layout');
+    return updatedUser as UserWithProgress;
 
   } catch (error) {
-    console.error("Error finalizando la construcción:", error);
+    console.error(`Error finalizando la construcción en la propiedad ${propiedadId}:`, error);
     return user;
   }
 }
 
-export async function verificarYFinalizarReclutamiento(user: UserWithProgress): Promise<UserWithProgress> {
-    const reclutamientoActivo = user.colaReclutamiento;
-    if (!reclutamientoActivo || new Date() < new Date(reclutamientoActivo.fechaFinalizacion)) {
-      return user;
+export async function verificarYFinalizarConstruccion(user: UserWithProgress): Promise<UserWithProgress> {
+    let userActualizado = user;
+    for (const propiedad of user.propiedades) {
+        if (propiedad.colaConstruccion) {
+            userActualizado = await verificarYFinalizarConstruccionDePropiedad(userActualizado, propiedad.id);
+        }
     }
-  
+    return userActualizado;
+}
+
+async function verificarYFinalizarReclutamientoDePropiedad(user: UserWithProgress, propiedadId: string): Promise<UserWithProgress> {
+    const propiedad = user.propiedades.find(p => p.id === propiedadId);
+    const reclutamientoActivo = propiedad?.colaReclutamiento;
+
+    if (!reclutamientoActivo || new Date() < new Date(reclutamientoActivo.fechaFinalizacion)) {
+        return user;
+    }
+
     try {
-        const userActualizado = await prisma.$transaction(async (tx) => {
+        await prisma.$transaction(async (tx) => {
             const tropaExistente = await tx.tropaUsuario.findUnique({
                 where: {
                     userId_configuracionTropaId: {
@@ -154,33 +158,36 @@ export async function verificarYFinalizarReclutamiento(user: UserWithProgress): 
             await tx.colaReclutamiento.delete({
                 where: { id: reclutamientoActivo.id }
             });
-
-            return await tx.user.findUnique({
-                where: { id: user.id },
-                include: {
-                    progreso: true,
-                    propiedades: { include: { habitaciones: { include: { configuracion: { include: { escalado: true } } } } } },
-                    entrenamientos: { include: { configuracion: true } },
-                    tropas: { include: { configuracion: true } },
-                    colaConstruccion: true,
-                    colaReclutamiento: {
-                      include: {
-                        tropaConfig: true
-                      }
-                    },
-                    puntuacion: true,
-                }
-            });
         });
-      
+        
+        const updatedUser = await prisma.user.findUnique({
+            where: { id: user.id },
+            include: {
+                progreso: true,
+                propiedades: { include: { habitaciones: { include: { configuracion: { include: { escalado: true } } } }, colaConstruccion: true, colaReclutamiento: { include: { tropaConfig: true } } } },
+                entrenamientos: { include: { configuracion: true } },
+                tropas: { include: { configuracion: true } },
+                puntuacion: true,
+            }
+        });
+
         revalidatePath('/(dashboard)', 'layout');
-  
-      return userActualizado as UserWithProgress;
-  
+        return updatedUser as UserWithProgress;
+
     } catch (error) {
-      console.error("Error finalizando el reclutamiento:", error);
-      return user;
+        console.error(`Error finalizando el reclutamiento en la propiedad ${propiedadId}:`, error);
+        return user;
     }
+}
+
+export async function verificarYFinalizarReclutamiento(user: UserWithProgress): Promise<UserWithProgress> {
+    let userActualizado = user;
+    for (const propiedad of user.propiedades) {
+        if (propiedad.colaReclutamiento) {
+            userActualizado = await verificarYFinalizarReclutamientoDePropiedad(userActualizado, propiedad.id);
+        }
+    }
+    return userActualizado;
 }
 
 
@@ -208,7 +215,10 @@ export async function actualizarPuntuacionUsuario(user: UserWithProgress): Promi
       },
     });
 
-    return { ...user, puntuacion: puntuacionActualizada };
+    // We need to manually update the user object we pass around
+    const updatedUser = { ...user, puntuacion: puntuacionActualizada };
+    return updatedUser;
+    
   } catch (error) {
     console.error("Error actualizando la puntuación del usuario:", error);
     return user;
