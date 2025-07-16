@@ -39,18 +39,17 @@ export function calcularTiempoConstruccion(
     return config.duracion;
   }
 
+  // La Oficina del Jefe tiene su propia fórmula de tiempo más simple para no depender de sí misma.
   if (config.id === 'oficina_del_jefe') {
-    return Math.floor(config.duracion * Math.pow(1.15, nivel - 1));
+    return Math.floor(config.duracion * Math.pow(1.5, nivel - 1));
   }
 
-  const tiempoBase = nivel * 60;
-  const factorMultiplicador = 1.2 + Math.floor((nivel - 1) / 10) * 0.1;
-  const tiempoFinalAumento = tiempoBase * factorMultiplicador;
+  // Aseguramos que el nivel de la oficina sea como mínimo 1 para evitar división por cero.
+  const divisorOficina = Math.max(1, nivelOficinaJefe);
+  
+  const tiempoFinal = ((nivel * nivel) / divisorOficina) * config.duracion;
 
-  const bonusReduccion = Math.min(nivelOficinaJefe * 0.02, 0.5); 
-  const tiempoFinalConBonus = tiempoFinalAumento * (1 - bonusReduccion);
-
-  return Math.max(5, Math.floor(tiempoFinalConBonus));
+  return Math.max(5, Math.floor(tiempoFinal)); // Aseguramos un tiempo mínimo de construcción.
 }
 
 
