@@ -3,7 +3,7 @@ import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ResourceBar } from "@/components/dashboard/resource-bar";
 import { DashboardClientLayout } from "@/components/dashboard/dashboard-client-layout";
-import { obtenerEstadoJuegoActualizado, verificarYFinalizarConstruccion } from "@/lib/actions/user.actions";
+import { obtenerEstadoJuegoActualizado, verificarYFinalizarConstruccion, verificarYFinalizarReclutamiento } from "@/lib/actions/user.actions";
 import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth";
 
@@ -31,11 +31,12 @@ export default async function DashboardLayout({
     redirect('/');
   }
 
-  // Primero, verificar si alguna construcción ha finalizado
+  // Verificar finalización de colas en orden
   const userAfterConstructionCheck = await verificarYFinalizarConstruccion(sessionUser);
-
-  // Luego, actualizar los recursos generados con el tiempo
-  const userWithUpdatedProgress = await obtenerEstadoJuegoActualizado(userAfterConstructionCheck);
+  const userAfterRecruitmentCheck = await verificarYFinalizarReclutamiento(userAfterConstructionCheck);
+  
+  // Actualizar recursos generados
+  const userWithUpdatedProgress = await obtenerEstadoJuegoActualizado(userAfterRecruitmentCheck);
 
 
   return (

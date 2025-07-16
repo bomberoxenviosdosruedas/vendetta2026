@@ -1,7 +1,8 @@
 
+
 "use server"
 
-import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion, ConfiguracionEntrenamiento, ColaConstruccion } from '@prisma/client/edge'
+import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 
 const prisma = new PrismaClient().$extends(withAccelerate())
@@ -14,12 +15,17 @@ export type FullHabitacionUsuario = HabitacionUsuario & {
   configuracion: FullConfiguracionHabitacion 
 };
 
+export type FullColaReclutamiento = ColaReclutamiento & {
+  tropaConfig: ConfiguracionTropa;
+};
+
 export type UserWithProgress = User & {
     progreso: ProgresoUsuario | null;
     habitaciones: FullHabitacionUsuario[];
     entrenamientos: (EntrenamientoUsuario & { configuracion: ConfiguracionEntrenamiento })[];
     tropas: TropaUsuario[];
     colaConstruccion: ColaConstruccion | null;
+    colaReclutamiento: FullColaReclutamiento | null;
 };
 
 export async function getRoomConfigurations(): Promise<FullConfiguracionHabitacion[]> {
@@ -96,6 +102,11 @@ export async function getUserByUsername(username: string): Promise<UserWithProgr
                 },
                 tropas: true,
                 colaConstruccion: true,
+                colaReclutamiento: {
+                  include: {
+                    tropaConfig: true
+                  }
+                },
             }
         });
         return user as UserWithProgress | null;
@@ -134,6 +145,11 @@ export async function getUserWithProgressByUsername(username: string): Promise<U
                 },
                 tropas: true,
                 colaConstruccion: true,
+                colaReclutamiento: {
+                  include: {
+                    tropaConfig: true
+                  }
+                },
             }
         });
         return user as UserWithProgress | null;

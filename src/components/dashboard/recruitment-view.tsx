@@ -1,3 +1,6 @@
+
+'use client'
+
 import Image from "next/image"
 import {
   Card,
@@ -5,8 +8,14 @@ import {
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { getTroopConfigurations } from "@/lib/data"
-import { Clock, PlusCircle, Target, Boxes, DollarSign, Shield, Swords } from "lucide-react"
+import { Clock, PlusCircle, Target, Boxes, DollarSign, Shield, Swords, Ban } from "lucide-react"
 import { getSessionUser } from "@/lib/auth"
+import { iniciarReclutamiento } from "@/lib/actions/troop.actions"
+import { useEffect, useState } from "react"
+import type { ConfiguracionTropa, UserWithProgress } from "@prisma/client/edge"
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
+import { Terminal } from "lucide-react"
+import { Input } from "../ui/input"
 
 function formatNumber(num: number): string {
   if (num < 1000) {
@@ -17,7 +26,6 @@ function formatNumber(num: number): string {
   const shortValue = (num / Math.pow(1000, i));
   return shortValue.toFixed(i > 0 ? 2 : 0) + suffixes[i];
 }
-
 
 function formatDuration(seconds: number) {
     if (seconds <= 0) return "0s";
@@ -47,11 +55,87 @@ function formatDuration(seconds: number) {
     return result.trim() || '0s';
 }
 
+type RecruitmentViewProps = {
+    troopConfigs: (ConfiguracionTropa & { count: number })[];
+    user: UserWithProgress;
+}
+
+function RecruitmentQueueAlert({ user }: { user: UserWithProgress }) {
+    const [tiempoRestante, setTiempoRestante] = useState("");
+
+    useEffect(() => {
+        if (!user.colaReclutamiento) return;
+
+        const interval = setInterval(() => {
+            const ahora = new Date().getTime();
+            const fin = new Date(user.colaReclutamiento.fechaFinalizacion).getTime();
+            const diferencia = Math.max(0, fin - ahora);
+            setTiempoRestante(formatDuration(Math.floor(diferencia / 1000)));
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [user.colaReclutamiento]);
+
+    if (!user.colaReclutamiento) return null;
+
+    return (
+        <Alert>
+            <Terminal className="h-4 w-4" />
+            <AlertTitle>Reclutamiento en curso</AlertTitle>
+            <AlertDescription>
+                Reclutando {user.colaReclutamiento.cantidad} x {user.colaReclutamiento.tropaConfig.nombre}. Tiempo restante: {tiempoRestante}
+            </AlertDescription>
+        </Alert>
+    )
+}
+
+function TroopForm({ troop, user }: { troop: ConfiguracionTropa, user: UserWithProgress }) {
+    const [cantidad, setCantidad] = useState(1);
+    const [error, setError] = useState('');
+    const [isPending, setIsPending] = useState(false);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError('');
+        setIsPending(true);
+
+        const result = await iniciarReclutamiento(troop.id, cantidad);
+        
+        if (result?.error) {
+            setError(result.error);
+        }
+
+        setIsPending(false);
+    }
+    
+    return (
+        <form onSubmit={handleSubmit} className="flex items-center gap-2">
+            <Input 
+                type="number"
+                min="1"
+                value={cantidad}
+                onChange={(e) => setCantidad(Number(e.target.value))}
+                className="w-20 h-9"
+                disabled={!!user.colaReclutamiento || isPending}
+            />
+            <Button type="submit" variant="outline" size="sm" disabled={!!user.colaReclutamiento || isPending}>
+                {user.colaReclutamiento ? <Ban className="mr-2 h-4 w-4" /> : <PlusCircle className="mr-2 h-4 w-4" />}
+                {isPending ? 'Enviando...' : (user.colaReclutamiento ? 'En cola' : 'Reclutar')}
+            </Button>
+            {error && <p className="text-xs text-destructive">{error}</p>}
+        </form>
+    )
+}
+
 export async function RecruitmentView() {
   const [troopConfigs, user] = await Promise.all([
     getTroopConfigurations(),
     getSessionUser()
   ]);
+
+  if (!user) {
+    return <div>Error al cargar datos de usuario.</div>
+  }
 
   const desiredOrder = [
     'maton', 'portero', 'acuchillador', 'pistolero', 'ocupacion',
@@ -87,11 +171,12 @@ export async function RecruitmentView() {
                 </p>
             </div>
        </div>
+        <RecruitmentQueueAlert user={user} />
       <Card>
         <CardContent className="p-0">
           <div className="divide-y divide-border">
               {troopsWithCounts.map((troop) => (
-                <div key={troop.id} className="p-4 grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+                <div key={troop.id} className="p-4 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
                   <div className="md:col-span-3 flex items-start gap-4">
                       <div className="w-20 h-16 relative rounded-md overflow-hidden border flex-shrink-0">
                           <Image
@@ -134,14 +219,10 @@ export async function RecruitmentView() {
                               </div>
                               <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
                                   <Clock className="h-3 w-3" />
-                                  <span>{formatDuration(troop.duracion)}</span>
+                                  <span>{formatDuration(troop.duracion)} por unidad</span>
                               </div>
                           </div>
-                          <form>
-                              <Button variant="outline" size="sm">
-                                <PlusCircle className="mr-2 h-4 w-4" /> Reclutar
-                              </Button>
-                          </form>
+                          <TroopForm troop={troop} user={user} />
                       </div>
                   </div>
                 </div>

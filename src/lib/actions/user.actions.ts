@@ -1,3 +1,4 @@
+
 'use server';
 
 import prisma from "../prisma/prisma";
@@ -59,47 +60,118 @@ export async function verificarYFinalizarConstruccion(user: UserWithProgress) {
   }
 
   try {
-    await prisma.$transaction([
-      prisma.habitacionUsuario.update({
-        where: {
-          userId_configuracionHabitacionId: {
-            userId: user.id,
-            configuracionHabitacionId: construccionActiva.habitacionId,
+    const userActualizado = await prisma.$transaction(async (tx) => {
+        await tx.habitacionUsuario.update({
+          where: {
+            userId_configuracionHabitacionId: {
+              userId: user.id,
+              configuracionHabitacionId: construccionActiva.habitacionId,
+            },
           },
-        },
-        data: {
-          nivel: construccionActiva.nivelDestino,
-        },
-      }),
-      prisma.colaConstruccion.delete({
-        where: {
-          userId: user.id,
-        },
-      }),
-    ]);
-    
-    // Forzar revalidación de datos en las rutas afectadas
-    revalidatePath('/rooms');
-    revalidatePath('/overview');
-    revalidatePath('/(dashboard)/layout', 'layout');
-
-    // Volver a obtener el usuario con los datos actualizados
-    const userActualizado = await prisma.user.findUnique({
-      where: { id: user.id },
-      include: {
-        progreso: true,
-        habitaciones: { include: { configuracion: { include: { escalado: true } } } },
-        entrenamientos: { include: { configuracion: true } },
-        tropas: true,
-        colaConstruccion: true,
-      }
+          data: {
+            nivel: construccionActiva.nivelDestino,
+          },
+        });
+        await tx.colaConstruccion.delete({
+          where: {
+            userId: user.id,
+          },
+        });
+  
+        // Devolver el usuario actualizado dentro de la transacción
+        return await tx.user.findUnique({
+            where: { id: user.id },
+            include: {
+              progreso: true,
+              habitaciones: { include: { configuracion: { include: { escalado: true } } } },
+              entrenamientos: { include: { configuracion: true } },
+              tropas: true,
+              colaConstruccion: true,
+              colaReclutamiento: {
+                include: {
+                  tropaConfig: true
+                }
+              },
+            }
+        });
     });
+    
+    revalidatePath('/(dashboard)', 'layout');
 
     return userActualizado as UserWithProgress;
 
   } catch (error) {
     console.error("Error finalizando la construcción:", error);
-    // Si falla, simplemente devolvemos el usuario original
     return user;
   }
+}
+
+export async function verificarYFinalizarReclutamiento(user: UserWithProgress): Promise<UserWithProgress> {
+    const reclutamientoActivo = user.colaReclutamiento;
+    if (!reclutamientoActivo || new Date() < new Date(reclutamientoActivo.fechaFinalizacion)) {
+      return user;
+    }
+  
+    try {
+        const userActualizado = await prisma.$transaction(async (tx) => {
+            const tropaExistente = await tx.tropaUsuario.findUnique({
+                where: {
+                    userId_configuracionTropaId: {
+                        userId: user.id,
+                        configuracionTropaId: reclutamientoActivo.tropaId,
+                    }
+                }
+            });
+
+            if (tropaExistente) {
+                await tx.tropaUsuario.update({
+                    where: {
+                        userId_configuracionTropaId: {
+                            userId: user.id,
+                            configuracionTropaId: reclutamientoActivo.tropaId,
+                        }
+                    },
+                    data: {
+                        cantidad: { increment: reclutamientoActivo.cantidad }
+                    }
+                });
+            } else {
+                await tx.tropaUsuario.create({
+                    data: {
+                        userId: user.id,
+                        configuracionTropaId: reclutamientoActivo.tropaId,
+                        cantidad: reclutamientoActivo.cantidad,
+                    }
+                });
+            }
+
+            await tx.colaReclutamiento.delete({
+                where: { userId: user.id }
+            });
+
+            return await tx.user.findUnique({
+                where: { id: user.id },
+                include: {
+                    progreso: true,
+                    habitaciones: { include: { configuracion: { include: { escalado: true } } } },
+                    entrenamientos: { include: { configuracion: true } },
+                    tropas: true,
+                    colaConstruccion: true,
+                    colaReclutamiento: {
+                      include: {
+                        tropaConfig: true
+                      }
+                    },
+                }
+            });
+        });
+      
+        revalidatePath('/(dashboard)', 'layout');
+  
+      return userActualizado as UserWithProgress;
+  
+    } catch (error) {
+      console.error("Error finalizando el reclutamiento:", error);
+      return user;
+    }
 }
