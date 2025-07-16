@@ -29,18 +29,25 @@ export function ConstructionQueue({ propiedad, allRooms }: ConstructionQueueProp
     const construccionesEnCola = propiedad.colaConstruccion;
 
     useEffect(() => {
-        if (construccionesEnCola.length === 0) return;
+        if (construccionesEnCola.length === 0) {
+            setTiempoRestanteTotal(0);
+            return;
+        };
 
-        const ultimaConstruccion = construccionesEnCola[construccionesEnCola.length - 1];
-        if (!ultimaConstruccion.fechaFinalizacion) return;
+        const ultimaConstruccionConFecha = [...construccionesEnCola].reverse().find(c => c.fechaFinalizacion);
+        
+        if (!ultimaConstruccionConFecha?.fechaFinalizacion) {
+            setTiempoRestanteTotal(0);
+            return;
+        }
 
-        const finTotal = new Date(ultimaConstruccion.fechaFinalizacion).getTime();
+        const finTotal = new Date(ultimaConstruccionConFecha.fechaFinalizacion).getTime();
 
         const updateTimer = () => {
             const ahora = new Date().getTime();
             const diferencia = Math.floor((finTotal - ahora) / 1000);
-            setTiempoRestanteTotal(diferencia);
-            if (diferencia < -1) { // Pequeño margen para refrescar
+            setTiempoRestanteTotal(diferencia > 0 ? diferencia : 0);
+            if (diferencia < -1) { 
                 router.refresh();
             }
         };
