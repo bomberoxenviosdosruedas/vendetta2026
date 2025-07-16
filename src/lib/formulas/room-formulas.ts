@@ -163,7 +163,7 @@ export function calcularProduccionTotalPorSegundo(user: UserWithProgress): { arm
                 break;
         }
     });
-  })
+  });
 
   return {
     armas: produccionArmasPorSegundo,
