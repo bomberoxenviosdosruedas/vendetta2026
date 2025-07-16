@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { FullPropiedad, UserWithProgress } from '@/lib/data';
+import type { UserWithProgress } from '@/lib/data';
 import { useRouter } from 'next/navigation';
 
 function formatTime(totalSeconds: number): string {
@@ -69,12 +69,15 @@ export function QueueStatusCard({ user, allRooms }: QueueCardProps) {
     };
 
     const activeConstructions = user.propiedades
-        .filter(p => p.colaConstruccion)
-        .map(p => ({ ...p.colaConstruccion, propiedadNombre: p.nombre }));
+        .flatMap(p => 
+            p.colaConstruccion.map(c => ({ ...c, propiedadNombre: p.nombre }))
+        )
+        .filter(c => c.fechaFinalizacion); // Solo las que están activas
 
     const activeRecruitments = user.propiedades
-        .filter(p => p.colaReclutamiento)
+        .filter(p => p.colaReclutamiento && p.colaReclutamiento.fechaFinalizacion)
         .map(p => ({ ...p.colaReclutamiento, propiedadNombre: p.nombre }));
+
 
     return (
         <div className="space-y-1">
@@ -90,17 +93,17 @@ export function QueueStatusCard({ user, allRooms }: QueueCardProps) {
             {/* Construcción */}
             <div className="bg-primary text-primary-foreground px-4 py-1.5 rounded-t-md flex justify-between items-center font-bold mt-2">
                 <span>HABITACIONES EN CONSTRUCCIÓN</span>
-                <span>({activeConstructions.length}/{user.propiedades.length})</span>
+                <span>({activeConstructions.length}/{user.propiedades.length * 5})</span>
             </div>
             <div className="bg-card text-card-foreground px-4 py-3 rounded-b-md space-y-2">
                 {activeConstructions.length > 0 ? (
-                    activeConstructions.map(queue => {
-                        const room = allRooms.find(r => r.id === queue.habitacionId);
+                    activeConstructions.map(queueItem => {
+                        const room = allRooms.find(r => r.id === queueItem.habitacionId);
                         return (
                              <CountdownTimer 
-                                key={queue.id}
-                                label={`${queue.propiedadNombre}: ${room?.nombre || 'Hab.'} (Nvl ${queue.nivelDestino})`}
-                                endDate={new Date(queue.fechaFinalizacion).toISOString()}
+                                key={queueItem.id}
+                                label={`${queueItem.propiedadNombre}: ${room?.nombre || 'Hab.'} (Nvl ${queueItem.nivelDestino})`}
+                                endDate={new Date(queueItem.fechaFinalizacion!).toISOString()}
                                 onFinish={handleRefresh}
                              />
                         )
@@ -117,11 +120,11 @@ export function QueueStatusCard({ user, allRooms }: QueueCardProps) {
             </div>
             <div className="bg-card text-card-foreground px-4 py-3 rounded-b-md space-y-2">
                 {activeRecruitments.length > 0 ? (
-                     activeRecruitments.map(queue => (
+                     activeRecruitments.map(queueItem => (
                         <CountdownTimer 
-                            key={queue.id}
-                            label={`${queue.propiedadNombre}: ${queue.cantidad} x ${queue.tropaConfig.nombre}`}
-                            endDate={new Date(queue.fechaFinalizacion).toISOString()}
+                            key={queueItem!.id}
+                            label={`${queueItem!.propiedadNombre}: ${queueItem!.cantidad} x ${queueItem!.tropaConfig.nombre}`}
+                            endDate={new Date(queueItem!.fechaFinalizacion!).toISOString()}
                             onFinish={handleRefresh}
                          />
                     ))
