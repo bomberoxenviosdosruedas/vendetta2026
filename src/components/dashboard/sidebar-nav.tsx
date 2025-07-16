@@ -1,3 +1,4 @@
+
 "use client"
 
 import Link from "next/link"
@@ -14,7 +15,6 @@ import {
     Users, 
     Shield, 
     Target, 
-    Building, 
     Search, 
     FlaskConical, 
     Users2, 
@@ -27,11 +27,17 @@ import {
     BarChart, 
     Trophy 
 } from "lucide-react"
+import { PropertySelector } from "./property-selector"
+import type { UserWithProgress } from "@/lib/data"
 
 interface NavItem {
   href: string
   label: string
   icon: React.ReactNode
+}
+
+interface SidebarNavProps {
+    user: UserWithProgress | null;
 }
 
 const mainNav: NavItem[] = [
@@ -40,7 +46,6 @@ const mainNav: NavItem[] = [
   { href: "/recruitment", label: "Reclutamiento", icon: <Users /> },
   { href: "/security", label: "Seguridad", icon: <Shield /> },
   { href: "/training", label: "Entrenamiento", icon: <Target /> },
-  { href: "/buildings", label: "Edificios", icon: <Building /> },
   { href: "/search", label: "Buscar", icon: <Search /> },
 ]
 
@@ -60,7 +65,7 @@ const tertiaryNav: NavItem[] = [
     { href: "/rankings", label: "Clasificaciones", icon: <Trophy /> },
 ]
 
-export function SidebarNav() {
+export function SidebarNav({ user }: SidebarNavProps) {
   const pathname = usePathname()
 
   const renderNav = (items: NavItem[]) => (
@@ -86,6 +91,8 @@ export function SidebarNav() {
       <SidebarGroup>
         {renderNav(mainNav)}
       </SidebarGroup>
+      
+      {user && <PropertySelector properties={user.propiedades} />}
 
       <SidebarGroup>
         {renderNav(secondaryNav)}

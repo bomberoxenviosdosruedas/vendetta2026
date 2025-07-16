@@ -41,7 +41,7 @@ export function DashboardClientLayout({
            <h2 className="p-2 text-lg font-semibold tracking-tight text-primary">Vendetta</h2>
         </SidebarHeader>
         <SidebarContent>
-          <SidebarNav />
+          <SidebarNav user={user} />
         </SidebarContent>
         <Separator />
         <SidebarFooter>
