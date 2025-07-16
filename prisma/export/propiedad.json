@@ -6,5 +6,13 @@
     "ciudad": 1,
     "barrio": 1,
     "edificio": 1
+  },
+  {
+    "id": "cmd5m4muk00012u0wxg2wtqmc",
+    "userId": "cmd5m4muk00002u0w0tjillvb",
+    "nombre": "Propiedad Principal",
+    "ciudad": 1,
+    "barrio": 1,
+    "edificio": 10
   }
 ]

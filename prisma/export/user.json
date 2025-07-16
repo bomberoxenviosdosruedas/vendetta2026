@@ -8,5 +8,15 @@
     "avatarUrl": "/img/bomberox.png",
     "createdAt": "2025-07-16T04:30:52.647Z",
     "updatedAt": "2025-07-16T04:30:52.647Z"
+  },
+  {
+    "id": "cmd5m4muk00002u0w0tjillvb",
+    "name": "base ",
+    "username": "base ",
+    "password": "qsTAw@9dwuZDerq",
+    "title": "Nuevo Jefe",
+    "avatarUrl": "https://placehold.co/128x128.png",
+    "createdAt": "2025-07-16T07:01:19.148Z",
+    "updatedAt": "2025-07-16T07:01:19.148Z"
   }
 ]

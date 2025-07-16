@@ -3,9 +3,18 @@
     "id": "cmd5gr6fd0004zt0wt5tpdk08",
     "userId": "cmd5gr5ye0000zt0wrmu0ec81",
     "dolares": 100000,
-    "armas": 49670,
-    "municion": 49130,
+    "armas": 49418,
+    "municion": 48350,
     "alcohol": 10000,
-    "ultimaActualizacion": "2025-07-16T04:53:53.048Z"
+    "ultimaActualizacion": "2025-07-16T06:54:00.313Z"
+  },
+  {
+    "id": "cmd5m4muk000i2u0wadrjh499",
+    "userId": "cmd5m4muk00002u0w0tjillvb",
+    "dolares": 10000,
+    "armas": 9964,
+    "municion": 9940,
+    "alcohol": 10000,
+    "ultimaActualizacion": "2025-07-16T07:02:00.536Z"
   }
 ]
