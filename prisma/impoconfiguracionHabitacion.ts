@@ -21,7 +21,7 @@ async function main() {
   console.log('🏠 Iniciando la importación de configuración de habitaciones...');
 
   // El archivo JSON es un array, por lo que podemos iterar directamente
-  const habitaciones: HabitacionData[] = datosHabitaciones;
+  const habitaciones: HabitacionData[] = (datosHabitaciones as any).default || datosHabitaciones;
 
   for (const habitacion of habitaciones) {
     try {
@@ -69,5 +69,3 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
-
-    
