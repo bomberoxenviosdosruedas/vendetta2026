@@ -1,3 +1,4 @@
+
 'use client'
 
 import Image from "next/image"
@@ -165,9 +166,9 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
                                     <div className="flex flex-wrap gap-x-4 gap-y-2 items-center">
                                         <div className="flex flex-col gap-1 text-sm flex-grow">
                                             <div className="grid grid-cols-3 gap-x-3">
-                                                {room.costos.armas > 0 && <div className="flex items-center gap-1.5" title={`${room.costos.armas.toLocaleString()} Armas`}><Target className="h-4 w-4" /><span>{formatNumber(room.costos.armas)}</span></div>}
-                                                {room.costos.municion > 0 && <div className="flex items-center gap-1.5" title={`${room.costos.municion.toLocaleString()} Munición`}><Boxes className="h-4 w-4" /><span>{formatNumber(room.costos.municion)}</span></div>}
-                                                {room.costos.dolares > 0 && <div className="flex items-center gap-1.5" title={`${room.costos.dolares.toLocaleString()} Dólares`}><DollarSign className="h-4 w-4" /><span>{formatNumber(room.costos.dolares)}</span></div>}
+                                                {room.costos.armas > 0 && <div className="flex items-center gap-1.5" title={`${room.costos.armas.toString()} Armas`}><Target className="h-4 w-4" /><span>{formatNumber(room.costos.armas)}</span></div>}
+                                                {room.costos.municion > 0 && <div className="flex items-center gap-1.5" title={`${room.costos.municion.toString()} Munición`}><Boxes className="h-4 w-4" /><span>{formatNumber(room.costos.municion)}</span></div>}
+                                                {room.costos.dolares > 0 && <div className="flex items-center gap-1.5" title={`${room.costos.dolares.toString()} Dólares`}><DollarSign className="h-4 w-4" /><span>{formatNumber(room.costos.dolares)}</span></div>}
                                             </div>
                                             <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
                                                 <Clock className="h-3 w-3" />
