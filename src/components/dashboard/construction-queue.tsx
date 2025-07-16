@@ -1,12 +1,10 @@
-
-
 'use client';
 
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
-import type { FullPropiedad, UserWithProgress } from '@/lib/data';
+import type { FullPropiedad } from '@/lib/data';
 import { useRouter } from 'next/navigation';
 
 function formatTime(totalSeconds: number) {
@@ -38,18 +36,18 @@ export function ConstructionQueue({ propiedad, allRooms }: ConstructionQueueProp
             const ahora = new Date().getTime();
             const diferencia = Math.floor((fin - ahora) / 1000);
             setTiempoRestante(diferencia);
-            if (diferencia <= 0) {
+            if (diferencia < 0) {
                 router.refresh();
             }
         };
 
-        updateTimer();
+        updateTimer(); // Initial call
         const intervalId = setInterval(updateTimer, 1000);
 
         return () => clearInterval(intervalId);
     }, [construccionActiva, router]);
 
-    if (!construccionActiva) {
+    if (!construccionActiva || tiempoRestante <= 0) {
         return null;
     }
 

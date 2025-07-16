@@ -1,5 +1,3 @@
-
-
 'use client'
 
 import Image from "next/image"
@@ -13,8 +11,9 @@ import { calcularCostosNivel, calcularTiempoConstruccion } from "@/lib/formulas/
 import { iniciarAmpliacion } from "@/lib/actions/room.actions"
 import { ConstructionQueue } from "./construction-queue"
 import { FullConfiguracionHabitacion, UserWithProgress } from "@/lib/data"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useToast } from "@/hooks/use-toast"
+import { useRouter } from "next/navigation"
 
 function formatNumber(num: number): string {
   if (num < 1000) {
@@ -62,6 +61,7 @@ type RoomsViewProps = {
 }
 
 export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
+    const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState<string | null>(null);
     const { toast } = useToast();
 
@@ -73,6 +73,20 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
 
     const userRoomsMap = new Map(propiedadActual.habitaciones.map(h => [h.configuracionHabitacionId, h]));
     const construccionActiva = propiedadActual.colaConstruccion;
+
+    useEffect(() => {
+        if (!construccionActiva) return;
+        const fin = new Date(construccionActiva.fechaFinalizacion).getTime();
+        const interval = setInterval(() => {
+            const ahora = new Date().getTime();
+            if (ahora >= fin) {
+                router.refresh();
+                clearInterval(interval);
+            }
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [construccionActiva, router]);
 
     const desiredOrder = [
         'oficina_del_jefe', 'escuela_especializacion', 'armeria', 'almacen_de_municion',
