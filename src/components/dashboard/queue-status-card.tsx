@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { UserWithProgress } from '@/lib/data';
+import type { FullPropiedad, UserWithProgress } from '@/lib/data';
 import { useRouter } from 'next/navigation';
 
 function formatTime(totalSeconds: number): string {
@@ -39,6 +39,12 @@ function CountdownTimer({ label, endDate, onFinish }: TimerProps) {
             }
         }, 1000);
 
+        // Run once on mount
+        const now = new Date().getTime();
+        const difference = Math.floor((end - now) / 1000);
+        setTimeLeft(formatTime(difference > 0 ? difference : 0));
+
+
         return () => clearInterval(intervalId);
     }, [endDate, onFinish]);
 
@@ -57,17 +63,18 @@ type QueueCardProps = {
 
 export function QueueStatusCard({ user, allRooms }: QueueCardProps) {
     const router = useRouter();
-    const { colaConstruccion, colaReclutamiento } = user;
 
     const handleRefresh = () => {
         router.refresh();
     };
-    
-    const roomInConstruction = colaConstruccion 
-        ? allRooms.find(r => r.id === colaConstruccion.habitacionId)
-        : null;
 
-    const troopInRecruitment = colaReclutamiento?.tropaConfig;
+    const activeConstructions = user.propiedades
+        .filter(p => p.colaConstruccion)
+        .map(p => ({ ...p.colaConstruccion, propiedadNombre: p.nombre }));
+
+    const activeRecruitments = user.propiedades
+        .filter(p => p.colaReclutamiento)
+        .map(p => ({ ...p.colaReclutamiento, propiedadNombre: p.nombre }));
 
     return (
         <div className="space-y-1">
@@ -83,15 +90,21 @@ export function QueueStatusCard({ user, allRooms }: QueueCardProps) {
             {/* Construcción */}
             <div className="bg-primary text-primary-foreground px-4 py-1.5 rounded-t-md flex justify-between items-center font-bold mt-2">
                 <span>HABITACIONES EN CONSTRUCCIÓN</span>
-                <span>({colaConstruccion ? '1' : '0'}/1)</span>
+                <span>({activeConstructions.length}/{user.propiedades.length})</span>
             </div>
             <div className="bg-card text-card-foreground px-4 py-3 rounded-b-md space-y-2">
-                {colaConstruccion && roomInConstruction ? (
-                     <CountdownTimer 
-                        label={`${roomInConstruction.nombre} (Nivel ${colaConstruccion.nivelDestino})`}
-                        endDate={colaConstruccion.fechaFinalizacion.toISOString()}
-                        onFinish={handleRefresh}
-                     />
+                {activeConstructions.length > 0 ? (
+                    activeConstructions.map(queue => {
+                        const room = allRooms.find(r => r.id === queue.habitacionId);
+                        return (
+                             <CountdownTimer 
+                                key={queue.id}
+                                label={`${queue.propiedadNombre}: ${room?.nombre || 'Hab.'} (Nvl ${queue.nivelDestino})`}
+                                endDate={new Date(queue.fechaFinalizacion).toISOString()}
+                                onFinish={handleRefresh}
+                             />
+                        )
+                    })
                 ) : (
                     <p className="text-muted-foreground text-center text-sm">No hay construcciones en cola.</p>
                 )}
@@ -100,15 +113,18 @@ export function QueueStatusCard({ user, allRooms }: QueueCardProps) {
             {/* Reclutamiento */}
              <div className="bg-primary text-primary-foreground px-4 py-1.5 rounded-t-md flex justify-between items-center font-bold mt-2">
                 <span>RECLUTAMIENTO</span>
-                <span>({colaReclutamiento ? '1' : '0'}/1)</span>
+                <span>({activeRecruitments.length}/{user.propiedades.length})</span>
             </div>
             <div className="bg-card text-card-foreground px-4 py-3 rounded-b-md space-y-2">
-                {colaReclutamiento && troopInRecruitment ? (
-                    <CountdownTimer 
-                        label={`${colaReclutamiento.cantidad} x ${troopInRecruitment.nombre}`}
-                        endDate={colaReclutamiento.fechaFinalizacion.toISOString()}
-                        onFinish={handleRefresh}
-                     />
+                {activeRecruitments.length > 0 ? (
+                     activeRecruitments.map(queue => (
+                        <CountdownTimer 
+                            key={queue.id}
+                            label={`${queue.propiedadNombre}: ${queue.cantidad} x ${queue.tropaConfig.nombre}`}
+                            endDate={new Date(queue.fechaFinalizacion).toISOString()}
+                            onFinish={handleRefresh}
+                         />
+                    ))
                 ) : (
                     <p className="text-muted-foreground text-center text-sm">No hay reclutamientos en cola.</p>
                 )}
