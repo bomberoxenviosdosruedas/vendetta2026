@@ -6,11 +6,10 @@ import {
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { getTrainingConfigurations } from "@/lib/data"
-import { Clock, Target, Boxes, DollarSign, BrainCircuit } from "lucide-react"
+import { Clock, BrainCircuit, Target, Boxes, DollarSign } from "lucide-react"
 import { getSessionUser } from "@/lib/auth"
 import { calcularCostosEntrenamiento, calcularTiempoEntrenamiento } from "@/lib/formulas/training-formulas"
 import { iniciarEntrenamiento } from "@/lib/actions/training.actions"
-import { revalidatePath } from "next/cache"
 
 function formatNumber(num: number): string {
   if (num < 1000) {
@@ -51,16 +50,6 @@ function formatDuration(seconds: number) {
     return result.trim() || '0s';
 }
 
-async function handleEntrenamiento(trainingId: string) {
-    'use server';
-    const result = await iniciarEntrenamiento(trainingId);
-    if (result?.error) {
-        console.error(result.error);
-    } else {
-        revalidatePath('/training');
-    }
-}
-
 
 export async function TrainingView() {
   const user = await getSessionUser();
@@ -70,7 +59,7 @@ export async function TrainingView() {
   }
 
   const userTrainingsMap = new Map(user.entrenamientos.map(t => [t.configuracionEntrenamientoId, t]));
-  const nivelEscuela = user.habitaciones.find(h => h.configuracionHabitacionId === 'escuela_especializacion')?.nivel || 1;
+  const nivelEscuela = user.habitaciones.find(h => h.configuracionHabitacionId === 'escuela_especializacion')?.nivel || 0;
 
   const allTrainingConfigs = await getTrainingConfigurations();
   
@@ -153,7 +142,7 @@ export async function TrainingView() {
                                     <span>{formatDuration(training.tiempo)}</span>
                                 </div>
                             </div>
-                            <form action={handleEntrenamiento.bind(null, training.id)}>
+                            <form action={iniciarEntrenamiento.bind(null, training.id)}>
                                 <Button type="submit" variant="outline" size="sm">
                                     <BrainCircuit className="mr-2 h-4 w-4" /> Entrenar
                                 </Button>
