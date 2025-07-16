@@ -146,12 +146,12 @@ export function calcularProduccionTotalPorSegundo(user: UserWithProgress): { arm
   user.propiedades.forEach(propiedad => {
     propiedad.habitaciones.forEach(habitacion => {
         const config = habitacion.configuracion;
-        if (!config.escalado?.produccionRecurso || habitacion.nivel === 0) return;
+        if (!config.produccionRecurso || habitacion.nivel === 0) return;
 
         const produccionPorHora = calcularProduccionRecurso(config.id, habitacion.nivel);
         const produccionPorSegundo = produccionPorHora / 3600;
 
-        switch (config.escalado.produccionRecurso) {
+        switch (config.produccionRecurso) {
             case 'armas':
                 produccionArmasPorSegundo += produccionPorSegundo;
                 break;
