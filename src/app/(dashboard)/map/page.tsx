@@ -10,10 +10,10 @@ function MapLoading() {
     return (
         <div className="space-y-4">
             <div className="flex justify-between items-center gap-4">
-                <Skeleton className="h-10 w-48" />
-                <Skeleton className="h-10 w-48" />
+                <Skeleton className="h-10 w-48 shimmer" />
+                <Skeleton className="h-10 w-48 shimmer" />
             </div>
-            <Skeleton className="w-full aspect-square rounded-lg" />
+            <Skeleton className="w-full aspect-square rounded-lg shimmer" />
         </div>
     )
 }
@@ -38,7 +38,7 @@ export default async function MapPage({
     const properties = await getPropertiesByLocation(initialCiudad, initialBarrio);
 
     return (
-        <div className="flex flex-col space-y-4">
+        <div className="main-view">
             <h2 className="text-3xl font-bold tracking-tight">Mapa de la Ciudad</h2>
             <Suspense fallback={<MapLoading />}>
                 <MapView 

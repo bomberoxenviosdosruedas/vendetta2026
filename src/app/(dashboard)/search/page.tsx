@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function SearchPage() {
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="main-view">
       <h2 className="text-3xl font-bold tracking-tight">Buscar</h2>
       <Card>
         <CardHeader>
