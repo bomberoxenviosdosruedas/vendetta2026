@@ -17,8 +17,14 @@ export async function iniciarAmpliacion(habitacionId: string) {
     if (user.colaConstruccion) {
         return { error: 'Ya hay una construcción en progreso.' };
     }
+    
+    // CORRECCIÓN: Acceder a las habitaciones a través de la primera propiedad del usuario.
+    const propiedadActual = user.propiedades[0];
+    if (!propiedadActual) {
+        return { error: 'El usuario no tiene una propiedad asignada.' };
+    }
 
-    const habitacionUsuario = user.habitaciones.find(h => h.configuracionHabitacionId === habitacionId);
+    const habitacionUsuario = propiedadActual.habitaciones.find(h => h.configuracionHabitacionId === habitacionId);
 
     if (!habitacionUsuario) {
          return { error: 'Configuración de habitación de usuario no encontrada.' };
@@ -31,7 +37,7 @@ export async function iniciarAmpliacion(habitacionId: string) {
 
     const nivelActual = habitacionUsuario.nivel;
     const nivelSiguiente = nivelActual + 1;
-    const nivelOficinaJefe = user.habitaciones.find(h => h.configuracionHabitacionId === 'oficina_del_jefe')?.nivel || 1;
+    const nivelOficinaJefe = propiedadActual.habitaciones.find(h => h.configuracionHabitacionId === 'oficina_del_jefe')?.nivel || 1;
   
     const costos = calcularCostosNivel(nivelSiguiente, config as FullConfiguracionHabitacion);
     const tiempo = calcularTiempoConstruccion(nivelSiguiente, config as FullConfiguracionHabitacion, nivelOficinaJefe);
