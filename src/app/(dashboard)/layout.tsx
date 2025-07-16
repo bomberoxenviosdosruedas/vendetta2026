@@ -3,7 +3,7 @@ import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ResourceBar } from "@/components/dashboard/resource-bar";
 import { DashboardClientLayout } from "@/components/dashboard/dashboard-client-layout";
-import { obtenerEstadoJuegoActualizado } from "@/lib/actions";
+import { obtenerEstadoJuegoActualizado } from "@/lib/actions/user.actions";
 import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth";
 

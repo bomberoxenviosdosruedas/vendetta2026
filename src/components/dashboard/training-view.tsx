@@ -6,9 +6,11 @@ import {
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { getTrainingConfigurations } from "@/lib/data"
-import { Clock, PlusCircle, Target, Boxes, DollarSign, BrainCircuit } from "lucide-react"
+import { Clock, Target, Boxes, DollarSign, BrainCircuit } from "lucide-react"
 import { getSessionUser } from "@/lib/auth"
-import { calcularCostosEntrenamiento, calcularTiempoEntrenamiento } from "@/lib/formulas"
+import { calcularCostosEntrenamiento, calcularTiempoEntrenamiento } from "@/lib/formulas/training-formulas"
+import { iniciarEntrenamiento } from "@/lib/actions/training.actions"
+import { revalidatePath } from "next/cache"
 
 function formatNumber(num: number): string {
   if (num < 1000) {
@@ -47,6 +49,17 @@ function formatDuration(seconds: number) {
     }
 
     return result.trim() || '0s';
+}
+
+async function handleEntrenamiento(trainingId: string) {
+    'use server';
+    const result = await iniciarEntrenamiento(trainingId);
+    if (result?.error) {
+        console.error(result.error);
+        // Toast
+    } else {
+        revalidatePath('/training');
+    }
 }
 
 
@@ -141,7 +154,7 @@ export async function TrainingView() {
                                     <span>{formatDuration(training.tiempo)}</span>
                                 </div>
                             </div>
-                            <form>
+                            <form action={handleEntrenamiento.bind(null, training.id)}>
                                 <Button type="submit" variant="outline" size="sm">
                                     <BrainCircuit className="mr-2 h-4 w-4" /> Entrenar
                                 </Button>

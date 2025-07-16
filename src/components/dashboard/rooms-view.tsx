@@ -7,9 +7,8 @@ import { Button } from "@/components/ui/button"
 import { getRoomConfigurations } from "@/lib/data"
 import { Clock, PlusCircle, Target, Boxes, DollarSign, Terminal } from "lucide-react"
 import { getSessionUser } from "@/lib/auth"
-import { calcularCostosNivel, calcularTiempoConstruccion } from "@/lib/formulas"
-import { iniciarAmpliacion } from "@/lib/actions"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { calcularCostosNivel, calcularTiempoConstruccion } from "@/lib/formulas/room-formulas"
+import { iniciarAmpliacion } from "@/lib/actions/room.actions"
 import { revalidatePath } from "next/cache"
 
 function formatNumber(num: number): string {
@@ -52,14 +51,15 @@ function formatDuration(seconds: number) {
 }
 
 
-async function handleAmpliacion(habitacionId: string, nivel: number) {
+async function handleAmpliacion(habitacionId: string) {
   'use server'
-  console.log(`Iniciando ampliación para ${habitacionId} al nivel ${nivel + 1}`);
   const resultado = await iniciarAmpliacion(habitacionId);
   if (resultado?.error) {
     console.error(resultado.error);
+    // Idealmente, aquí se mostraría un toast al usuario
   } else {
     revalidatePath('/rooms');
+    revalidatePath('/(dashboard)/layout', 'layout');
   }
   return resultado;
 }
@@ -158,12 +158,7 @@ export async function RoomsView() {
                                     <span>{formatDuration(room.tiempo)}</span>
                                 </div>
                             </div>
-                            <form action={async () => {
-                                'use server';
-                                const result = await handleAmpliacion(room.id, room.nivel);
-                                // Aquí podrías manejar el resultado si es necesario, por ejemplo, mostrar un toast.
-                                // Por ahora, el revalidate se maneja dentro de la acción.
-                            }}>
+                            <form action={handleAmpliacion.bind(null, room.id)}>
                                 <Button type="submit" variant="outline" size="sm">
                                     <PlusCircle className="mr-2 h-4 w-4" /> Ampliar
                                 </Button>
