@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Bell, Briefcase, MessageSquare, ShieldCheck, Swords, UserPlus } from "lucide-react";
+import { QueueStatusCard } from "./queue-status-card";
+import { getRoomConfigurations } from "@/lib/data";
 
 
 async function ActionIcons() {
@@ -44,10 +46,13 @@ export async function OverviewView() {
     }
 
     const { puntuacion } = user;
+    const allRoomConfigs = await getRoomConfigurations();
+    const simpleRoomConfigs = allRoomConfigs.map(r => ({ id: r.id, nombre: r.nombre }));
+
 
     return (
         <div className="flex-grow p-4 md:p-6 space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-[min-content,1fr] gap-4 h-full">
+            <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-[min-content,1fr] gap-4 h-full">
                 
                 {/* Player Card */}
                 <Card className="md:col-span-1 md:row-span-1">
@@ -64,7 +69,7 @@ export async function OverviewView() {
                 </Card>
 
                 {/* Main Property Card */}
-                <Card className="md:col-span-2 md:row-span-2 relative overflow-hidden">
+                <Card className="md:col-span-1 md:row-span-2 relative overflow-hidden">
                     <Image 
                         src="https://placehold.co/600x400.png"
                         alt="Vista de la propiedad principal"
@@ -83,7 +88,6 @@ export async function OverviewView() {
                 <Card className="md:col-span-1 md:row-span-2 relative">
                     <CardContent className="p-4 flex flex-col items-center justify-center gap-2 h-full">
                         <Avatar className="h-24 w-24 border-2 border-primary">
-                            {/* Idealmente aquí iría el logo de la familia */}
                             <AvatarImage src="https://placehold.co/128x128.png" alt="Logo Familia" data-ai-hint="mafia family crest" />
                             <AvatarFallback>B</AvatarFallback>
                         </Avatar>
@@ -92,57 +96,10 @@ export async function OverviewView() {
                     </CardContent>
                     <ActionIcons />
                 </Card>
-
-                {/* Status Card */}
-                <Card className="md:col-span-1 md:row-span-2">
-                    <CardHeader>
-                        <CardTitle className="text-lg">Estado Actual</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                       <div className="flex justify-between items-center">
-                            <div>
-                                <p className="font-semibold">Misiones</p>
-                                <p className="text-xs text-muted-foreground">3 misiones activas</p>
-                            </div>
-                            <Button variant="outline" size="sm">Ver misiones</Button>
-                       </div>
-                       <div className="flex justify-between items-center">
-                            <div>
-                                <p className="font-semibold">Construcción</p>
-                                <p className="text-xs text-muted-foreground">2 edificios en cola</p>
-                            </div>
-                            <Button variant="outline" size="sm">Mostrar todo</Button>
-                       </div>
-                       <div className="flex justify-between items-center">
-                            <div>
-                                <p className="font-semibold">Reclutamiento</p>
-                                <p className="text-xs text-muted-foreground">5 unidades en cola</p>
-                            </div>
-                            <Button variant="outline" size="sm">Mostrar todo</Button>
-                       </div>
-                    </CardContent>
-                </Card>
                 
-                {/* Security and Training Cards */}
-                <div className="md:col-span-1 md:row-span-2 flex flex-col gap-4">
-                    <Card>
-                        <CardHeader>
-                             <CardTitle className="text-base">Seguridad</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-2xl font-bold text-green-400">ÓPTIMA</p>
-                            <p className="text-xs text-muted-foreground">Tus defensas están al máximo.</p>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardHeader>
-                             <CardTitle className="text-base">Puntuación Total</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                             <p className="text-2xl font-bold">{formatPoints(puntuacion?.puntosTotales)}</p>
-                             <p className="text-xs text-muted-foreground">Clasificación: #1</p>
-                        </CardContent>
-                    </Card>
+                 {/* Queue Status Card */}
+                 <div className="md:col-span-3">
+                    <QueueStatusCard user={user} allRooms={simpleRoomConfigs} />
                 </div>
             </div>
 
