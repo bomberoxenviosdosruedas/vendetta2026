@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import prisma from "../prisma/prisma";
@@ -95,7 +94,6 @@ async function verificarYFinalizarConstruccionDePropiedad(user: UserWithProgress
       }
     });
 
-    revalidatePath('/(dashboard)', 'layout');
     return updatedUser as UserWithProgress;
 
   } catch (error) {
@@ -171,7 +169,6 @@ async function verificarYFinalizarReclutamientoDePropiedad(user: UserWithProgres
             }
         });
 
-        revalidatePath('/(dashboard)', 'layout');
         return updatedUser as UserWithProgress;
 
     } catch (error) {
@@ -224,3 +221,5 @@ export async function actualizarPuntuacionUsuario(user: UserWithProgress): Promi
     return user;
   }
 }
+
+    
