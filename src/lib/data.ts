@@ -33,6 +33,35 @@ export type UserWithProgress = User & {
     puntuacion: PuntuacionUsuario | null;
 };
 
+export type UserForRanking = User & {
+    puntuacion: PuntuacionUsuario | null;
+    _count: {
+        propiedades: number;
+    }
+}
+
+export async function getUsersForRanking(): Promise<UserForRanking[]> {
+    try {
+        const users = await prisma.user.findMany({
+            include: {
+                puntuacion: true,
+                _count: {
+                    select: { propiedades: true },
+                }
+            },
+            orderBy: {
+                puntuacion: {
+                    puntosTotales: 'desc'
+                }
+            }
+        });
+        return users as UserForRanking[];
+    } catch (error) {
+        console.error("Error fetching users for ranking:", error);
+        return [];
+    }
+}
+
 export async function getRoomConfigurations(): Promise<FullConfiguracionHabitacion[]> {
   try {
     const roomConfigurations = await prisma.configuracionHabitacion.findMany({
