@@ -1,6 +1,10 @@
+
 import { RoomsView } from "@/components/dashboard/rooms-view"
 import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
+import { getSessionUser } from "@/lib/auth"
+import { getRoomConfigurations } from "@/lib/data"
+import { redirect } from "next/navigation"
 
 function RoomsLoading() {
     return (
@@ -27,11 +31,18 @@ function RoomsLoading() {
     )
   }
 
-export default function RoomsPage() {
+export default async function RoomsPage() {
+  const user = await getSessionUser();
+  if (!user) {
+    redirect('/');
+  }
+
+  const allRoomConfigs = await getRoomConfigurations();
+
   return (
     <div className="flex flex-col space-y-4">
       <Suspense fallback={<RoomsLoading />}>
-          <RoomsView />
+          <RoomsView user={user} allRoomConfigs={allRoomConfigs} />
       </Suspense>
     </div>
   )
