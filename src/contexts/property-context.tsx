@@ -29,15 +29,17 @@ function PropertyProviderClient({ children, initialProperties }: { children: Rea
         setSelectedProperty(property);
         const params = new URLSearchParams(searchParams);
         params.set('propertyId', id);
+        // Usamos replace para no añadir al historial de navegación
         router.replace(`${pathname}?${params.toString()}`);
     }
   };
 
   useEffect(() => {
     const propertyId = searchParams.get('propertyId');
-    const propertyToSelect = 
-      properties.find(p => p.id === propertyId) || 
-      (properties.length > 0 ? properties[0] : null);
+    // Si no hay propertyId en la URL, se usa el de la primera propiedad (que ya está ordenada en el layout)
+    const currentId = propertyId || (properties.length > 0 ? properties[0].id : null);
+    
+    const propertyToSelect = properties.find(p => p.id === currentId) || null;
 
     if (propertyToSelect?.id !== selectedProperty?.id) {
         setSelectedProperty(propertyToSelect);

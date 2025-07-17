@@ -56,9 +56,16 @@ export default async function DashboardLayout({
       )
   }
 
+  const sortedProperties = [...finalUser.propiedades].sort((a, b) => {
+    if (a.nombre === 'Propiedad Principal') return -1;
+    if (b.nombre === 'Propiedad Principal') return 1;
+    return 0;
+  });
+
+
   return (
     <Suspense>
-      <PropertyProvider initialProperties={finalUser.propiedades}>
+      <PropertyProvider initialProperties={sortedProperties}>
           <DashboardClientLayout user={finalUser}>
               <div className="sticky top-14 sm:top-16 z-20">
                   <Suspense fallback={<ResourceBarFallback />}>

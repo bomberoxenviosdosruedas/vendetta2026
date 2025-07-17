@@ -2,7 +2,7 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useSearchParams } from "next/navigation"
 import {
   SidebarMenu,
   SidebarMenuItem,
@@ -30,6 +30,7 @@ import {
 } from "lucide-react"
 import { PropertySelector } from "./property-selector"
 import type { UserWithProgress } from "@/lib/data"
+import { useProperty } from "@/contexts/property-context"
 
 interface NavItem {
   href: string
@@ -67,8 +68,12 @@ const tertiaryNav: NavItem[] = [
 ]
 
 export function SidebarNav({ user }: SidebarNavProps) {
-  const pathname = usePathname()
-  const { setOpenMobile, isMobile } = useSidebar()
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const { selectedProperty } = useProperty();
+  const { setOpenMobile, isMobile } = useSidebar();
+
+  const propertyId = selectedProperty?.id;
 
   const handleClick = () => {
     if (isMobile) {
@@ -78,20 +83,23 @@ export function SidebarNav({ user }: SidebarNavProps) {
 
   const renderNav = (items: NavItem[]) => (
     <SidebarMenu>
-      {items.map((item) => (
-        <SidebarMenuItem key={item.href}>
-          <SidebarMenuButton
-            as={Link}
-            href={item.href}
-            isActive={pathname.startsWith(item.href)}
-            tooltip={item.label}
-            onClick={handleClick}
-          >
-            {item.icon}
-            <span>{item.label}</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      ))}
+      {items.map((item) => {
+        const href = propertyId ? `${item.href}?propertyId=${propertyId}` : item.href;
+        return (
+          <SidebarMenuItem key={item.href}>
+            <SidebarMenuButton
+              as={Link}
+              href={href}
+              isActive={pathname.startsWith(item.href)}
+              tooltip={item.label}
+              onClick={handleClick}
+            >
+              {item.icon}
+              <span>{item.label}</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        )
+      })}
     </SidebarMenu>
   )
 
@@ -101,7 +109,7 @@ export function SidebarNav({ user }: SidebarNavProps) {
         {renderNav(mainNav)}
       </SidebarGroup>
       
-      {user && <PropertySelector properties={user.propiedades} />}
+      {user && user.propiedades.length > 0 && <PropertySelector properties={user.propiedades} />}
 
       <SidebarGroup>
         {renderNav(secondaryNav)}
