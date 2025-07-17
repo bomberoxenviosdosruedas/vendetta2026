@@ -8,7 +8,7 @@ const scriptsToRun = [
   'impoconfiguracionHabitacion.ts',
   'impoconfiguracionEntrenamiento.ts',
   'impoconfiguracionTropa.ts',
-  'impousuarioprueba.ts'
+  'impousuarioprueba.ts', // Este script ahora carga todos los datos de usuario
 ];
 // ---------------------
 
@@ -50,12 +50,10 @@ async function main() {
     logStep(`Ejecutando script: ${scriptName}...`);
     
     try {
-      // Usamos 'bun' para ejecutar los scripts, como está definido en package.json
       execSync(`bun ${scriptPath}`, { stdio: 'inherit' });
       logSuccess(`Script ${scriptName} finalizado exitosamente.`);
     } catch (error) {
       logError(`Ocurrió un error al ejecutar ${scriptName}. El proceso de seeding se detendrá.`, error);
-      // Detenemos la ejecución si un script falla para evitar inconsistencias.
       process.exit(1);
     }
   }

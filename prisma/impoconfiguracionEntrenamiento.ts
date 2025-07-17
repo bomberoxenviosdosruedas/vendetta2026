@@ -1,6 +1,6 @@
 
 import { PrismaClient } from '@prisma/client/edge';
-import * as datosEntrenamientos from './importar/configuracionEntrenamiento.json';
+import * as datosEntrenamientos from './datosactuales/configuracionEntrenamiento.json';
 
 const prisma = new PrismaClient();
 

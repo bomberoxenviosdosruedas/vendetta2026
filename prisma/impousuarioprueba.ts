@@ -1,150 +1,132 @@
 
 import { PrismaClient } from '@prisma/client/edge';
-import * as datosUsuarios from './importar/user.json';
-import * as datosHabitaciones from './importar/configuracionHabitacion.json';
-import * as datosEntrenamientos from './importar/configuracionEntrenamiento.json';
-import * as datosTropas from './importar/configuracionTropa.json';
+import * as datosUsuarios from './datosactuales/user.json';
+import * as datosPropiedades from './datosactuales/propiedad.json';
+import * as datosHabitaciones from './datosactuales/habitacionUsuario.json';
+import * as datosEntrenamientos from './datosactuales/entrenamientoUsuario.json';
+import * as datosTropas from './datosactuales/tropaUsuario.json';
+import * as datosPuntuacion from './datosactuales/puntuacionUsuario.json';
+import * as datosColaConstruccion from './datosactuales/colaConstruccion.json';
+import * as datosColaReclutamiento from './datosactuales/colaReclutamiento.json';
+import * as datosColaMisiones from './datosactuales/colaMisiones.json';
 
 const prisma = new PrismaClient();
 
-interface UserData {
-  id: string;
-  name: string;
-  username: string;
-  password?: string;
-  title?: string;
-  avatarUrl?: string;
-}
-
 async function main() {
-  console.log('🚀 Iniciando la importación del usuario de prueba completo...');
-
-  const usuarios: UserData[] = (datosUsuarios as any).default || datosUsuarios;
+  console.log('🚀 Iniciando la importación de datos completos de usuarios...');
+  
+  const usuarios = (datosUsuarios as any).default || datosUsuarios;
+  const propiedades = (datosPropiedades as any).default || datosPropiedades;
   const habitaciones = (datosHabitaciones as any).default || datosHabitaciones;
   const entrenamientos = (datosEntrenamientos as any).default || datosEntrenamientos;
   const tropas = (datosTropas as any).default || datosTropas;
+  const puntuaciones = (datosPuntuacion as any).default || datosPuntuacion;
+  const colasConstruccion = (datosColaConstruccion as any).default || datosColaConstruccion;
+  const colasReclutamiento = (datosColaReclutamiento as any).default || datosColaReclutamiento;
+  const colasMisiones = (datosColaMisiones as any).default || datosColaMisiones;
 
   for (const userData of usuarios) {
     try {
       console.log(`👤 Procesando usuario: ${userData.username}`);
-
-      // 1. Crear o actualizar el usuario
-      const user = await prisma.user.upsert({
-        where: { username: userData.username },
-        update: {
-          name: userData.name,
-          title: userData.title,
-          avatarUrl: userData.avatarUrl,
-        },
-        create: {
-          name: userData.name,
-          username: userData.username,
-          password: userData.password || 'password123',
-          title: userData.title,
-          avatarUrl: userData.avatarUrl,
-        },
+      await prisma.user.upsert({
+        where: { id: userData.id },
+        update: { ...userData, createdAt: new Date(userData.createdAt), updatedAt: new Date(userData.updatedAt) },
+        create: { ...userData, createdAt: new Date(userData.createdAt), updatedAt: new Date(userData.updatedAt) },
       });
-
-      // 2. Crear o actualizar la propiedad principal
-      const propiedad = await prisma.propiedad.upsert({
-        where: {
-          ciudad_barrio_edificio: {
-            ciudad: 1,
-            barrio: 1,
-            edificio: 1,
-          },
-        },
-        update: { userId: user.id },
-        create: {
-          userId: user.id,
-          nombre: 'Propiedad Principal',
-          ciudad: 1,
-          barrio: 1,
-          edificio: 1,
-        },
-      });
-
-      // 3. Crear puntuación inicial del usuario
-      await prisma.puntuacionUsuario.upsert({
-          where: { userId: user.id },
-          update: {},
-          create: {
-              userId: user.id,
-              puntosHabitaciones: 0,
-              puntosTropas: 0,
-              puntosEntrenamientos: 0,
-              puntosTotales: 0,
-          }
-      });
-
-      console.log('🏠 Asignando todas las habitaciones en Nivel 1...');
-      for (const habitacion of habitaciones) {
-        await prisma.habitacionUsuario.upsert({
-          where: {
-            propiedadId_configuracionHabitacionId: {
-              propiedadId: propiedad.id,
-              configuracionHabitacionId: habitacion.id,
-            },
-          },
-          update: { nivel: 1 },
-          create: {
-            propiedadId: propiedad.id,
-            configuracionHabitacionId: habitacion.id,
-            nivel: 1,
-          },
-        });
-      }
-
-      console.log('🏋️ Asignando todos los entrenamientos en Nivel 1...');
-      for (const entrenamiento of entrenamientos) {
-        await prisma.entrenamientoUsuario.upsert({
-            where: {
-                userId_configuracionEntrenamientoId: {
-                    userId: user.id,
-                    configuracionEntrenamientoId: entrenamiento.id,
-                }
-            },
-            update: { nivel: 1 },
-            create: {
-                userId: user.id,
-                configuracionEntrenamientoId: entrenamiento.id,
-                nivel: 1
-            }
-        });
-      }
-      
-      console.log('🛡️ Asignando todas las tropas (1 unidad)...');
-       for (const tropa of tropas) {
-        await prisma.tropaUsuario.upsert({
-            where: {
-                propiedadId_configuracionTropaId: {
-                    propiedadId: propiedad.id,
-                    configuracionTropaId: tropa.id,
-                }
-            },
-            update: { cantidad: 1 },
-            create: {
-                propiedadId: propiedad.id,
-                configuracionTropaId: tropa.id,
-                cantidad: 1
-            }
-        });
-      }
-
-
-      console.log(`✅ Usuario '${userData.username}' configurado exitosamente.`);
-
-    } catch (error) {
-      console.error(`❌ Error procesando al usuario '${userData.username}':`, error);
+    } catch (e) {
+      console.error(`Error con usuario ${userData.username}`, e);
     }
   }
 
-  console.log('🎉 Importación de usuario de prueba finalizada.');
+  for (const propData of propiedades) {
+    try {
+      console.log(`🏡 Procesando propiedad: ${propData.nombre} de usuario ${propData.userId}`);
+      await prisma.propiedad.upsert({
+        where: { id: propData.id },
+        update: { ...propData, ultimaActualizacion: new Date(propData.ultimaActualizacion) },
+        create: { ...propData, ultimaActualizacion: new Date(propData.ultimaActualizacion) },
+      });
+    } catch(e) {
+      console.error(`Error con propiedad ${propData.id}`, e);
+    }
+  }
+  
+  for (const habData of habitaciones) {
+    try {
+        await prisma.habitacionUsuario.upsert({
+            where: { id: habData.id },
+            update: habData,
+            create: habData,
+        });
+    } catch(e) {
+         console.error(`Error con habitacion ${habData.id}`, e);
+    }
+  }
+
+  for (const entData of entrenamientos) {
+     try {
+        await prisma.entrenamientoUsuario.upsert({
+            where: { id: entData.id },
+            update: entData,
+            create: entData,
+        });
+     } catch (e) {
+        console.error(`Error con entrenamiento ${entData.id}`, e);
+     }
+  }
+
+  for (const tropaData of tropas) {
+    try {
+        await prisma.tropaUsuario.upsert({
+            where: { id: tropaData.id },
+            update: tropaData,
+            create: tropaData,
+        });
+    } catch (e) {
+        console.error(`Error con tropa ${tropaData.id}`, e);
+    }
+  }
+  
+  for (const puntData of puntuaciones) {
+     try {
+      await prisma.puntuacionUsuario.upsert({
+          where: { id: puntData.id },
+          update: puntData,
+          create: puntData,
+      });
+     } catch (e) {
+        console.error(`Error con puntuacion ${puntData.id}`, e);
+     }
+  }
+  
+  for (const cola of colasConstruccion) {
+      try {
+        await prisma.colaConstruccion.create({ data: {...cola, fechaInicio: new Date(cola.fechaInicio), fechaFinalizacion: new Date(cola.fechaFinalizacion), createdAt: new Date(cola.createdAt)} });
+      } catch (e) {
+          console.error(`Error creando cola construccion ${cola.id}`, e);
+      }
+  }
+  for (const cola of colasReclutamiento) {
+      try {
+        await prisma.colaReclutamiento.create({ data: {...cola, fechaInicio: new Date(cola.fechaInicio), fechaFinalizacion: new Date(cola.fechaFinalizacion)} });
+      } catch (e) {
+         console.error(`Error creando cola reclutamiento ${cola.id}`, e);
+      }
+  }
+  for (const cola of colasMisiones) {
+     try {
+      await prisma.colaMisiones.create({ data: {...cola, fechaLlegada: new Date(cola.fechaLlegada), fechaRegreso: new Date(cola.fechaRegreso)} });
+     } catch(e) {
+         console.error(`Error creando cola mision ${cola.id}`, e);
+     }
+  }
+
+  console.log('🎉 Importación de datos completos de usuarios finalizada.');
 }
 
 main()
   .catch(async (e) => {
-    console.error('❌ Error general en el script de importación de prueba:', e);
+    console.error('❌ Error general en el script de importación de datos completos:', e);
     await prisma.$disconnect();
     process.exit(1);
   })
