@@ -6,11 +6,10 @@ import { DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClos
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { FullConfiguracionHabitacion } from '@/lib/data';
 import { calcularCostosNivel, calcularProduccionRecurso } from '@/lib/formulas/room-formulas';
-import { Boxes, DollarSign, Target, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { ScrollArea } from '../ui/scroll-area';
 import { Separator } from '../ui/separator';
 import { Button } from '../ui/button';
-import { cn } from '@/lib/utils';
 
 type RoomWithLevel = FullConfiguracionHabitacion & { nivel: number };
 
@@ -40,9 +39,9 @@ function getBenefitText(roomId: string, level: number): string {
 function CostList({ costos }: { costos: { armas: number, municion: number, dolares: number }}) {
     return (
         <div className="flex flex-col gap-1 sm:grid sm:grid-cols-3 sm:gap-x-2 text-xs">
-            {costos.armas > 0 && <div className="flex items-center gap-1.5" title='Armas'><Target className="h-3.5 w-3.5"/><span>{formatNumber(costos.armas)}</span></div>}
-            {costos.municion > 0 && <div className="flex items-center gap-1.5" title='Munición'><Boxes className="h-3.5 w-3.5"/><span>{formatNumber(costos.municion)}</span></div>}
-            {costos.dolares > 0 && <div className="flex items-center gap-1.5" title='Dólares'><DollarSign className="h-3.5 w-3.5"/><span>{formatNumber(costos.dolares)}</span></div>}
+            {costos.armas > 0 && <div className="flex items-center gap-1.5" title='Armas'><Image src="/img/recursos/armas.svg" alt="Armas" width={14} height={14} /><span>{formatNumber(costos.armas)}</span></div>}
+            {costos.municion > 0 && <div className="flex items-center gap-1.5" title='Munición'><Image src="/img/recursos/municion.svg" alt="Munición" width={14} height={14} /><span>{formatNumber(costos.municion)}</span></div>}
+            {costos.dolares > 0 && <div className="flex items-center gap-1.5" title='Dólares'><Image src="/img/recursos/dolares.svg" alt="Dólares" width={14} height={14} /><span>{formatNumber(costos.dolares)}</span></div>}
         </div>
     )
 }
@@ -86,7 +85,7 @@ export function RoomDetailsModal({ room }: RoomDetailsModalProps) {
             <TableBody>
                 {projectionLevels.map((level) => {
                 const costos = calcularCostosNivel(level, room);
-                const produccion = room.escalado?.produccionRecurso 
+                const produccion = room.produccionRecurso 
                     ? calcularProduccionRecurso(room.id, level)
                     : 0;
 
@@ -112,7 +111,7 @@ export function RoomDetailsModal({ room }: RoomDetailsModalProps) {
             <div className="sm:hidden space-y-4">
                 {projectionLevels.map((level) => {
                     const costos = calcularCostosNivel(level, room);
-                    const produccion = room.escalado?.produccionRecurso 
+                    const produccion = room.produccionRecurso
                         ? calcularProduccionRecurso(room.id, level)
                         : 0;
                     

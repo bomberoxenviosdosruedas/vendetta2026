@@ -223,9 +223,9 @@ export function RecruitmentView({ user, troopConfigs }: RecruitmentViewProps) {
                                   </div>
                               </div>
                               <div className="grid grid-cols-3 gap-x-3">
-                                  {troop.costoArmas > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoArmas.toLocaleString('de-DE')} Armas`}><Target className="h-4 w-4" /><span>{formatNumber(troop.costoArmas)}</span></div>}
-                                  {troop.costoMunicion > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoMunicion.toLocaleString('de-DE')} Munición`}><Boxes className="h-4 w-4" /><span>{formatNumber(troop.costoMunicion)}</span></div>}
-                                  {troop.costoDolares > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoDolares.toLocaleString('de-DE')} Dólares`}><DollarSign className="h-4 w-4" /><span>{formatNumber(troop.costoDolares)}</span></div>}
+                                  {troop.costoArmas > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoArmas.toLocaleString('de-DE')} Armas`}><Image src="/img/recursos/armas.svg" alt="Armas" width={16} height={16} /><span>{formatNumber(troop.costoArmas)}</span></div>}
+                                  {troop.costoMunicion > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoMunicion.toLocaleString('de-DE')} Munición`}><Image src="/img/recursos/municion.svg" alt="Munición" width={16} height={16} /><span>{formatNumber(troop.costoMunicion)}</span></div>}
+                                  {troop.costoDolares > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoDolares.toLocaleString('de-DE')} Dólares`}><Image src="/img/recursos/dolares.svg" alt="Dólares" width={16} height={16} /><span>{formatNumber(troop.costoDolares)}</span></div>}
                               </div>
                               <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
                                   <Clock className="h-3 w-3" />

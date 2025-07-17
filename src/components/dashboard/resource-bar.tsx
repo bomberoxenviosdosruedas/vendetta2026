@@ -1,16 +1,16 @@
 
 'use client'
 
-import { Boxes, DollarSign, Droplets, Target } from 'lucide-react';
 import { LiveClock } from "./live-clock";
 import type { UserWithProgress } from '@/lib/data';
 import { useProperty } from '@/contexts/property-context';
+import Image from "next/image";
 
-const resourceIcons = {
-    armas: <Target className="h-5 w-5 text-destructive" />,
-    municion: <Boxes className="h-5 w-5 text-blue-400" />,
-    alcohol: <Droplets className="h-5 w-5 text-purple-400" />,
-    dolares: <DollarSign className="h-5 w-5 text-green-400" />,
+const resourceIcons: { [key: string]: string } = {
+    armas: '/img/recursos/armas.svg',
+    municion: '/img/recursos/municion.svg',
+    alcohol: '/img/recursos/alcohol.svg',
+    dolares: '/img/recursos/dolares.svg',
 };
 
 function formatNumber(num: number) {
@@ -48,7 +48,7 @@ export function ResourceBar({ user }: ResourceBarProps) {
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-2 md:flex md:items-center md:gap-x-6 w-full">
                     {resources.map((res) => (
                         <div key={res.name} className="flex items-center gap-2">
-                            {res.icon}
+                            <Image src={res.icon} alt={res.name} width={20} height={20} className="h-5 w-5" />
                             <span className="hidden sm:inline text-xs font-semibold tracking-wider uppercase text-muted-foreground">{res.name}</span>
                             <span className="font-bold text-foreground tabular-nums">
                                 {formatNumber(res.value)}

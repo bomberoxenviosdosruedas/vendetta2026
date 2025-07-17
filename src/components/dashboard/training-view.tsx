@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { getTrainingConfigurations } from "@/lib/data"
-import { Clock, BrainCircuit, Target, Boxes, DollarSign } from "lucide-react"
+import { Clock, BrainCircuit } from "lucide-react"
 import { getSessionUser } from "@/lib/auth"
 import { calcularCostosEntrenamiento, calcularTiempoEntrenamiento } from "@/lib/formulas/training-formulas"
 import { iniciarEntrenamiento } from "@/lib/actions/training.actions"
@@ -132,9 +132,9 @@ export async function TrainingView() {
                         <div className="flex flex-wrap gap-x-4 gap-y-2 items-center">
                             <div className="flex flex-col gap-1 text-sm flex-grow">
                                 <div className="grid grid-cols-3 gap-x-3">
-                                    {training.costos.armas > 0 && <div className="flex items-center gap-1.5" title={`${training.costos.armas.toLocaleString('de-DE')} Armas`}><Target className="h-4 w-4" /><span>{formatNumber(training.costos.armas)}</span></div>}
-                                    {training.costos.municion > 0 && <div className="flex items-center gap-1.5" title={`${training.costos.municion.toLocaleString('de-DE')} Munición`}><Boxes className="h-4 w-4" /><span>{formatNumber(training.costos.municion)}</span></div>}
-                                    {training.costos.dolares > 0 && <div className="flex items-center gap-1.5" title={`${training.costos.dolares.toLocaleString('de-DE')} Dólares`}><DollarSign className="h-4 w-4" /><span>{formatNumber(training.costos.dolares)}</span></div>}
+                                    {training.costos.armas > 0 && <div className="flex items-center gap-1.5" title={`${training.costos.armas.toLocaleString('de-DE')} Armas`}><Image src="/img/recursos/armas.svg" alt="Armas" width={16} height={16} /><span>{formatNumber(training.costos.armas)}</span></div>}
+                                    {training.costos.municion > 0 && <div className="flex items-center gap-1.5" title={`${training.costos.municion.toLocaleString('de-DE')} Munición`}><Image src="/img/recursos/municion.svg" alt="Munición" width={16} height={16} /><span>{formatNumber(training.costos.municion)}</span></div>}
+                                    {training.costos.dolares > 0 && <div className="flex items-center gap-1.5" title={`${training.costos.dolares.toLocaleString('de-DE')} Dólares`}><Image src="/img/recursos/dolares.svg" alt="Dólares" width={16} height={16} /><span>{formatNumber(training.costos.dolares)}</span></div>}
                                 </div>
                                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
                                     <Clock className="h-3 w-3" />

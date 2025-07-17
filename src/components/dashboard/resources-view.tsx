@@ -3,13 +3,13 @@ import { getSessionUser, type UserWithProgress } from "@/lib/auth";
 import { calcularProduccionTotalPorSegundo } from "@/lib/formulas/room-formulas";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Boxes, DollarSign, Droplets, Target } from 'lucide-react';
+import Image from "next/image";
 
-const resourceIcons: { [key: string]: React.ReactNode } = {
-    armas: <Target className="h-5 w-5 mr-2" />,
-    municion: <Boxes className="h-5 w-5 mr-2" />,
-    alcohol: <Droplets className="h-5 w-5 mr-2" />,
-    dolares: <DollarSign className="h-5 w-5 mr-2" />,
+const resourceIcons: { [key: string]: string } = {
+    armas: '/img/recursos/armas.svg',
+    municion: '/img/recursos/municion.svg',
+    alcohol: '/img/recursos/alcohol.svg',
+    dolares: '/img/recursos/dolares.svg',
 };
 
 const resourceNames: { [key: string]: string } = {
@@ -30,7 +30,15 @@ export async function ResourcesView() {
         return <div>Usuario no encontrado</div>
     }
 
-    const produccionPorSegundo = calcularProduccionTotalPorSegundo(user);
+    // TODO: This should be based on selected property
+    const produccionPorSegundo = user.propiedades.reduce((acc, propiedad) => {
+        const prod = calcularProduccionTotalPorSegundo(propiedad);
+        acc.armas += prod.armas;
+        acc.municion += prod.municion;
+        acc.alcohol += prod.alcohol;
+        acc.dolares += prod.dolares;
+        return acc;
+    }, { armas: 0, municion: 0, alcohol: 0, dolares: 0 });
 
     const productionData = Object.keys(produccionPorSegundo).map(key => {
         const porHora = produccionPorSegundo[key as keyof typeof produccionPorSegundo] * 3600;
@@ -67,8 +75,8 @@ export async function ResourcesView() {
                         <TableBody>
                             {productionData.map(res => (
                                 <TableRow key={res.name}>
-                                    <TableCell className="font-medium flex items-center">
-                                        {res.icon}
+                                    <TableCell className="font-medium flex items-center gap-2">
+                                        <Image src={res.icon} alt={res.name} width={20} height={20} />
                                         {res.name}
                                     </TableCell>
                                     <TableCell className="text-right text-green-400 font-mono">{formatProduction(res.porHora)}</TableCell>
