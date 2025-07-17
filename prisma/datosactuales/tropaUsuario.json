@@ -18,12 +18,6 @@
     "cantidad": 1
   },
   {
-    "id": "cmd6re5e30025zi0wpkakwer4",
-    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
-    "configuracionTropaId": "espia",
-    "cantidad": 1
-  },
-  {
     "id": "cmd6re5ls0027zi0wr6k7ae1t",
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionTropaId": "fbi",
@@ -75,6 +69,12 @@
     "id": "cmd6re7bf002nzi0w4a2k6c9q",
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionTropaId": "portero",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd6re5e30025zi0wpkakwer4",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "espia",
     "cantidad": 1
   },
   {
