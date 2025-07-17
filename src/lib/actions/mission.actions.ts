@@ -4,7 +4,8 @@
 import { revalidatePath } from "next/cache";
 import prisma from "../prisma/prisma";
 import { getSessionUser } from "../auth";
-import { getPropertyOwner } from "../data";
+import { getPropertyOwner, getTroopConfigurations } from "../data";
+import { calcularDistancia, calcularDuracionViaje, calcularVelocidadFlota } from "../formulas/mission-formulas";
 
 interface MissionInput {
     origenPropiedadId: string;
@@ -16,6 +17,8 @@ interface MissionInput {
     tropas: { id: string, cantidad: number }[];
     tipo: string;
 }
+
+const MISIONES_SIN_RETORNO = ['OCUPAR'];
 
 export async function enviarMision(input: MissionInput) {
     const user = await getSessionUser();
@@ -33,7 +36,7 @@ export async function enviarMision(input: MissionInput) {
     if (!coordinates.ciudad || !coordinates.barrio || !coordinates.edificio) {
         return { error: "Coordenadas incompletas." };
     }
-    if (tropas.length === 0) {
+     if (tropas.length === 0 || tropas.every(t => t.cantidad === 0)) {
         return { error: "Debes seleccionar al menos una tropa." };
     }
 
@@ -45,6 +48,20 @@ export async function enviarMision(input: MissionInput) {
         }
     }
     
+    // Calcular distancia y duración
+    const troopConfigs = await getTroopConfigurations();
+    const troopConfigsMap = new Map(troopConfigs.map(t => [t.id, t]));
+    
+    const velocidadFlota = calcularVelocidadFlota(tropas, troopConfigsMap);
+    const distancia = calcularDistancia(origenPropiedad, coordinates);
+    const duracionViaje = calcularDuracionViaje(distancia, velocidadFlota);
+    
+    const fechaInicio = new Date();
+    const fechaLlegada = new Date(fechaInicio.getTime() + duracionViaje * 1000);
+    const requiereRetorno = !MISIONES_SIN_RETORNO.includes(tipo);
+    const fechaRegreso = requiereRetorno ? new Date(fechaLlegada.getTime() + duracionViaje * 1000) : null;
+
+
     if (tipo === 'OCUPAR') {
         const targetOwner = await getPropertyOwner(coordinates);
         if (targetOwner) {
@@ -66,7 +83,6 @@ export async function enviarMision(input: MissionInput) {
                         ciudad: coordinates.ciudad,
                         barrio: coordinates.barrio,
                         edificio: coordinates.edificio,
-                        // Valores iniciales de recursos
                         armas: 10000,
                         municion: 10000,
                         alcohol: 10000,
@@ -109,16 +125,20 @@ export async function enviarMision(input: MissionInput) {
                     destinoCiudad: coordinates.ciudad,
                     destinoBarrio: coordinates.barrio,
                     destinoEdificio: coordinates.edificio,
-                    fechaLlegada: new Date(Date.now() + 5 * 60 * 1000),
-                    fechaRegreso: new Date(Date.now() + 10 * 60 * 1000)
+                    fechaLlegada: fechaLlegada,
+                    fechaRegreso: fechaRegreso,
+                    velocidadFlota,
+                    duracionViaje,
                 }
             });
 
             for (const t of tropas) {
-                await tx.tropaUsuario.update({
-                    where: { propiedadId_configuracionTropaId: { propiedadId: origenPropiedadId, configuracionTropaId: t.id } },
-                    data: { cantidad: { decrement: t.cantidad } }
-                });
+                if (t.cantidad > 0) {
+                    await tx.tropaUsuario.update({
+                        where: { propiedadId_configuracionTropaId: { propiedadId: origenPropiedadId, configuracionTropaId: t.id } },
+                        data: { cantidad: { decrement: t.cantidad } }
+                    });
+                }
             }
         });
 

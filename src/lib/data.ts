@@ -191,7 +191,11 @@ const userInclude = {
         }
     },
     puntuacion: true,
-    misiones: true,
+    misiones: {
+        orderBy: {
+            fechaLlegada: 'asc'
+        }
+    },
 };
 
 export async function getUserByUsername(username: string): Promise<UserWithProgress | null> {
