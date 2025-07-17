@@ -8,7 +8,6 @@ import { Label } from '@/components/ui/label';
 import { getPropertyOwner, UserWithProgress } from '@/lib/data';
 import { debounce } from 'lodash';
 import { Loader2, User, UserX, Clock } from 'lucide-react';
-import { Table, TableBody, TableCell, TableHeader, TableRow, TableHead } from '@/components/ui/table';
 import Image from 'next/image';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { enviarMision } from '@/lib/actions/mission.actions';
@@ -55,7 +54,13 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
     const { selectedProperty } = useProperty();
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
-    const [coordinates, setCoordinates] = useState({ ciudad: '', barrio: '', edificio: '' });
+    
+    const [coordinates, setCoordinates] = useState({ 
+        ciudad: selectedProperty?.ciudad.toString() || '', 
+        barrio: selectedProperty?.barrio.toString() || '', 
+        edificio: selectedProperty?.edificio.toString() || '' 
+    });
+
     const [targetOwner, setTargetOwner] = useState<{ id: string, name: string } | null | undefined>(undefined);
     const [isLoadingTarget, setIsLoadingTarget] = useState(false);
     const [missionType, setMissionType] = useState('ATAQUE');
@@ -65,29 +70,40 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
     const troopConfigsMap = new Map(troopConfigs.map(t => [t.id, t]));
 
     useEffect(() => {
-        const calculateTime = async () => {
-            if (!selectedProperty || tropas.length === 0 || !coordinates.ciudad || !coordinates.barrio || !coordinates.edificio) {
-                setTravelTime(0);
-                return;
-            }
-
-            const activeTroops = tropas.filter(t => t.cantidad > 0);
-            if(activeTroops.length === 0) {
-                setTravelTime(0);
-                return;
-            }
-
-            const velocidad = await calcularVelocidadFlota(activeTroops, troopConfigsMap);
-            const distancia = await calcularDistancia(selectedProperty, {
-                ciudad: parseInt(coordinates.ciudad, 10),
-                barrio: parseInt(coordinates.barrio, 10),
-                edificio: parseInt(coordinates.edificio, 10),
+        if (selectedProperty) {
+            setCoordinates({
+                ciudad: selectedProperty.ciudad.toString(),
+                barrio: selectedProperty.barrio.toString(),
+                edificio: selectedProperty.edificio.toString(),
             });
-            const duracion = await calcularDuracionViaje(distancia, velocidad);
-            setTravelTime(duracion);
-        };
-        calculateTime();
+        }
+    }, [selectedProperty]);
+
+    const calculateTravelTime = useCallback(async () => {
+        if (!selectedProperty || tropas.length === 0 || !coordinates.ciudad || !coordinates.barrio || !coordinates.edificio) {
+            setTravelTime(0);
+            return;
+        }
+
+        const activeTroops = tropas.filter(t => t.cantidad > 0);
+        if(activeTroops.length === 0) {
+            setTravelTime(0);
+            return;
+        }
+
+        const velocidad = await calcularVelocidadFlota(activeTroops, troopConfigsMap);
+        const distancia = await calcularDistancia(selectedProperty, {
+            ciudad: parseInt(coordinates.ciudad, 10),
+            barrio: parseInt(coordinates.barrio, 10),
+            edificio: parseInt(coordinates.edificio, 10),
+        });
+        const duracion = await calcularDuracionViaje(distancia, velocidad);
+        setTravelTime(duracion);
     }, [tropas, coordinates, selectedProperty, troopConfigsMap]);
+    
+    useEffect(() => {
+        calculateTravelTime();
+    }, [calculateTravelTime]);
     
 
     const debouncedFetchOwner = useCallback(
@@ -133,6 +149,19 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
             return prev;
         })
     }
+
+    const setMaxTroops = (troopId: string) => {
+        const available = selectedProperty?.tropas.find(t => t.configuracionTropaId === troopId)?.cantidad || 0;
+        handleTroopChange(troopId, available);
+    };
+
+    const setAllMaxTroops = () => {
+        const newTroopInputs = selectedProperty?.tropas.map(tropa => ({
+            id: tropa.configuracionTropaId,
+            cantidad: tropa.cantidad,
+        })) || [];
+        setTropas(newTroopInputs);
+    };
     
     const handleSubmit = async () => {
         if (!selectedProperty) {
@@ -227,46 +256,46 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Selección de Tropas desde {selectedProperty.nombre}</CardTitle>
+                    <CardTitle>Tropas de {selectedProperty.nombre}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Tropa</TableHead>
-                                <TableHead className='text-right'>Disponible</TableHead>
-                                <TableHead className='w-[100px]'>Cantidad</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {selectedProperty.tropas.map(tropa => (
-                                <TableRow key={tropa.configuracionTropaId}>
-                                    <TableCell className='flex items-center gap-2'>
-                                         <div className="w-10 h-8 relative rounded-md overflow-hidden border flex-shrink-0">
-                                            <Image src={tropa.configuracion.urlImagen} alt={tropa.configuracion.nombre} fill className='object-contain' />
-                                        </div>
-                                        <span className='font-semibold'>{tropa.configuracion.nombre}</span>
-                                    </TableCell>
-                                    <TableCell className='text-right'>{tropa.cantidad}</TableCell>
-                                    <TableCell>
-                                        <Input 
-                                            type='number'
-                                            min="0"
-                                            max={tropa.cantidad}
-                                            value={tropas.find(t => t.id === tropa.configuracionTropaId)?.cantidad || 0}
-                                            onChange={(e) => handleTroopChange(tropa.configuracionTropaId, parseInt(e.target.value) || 0)}
-                                            className='h-8 text-center'
-                                        />
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+                    <div className='space-y-2'>
+                        {selectedProperty.tropas.filter(t => t.cantidad > 0).map(tropa => (
+                            <div key={tropa.configuracionTropaId} className='p-3 border rounded-lg flex flex-col sm:flex-row sm:items-center gap-4'>
+                                <div className='flex items-center gap-3 flex-1'>
+                                    <div className="w-12 h-10 relative rounded-md overflow-hidden border flex-shrink-0">
+                                        <Image src={tropa.configuracion.urlImagen} alt={tropa.configuracion.nombre} fill className='object-contain' />
+                                    </div>
+                                    <div>
+                                        <p className='font-semibold'>{tropa.configuracion.nombre}</p>
+                                        <p className='text-xs text-muted-foreground'>Disponibles: {tropa.cantidad}</p>
+                                    </div>
+                                </div>
+                                <div className='flex items-center gap-2'>
+                                    <Input 
+                                        type='number'
+                                        min="0"
+                                        max={tropa.cantidad}
+                                        value={tropas.find(t => t.id === tropa.configuracionTropaId)?.cantidad || 0}
+                                        onChange={(e) => handleTroopChange(tropa.configuracionTropaId, parseInt(e.target.value) || 0)}
+                                        className='h-9 w-24 text-center'
+                                    />
+                                    <Button variant="outline" size="sm" className='h-9' onClick={() => setMaxTroops(tropa.configuracionTropaId)}>
+                                        Máx
+                                    </Button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <Button variant="secondary" className='w-full mt-4' onClick={setAllMaxTroops}>Seleccionar Todas las Tropas</Button>
+                    
                     <div className="mt-4 p-2 text-center bg-muted rounded-md text-sm font-semibold flex items-center justify-center gap-2">
                         <Clock className="h-4 w-4 text-primary"/>
                         <span>Tiempo de Viaje (ida):</span>
                         <span className="font-bold">{formatDuration(travelTime)}</span>
                     </div>
+
                     <Button onClick={handleSubmit} disabled={isPending} className='w-full mt-4'>
                         {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Enviar Misión
