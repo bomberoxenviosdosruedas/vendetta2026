@@ -8,35 +8,48 @@ const prisma = new PrismaClient();
 const exportDir = path.join(__dirname, 'datosactuales');
 
 async function main() {
-  console.log('⚙️  Iniciando la exportación de datos de configuración...');
+  console.log('⚙️  Iniciando la exportación de datos completos...');
 
   if (!fs.existsSync(exportDir)) {
     fs.mkdirSync(exportDir, { recursive: true });
     console.log(`📂 Directorio de exportación creado en: ${exportDir}`);
   }
 
+  // Se añaden todos los modelos de usuario y sus relacionados a la exportación
   const modelsToExport: (keyof PrismaClient)[] = [
     'configuracionHabitacion',
     'configuracionEntrenamiento',
     'configuracionTropa',
+    'user',
+    'propiedad',
+    'habitacionUsuario',
+    'entrenamientoUsuario',
+    'tropaUsuario',
+    'puntuacionUsuario',
+    'colaConstruccion',
+    'colaReclutamiento',
+    'colaMisiones',
   ];
 
   for (const modelName of modelsToExport) {
     try {
-      // Usamos 'any' porque el tipo de PrismaClient[modelName] es dinámico
+      if (typeof (prisma as any)[modelName]?.findMany !== 'function') {
+        console.log(`⚠️  El modelo '${modelName}' no tiene el método findMany y será omitido.`);
+        continue;
+      }
+      
       const data = await (prisma as any)[modelName].findMany();
       const filePath = path.join(exportDir, `${modelName}.json`);
       
-      // Usamos JSON.stringify con un espaciado de 2 para que sea legible
       fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
       
-      console.log(`✅ Datos de configuración del modelo '${modelName}' exportados a ${filePath}`);
+      console.log(`✅ Datos del modelo '${modelName}' exportados a ${filePath}`);
     } catch (error) {
       console.error(`❌ Error exportando el modelo '${modelName}':`, error);
     }
   }
 
-  console.log('🎉 Exportación de configuración finalizada exitosamente.');
+  console.log('🎉 Exportación de datos finalizada exitosamente.');
 }
 
 main()
