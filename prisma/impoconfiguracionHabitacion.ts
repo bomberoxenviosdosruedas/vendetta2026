@@ -13,14 +13,14 @@ interface HabitacionData {
   costoMunicion: number;
   costoDolares: number;
   duracion: number;
-  produccion: number;
+  produccionBase: number;
+  produccionRecurso: string | null;
   puntos: number;
 }
 
 async function main() {
   console.log('🏠 Iniciando la importación de configuración de habitaciones...');
 
-  // El archivo JSON es un array, por lo que podemos iterar directamente
   const habitaciones: HabitacionData[] = (datosHabitaciones as any).default || datosHabitaciones;
 
   for (const habitacion of habitaciones) {
@@ -35,7 +35,8 @@ async function main() {
           costoMunicion: habitacion.costoMunicion,
           costoDolares: habitacion.costoDolares,
           duracion: habitacion.duracion,
-          produccion: habitacion.produccion,
+          produccionBase: habitacion.produccionBase,
+          produccionRecurso: habitacion.produccionRecurso,
           puntos: habitacion.puntos,
         },
         create: {
@@ -47,7 +48,8 @@ async function main() {
           costoMunicion: habitacion.costoMunicion,
           costoDolares: habitacion.costoDolares,
           duracion: habitacion.duracion,
-          produccion: habitacion.produccion,
+          produccionBase: habitacion.produccionBase,
+          produccionRecurso: habitacion.produccionRecurso,
           puntos: habitacion.puntos,
         },
       });
