@@ -1,0 +1,86 @@
+[
+  {
+    "id": "cmd6re4qh001zzi0wil07h24e",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "acuchillador",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd6re4ym0021zi0wc0534w2p",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "asesino",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd6re56m0023zi0w76g10ojr",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "cia",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd6re5e30025zi0wpkakwer4",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "espia",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd6re5ls0027zi0wr6k7ae1t",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "fbi",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd6re5tn0029zi0wba1rgvw3",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "francotirador",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd6re614002bzi0w4o0j4qbm",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "maton",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd6re68n002dzi0wd56b3ml8",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "mercenario",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd6re6gb002fzi0wz9aukssk",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "ninja",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd6re6vh002jzi0wvjxtmrte",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "pistolero",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd6re73h002lzi0wkxmjur1m",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "porteador",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd6re7bf002nzi0w4a2k6c9q",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "portero",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd6re7jf002pzi0ww3qjgx0p",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "transportista",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd6re6o0002hzi0wm9xp290j",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "ocupacion",
+    "cantidad": 0
+  }
+]

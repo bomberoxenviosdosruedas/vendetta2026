@@ -1,0 +1,28 @@
+[
+  {
+    "id": "cmd6rdxey0005zi0wo4g1kht1",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
+    "nombre": "Propiedad Principal",
+    "ciudad": 1,
+    "barrio": 1,
+    "edificio": 1,
+    "armas": 4133.087777777778,
+    "municion": 4137.887777777777,
+    "alcohol": 24,
+    "dolares": 9506.166666666664,
+    "ultimaActualizacion": "2025-07-17T02:42:40.789Z"
+  },
+  {
+    "id": "cmd6s83yl003nzi0wqwz31ijx",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
+    "nombre": "Colonia en 1:1",
+    "ciudad": 1,
+    "barrio": 1,
+    "edificio": 2,
+    "armas": 10000.48333333333,
+    "municion": 10000.96666666667,
+    "alcohol": 10002.41666666667,
+    "dolares": 10001.11166666667,
+    "ultimaActualizacion": "2025-07-17T02:42:40.789Z"
+  }
+]
