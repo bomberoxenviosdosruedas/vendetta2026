@@ -15,6 +15,7 @@ import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
 import { Terminal } from "lucide-react"
 import { Input } from "../ui/input"
 import type { UserWithProgress } from "@/lib/data"
+import { useProperty } from "@/contexts/property-context"
 
 function formatNumber(num: number): string {
     return num.toLocaleString('de-DE');
@@ -56,10 +57,10 @@ type RecruitmentViewProps = {
     user: UserWithProgress;
 }
 
-function RecruitmentQueueAlert({ user, propiedadId }: { user: UserWithProgress, propiedadId: string }) {
+function RecruitmentQueueAlert() {
+    const { selectedProperty } = useProperty();
     const [tiempoRestante, setTiempoRestante] = useState("");
-    const propiedad = user.propiedades.find(p => p.id === propiedadId);
-    const colaReclutamiento = propiedad?.colaReclutamiento;
+    const colaReclutamiento = selectedProperty?.colaReclutamiento;
 
     useEffect(() => {
         if (!colaReclutamiento) return;
@@ -74,12 +75,12 @@ function RecruitmentQueueAlert({ user, propiedadId }: { user: UserWithProgress, 
         return () => clearInterval(interval);
     }, [colaReclutamiento]);
 
-    if (!colaReclutamiento) return null;
+    if (!selectedProperty || !colaReclutamiento) return null;
 
     return (
         <Alert>
             <Terminal className="h-4 w-4" />
-            <AlertTitle>Reclutamiento en curso en {propiedad?.nombre}</AlertTitle>
+            <AlertTitle>Reclutamiento en curso en {selectedProperty?.nombre}</AlertTitle>
             <AlertDescription>
                 Reclutando {colaReclutamiento.cantidad} x {colaReclutamiento.tropaConfig.nombre}. Tiempo restante: {tiempoRestante}
             </AlertDescription>
@@ -87,20 +88,22 @@ function RecruitmentQueueAlert({ user, propiedadId }: { user: UserWithProgress, 
     )
 }
 
-function TroopForm({ troop, user, propiedadId }: { troop: ConfiguracionTropa, user: UserWithProgress, propiedadId: string }) {
+function TroopForm({ troop, user }: { troop: ConfiguracionTropa, user: UserWithProgress }) {
+    const { selectedProperty } = useProperty();
     const [cantidad, setCantidad] = useState(1);
     const [error, setError] = useState('');
     const [isPending, setIsPending] = useState(false);
     
-    const propiedad = user.propiedades.find(p => p.id === propiedadId);
-    const colaReclutamientoActiva = !!propiedad?.colaReclutamiento;
+    const colaReclutamientoActiva = !!selectedProperty?.colaReclutamiento;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!selectedProperty) return;
+
         setError('');
         setIsPending(true);
 
-        const result = await iniciarReclutamiento(propiedadId, troop.id, cantidad);
+        const result = await iniciarReclutamiento(selectedProperty.id, troop.id, cantidad);
         
         if (result?.error) {
             setError(result.error);
@@ -129,11 +132,19 @@ function TroopForm({ troop, user, propiedadId }: { troop: ConfiguracionTropa, us
 }
 
 export function RecruitmentView({ user, troopConfigs }: RecruitmentViewProps) {
+  const { selectedProperty } = useProperty();
 
-  const propiedadActual = user.propiedades[0];
-
-  if (!user || !propiedadActual) {
-    return <div>Error al cargar datos de usuario o propiedad.</div>
+  if (!selectedProperty) {
+    return (
+      <div className="main-view">
+        <h2 className="text-3xl font-bold tracking-tight">Reclutamiento</h2>
+        <Card>
+          <CardContent className="p-6">
+              <p>Por favor, selecciona una propiedad para reclutar tropas.</p>
+          </CardContent>
+        </Card>
+      </div>
+    )
   }
 
   const desiredOrder = [
@@ -150,7 +161,7 @@ export function RecruitmentView({ user, troopConfigs }: RecruitmentViewProps) {
     return indexA - indexB;
   });
 
-  const userTroopsMap = new Map(user?.tropas.map(t => [t.configuracionTropaId, t]));
+  const userTroopsMap = new Map(selectedProperty.tropas.map(t => [t.configuracionTropaId, t]));
 
   const troopsWithCounts = sortedTroops.map(config => {
     const userTropa = userTroopsMap.get(config.id);
@@ -166,11 +177,11 @@ export function RecruitmentView({ user, troopConfigs }: RecruitmentViewProps) {
             <div>
                 <h2 className="text-3xl font-bold tracking-tight">Reclutamiento de Tropas</h2>
                 <p className="text-muted-foreground">
-                    Reclutando en: {propiedadActual.nombre}.
+                    Reclutando en: {selectedProperty.nombre}.
                 </p>
             </div>
        </div>
-        <RecruitmentQueueAlert user={user} propiedadId={propiedadActual.id} />
+        <RecruitmentQueueAlert />
       <Card>
         <CardContent className="p-0">
           <div className="divide-y divide-border">
@@ -221,7 +232,7 @@ export function RecruitmentView({ user, troopConfigs }: RecruitmentViewProps) {
                                   <span>{formatDuration(troop.duracion)} por unidad</span>
                               </div>
                           </div>
-                          <TroopForm troop={troop} user={user} propiedadId={propiedadActual.id} />
+                          <TroopForm troop={troop} user={user} />
                       </div>
                   </div>
                 </div>

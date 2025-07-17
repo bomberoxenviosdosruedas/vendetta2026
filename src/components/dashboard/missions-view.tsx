@@ -14,6 +14,7 @@ import Image from 'next/image';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { enviarMision } from '@/lib/actions/mission.actions';
 import { useToast } from '@/hooks/use-toast';
+import { useProperty } from '@/contexts/property-context';
 
 type TroopInput = {
     id: string;
@@ -21,6 +22,7 @@ type TroopInput = {
 }
 
 export function MissionsView({ user }: { user: UserWithProgress }) {
+    const { selectedProperty } = useProperty();
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
     const [coordinates, setCoordinates] = useState({ ciudad: '', barrio: '', edificio: '' });
@@ -74,8 +76,14 @@ export function MissionsView({ user }: { user: UserWithProgress }) {
     }
     
     const handleSubmit = async () => {
+        if (!selectedProperty) {
+            toast({ variant: 'destructive', title: 'Error', description: 'No hay una propiedad de origen seleccionada.' });
+            return;
+        }
+
         startTransition(async () => {
             const result = await enviarMision({
+                origenPropiedadId: selectedProperty.id,
                 coordinates: {
                     ciudad: parseInt(coordinates.ciudad),
                     barrio: parseInt(coordinates.barrio),
@@ -89,10 +97,13 @@ export function MissionsView({ user }: { user: UserWithProgress }) {
                 toast({ variant: 'destructive', title: 'Error en la misión', description: result.error });
             } else {
                 toast({ title: '¡Misión enviada!', description: result.success });
-                // Reset form
                 setTropas([]);
             }
         });
+    }
+
+    if (!selectedProperty) {
+        return <p>Selecciona una propiedad para enviar misiones.</p>
     }
 
     return (
@@ -157,7 +168,7 @@ export function MissionsView({ user }: { user: UserWithProgress }) {
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Selección de Tropas</CardTitle>
+                    <CardTitle>Selección de Tropas desde {selectedProperty.nombre}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Table>
@@ -169,7 +180,7 @@ export function MissionsView({ user }: { user: UserWithProgress }) {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {user.tropas.map(tropa => (
+                            {selectedProperty.tropas.map(tropa => (
                                 <TableRow key={tropa.configuracionTropaId}>
                                     <TableCell className='flex items-center gap-2'>
                                          <div className="w-10 h-8 relative rounded-md overflow-hidden border flex-shrink-0">

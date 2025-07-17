@@ -17,6 +17,7 @@ import { useEffect, useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import { RoomDetailsModal } from "./room-details-modal"
+import { useProperty } from "@/contexts/property-context"
 
 function formatNumber(num: number): string {
   if (num < 1000) {
@@ -68,17 +69,25 @@ type RoomsViewProps = {
 
 export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
     const router = useRouter();
+    const { selectedProperty } = useProperty();
     const [isSubmitting, setIsSubmitting] = useState<string | null>(null);
     const { toast } = useToast();
 
-    // Por ahora, trabajaremos con la primera propiedad del usuario.
-    const propiedadActual = user.propiedades[0];
-    if (!propiedadActual) {
-        return <div>Usuario o propiedad no encontrado</div>
+    if (!selectedProperty) {
+      return (
+        <div className="main-view">
+          <h2 className="text-3xl font-bold tracking-tight">Gestión de Habitaciones</h2>
+          <Card>
+            <CardContent className="p-6">
+                <p>Por favor, selecciona una propiedad para gestionar sus habitaciones.</p>
+            </CardContent>
+          </Card>
+        </div>
+      )
     }
 
-    const userRoomsMap = new Map(propiedadActual.habitaciones.map(h => [h.configuracionHabitacionId, h]));
-    const construccionEnCola = propiedadActual.colaConstruccion;
+    const userRoomsMap = new Map(selectedProperty.habitaciones.map(h => [h.configuracionHabitacionId, h]));
+    const construccionEnCola = selectedProperty.colaConstruccion;
 
     useEffect(() => {
         if (!construccionEnCola || construccionEnCola.length === 0) return;
@@ -114,7 +123,6 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
         const userRoom = userRoomsMap.get(id);
         const nivelBase = userRoom ? userRoom.nivel : 0;
         
-        // El nivel real a mostrar es el nivel base + las mejoras encoladas
         const mejorasEnCola = construccionEnCola.filter(c => c.habitacionId === id).length;
         const nivelProyectado = nivelBase + mejorasEnCola;
         const nivelSiguiente = nivelProyectado + 1;
@@ -139,8 +147,9 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
 
 
     const handleAmpliacion = async (habitacionId: string) => {
+        if (!selectedProperty) return;
         setIsSubmitting(habitacionId);
-        const resultado = await iniciarAmpliacion(propiedadActual.id, habitacionId);
+        const resultado = await iniciarAmpliacion(selectedProperty.id, habitacionId);
         if (resultado?.error) {
             toast({
                 title: "Error al ampliar",
@@ -160,12 +169,12 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
 
     return (
         <div className="space-y-4">
-            <ConstructionQueue propiedad={propiedadActual} allRooms={simpleRoomConfigs} />
+            <ConstructionQueue propiedad={selectedProperty} allRooms={simpleRoomConfigs} />
             <div className="flex items-center justify-between">
                 <div>
                     <h2 className="text-3xl font-bold tracking-tight">Gestión de Habitaciones</h2>
                     <p className="text-muted-foreground">
-                        Amplía y gestiona los edificios de tu propiedad: {propiedadActual.nombre}.
+                        Amplía y gestiona los edificios de tu propiedad: {selectedProperty.nombre}.
                     </p>
                 </div>
             </div>

@@ -1,13 +1,12 @@
 
-
 import { Suspense } from "react"
 import { ResourceBar } from "@/components/dashboard/resource-bar";
 import { DashboardClientLayout } from "@/components/dashboard/dashboard-client-layout";
-import { obtenerEstadoJuegoActualizado, verificarYFinalizarConstruccion, verificarYFinalizarReclutamiento, actualizarPuntuacionUsuario } from "@/lib/actions/user.actions";
+import { verificarYFinalizarConstruccion, verificarYFinalizarReclutamiento, actualizarPuntuacionUsuario, obtenerEstadoJuegoActualizado } from "@/lib/actions/user.actions";
 import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth";
 import { Skeleton } from "@/components/ui/skeleton";
-
+import { PropertyProvider } from "@/contexts/property-context";
 
 function ResourceBarFallback() {
     return (
@@ -43,19 +42,33 @@ export default async function DashboardLayout({
   const userWithUpdatedProgress = await obtenerEstadoJuegoActualizado(combinedUser);
   const finalUser = await actualizarPuntuacionUsuario(userWithUpdatedProgress);
 
+  if (!finalUser.propiedades || finalUser.propiedades.length === 0) {
+      // Redirect to a page to create the first property if none exist
+      // For now, just show an error message or redirect to overview with a message
+      return (
+        <DashboardClientLayout user={finalUser}>
+            <main className="p-4 md:p-6">
+              <h2 className="text-2xl font-bold">Sin propiedades</h2>
+              <p>No tienes ninguna propiedad. ¡Crea una para empezar!</p>
+            </main>
+        </DashboardClientLayout>
+      )
+  }
 
   return (
-    <DashboardClientLayout user={finalUser}>
-        <div className="sticky top-14 sm:top-16 z-20">
-            <Suspense fallback={<ResourceBarFallback />}>
-                <ResourceBar user={finalUser} />
-            </Suspense>
-        </div>
-        <div className="flex-1">
-          <main className="p-4 md:p-6">
-            {children}
-          </main>
-        </div>
-    </DashboardClientLayout>
+    <PropertyProvider initialProperties={finalUser.propiedades}>
+        <DashboardClientLayout user={finalUser}>
+            <div className="sticky top-14 sm:top-16 z-20">
+                <Suspense fallback={<ResourceBarFallback />}>
+                    <ResourceBar user={finalUser} />
+                </Suspense>
+            </div>
+            <div className="flex-1">
+              <main className="p-4 md:p-6">
+                {children}
+              </main>
+            </div>
+        </DashboardClientLayout>
+    </PropertyProvider>
   )
 }

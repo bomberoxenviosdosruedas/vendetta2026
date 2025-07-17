@@ -1,6 +1,10 @@
+
+'use client'
+
 import { Boxes, DollarSign, Droplets, Target } from 'lucide-react';
 import { LiveClock } from "./live-clock";
 import type { UserWithProgress } from '@/lib/data';
+import { useProperty } from '@/contexts/property-context';
 
 const resourceIcons = {
     armas: <Target className="h-5 w-5 text-destructive" />,
@@ -10,7 +14,7 @@ const resourceIcons = {
 };
 
 function formatNumber(num: number) {
-    // Redondeamos hacia abajo para eliminar decimales antes de formatear.
+    if (typeof num !== 'number') return '0';
     return Math.floor(num).toLocaleString('de-DE');
 }
 
@@ -19,23 +23,23 @@ interface ResourceBarProps {
 }
 
 export function ResourceBar({ user }: ResourceBarProps) {
-    if (!user || !user.progreso) {
+    const { selectedProperty } = useProperty();
+
+    if (!user || !selectedProperty) {
         return (
             <div className="w-full bg-background/95 backdrop-blur-sm text-white p-2">
                 <div className="container mx-auto flex items-center justify-center">
-                    <p>No se pudieron cargar los datos del usuario.</p>
+                    <p>Selecciona una propiedad para ver tus recursos.</p>
                 </div>
             </div>
         );
     }
-    
-    const { progreso } = user;
 
     const resources = [
-        { name: 'ARMAS', value: progreso.armas, icon: resourceIcons.armas },
-        { name: 'MUNICION', value: progreso.municion, icon: resourceIcons.municion },
-        { name: 'ALCOHOL', value: progreso.alcohol, icon: resourceIcons.alcohol },
-        { name: 'DOLARES', value: progreso.dolares, icon: resourceIcons.dolares },
+        { name: 'ARMAS', value: selectedProperty.armas, icon: resourceIcons.armas },
+        { name: 'MUNICION', value: selectedProperty.municion, icon: resourceIcons.municion },
+        { name: 'ALCOHOL', value: selectedProperty.alcohol, icon: resourceIcons.alcohol },
+        { name: 'DOLARES', value: selectedProperty.dolares, icon: resourceIcons.dolares },
     ];
 
     return (
