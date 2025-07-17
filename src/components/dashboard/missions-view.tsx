@@ -1,27 +1,58 @@
 
 'use client'
 
-import { useState, useTransition, useCallback } from 'react';
+import { useState, useTransition, useCallback, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { getPropertyOwner, UserWithProgress } from '@/lib/data';
 import { debounce } from 'lodash';
-import { Loader2, User, UserX } from 'lucide-react';
+import { Loader2, User, UserX, Clock } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHeader, TableRow, TableHead } from '@/components/ui/table';
 import Image from 'next/image';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { enviarMision } from '@/lib/actions/mission.actions';
 import { useToast } from '@/hooks/use-toast';
 import { useProperty } from '@/contexts/property-context';
+import type { ConfiguracionTropa } from '@prisma/client';
+import { calcularDistancia, calcularDuracionViaje, calcularVelocidadFlota } from '@/lib/formulas/mission-formulas';
 
 type TroopInput = {
     id: string;
     cantidad: number;
 }
 
-export function MissionsView({ user }: { user: UserWithProgress }) {
+function formatDuration(seconds: number): string {
+    if (seconds <= 0) return "0s";
+
+    const units: {name: string, seconds: number}[] = [
+        { name: 'd', seconds: 86400 },
+        { name: 'h', seconds: 3600 },
+        { name: 'm', seconds: 60 },
+        { name: 's', seconds: 1 }
+    ];
+
+    let remainingSeconds = seconds;
+    let result = '';
+    let parts = 0;
+
+    for (const unit of units) {
+        if (remainingSeconds >= unit.seconds && parts < 3) {
+            const amount = Math.floor(remainingSeconds / unit.seconds);
+            if (amount > 0) {
+                result += `${amount}${unit.name} `;
+                remainingSeconds %= unit.seconds;
+                parts++;
+            }
+        }
+    }
+
+    return result.trim() || '0s';
+}
+
+
+export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, troopConfigs: ConfiguracionTropa[] }) {
     const { selectedProperty } = useProperty();
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
@@ -30,6 +61,35 @@ export function MissionsView({ user }: { user: UserWithProgress }) {
     const [isLoadingTarget, setIsLoadingTarget] = useState(false);
     const [missionType, setMissionType] = useState('ATAQUE');
     const [tropas, setTropas] = useState<TroopInput[]>([]);
+    const [travelTime, setTravelTime] = useState<number>(0);
+    
+    const troopConfigsMap = new Map(troopConfigs.map(t => [t.id, t]));
+
+    useEffect(() => {
+        const calculateTime = async () => {
+            if (!selectedProperty || tropas.length === 0 || !coordinates.ciudad || !coordinates.barrio || !coordinates.edificio) {
+                setTravelTime(0);
+                return;
+            }
+
+            const activeTroops = tropas.filter(t => t.cantidad > 0);
+            if(activeTroops.length === 0) {
+                setTravelTime(0);
+                return;
+            }
+
+            const velocidad = await calcularVelocidadFlota(activeTroops, troopConfigsMap);
+            const distancia = await calcularDistancia(selectedProperty, {
+                ciudad: parseInt(coordinates.ciudad, 10),
+                barrio: parseInt(coordinates.barrio, 10),
+                edificio: parseInt(coordinates.edificio, 10),
+            });
+            const duracion = await calcularDuracionViaje(distancia, velocidad);
+            setTravelTime(duracion);
+        };
+        calculateTime();
+    }, [tropas, coordinates, selectedProperty, troopConfigsMap]);
+    
 
     const debouncedFetchOwner = useCallback(
         debounce(async (ciudad: number, barrio: number, edificio: number) => {
@@ -203,6 +263,11 @@ export function MissionsView({ user }: { user: UserWithProgress }) {
                             ))}
                         </TableBody>
                     </Table>
+                    <div className="mt-4 p-2 text-center bg-muted rounded-md text-sm font-semibold flex items-center justify-center gap-2">
+                        <Clock className="h-4 w-4 text-primary"/>
+                        <span>Tiempo de Viaje (ida):</span>
+                        <span className="font-bold">{formatDuration(travelTime)}</span>
+                    </div>
                     <Button onClick={handleSubmit} disabled={isPending} className='w-full mt-4'>
                         {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Enviar Misión

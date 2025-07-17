@@ -4,6 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getSessionUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { MissionsView } from "@/components/dashboard/missions-view";
+import { getTroopConfigurations } from "@/lib/data";
 
 function MissionsLoading() {
     return (
@@ -30,6 +31,8 @@ export default async function MissionsPage() {
     if (!user) {
         redirect('/');
     }
+
+    const troopConfigs = await getTroopConfigurations();
     
     return (
         <div className="main-view">
@@ -42,7 +45,7 @@ export default async function MissionsPage() {
                 </div>
             </div>
             <Suspense fallback={<MissionsLoading />}>
-                <MissionsView user={user} />
+                <MissionsView user={user} troopConfigs={troopConfigs} />
             </Suspense>
         </div>
     );
