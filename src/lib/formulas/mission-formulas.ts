@@ -16,7 +16,7 @@ interface Coordenadas {
  * @param destino Las coordenadas de destino.
  * @returns La distancia calculada como un valor numérico.
  */
-export function calcularDistancia(origen: Coordenadas, destino: Coordenadas): number {
+export async function calcularDistancia(origen: Coordenadas, destino: Coordenadas): Promise<number> {
     if (origen.ciudad !== destino.ciudad) {
         return Math.abs(origen.ciudad - destino.ciudad) * 20000;
     }
@@ -36,10 +36,10 @@ export function calcularDistancia(origen: Coordenadas, destino: Coordenadas): nu
  * @param configs Un mapa o array de todas las configuraciones de tropas.
  * @returns La velocidad de la tropa más lenta.
  */
-export function calcularVelocidadFlota(
+export async function calcularVelocidadFlota(
     tropasEnviadas: { id: string; cantidad: number }[],
     configs: Map<string, ConfiguracionTropa>
-): number {
+): Promise<number> {
     let velocidadMasLenta = Infinity;
     
     for (const tropa of tropasEnviadas) {
@@ -61,7 +61,7 @@ export function calcularVelocidadFlota(
  * @param velocidadFlota La velocidad de la tropa más lenta en la misión.
  * @returns La duración del viaje en segundos.
  */
-export function calcularDuracionViaje(distancia: number, velocidadFlota: number): number {
+export async function calcularDuracionViaje(distancia: number, velocidadFlota: number): Promise<number> {
     if (velocidadFlota <= 0) {
         // Prevenir división por cero. Devuelve un tiempo máximo o un error.
         return 86400 * 30; // 30 días

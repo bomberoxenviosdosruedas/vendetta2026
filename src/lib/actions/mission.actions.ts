@@ -52,9 +52,9 @@ export async function enviarMision(input: MissionInput) {
     const troopConfigs = await getTroopConfigurations();
     const troopConfigsMap = new Map(troopConfigs.map(t => [t.id, t]));
     
-    const velocidadFlota = calcularVelocidadFlota(tropas, troopConfigsMap);
-    const distancia = calcularDistancia(origenPropiedad, coordinates);
-    const duracionViaje = calcularDuracionViaje(distancia, velocidadFlota);
+    const velocidadFlota = await calcularVelocidadFlota(tropas, troopConfigsMap);
+    const distancia = await calcularDistancia(origenPropiedad, coordinates);
+    const duracionViaje = await calcularDuracionViaje(distancia, velocidadFlota);
     
     const fechaInicio = new Date();
     const fechaLlegada = new Date(fechaInicio.getTime() + duracionViaje * 1000);
