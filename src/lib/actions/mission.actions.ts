@@ -7,6 +7,7 @@ import { getSessionUser } from "../auth";
 import { getPropertyOwner } from "../data";
 
 interface MissionInput {
+    origenPropiedadId: string;
     coordinates: {
         ciudad: number;
         barrio: number;
@@ -22,9 +23,13 @@ export async function enviarMision(input: MissionInput) {
         return { error: "Usuario no autenticado." };
     }
 
-    const { coordinates, tropas, tipo } = input;
+    const { origenPropiedadId, coordinates, tropas, tipo } = input;
+    const origenPropiedad = user.propiedades.find(p => p.id === origenPropiedadId);
 
-    // Validación básica
+    if (!origenPropiedad) {
+        return { error: "Propiedad de origen no encontrada." };
+    }
+
     if (!coordinates.ciudad || !coordinates.barrio || !coordinates.edificio) {
         return { error: "Coordenadas incompletas." };
     }
@@ -32,15 +37,14 @@ export async function enviarMision(input: MissionInput) {
         return { error: "Debes seleccionar al menos una tropa." };
     }
 
-    const userTropasMap = new Map(user.tropas.map(t => [t.configuracionTropaId, t.cantidad]));
+    const tropasPropiedadMap = new Map(origenPropiedad.tropas.map(t => [t.configuracionTropaId, t.cantidad]));
 
     for (const tropa of tropas) {
-        if ((userTropasMap.get(tropa.id) || 0) < tropa.cantidad) {
-            return { error: `No tienes suficientes unidades de una de las tropas seleccionadas.` };
+        if ((tropasPropiedadMap.get(tropa.id) || 0) < tropa.cantidad) {
+            return { error: `No tienes suficientes unidades de una de las tropas seleccionadas en ${origenPropiedad.nombre}.` };
         }
     }
     
-    // Lógica de OCUPAR
     if (tipo === 'OCUPAR') {
         const targetOwner = await getPropertyOwner(coordinates);
         if (targetOwner) {
@@ -52,31 +56,38 @@ export async function enviarMision(input: MissionInput) {
             return { error: "Necesitas enviar al menos una Tropa de Ocupación para esta misión." };
         }
         
-        // Simulación de éxito inmediato
         try {
-            const allRoomConfigs = await prisma.configuracionHabitacion.findMany();
-            await prisma.propiedad.create({
-                data: {
-                    userId: user.id,
-                    nombre: `Colonia en ${coordinates.ciudad}:${coordinates.barrio}`,
-                    ciudad: coordinates.ciudad,
-                    barrio: coordinates.barrio,
-                    edificio: coordinates.edificio,
-                    habitaciones: {
-                        create: allRoomConfigs.map(config => ({
-                            configuracionHabitacionId: config.id,
-                            nivel: 1
-                        }))
+            await prisma.$transaction(async (tx) => {
+                const allRoomConfigs = await tx.configuracionHabitacion.findMany();
+                await tx.propiedad.create({
+                    data: {
+                        userId: user.id,
+                        nombre: `Colonia en ${coordinates.ciudad}:${coordinates.barrio}`,
+                        ciudad: coordinates.ciudad,
+                        barrio: coordinates.barrio,
+                        edificio: coordinates.edificio,
+                        // Valores iniciales de recursos
+                        armas: 10000,
+                        municion: 10000,
+                        alcohol: 10000,
+                        dolares: 10000,
+                        habitaciones: {
+                            create: allRoomConfigs.map(config => ({
+                                configuracionHabitacionId: config.id,
+                                nivel: 1
+                            }))
+                        }
                     }
-                }
-            });
+                });
 
-            await prisma.tropaUsuario.update({
-                where: { userId_configuracionTropaId: { userId: user.id, configuracionTropaId: 'ocupacion' } },
-                data: { cantidad: { decrement: tropaOcupacion.cantidad } }
+                await tx.tropaUsuario.update({
+                    where: { propiedadId_configuracionTropaId: { propiedadId: origenPropiedadId, configuracionTropaId: 'ocupacion' } },
+                    data: { cantidad: { decrement: tropaOcupacion.cantidad } }
+                });
             });
             
             revalidatePath('/overview');
+            revalidatePath('/map');
             return { success: `¡Has ocupado exitosamente la propiedad en ${coordinates.ciudad}:${coordinates.barrio}:${coordinates.edificio}!` };
 
         } catch (error) {
@@ -85,34 +96,31 @@ export async function enviarMision(input: MissionInput) {
         }
     }
 
-
-    // Lógica para crear la misión en la cola (placeholder por ahora)
     try {
-        await prisma.colaMisiones.create({
-            data: {
-                userId: user.id,
-                tipoMision: tipo,
-                tropas: JSON.stringify(tropas),
-                origenCiudad: user.propiedades[0].ciudad,
-                origenBarrio: user.propiedades[0].barrio,
-                origenEdificio: user.propiedades[0].edificio,
-                destinoCiudad: coordinates.ciudad,
-                destinoBarrio: coordinates.barrio,
-                destinoEdificio: coordinates.edificio,
-                fechaLlegada: new Date(Date.now() + 5 * 60 * 1000), // Llega en 5 minutos
-                fechaRegreso: new Date(Date.now() + 10 * 60 * 1000) // Regresa en 10 minutos
+        await prisma.$transaction(async (tx) => {
+            await tx.colaMisiones.create({
+                data: {
+                    userId: user.id,
+                    tipoMision: tipo,
+                    tropas: JSON.stringify(tropas),
+                    origenCiudad: origenPropiedad.ciudad,
+                    origenBarrio: origenPropiedad.barrio,
+                    origenEdificio: origenPropiedad.edificio,
+                    destinoCiudad: coordinates.ciudad,
+                    destinoBarrio: coordinates.barrio,
+                    destinoEdificio: coordinates.edificio,
+                    fechaLlegada: new Date(Date.now() + 5 * 60 * 1000),
+                    fechaRegreso: new Date(Date.now() + 10 * 60 * 1000)
+                }
+            });
+
+            for (const t of tropas) {
+                await tx.tropaUsuario.update({
+                    where: { propiedadId_configuracionTropaId: { propiedadId: origenPropiedadId, configuracionTropaId: t.id } },
+                    data: { cantidad: { decrement: t.cantidad } }
+                });
             }
         });
-
-         // Descontar tropas
-        await prisma.$transaction(
-            tropas.map(t => 
-                prisma.tropaUsuario.update({
-                    where: { userId_configuracionTropaId: { userId: user.id, configuracionTropaId: t.id } },
-                    data: { cantidad: { decrement: t.cantidad } }
-                })
-            )
-        );
 
     } catch (error) {
         console.error("Error al crear la misión:", error);

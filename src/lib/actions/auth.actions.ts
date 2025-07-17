@@ -16,8 +16,6 @@ interface RegisterUserInput {
 }
 
 async function findAvailableSlot(): Promise<{ ciudad: number; barrio: number; edificio: number; }> {
-    // This is a very simplified version. A real implementation would need to be much more robust
-    // to handle race conditions and find empty slots efficiently.
     for (let c = 1; c <= 100; c++) {
         for (let b = 1; b <= 100; b++) {
             for (let e = 1; e <= 225; e++) {
@@ -30,14 +28,12 @@ async function findAvailableSlot(): Promise<{ ciudad: number; barrio: number; ed
             }
         }
     }
-    // Fallback if no slot is found, which is unlikely in early stages.
     return { ciudad: 1, barrio: 1, edificio: Math.floor(Math.random() * 225) + 1 };
 }
 
 export async function registerUser(input: RegisterUserInput) {
     const { username, password, location } = input;
 
-    // 1. Check if username is already taken
     const existingUser = await prisma.user.findUnique({
         where: { username }
     });
@@ -46,7 +42,6 @@ export async function registerUser(input: RegisterUserInput) {
         return { error: 'El nombre de usuario ya está en uso.' };
     }
 
-    // 2. Check if location is available, or find a new one
     let finalLocation = location;
     const existingProperty = await prisma.propiedad.findUnique({
         where: { ciudad_barrio_edificio: { ciudad: location.ciudad, barrio: location.barrio, edificio: location.edificio } }
@@ -62,7 +57,7 @@ export async function registerUser(input: RegisterUserInput) {
         const newUser = await prisma.user.create({
             data: {
                 username,
-                password, // Storing plain text password - NOT FOR PRODUCTION
+                password,
                 name: username,
                 title: 'Nuevo Jefe',
                 avatarUrl: `https://placehold.co/128x128.png`,
@@ -72,20 +67,16 @@ export async function registerUser(input: RegisterUserInput) {
                         ciudad: finalLocation.ciudad,
                         barrio: finalLocation.barrio,
                         edificio: finalLocation.edificio,
+                        armas: 10000,
+                        municion: 10000,
+                        alcohol: 10000,
+                        dolares: 10000,
                         habitaciones: {
                             create: allRoomConfigs.map(config => ({
                                 configuracionHabitacionId: config.id,
                                 nivel: 1
                             }))
                         }
-                    }
-                },
-                progreso: {
-                    create: {
-                        dolares: 10000,
-                        armas: 10000,
-                        municion: 10000,
-                        alcohol: 10000,
                     }
                 },
                 puntuacion: {
@@ -99,7 +90,6 @@ export async function registerUser(input: RegisterUserInput) {
             }
         });
 
-        // 3. Log the user in
         await login(newUser.username);
 
         revalidatePath('/');

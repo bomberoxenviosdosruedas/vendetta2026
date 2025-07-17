@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import { revalidatePath } from "next/cache";
@@ -12,7 +11,7 @@ import { calcularTiempoReclutamiento } from "../formulas/troop-formulas";
 export async function iniciarReclutamiento(propiedadId: string, tropaId: string, cantidad: number) {
     const user = await getSessionUser();
   
-    if (!user || !user.progreso) {
+    if (!user) {
       return { error: 'Usuario no autenticado.' };
     }
 
@@ -45,9 +44,9 @@ export async function iniciarReclutamiento(propiedadId: string, tropaId: string,
     const tiempoTotal = calcularTiempoReclutamiento(config, cantidad, nivelCampoEntrenamiento);
   
     if (
-      user.progreso.armas < costoArmasTotal ||
-      user.progreso.municion < costoMunicionTotal ||
-      user.progreso.dolares < costoDolaresTotal
+      propiedadActual.armas < costoArmasTotal ||
+      propiedadActual.municion < costoMunicionTotal ||
+      propiedadActual.dolares < costoDolaresTotal
     ) {
       return { error: 'No tienes suficientes recursos para este reclutamiento.' };
     }
@@ -57,8 +56,8 @@ export async function iniciarReclutamiento(propiedadId: string, tropaId: string,
       const fechaFinalizacion = new Date(fechaInicio.getTime() + tiempoTotal * 1000);
 
       await prisma.$transaction([
-        prisma.progresoUsuario.update({
-          where: { userId: user.id },
+        prisma.propiedad.update({
+          where: { id: propiedadId },
           data: {
             armas: { decrement: costoArmasTotal },
             municion: { decrement: costoMunicionTotal },

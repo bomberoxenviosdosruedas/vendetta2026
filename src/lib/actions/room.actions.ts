@@ -10,7 +10,7 @@ import { calcularCostosNivel, calcularTiempoConstruccion } from "../formulas/roo
 export async function iniciarAmpliacion(propiedadId: string, habitacionId: string) {
     const user = await getSessionUser();
   
-    if (!user || !user.progreso) {
+    if (!user) {
       return { error: 'Usuario no autenticado.' };
     }
     
@@ -36,7 +36,6 @@ export async function iniciarAmpliacion(propiedadId: string, habitacionId: strin
         return { error: 'Configuración de la habitación no encontrada.'}
     }
     
-    // Nivel a construir = Nivel Base en DB + mejoras ya encoladas + 1
     const nivelBase = habitacionUsuario.nivel;
     const mejorasEnCola = construccionesEnCola.filter(c => c.habitacionId === habitacionId).length;
     const nivelSiguiente = nivelBase + mejorasEnCola + 1;
@@ -46,20 +45,19 @@ export async function iniciarAmpliacion(propiedadId: string, habitacionId: strin
     const costos = calcularCostosNivel(nivelSiguiente, config as FullConfiguracionHabitacion);
   
     if (
-      user.progreso.armas < costos.armas ||
-      user.progreso.municion < costos.municion ||
-      user.progreso.dolares < costos.dolares
+      propiedadActual.armas < costos.armas ||
+      propiedadActual.municion < costos.municion ||
+      propiedadActual.dolares < costos.dolares
     ) {
       return { error: 'No tienes suficientes recursos para esta ampliación.' };
     }
 
-    // Calcular la duración de esta construcción específica
     const duracion = calcularTiempoConstruccion(nivelSiguiente, config, nivelOficinaJefe);
   
     try {
       await prisma.$transaction([
-        prisma.progresoUsuario.update({
-          where: { userId: user.id },
+        prisma.propiedad.update({
+          where: { id: propiedadId },
           data: {
             armas: { decrement: costos.armas },
             municion: { decrement: costos.municion },
@@ -71,8 +69,7 @@ export async function iniciarAmpliacion(propiedadId: string, habitacionId: strin
                 propiedadId: propiedadId,
                 habitacionId: habitacionId,
                 nivelDestino: nivelSiguiente,
-                duracion: duracion, // Guardar la duración
-                // fechaInicio y fechaFinalizacion se calcularán cuando la construcción se active
+                duracion: duracion,
                 fechaInicio: null,
                 fechaFinalizacion: null,
             }

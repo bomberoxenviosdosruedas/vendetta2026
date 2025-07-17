@@ -1,9 +1,7 @@
 
-
-
 "use server"
 
-import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones } from '@prisma/client/edge'
+import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 
 const prisma = new PrismaClient().$extends(withAccelerate())
@@ -20,17 +18,20 @@ export type FullColaReclutamiento = ColaReclutamiento & {
   tropaConfig: ConfiguracionTropa;
 };
 
+export type FullTropaUsuario = TropaUsuario & {
+    configuracion: ConfiguracionTropa;
+}
+
 export type FullPropiedad = Propiedad & {
     habitaciones: FullHabitacionUsuario[];
     colaConstruccion: ColaConstruccion[];
     colaReclutamiento: FullColaReclutamiento | null;
+    tropas: FullTropaUsuario[];
 }
 
 export type UserWithProgress = User & {
-    progreso: ProgresoUsuario | null;
     propiedades: FullPropiedad[];
     entrenamientos: (EntrenamientoUsuario & { configuracion: ConfiguracionEntrenamiento })[];
-    tropas: (TropaUsuario & { configuracion: ConfiguracionTropa })[];
     puntuacion: PuntuacionUsuario | null;
     misiones: ColaMisiones[];
 };
@@ -71,7 +72,7 @@ export async function getPropertiesByLocation(ciudad: number, barrio: number) {
                 barrio,
             },
             include: {
-                user: true // Incluimos la información del usuario propietario
+                user: true
             }
         });
         return properties;
@@ -150,7 +151,6 @@ export async function getUsers() {
 }
 
 const userInclude = {
-    progreso: true,
     propiedades: {
         include: {
             habitaciones: {
@@ -163,6 +163,11 @@ const userInclude = {
                 },
                  orderBy: {
                     configuracionHabitacionId: 'asc'
+                }
+            },
+            tropas: {
+                include: {
+                    configuracion: true
                 }
             },
             colaConstruccion: {
@@ -184,11 +189,6 @@ const userInclude = {
         orderBy: {
             configuracionEntrenamientoId: 'asc'
         }
-    },
-    tropas: {
-      include: {
-        configuracion: true
-      }
     },
     puntuacion: true,
     misiones: true,
