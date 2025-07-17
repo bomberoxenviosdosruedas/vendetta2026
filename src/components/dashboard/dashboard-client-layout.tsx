@@ -1,6 +1,7 @@
 
 "use client"
 
+import Link from "next/link";
 import {
   SidebarProvider,
   Sidebar,
@@ -38,10 +39,10 @@ export function DashboardClientLayout({
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
-           <div className="flex items-center gap-2 p-2">
+           <Link href="/overview" className="flex items-center gap-2 p-2">
             <Swords className="h-6 w-6 text-primary" />
             <h2 className="text-lg font-semibold tracking-tight text-foreground">Vendetta</h2>
-           </div>
+           </Link>
         </SidebarHeader>
         <SidebarContent>
           <SidebarNav user={user} />
