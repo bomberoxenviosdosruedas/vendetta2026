@@ -39,9 +39,10 @@ export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
             return;
         }
 
-        // Fix para el usuario de prueba "bomberox"
+        // Allow 'bomberox' to log in without password check for testing.
+        // For all other users, validate the password.
         if (username !== 'bomberox' && user.password !== password) {
-            setError('Usuario o contraseña incorrectos.');
+            setError('La contraseña es incorrecta.');
             setIsLoading(false);
             return;
         }
@@ -54,6 +55,7 @@ export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
         router.push('/overview');
         router.refresh();
     } catch (err) {
+        console.error("Login error:", err);
         setError('Ocurrió un error en el servidor.');
         setIsLoading(false);
     }
