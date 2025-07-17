@@ -4,16 +4,16 @@ export function calcularCostosEntrenamiento(
   nivel: number,
   config: ConfiguracionEntrenamiento
 ): { armas: number; municion: number; dolares: number } {
-  if (nivel <= 0) {
+  if (nivel <= 1) {
     return { armas: config.costoArmas, municion: config.costoMunicion, dolares: config.costoDolares };
   }
 
-  // Factor de costo fijo de 1.5 para todos los entrenamientos
-  const factor = 1.5;
+  // Nueva fórmula: (nivel * nivel) * costo_base
+  const factor = nivel * nivel;
 
-  const costoArmas = Math.floor(config.costoArmas * Math.pow(factor, nivel - 1));
-  const costoMunicion = Math.floor(config.costoMunicion * Math.pow(factor, nivel - 1));
-  const costoDolares = Math.floor(config.costoDolares * Math.pow(factor, nivel - 1));
+  const costoArmas = Math.floor(config.costoArmas * factor);
+  const costoMunicion = Math.floor(config.costoMunicion * factor);
+  const costoDolares = Math.floor(config.costoDolares * factor);
 
   return { armas: costoArmas, municion: costoMunicion, dolares: costoDolares };
 }
