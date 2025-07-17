@@ -72,15 +72,15 @@
     "cantidad": 1
   },
   {
-    "id": "cmd6re7jf002pzi0ww3qjgx0p",
-    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
-    "configuracionTropaId": "transportista",
-    "cantidad": 1
-  },
-  {
     "id": "cmd6re6o0002hzi0wm9xp290j",
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionTropaId": "ocupacion",
+    "cantidad": 0
+  },
+  {
+    "id": "cmd6re7jf002pzi0ww3qjgx0p",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "transportista",
     "cantidad": 0
   }
 ]

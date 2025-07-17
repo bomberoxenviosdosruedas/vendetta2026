@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import prisma from "../prisma/prisma";
@@ -218,7 +219,7 @@ export async function verificarYFinalizarMisiones(user: UserWithProgress): Promi
         try {
             await prisma.$transaction(async (tx) => {
                 for (const mision of misionesFinalizadas) {
-                    if (mision.tipoMision !== 'OCUPAR') { // Ocupar no devuelve tropas
+                    if (mision.tipoMision !== 'OCUPAR' && mision.propiedadOrigenId) {
                         const tropas: { id: string; cantidad: number }[] = JSON.parse(mision.tropas);
                         
                         for (const tropa of tropas) {
@@ -226,7 +227,7 @@ export async function verificarYFinalizarMisiones(user: UserWithProgress): Promi
                                 await tx.tropaUsuario.update({
                                     where: { 
                                         propiedadId_configuracionTropaId: {
-                                            propiedadId: mision.propiedadOrigenId!,
+                                            propiedadId: mision.propiedadOrigenId,
                                             configuracionTropaId: tropa.id
                                         }
                                     },
