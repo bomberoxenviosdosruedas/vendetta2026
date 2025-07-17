@@ -1,3 +1,4 @@
+
 import type { UserWithProgress } from "../data";
 
 export function calcularPuntosHabitaciones(user: UserWithProgress): number {

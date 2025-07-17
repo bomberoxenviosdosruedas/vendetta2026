@@ -107,7 +107,6 @@ export const getUsersForRanking = cache(async (): Promise<UserForRanking[]> => {
 
 export const getRoomConfigurations = cache(async (): Promise<FullConfiguracionHabitacion[]> => {
   try {
-    console.log("Fetching room configurations from DB...");
     const roomConfigurations = await prisma.configuracionHabitacion.findMany({
       include: {
         escalado: true,
@@ -123,7 +122,6 @@ export const getRoomConfigurations = cache(async (): Promise<FullConfiguracionHa
 
 export const getTroopConfigurations = cache(async () => {
     try {
-        console.log("Fetching troop configurations from DB...");
         const troopConfigurations = await prisma.configuracionTropa.findMany();
         return troopConfigurations;
     } catch (error) {
@@ -134,7 +132,6 @@ export const getTroopConfigurations = cache(async () => {
 
 export const getTrainingConfigurations = cache(async () => {
     try {
-        console.log("Fetching training configurations from DB...");
         const trainingConfigurations = await prisma.configuracionEntrenamiento.findMany();
         return trainingConfigurations;
     } catch (error) {
