@@ -1,3 +1,4 @@
+
 'use server';
 
 import { revalidatePath } from "next/cache";
@@ -6,11 +7,16 @@ import { getSessionUser } from "../auth";
 import { getTrainingConfigurations } from "../data";
 import { calcularCostosEntrenamiento } from "../formulas/training-formulas";
 
-export async function iniciarEntrenamiento(trainingId: string) {
+export async function iniciarEntrenamiento(trainingId: string, propertyId: string) {
     const user = await getSessionUser();
   
-    if (!user || !user.progreso) {
+    if (!user) {
       return { error: 'Usuario no autenticado.' };
+    }
+    
+    const propiedadActual = user.propiedades.find(p => p.id === propertyId);
+    if (!propiedadActual) {
+        return { error: 'Propiedad no encontrada para este usuario.' };
     }
 
     const allTrainingConfigs = await getTrainingConfigurations();
@@ -28,17 +34,17 @@ export async function iniciarEntrenamiento(trainingId: string) {
     const costos = calcularCostosEntrenamiento(nivelSiguiente, config);
   
     if (
-      user.progreso.armas < costos.armas ||
-      user.progreso.municion < costos.municion ||
-      user.progreso.dolares < costos.dolares
+      propiedadActual.armas < costos.armas ||
+      propiedadActual.municion < costos.municion ||
+      propiedadActual.dolares < costos.dolares
     ) {
-      return { error: 'No tienes suficientes recursos para este entrenamiento.' };
+      return { error: 'No tienes suficientes recursos en esta propiedad para el entrenamiento.' };
     }
   
     try {
       await prisma.$transaction(async (tx) => {
-        await tx.progresoUsuario.update({
-          where: { userId: user.id },
+        await tx.propiedad.update({
+          where: { id: propertyId },
           data: {
             armas: { decrement: costos.armas },
             municion: { decrement: costos.municion },

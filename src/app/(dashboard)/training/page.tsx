@@ -2,6 +2,9 @@
 import { TrainingView } from "@/components/dashboard/training-view"
 import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
+import { getSessionUser } from "@/lib/auth"
+import { redirect } from "next/navigation"
+import { getTrainingConfigurations } from "@/lib/data"
 
 function TrainingLoading() {
     return (
@@ -30,11 +33,18 @@ function TrainingLoading() {
     )
   }
 
-export default function TrainingPage() {
+export default async function TrainingPage() {
+  const user = await getSessionUser();
+  if (!user) {
+    redirect('/');
+  }
+
+  const allTrainingConfigs = await getTrainingConfigurations();
+
   return (
     <div className="main-view">
       <Suspense fallback={<TrainingLoading />}>
-          <TrainingView />
+          <TrainingView user={user} allTrainingConfigs={allTrainingConfigs} />
       </Suspense>
     </div>
   );

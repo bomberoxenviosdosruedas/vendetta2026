@@ -1,15 +1,20 @@
 
+'use client'
+
 import Image from "next/image"
 import {
   Card,
   CardContent,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { getTrainingConfigurations } from "@/lib/data"
 import { Clock, BrainCircuit } from "lucide-react"
-import { getSessionUser } from "@/lib/auth"
 import { calcularCostosEntrenamiento, calcularTiempoEntrenamiento } from "@/lib/formulas/training-formulas"
 import { iniciarEntrenamiento } from "@/lib/actions/training.actions"
+import type { ConfiguracionEntrenamiento } from "@prisma/client"
+import { useProperty } from "@/contexts/property-context"
+import type { UserWithProgress } from "@/lib/data"
+import { useState } from "react"
+import { useToast } from "@/hooks/use-toast"
 
 function formatNumber(num: number): string {
     return num.toLocaleString('de-DE');
@@ -46,21 +51,49 @@ function formatDuration(seconds: number): string {
     return result.trim() || '0s';
 }
 
+function TrainingForm({ training, user, propertyId }: { training: any, user: UserWithProgress, propertyId: string }) {
+    const [isPending, setIsPending] = useState(false);
+    const { toast } = useToast();
 
+    const handleAction = async () => {
+        setIsPending(true);
+        const result = await iniciarEntrenamiento(training.id, propertyId);
+        if (result.error) {
+            toast({ variant: 'destructive', title: 'Error', description: result.error });
+        } else if (result.success) {
+            toast({ title: 'Éxito', description: result.success });
+        }
+        setIsPending(false);
+    }
+    
+    return (
+        <form action={handleAction}>
+            <Button type="submit" variant="outline" size="sm" disabled={isPending}>
+                <BrainCircuit className="mr-2 h-4 w-4" /> {isPending ? 'Entrenando...' : 'Entrenar'}
+            </Button>
+        </form>
+    )
+}
 
-export async function TrainingView() {
-  const user = await getSessionUser();
+interface TrainingViewProps {
+    user: UserWithProgress;
+    allTrainingConfigs: ConfiguracionEntrenamiento[];
+}
 
-  if (!user || !user.propiedades || user.propiedades.length === 0) {
-    return <div>Usuario o propiedad no encontrado</div>
+export function TrainingView({ user, allTrainingConfigs }: TrainingViewProps) {
+  const { selectedProperty } = useProperty();
+
+  if (!selectedProperty) {
+      return (
+        <div className="main-view">
+          <h2 className="text-3xl font-bold tracking-tight">Centro de Entrenamiento</h2>
+          <Card><CardContent className="p-6">Selecciona una propiedad para ver los entrenamientos.</CardContent></Card>
+        </div>
+      )
   }
 
-  // Asumimos que la escuela de especialización está en la primera propiedad.
-  const propiedadActual = user.propiedades[0];
   const userTrainingsMap = new Map(user.entrenamientos.map(t => [t.configuracionEntrenamientoId, t]));
-  const nivelEscuela = propiedadActual.habitaciones.find(h => h.configuracionHabitacionId === 'escuela_especializacion')?.nivel || 0;
-
-  const allTrainingConfigs = await getTrainingConfigurations();
+  const nivelEscuela = selectedProperty.habitaciones.find(h => h.configuracionHabitacionId === 'escuela_especializacion')?.nivel || 0;
   
   const desiredOrder = [
     'rutas', 'encargos', 'extorsion', 'administracion', 'contrabando', 'espionaje', 
@@ -95,7 +128,7 @@ export async function TrainingView() {
             <div>
                 <h2 className="text-3xl font-bold tracking-tight">Centro de Entrenamiento</h2>
                 <p className="text-muted-foreground">
-                    Mejora tus habilidades y las de tu familia.
+                    Mejora tus habilidades desde {selectedProperty.nombre}.
                 </p>
             </div>
        </div>
@@ -141,11 +174,7 @@ export async function TrainingView() {
                                     <span>{formatDuration(training.tiempo)}</span>
                                 </div>
                             </div>
-                            <form action={iniciarEntrenamiento.bind(null, training.id)}>
-                                <Button type="submit" variant="outline" size="sm">
-                                    <BrainCircuit className="mr-2 h-4 w-4" /> Entrenar
-                                </Button>
-                            </form>
+                           <TrainingForm training={training} user={user} propertyId={selectedProperty.id} />
                         </div>
                     </div>
                 </div>

@@ -3,6 +3,7 @@
 
 import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
+import { cache } from 'react';
 
 const prisma = new PrismaClient().$extends(withAccelerate())
 
@@ -43,7 +44,7 @@ export type UserForRanking = User & {
     }
 }
 
-export async function getPropertyOwner(coords: { ciudad: number, barrio: number, edificio: number }): Promise<{id: string, name: string} | null> {
+export const getPropertyOwner = cache(async (coords: { ciudad: number, barrio: number, edificio: number }): Promise<{id: string, name: string} | null> => {
     try {
         const property = await prisma.propiedad.findUnique({
             where: {
@@ -62,9 +63,9 @@ export async function getPropertyOwner(coords: { ciudad: number, barrio: number,
     } catch(e) {
         return null;
     }
-}
+});
 
-export async function getPropertiesByLocation(ciudad: number, barrio: number) {
+export const getPropertiesByLocation = cache(async (ciudad: number, barrio: number) => {
     try {
         const properties = await prisma.propiedad.findMany({
             where: {
@@ -80,9 +81,9 @@ export async function getPropertiesByLocation(ciudad: number, barrio: number) {
         console.error("Error fetching properties by location:", error);
         return [];
     }
-}
+});
 
-export async function getUsersForRanking(): Promise<UserForRanking[]> {
+export const getUsersForRanking = cache(async (): Promise<UserForRanking[]> => {
     try {
         const users = await prisma.user.findMany({
             include: {
@@ -102,10 +103,11 @@ export async function getUsersForRanking(): Promise<UserForRanking[]> {
         console.error("Error fetching users for ranking:", error);
         return [];
     }
-}
+});
 
-export async function getRoomConfigurations(): Promise<FullConfiguracionHabitacion[]> {
+export const getRoomConfigurations = cache(async (): Promise<FullConfiguracionHabitacion[]> => {
   try {
+    console.log("Fetching room configurations from DB...");
     const roomConfigurations = await prisma.configuracionHabitacion.findMany({
       include: {
         escalado: true,
@@ -117,30 +119,32 @@ export async function getRoomConfigurations(): Promise<FullConfiguracionHabitaci
     console.error("Error fetching room configurations:", error);
     return [];
   }
-}
+});
 
-export async function getTroopConfigurations() {
+export const getTroopConfigurations = cache(async () => {
     try {
+        console.log("Fetching troop configurations from DB...");
         const troopConfigurations = await prisma.configuracionTropa.findMany();
         return troopConfigurations;
     } catch (error) {
         console.error("Error fetching troop configurations:", error);
         return [];
     }
-}
+});
 
-export async function getTrainingConfigurations() {
+export const getTrainingConfigurations = cache(async () => {
     try {
+        console.log("Fetching training configurations from DB...");
         const trainingConfigurations = await prisma.configuracionEntrenamiento.findMany();
         return trainingConfigurations;
     } catch (error) {
         console.error("Error fetching training configurations:", error);
         return [];
     }
-}
+});
 
 
-export async function getUsers() {
+export const getUsers = cache(async () => {
     try {
         const users = await prisma.user.findMany();
         return users;
@@ -148,7 +152,7 @@ export async function getUsers() {
         console.error("Error fetching users:", error);
         return [];
     }
-}
+});
 
 const userInclude = {
     propiedades: {
