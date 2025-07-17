@@ -64,20 +64,7 @@ async function main() {
         },
       });
 
-      // 3. Crear progreso inicial del usuario
-      await prisma.progresoUsuario.upsert({
-          where: { userId: user.id },
-          update: {},
-          create: {
-              userId: user.id,
-              dolares: 100000,
-              armas: 50000,
-              municion: 50000,
-              alcohol: 10000,
-          }
-      });
-      
-      // 3.1 Crear puntuación inicial del usuario
+      // 3. Crear puntuación inicial del usuario
       await prisma.puntuacionUsuario.upsert({
           where: { userId: user.id },
           update: {},
@@ -130,14 +117,14 @@ async function main() {
        for (const tropa of tropas) {
         await prisma.tropaUsuario.upsert({
             where: {
-                userId_configuracionTropaId: {
-                    userId: user.id,
+                propiedadId_configuracionTropaId: {
+                    propiedadId: propiedad.id,
                     configuracionTropaId: tropa.id,
                 }
             },
             update: { cantidad: 1 },
             create: {
-                userId: user.id,
+                propiedadId: propiedad.id,
                 configuracionTropaId: tropa.id,
                 cantidad: 1
             }
