@@ -56,19 +56,21 @@ export default async function DashboardLayout({
   }
 
   return (
-    <PropertyProvider initialProperties={finalUser.propiedades}>
-        <DashboardClientLayout user={finalUser}>
-            <div className="sticky top-14 sm:top-16 z-20">
-                <Suspense fallback={<ResourceBarFallback />}>
-                    <ResourceBar user={finalUser} />
-                </Suspense>
-            </div>
-            <div className="flex-1">
-              <main className="p-4 md:p-6">
-                {children}
-              </main>
-            </div>
-        </DashboardClientLayout>
-    </PropertyProvider>
+    <Suspense fallback={<div>Cargando...</div>}>
+      <PropertyProvider initialProperties={finalUser.propiedades}>
+          <DashboardClientLayout user={finalUser}>
+              <div className="sticky top-14 sm:top-16 z-20">
+                  <Suspense fallback={<ResourceBarFallback />}>
+                      <ResourceBar user={finalUser} />
+                  </Suspense>
+              </div>
+              <div className="flex-1">
+                <main className="p-4 md:p-6">
+                  {children}
+                </main>
+              </div>
+          </DashboardClientLayout>
+      </PropertyProvider>
+    </Suspense>
   )
 }

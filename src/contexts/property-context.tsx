@@ -16,7 +16,10 @@ const PropertyContext = createContext<PropertyContextType | undefined>(undefined
 export function PropertyProvider({ children, initialProperties }: { children: ReactNode, initialProperties: FullPropiedad[] }) {
   const searchParams = useSearchParams();
   const [properties] = useState<FullPropiedad[]>(initialProperties);
-  const [selectedProperty, setSelectedProperty] = useState<FullPropiedad | null>(null);
+  const [selectedProperty, setSelectedProperty] = useState<FullPropiedad | null>(() => {
+    const propertyId = searchParams.get('propertyId');
+    return properties.find(p => p.id === propertyId) || (properties.length > 0 ? properties[0] : null);
+  });
 
   useEffect(() => {
     const propertyId = searchParams.get('propertyId');
@@ -24,8 +27,10 @@ export function PropertyProvider({ children, initialProperties }: { children: Re
       properties.find(p => p.id === propertyId) || 
       (properties.length > 0 ? properties[0] : null);
 
-    setSelectedProperty(propertyToSelect);
-  }, [searchParams, properties]);
+    if (propertyToSelect?.id !== selectedProperty?.id) {
+        setSelectedProperty(propertyToSelect);
+    }
+  }, [searchParams, properties, selectedProperty]);
 
   const setSelectedPropertyById = (id: string) => {
     const property = properties.find(p => p.id === id);
