@@ -117,6 +117,7 @@ export async function enviarMision(input: MissionInput) {
             await tx.colaMisiones.create({
                 data: {
                     userId: user.id,
+                    propiedadOrigenId: origenPropiedadId,
                     tipoMision: tipo,
                     tropas: JSON.stringify(tropas),
                     origenCiudad: origenPropiedad.ciudad,

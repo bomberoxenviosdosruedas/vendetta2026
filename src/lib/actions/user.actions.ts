@@ -203,6 +203,70 @@ export async function verificarYFinalizarReclutamiento(user: UserWithProgress): 
     return { ...user, propiedades: propiedadesActualizadas };
 }
 
+export async function verificarYFinalizarMisiones(user: UserWithProgress): Promise<UserWithProgress> {
+    if (!user.misiones || user.misiones.length === 0) return user;
+
+    const ahora = new Date();
+    let seHizoUnCambio = false;
+
+    const misionesFinalizadas = user.misiones.filter(m => {
+        const fechaFinal = m.fechaRegreso || m.fechaLlegada;
+        return fechaFinal && ahora >= new Date(fechaFinal);
+    });
+
+    if (misionesFinalizadas.length > 0) {
+        try {
+            await prisma.$transaction(async (tx) => {
+                for (const mision of misionesFinalizadas) {
+                    if (mision.tipoMision !== 'OCUPAR') { // Ocupar no devuelve tropas
+                        const tropas: { id: string; cantidad: number }[] = JSON.parse(mision.tropas);
+                        
+                        for (const tropa of tropas) {
+                            if (tropa.cantidad > 0) {
+                                await tx.tropaUsuario.update({
+                                    where: { 
+                                        propiedadId_configuracionTropaId: {
+                                            propiedadId: mision.propiedadOrigenId!,
+                                            configuracionTropaId: tropa.id
+                                        }
+                                    },
+                                    data: { cantidad: { increment: tropa.cantidad } }
+                                });
+                            }
+                        }
+                    }
+                    await tx.colaMisiones.delete({ where: { id: mision.id } });
+                }
+            });
+            seHizoUnCambio = true;
+        } catch (error) {
+            console.error("Error al finalizar misiones y devolver tropas:", error);
+        }
+    }
+
+    if (seHizoUnCambio) {
+        const userRefrescado = await prisma.user.findUnique({
+            where: { id: user.id },
+            include: {
+                propiedades: {
+                    include: { 
+                        habitaciones: { include: { configuracion: { include: { escalado: true } } } },
+                        colaConstruccion: { orderBy: { createdAt: 'asc' } }, 
+                        colaReclutamiento: { include: { tropaConfig: true } },
+                        tropas: { include: { configuracion: true } }
+                    }
+                },
+                entrenamientos: { include: { configuracion: true } },
+                puntuacion: true,
+                misiones: { orderBy: { fechaLlegada: 'asc' } }
+            }
+        });
+        return userRefrescado as UserWithProgress;
+    }
+
+    return user;
+}
+
 
 export async function actualizarPuntuacionUsuario(user: UserWithProgress): Promise<UserWithProgress> {
   const puntosHabitaciones = calcularPuntosHabitaciones(user);
