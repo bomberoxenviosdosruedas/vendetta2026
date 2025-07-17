@@ -1,30 +1,13 @@
 
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider     = "postgresql"
   url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
-// ==================================================================
-// --- ENUMS
-// ==================================================================
-
-enum TipoRecurso {
-  armas
-  municion
-  alcohol
-  dolares
-  dolares_por_alcohol
+generator client {
+  provider      = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 enum TipoTropa {
@@ -33,30 +16,26 @@ enum TipoTropa {
   OCUPAR
 }
 
-
-// ==================================================================
-// --- Modelos de Usuario y Progreso
-// ==================================================================
-
 model User {
-  id             String                @id @default(cuid())
-  name           String
-  username       String                @unique
-  password       String
-  title          String?
-  avatarUrl      String?
-  createdAt      DateTime              @default(now())
-  updatedAt      DateTime              @updatedAt
-  progreso       ProgresoUsuario?
-  propiedades    Propiedad[]
-  entrenamientos EntrenamientoUsuario[]
-  tropas         TropaUsuario[]
-  puntuacion     PuntuacionUsuario?
+  id                  String               @id @default(cuid())
+  name                String
+  username            String               @unique
+  password            String
+  title               String?
+  avatarUrl           String?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  progreso            ProgresoUsuario?
+  propiedades         Propiedad[]
+  entrenamientos      EntrenamientoUsuario[]
+  tropas              TropaUsuario[]
+  puntuacion          PuntuacionUsuario?
+  misiones            ColaMisiones[]
 }
 
 model ProgresoUsuario {
   id                  String   @id @default(cuid())
-  user                User     @relation(fields: [userId], references: [id])
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId              String   @unique
   dolares             Float    @default(0)
   armas               Float    @default(0)
@@ -66,163 +45,168 @@ model ProgresoUsuario {
 }
 
 model PuntuacionUsuario {
-  id                   String @id @default(cuid())
-  user                 User   @relation(fields: [userId], references: [id])
-  userId               String @unique
-  puntosHabitaciones  Float  @default(0)
-  puntosTropas         Float  @default(0)
-  puntosEntrenamientos Float  @default(0)
-  puntosTotales        Float  @default(0)
-  updatedAt            DateTime @updatedAt
+  id                   String   @id @default(cuid())
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               String   @unique
+  puntosHabitaciones  Float    @default(0)
+  puntosTropas         Float    @default(0)
+  puntosEntrenamientos Float    @default(0)
+  puntosTotales        Float    @default(0)
+  ultimaActualizacion  DateTime @default(now())
 }
 
-// ==================================================================
-// --- Modelos de Propiedades y Construcción
-// ==================================================================
 
 model Propiedad {
-  id               String              @id @default(cuid())
-  user             User                @relation(fields: [userId], references: [id])
-  userId           String
-  nombre           String
-  ciudad           Int
-  barrio           Int
-  edificio         Int
-  habitaciones     HabitacionUsuario[]
-  colaConstruccion ColaConstruccion[]
-  colaReclutamiento ColaReclutamiento?
+  id                  String               @id @default(cuid())
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId              String
+  nombre              String
+  ciudad              Int
+  barrio              Int
+  edificio            Int
+  habitaciones        HabitacionUsuario[]
+  colaConstruccion    ColaConstruccion[]
+  colaReclutamiento   ColaReclutamiento?
 
   @@unique([ciudad, barrio, edificio])
   @@index([userId])
 }
 
 model HabitacionUsuario {
-  id                        String                   @id @default(cuid())
-  propiedad                 Propiedad                @relation(fields: [propiedadId], references: [id])
-  propiedadId               String
-  configuracion             ConfiguracionHabitacion @relation(fields: [configuracionHabitacionId], references: [id])
-  configuracionHabitacionId String
-  nivel                     Int                      @default(0)
-
+  id                          String                  @id @default(cuid())
+  propiedad                   Propiedad               @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
+  propiedadId                 String
+  configuracion               ConfiguracionHabitacion @relation(fields: [configuracionHabitacionId], references: [id], onDelete: Cascade)
+  configuracionHabitacionId   String
+  nivel                       Int                     @default(0)
+  
   @@unique([propiedadId, configuracionHabitacionId])
-  @@index([propiedadId])
+  @@index([configuracionHabitacionId])
 }
-
-model ColaConstruccion {
-  id             String    @id @default(cuid())
-  propiedad      Propiedad @relation(fields: [propiedadId], references: [id])
-  propiedadId    String
-  habitacionId   String
-  nivelDestino   Int
-  duracion       Int
-  fechaInicio    DateTime?
-  fechaFinalizacion DateTime?
-  createdAt      DateTime  @default(now())
-
-  @@index([propiedadId])
-}
-
-
-// ==================================================================
-// --- Modelos de Entrenamiento y Tropas
-// ==================================================================
 
 model EntrenamientoUsuario {
-  id                             String                     @id @default(cuid())
-  user                           User                       @relation(fields: [userId], references: [id])
-  userId                         String
-  configuracion                  ConfiguracionEntrenamiento @relation(fields: [configuracionEntrenamientoId], references: [id])
-  configuracionEntrenamientoId String
-  nivel                          Int                        @default(0)
-
+  id                              String                     @id @default(cuid())
+  user                            User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                          String
+  configuracion                   ConfiguracionEntrenamiento @relation(fields: [configuracionEntrenamientoId], references: [id], onDelete: Cascade)
+  configuracionEntrenamientoId    String
+  nivel                           Int                        @default(0)
+  
   @@unique([userId, configuracionEntrenamientoId])
+  @@index([configuracionEntrenamientoId])
 }
 
 model TropaUsuario {
-  id                   String             @id @default(cuid())
-  user                 User               @relation(fields: [userId], references: [id])
-  userId               String
-  configuracion        ConfiguracionTropa @relation(fields: [configuracionTropaId], references: [id])
-  configuracionTropaId String
-  cantidad             Int
-
+  id                      String             @id @default(cuid())
+  user                    User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                  String
+  configuracion           ConfiguracionTropa @relation(fields: [configuracionTropaId], references: [id], onDelete: Cascade)
+  configuracionTropaId    String
+  cantidad                Int                @default(0)
+  
   @@unique([userId, configuracionTropaId])
+  @@index([configuracionTropaId])
+}
+
+model ColaConstruccion {
+    id                  String      @id @default(cuid())
+    propiedad           Propiedad   @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
+    propiedadId         String
+    habitacionId        String
+    nivelDestino        Int
+    duracion            Int // Duración en segundos
+    fechaInicio         DateTime?
+    fechaFinalizacion   DateTime?
+    createdAt           DateTime    @default(now())
+
+    @@index([propiedadId])
 }
 
 model ColaReclutamiento {
-  id             String    @id @default(cuid())
-  propiedad      Propiedad @relation(fields: [propiedadId], references: [id])
-  propiedadId    String    @unique
-  tropaId        String    
-  tropaConfig    ConfiguracionTropa @relation(fields: [tropaId], references: [id])
-  cantidad       Int
-  fechaInicio    DateTime
-  fechaFinalizacion DateTime
-  createdAt      DateTime  @default(now())
+    id                  String              @id @default(cuid())
+    propiedad           Propiedad           @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
+    propiedadId         String              @unique
+    tropaConfig         ConfiguracionTropa  @relation(fields: [tropaId], references: [id])
+    tropaId             String
+    cantidad            Int
+    fechaInicio         DateTime
+    fechaFinalizacion   DateTime
+}
+
+model ColaMisiones {
+  id                String      @id @default(cuid())
+  user              User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String
+  tipoMision        String // Ataque, Ocupar, etc.
+  tropas            Json // JSON string de las tropas enviadas: { tropaId: cantidad }
+  origenCiudad      Int
+  origenBarrio      Int
+  origenEdificio    Int
+  destinoCiudad     Int
+  destinoBarrio     Int
+  destinoEdificio   Int
+  fechaLlegada      DateTime
+  fechaRegreso      DateTime?
+
+  @@index([userId])
 }
 
 
-// ==================================================================
-// --- Modelos de Configuración (Datos Maestros)
-// ==================================================================
+// --- Tablas de Configuración (Datos Maestros) ---
 
 model ConfiguracionHabitacion {
-  id                        String                              @id @unique
-  nombre                    String
-  descripcion               String
-  urlImagen                 String
-  costoArmas                Int
-  costoMunicion             Int
-  costoDolares              Int
-  duracion                  Int                                 @comment("Duración base en segundos para el nivel 1")
-  produccionRecurso         TipoRecurso?                        @comment("El tipo de recurso que produce esta habitación, si aplica.")
-  puntos                    Float
-  habitaciones              HabitacionUsuario[]
-  escalado                  ConfiguracionEscaladoHabitacion?
+  id                    String                         @id @unique
+  nombre                String
+  descripcion           String
+  urlImagen             String
+  costoArmas            Int                            @default(0)
+  costoMunicion         Int                            @default(0)
+  costoDolares          Int                            @default(0)
+  duracion              Int                            @default(0) // en segundos
+  produccionRecurso     String?                        // 'armas', 'municion', 'alcohol', 'dolares', etc.
+  puntos                Float                          @default(0)
+  habitaciones          HabitacionUsuario[]
+  escalado              ConfiguracionEscaladoHabitacion? @relation(fields: [escaladoId], references: [id])
+  escaladoId            String?                        @unique
 }
 
 model ConfiguracionEscaladoHabitacion {
-  id                     String                   @id @default(cuid())
-  habitacion             ConfiguracionHabitacion @relation(fields: [habitacionId], references: [id])
-  habitacionId           String                   @unique
-  factorCostoPorNivel    Float                    @default(1.2) @comment("Ej: 1.2 significa un aumento del 20% por nivel")
+  id                      String                  @id @default(cuid())
+  factorCostoPorNivel     Float
+  habitacion              ConfiguracionHabitacion?
 }
-
 
 model ConfiguracionEntrenamiento {
-  id             String                 @id @unique
-  nombre         String
-  urlImagen      String
-  costoArmas     Int
-  costoMunicion  Int
-  costoDolares   Int
-  duracion       Int
-  puntos         Float
-  entrenamientos EntrenamientoUsuario[]
+  id              String                   @id @unique
+  nombre          String
+  urlImagen       String
+  costoArmas      Int                      @default(0)
+  costoMunicion   Int                      @default(0)
+  costoDolares    Int                      @default(0)
+  duracion        Int                      @default(0) // en segundos
+  puntos          Float                    @default(0)
+  entrenamientos  EntrenamientoUsuario[]
 }
 
-
 model ConfiguracionTropa {
-  id             String      @id @unique
-  nombre         String
-  urlImagen      String
-  descripcion    String
-  costoArmas     Int
-  costoMunicion  Int
-  costoDolares   Int
-  duracion       Int
-  puntos         Float
-  ataque         Int
-  defensa        Int
-  capacidad      Int
-  velocidad      Int
-  salario        Int
-  tipo           TipoTropa   @default(ATAQUE)
-  // Campos JSON para requisitos y bonus
-  requisitos     String[]
-  bonusAtaque    String[]
-  bonusDefensa   String[]
-  // Relaciones
-  tropas         TropaUsuario[]
-  colaReclutamiento ColaReclutamiento[]
+  id            String                 @id @unique
+  nombre        String
+  urlImagen     String
+  descripcion   String
+  costoArmas    Int                    @default(0)
+  costoMunicion Int                    @default(0)
+  costoDolares  Int                    @default(0)
+  duracion      Int                    @default(0)
+  puntos        Float                  @default(0)
+  ataque        Int                    @default(0)
+  defensa       Int                    @default(0)
+  capacidad     Int                    @default(0)
+  velocidad     Int                    @default(0)
+  salario       Int                    @default(0)
+  tipo          TipoTropa              @default(ATAQUE)
+  requisitos    String[]
+  bonusAtaque   String[]
+  bonusDefensa  String[]
+  tropas        TropaUsuario[]
+  colasReclutamiento ColaReclutamiento[]
 }

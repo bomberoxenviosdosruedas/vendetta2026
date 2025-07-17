@@ -1,8 +1,9 @@
 
 
+
 "use server"
 
-import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario } from '@prisma/client/edge'
+import { PrismaClient, User, ProgresoUsuario, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 
 const prisma = new PrismaClient().$extends(withAccelerate())
@@ -31,12 +32,34 @@ export type UserWithProgress = User & {
     entrenamientos: (EntrenamientoUsuario & { configuracion: ConfiguracionEntrenamiento })[];
     tropas: (TropaUsuario & { configuracion: ConfiguracionTropa })[];
     puntuacion: PuntuacionUsuario | null;
+    misiones: ColaMisiones[];
 };
 
 export type UserForRanking = User & {
     puntuacion: PuntuacionUsuario | null;
     _count: {
         propiedades: number;
+    }
+}
+
+export async function getPropertyOwner(coords: { ciudad: number, barrio: number, edificio: number }): Promise<{id: string, name: string} | null> {
+    try {
+        const property = await prisma.propiedad.findUnique({
+            where: {
+                ciudad_barrio_edificio: coords
+            },
+            select: {
+                user: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
+                }
+            }
+        });
+        return property?.user || null;
+    } catch(e) {
+        return null;
     }
 }
 
@@ -168,6 +191,7 @@ const userInclude = {
       }
     },
     puntuacion: true,
+    misiones: true,
 };
 
 export async function getUserByUsername(username: string): Promise<UserWithProgress | null> {
