@@ -4,6 +4,7 @@ import { calcularProduccionTotalPorSegundo } from "@/lib/formulas/room-formulas"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import Image from "next/image";
+import { Separator } from "../ui/separator";
 
 const resourceIcons: { [key: string]: string } = {
     armas: '/img/recursos/armas.svg',
@@ -30,7 +31,6 @@ export async function ResourcesView() {
         return <div>Usuario no encontrado</div>
     }
 
-    // TODO: This should be based on selected property
     const produccionPorSegundo = user.propiedades.reduce((acc, propiedad) => {
         const prod = calcularProduccionTotalPorSegundo(propiedad);
         acc.armas += prod.armas;
@@ -59,11 +59,12 @@ export async function ResourcesView() {
                 <CardHeader>
                     <CardTitle>Producción de Recursos</CardTitle>
                     <CardDescription>
-                        Esta es la producción total de tus edificios por hora, día y semana.
+                        Esta es la producción total de tus edificios por hora, día y semana en todas tus propiedades.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Table>
+                    {/* Vista para Escritorio */}
+                    <Table className="hidden md:table">
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Recurso</TableHead>
@@ -86,6 +87,34 @@ export async function ResourcesView() {
                             ))}
                         </TableBody>
                     </Table>
+
+                    {/* Vista para Móvil */}
+                    <div className="md:hidden space-y-4">
+                        {productionData.map((res) => (
+                            <div key={res.name} className="p-4 border rounded-lg">
+                                <div className="flex items-center gap-3 mb-3">
+                                    <Image src={res.icon} alt={res.name} width={24} height={24} />
+                                    <h3 className="font-semibold text-lg">{res.name}</h3>
+                                </div>
+                                <Separator />
+                                <div className="mt-3 space-y-2 text-sm">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-muted-foreground">Por Hora:</span>
+                                        <span className="font-mono font-semibold text-green-400">{formatProduction(res.porHora)}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-muted-foreground">Por Día:</span>
+                                        <span className="font-mono font-semibold text-green-400">{formatProduction(res.porDia)}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-muted-foreground">Por Semana:</span>
+                                        <span className="font-mono font-semibold text-green-400">{formatProduction(res.porSemana)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
                 </CardContent>
             </Card>
         </div>
