@@ -2,7 +2,7 @@
   {
     "id": "honor",
     "nombre": "Honor",
-    "urlImagen": "/img/F16.gif",
+    "urlImagen": "/img/entrenamientos/F16.png",
     "costoArmas": 0,
     "costoMunicion": 0,
     "costoDolares": 280000,
@@ -12,7 +12,7 @@
   {
     "id": "rutas",
     "nombre": "Planificacion de rutas",
-    "urlImagen": "/img/F1.gif",
+    "urlImagen": "/img/entrenamientos/F1.png",
     "costoArmas": 250,
     "costoMunicion": 600,
     "costoDolares": 0,
@@ -22,7 +22,7 @@
   {
     "id": "extorsion",
     "nombre": "Extorsion",
-    "urlImagen": "/img/F3.gif",
+    "urlImagen": "/img/entrenamientos/F3.png",
     "costoArmas": 500,
     "costoMunicion": 1000,
     "costoDolares": 0,
@@ -32,7 +32,7 @@
   {
     "id": "encargos",
     "nombre": "Planificacion de encargos",
-    "urlImagen": "/img/F2.gif",
+    "urlImagen": "/img/entrenamientos/F2.png",
     "costoArmas": 500,
     "costoMunicion": 1250,
     "costoDolares": 500,
@@ -42,7 +42,7 @@
   {
     "id": "explosivos",
     "nombre": "Fabricación de explosivos",
-    "urlImagen": "/img/F12.gif",
+    "urlImagen": "/img/entrenamientos/F12.png",
     "costoArmas": 5000,
     "costoMunicion": 10000,
     "costoDolares": 7500,
@@ -52,7 +52,7 @@
   {
     "id": "seguridad",
     "nombre": "Seguridad",
-    "urlImagen": "/img/F7.gif",
+    "urlImagen": "/img/entrenamientos/F7.png",
     "costoArmas": 500,
     "costoMunicion": 2000,
     "costoDolares": 500,
@@ -62,7 +62,7 @@
   {
     "id": "espionaje",
     "nombre": "Espionaje",
-    "urlImagen": "/img/F6.gif",
+    "urlImagen": "/img/entrenamientos/F6.png",
     "costoArmas": 250,
     "costoMunicion": 250,
     "costoDolares": 150,
@@ -72,7 +72,7 @@
   {
     "id": "quimico",
     "nombre": "Entrenamiento químico",
-    "urlImagen": "/img/F15.gif",
+    "urlImagen": "/img/entrenamientos/F15.png",
     "costoArmas": 2000,
     "costoMunicion": 6000,
     "costoDolares": 6000,
@@ -82,7 +82,7 @@
   {
     "id": "guerrilla",
     "nombre": "Entrenamiento de guerrilla",
-    "urlImagen": "/img/F13.gif",
+    "urlImagen": "/img/entrenamientos/F13.png",
     "costoArmas": 4000,
     "costoMunicion": 5000,
     "costoDolares": 6000,
@@ -92,7 +92,7 @@
   {
     "id": "psicologico",
     "nombre": "Entrenamiento psicologico",
-    "urlImagen": "/img/F14.gif",
+    "urlImagen": "/img/entrenamientos/F14.png",
     "costoArmas": 1000,
     "costoMunicion": 2500,
     "costoDolares": 8000,
@@ -102,7 +102,7 @@
   {
     "id": "proteccion",
     "nombre": "Proteccion de grupo",
-    "urlImagen": "/img/F8.gif",
+    "urlImagen": "/img/entrenamientos/F8.png",
     "costoArmas": 1500,
     "costoMunicion": 2500,
     "costoDolares": 1000,
@@ -112,7 +112,7 @@
   {
     "id": "armas",
     "nombre": "Combate de armas a corta distancia",
-    "urlImagen": "/img/F10.gif",
+    "urlImagen": "/img/entrenamientos/F10.png",
     "costoArmas": 500,
     "costoMunicion": 100,
     "costoDolares": 1500,
@@ -122,7 +122,7 @@
   {
     "id": "combate",
     "nombre": "Combate cuerpo a cuerpo",
-    "urlImagen": "/img/F9.gif",
+    "urlImagen": "/img/entrenamientos/F9.png",
     "costoArmas": 1000,
     "costoMunicion": 1000,
     "costoDolares": 1500,
@@ -132,7 +132,7 @@
   {
     "id": "administracion",
     "nombre": "Administración de base",
-    "urlImagen": "/img/F4.gif",
+    "urlImagen": "/img/entrenamientos/F4.png",
     "costoArmas": 0,
     "costoMunicion": 0,
     "costoDolares": 2500,
@@ -142,7 +142,7 @@
   {
     "id": "contrabando",
     "nombre": "Contrabando",
-    "urlImagen": "/img/F5.gif",
+    "urlImagen": "/img/entrenamientos/F5.png",
     "costoArmas": 0,
     "costoMunicion": 0,
     "costoDolares": 750,
@@ -152,7 +152,7 @@
   {
     "id": "tiro",
     "nombre": "Entrenamiento de Tiro",
-    "urlImagen": "/img/F11.gif",
+    "urlImagen": "/img/entrenamientos/F11.png",
     "costoArmas": 2500,
     "costoMunicion": 6000,
     "costoDolares": 5000,
