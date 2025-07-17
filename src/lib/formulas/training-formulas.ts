@@ -8,7 +8,6 @@ export function calcularCostosEntrenamiento(
     return { armas: config.costoArmas, municion: config.costoMunicion, dolares: config.costoDolares };
   }
 
-  // Nueva fórmula: (nivel * nivel) * costo_base
   const factor = nivel * nivel;
 
   const costoArmas = Math.floor(config.costoArmas * factor);
@@ -27,9 +26,11 @@ export function calcularTiempoEntrenamiento(
     return config.duracion;
   }
   
-  const tiempoBase = config.duracion * Math.pow(1.5, nivel - 1);
-  const bonusReduccion = Math.min(nivelEscuela * 0.02, 0.5);
-  const tiempoFinal = tiempoBase * (1 - bonusReduccion);
+  // La fórmula es (nivel_objetivo * duracion_base) / nivel_escuela
+  // Aseguramos que nivelEscuela sea al menos 1 para evitar división por cero.
+  const divisorNivelEscuela = Math.max(1, nivelEscuela);
+
+  const tiempoFinal = (nivel * config.duracion) / divisorNivelEscuela;
   
-  return Math.max(5, Math.floor(tiempoFinal));
+  return Math.max(5, Math.floor(tiempoFinal)); // Asegura un tiempo mínimo de 5 segundos.
 }
