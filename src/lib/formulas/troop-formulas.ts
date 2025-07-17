@@ -1,4 +1,3 @@
-
 import type { ConfiguracionTropa } from '@prisma/client';
 
 /**

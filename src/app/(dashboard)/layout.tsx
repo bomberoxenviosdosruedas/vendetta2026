@@ -57,7 +57,7 @@ export default async function DashboardLayout({
   }
 
   return (
-    <Suspense fallback={<div>Cargando...</div>}>
+    <Suspense>
       <PropertyProvider initialProperties={finalUser.propiedades}>
           <DashboardClientLayout user={finalUser}>
               <div className="sticky top-14 sm:top-16 z-20">

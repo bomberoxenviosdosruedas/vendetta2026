@@ -1,4 +1,3 @@
-
 'use client'
 
 import Image from "next/image"
@@ -7,7 +6,7 @@ import {
   CardContent,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Clock, PlusCircle, Target, Boxes, DollarSign, Shield, Swords, Ban } from "lucide-react"
+import { Clock, PlusCircle, Ban } from "lucide-react"
 import { iniciarReclutamiento } from "@/lib/actions/troop.actions"
 import { useEffect, useState } from "react"
 import type { ConfiguracionTropa } from "@prisma/client"
@@ -214,12 +213,12 @@ export function RecruitmentView({ user, troopConfigs }: RecruitmentViewProps) {
                           <div className="flex flex-col gap-2 text-sm flex-grow">
                               <div className="grid grid-cols-2 gap-1 text-xs">
                                   <div className="flex items-center gap-2" title="Ataque">
-                                      <Swords className="h-4 w-4 text-red-500" /> 
-                                      <span>{formatNumber(troop.ataque)}</span>
+                                    <Image src="/img/recursos/armas.svg" alt="Ataque" width={16} height={16} />
+                                    <span>{formatNumber(troop.ataque)}</span>
                                   </div>
                                   <div className="flex items-center gap-2" title="Defensa">
-                                      <Shield className="h-4 w-4 text-blue-500" />
-                                      <span>{formatNumber(troop.defensa)}</span>
+                                    <Image src="/img/recursos/municion.svg" alt="Defensa" width={16} height={16} />
+                                    <span>{formatNumber(troop.defensa)}</span>
                                   </div>
                               </div>
                               <div className="grid grid-cols-3 gap-x-3">

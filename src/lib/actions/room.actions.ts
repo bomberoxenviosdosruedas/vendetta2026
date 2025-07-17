@@ -1,3 +1,4 @@
+
 'use server';
 
 import { revalidatePath } from "next/cache";
@@ -5,7 +6,6 @@ import prisma from "../prisma/prisma";
 import { getSessionUser } from "../auth";
 import { FullConfiguracionHabitacion } from "../data";
 import { calcularCostosNivel, calcularTiempoConstruccion } from "../formulas/room-formulas";
-
 
 export async function iniciarAmpliacion(propiedadId: string, habitacionId: string) {
     const user = await getSessionUser();
