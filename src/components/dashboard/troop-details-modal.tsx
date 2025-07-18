@@ -10,6 +10,8 @@ import { ScrollArea } from '../ui/scroll-area';
 import { Button } from '../ui/button';
 import type { ConfiguracionTropa } from '@prisma/client';
 import type { UserWithProgress } from '@/lib/data';
+import { Separator } from '../ui/separator';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 
 interface TroopDetailsModalProps {
   troop: ConfiguracionTropa;
@@ -23,6 +25,14 @@ function formatNumber(num: number): string {
 
 export function TroopDetailsModal({ troop, user }: TroopDetailsModalProps) {
     const { ataqueActual, defensaActual } = calcularStatsTropaConBonus(troop, user.entrenamientos);
+    const stats = [
+        { label: 'Ataque', base: troop.ataque, actual: ataqueActual },
+        { label: 'Defensa', base: troop.defensa, actual: defensaActual },
+        { label: 'Capacidad', base: troop.capacidad, actual: troop.capacidad },
+        { label: 'Velocidad', base: troop.velocidad, actual: troop.velocidad },
+        { label: 'Salario', base: troop.salario, actual: troop.salario },
+        { label: 'Puntos', base: troop.puntos, actual: troop.puntos },
+    ];
   return (
     <DialogContent className="max-w-3xl w-full max-h-[90svh] flex flex-col p-0">
         <DialogHeader className="p-6 pb-4">
@@ -44,7 +54,8 @@ export function TroopDetailsModal({ troop, user }: TroopDetailsModalProps) {
         <ScrollArea className="flex-grow px-6">
             <h3 className="font-semibold mb-2">Estadísticas de la Tropa</h3>
             
-            <Table>
+            {/* Vista de tabla para escritorio */}
+            <Table className="hidden sm:table">
                 <TableHeader>
                     <TableRow>
                         <TableHead className="w-[80px]">Valor</TableHead>
@@ -77,6 +88,36 @@ export function TroopDetailsModal({ troop, user }: TroopDetailsModalProps) {
                     </TableRow>
                 </TableBody>
             </Table>
+            
+            {/* Vista de tarjetas para móvil */}
+            <div className='sm:hidden space-y-4'>
+                <Card>
+                    <CardHeader className='p-4'>
+                        <CardTitle className='text-base'>Estadísticas Base</CardTitle>
+                    </CardHeader>
+                    <CardContent className='p-4 pt-0 grid grid-cols-2 gap-x-4 gap-y-2 text-sm'>
+                        {stats.map(stat => (
+                            <div key={`base-${stat.label}`} className='flex justify-between items-baseline'>
+                                <span className='text-muted-foreground'>{stat.label}:</span>
+                                <span className='font-mono font-semibold'>{formatNumber(stat.base)}</span>
+                            </div>
+                        ))}
+                    </CardContent>
+                </Card>
+                 <Card className='bg-muted/30'>
+                    <CardHeader className='p-4'>
+                        <CardTitle className='text-base text-primary'>Estadísticas Actuales</CardTitle>
+                    </CardHeader>
+                    <CardContent className='p-4 pt-0 grid grid-cols-2 gap-x-4 gap-y-2 text-sm'>
+                         {stats.map(stat => (
+                            <div key={`actual-${stat.label}`} className='flex justify-between items-baseline'>
+                                <span className='text-muted-foreground'>{stat.label}:</span>
+                                <span className='font-mono font-bold text-primary'>{formatNumber(stat.actual)}</span>
+                            </div>
+                        ))}
+                    </CardContent>
+                </Card>
+            </div>
         </ScrollArea>
         <div className="px-6 py-4 border-t mt-auto">
              <DialogClose asChild>
