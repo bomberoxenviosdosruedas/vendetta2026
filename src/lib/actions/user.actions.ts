@@ -7,6 +7,40 @@ import type { FullPropiedad, UserWithProgress } from "../data";
 import { calcularProduccionTotalPorSegundo } from "../formulas/room-formulas";
 import { revalidatePath } from "next/cache";
 import { calcularPuntosEntrenamientos, calcularPuntosHabitaciones, calcularPuntosTropas } from "../formulas/score-formulas";
+import { getSessionUser } from "../auth";
+
+interface UserSettings {
+    name?: string;
+    title?: string;
+    avatarUrl?: string;
+}
+
+export async function updateUserSettings(settings: UserSettings) {
+    const user = await getSessionUser();
+
+    if (!user) {
+        return { error: "Usuario no autenticado." };
+    }
+
+    try {
+        await prisma.user.update({
+            where: { id: user.id },
+            data: {
+                name: settings.name,
+                title: settings.title,
+                avatarUrl: settings.avatarUrl,
+            },
+        });
+
+        revalidatePath('/settings');
+        revalidatePath('/(dashboard)', 'layout');
+
+        return { success: "¡Perfil actualizado correctamente!" };
+    } catch (error) {
+        console.error("Error al actualizar el perfil:", error);
+        return { error: "Ocurrió un error al actualizar el perfil." };
+    }
+}
 
 async function actualizarRecursosPropiedad(propiedad: FullPropiedad): Promise<FullPropiedad> {
     const ahora = new Date();
