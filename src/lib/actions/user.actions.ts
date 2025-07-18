@@ -84,7 +84,7 @@ async function actualizarRecursosPropiedad(propiedad: FullPropiedad): Promise<Fu
                 habitaciones: { include: { configuracion: { include: { escalado: true } } } },
                 colaConstruccion: { orderBy: { createdAt: 'asc' } }, 
                 colaReclutamiento: { include: { tropaConfig: true } },
-                tropas: { include: { configuracion: true } }
+                TropaUsuario: { include: { configuracion: true } }
             }
         });
         return propiedadActualizada as FullPropiedad;
@@ -167,7 +167,7 @@ async function verificarYFinalizarConstruccionDePropiedad(propiedad: FullPropied
         habitaciones: { include: { configuracion: { include: { escalado: true } } } },
         colaConstruccion: { orderBy: { createdAt: 'asc' } }, 
         colaReclutamiento: { include: { tropaConfig: true } },
-        tropas: { include: { configuracion: true } }
+        TropaUsuario: { include: { configuracion: true } }
       }
     });
     return propiedadRefrescada as FullPropiedad;
@@ -231,7 +231,7 @@ async function verificarYFinalizarReclutamientoDePropiedad(propiedad: FullPropie
                 habitaciones: { include: { configuracion: { include: { escalado: true } } } },
                 colaConstruccion: { orderBy: { createdAt: 'asc' } }, 
                 colaReclutamiento: { include: { tropaConfig: true } },
-                tropas: { include: { configuracion: true } }
+                TropaUsuario: { include: { configuracion: true } }
               }
         });
         return propiedadRefrescada as FullPropiedad;
@@ -300,7 +300,7 @@ export async function verificarYFinalizarMisiones(user: UserWithProgress): Promi
                         habitaciones: { include: { configuracion: { include: { escalado: true } } } },
                         colaConstruccion: { orderBy: { createdAt: 'asc' } }, 
                         colaReclutamiento: { include: { tropaConfig: true } },
-                        tropas: { include: { configuracion: true } }
+                        TropaUsuario: { include: { configuracion: true } }
                     }
                 },
                 entrenamientos: { include: { configuracion: true } },
