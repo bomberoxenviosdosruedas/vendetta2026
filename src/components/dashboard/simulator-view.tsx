@@ -22,6 +22,7 @@ import {
 import { ScrollArea } from '../ui/scroll-area';
 import { UserWithProgress } from '@/lib/data';
 import { useProperty } from '@/contexts/property-context';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
 interface SimulatorViewProps {
     user: UserWithProgress;
@@ -66,6 +67,7 @@ const InputRow = ({ label, value, onChange }: { label: string; value: number; on
 );
 
 function formatNumber(num: number): string {
+    if(num === undefined || num === null) return "0";
     return num.toLocaleString('de-DE');
 }
 
@@ -214,8 +216,8 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
         const newState = {
             troops,
             trainings,
-            defenses: {}, // Defenses are not user-specific in this way
-            buildingsLevel: 1 // Default
+            defenses: {},
+            buildingsLevel: 1 
         };
 
         if (column === 'attacker') {
@@ -241,9 +243,6 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
         setDefenderState(initialColumnState);
         setBattleReport(null);
     }
-
-    const winnerText = battleReport?.winner === 'attacker' ? 'ATACANTE GANA' : battleReport?.winner === 'defender' ? 'DEFENSOR GANA' : 'EMPATE';
-    const winnerColor = battleReport?.winner === 'attacker' ? 'text-green-500' : battleReport?.winner === 'defender' ? 'text-red-500' : 'text-yellow-500';
 
     return (
         <div>
@@ -289,75 +288,78 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
 
             {battleReport && (
                  <Dialog open={!!battleReport} onOpenChange={(isOpen) => !isOpen && setBattleReport(null)}>
-                    <DialogContent className="max-w-4xl">
+                    <DialogContent className="max-w-4xl bg-black/80 border-primary text-white">
                         <DialogHeader>
-                            <DialogTitle className="text-2xl">Reporte de Batalla</DialogTitle>
-                            <DialogDescription className="flex flex-col sm:flex-row justify-between items-baseline">
-                                <span>El resultado de la simulación es: <span className={`font-bold ${winnerColor}`}>{winnerText}</span></span>
-                                <span className="text-xs text-muted-foreground">Atk: {formatNumber(battleReport.attackerPower)} vs Def: {formatNumber(battleReport.defenderPower)}</span>
-                            </DialogDescription>
+                            <DialogTitle className="text-2xl text-center text-primary tracking-widest">
+                                INFORME DE BATALLA
+                            </DialogTitle>
                         </DialogHeader>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
-                            <Card className="p-4 bg-muted/30">
-                                <CardHeader className="p-0 pb-2">
-                                    <CardTitle className="text-lg">Pérdidas del Atacante</CardTitle>
-                                </CardHeader>
-                                <CardContent className="p-0">
-                                    <ul className="list-disc list-inside text-sm text-red-400 space-y-1">
-                                        {troopConfigs.map(troop => (
-                                            <li key={`attacker-loss-${troop.id}`}>{troop.nombre}: {formatNumber(battleReport.attackerLosses.find(l => l.id === troop.id)?.quantity || 0)}</li>
-                                        ))}
-                                    </ul>
-                                </CardContent>
-                            </Card>
-                            <Card className="p-4 bg-muted/30">
-                                <CardHeader className="p-0 pb-2">
-                                     <CardTitle className="text-lg">Pérdidas del Defensor</CardTitle>
-                                </CardHeader>
-                               <CardContent className="p-0">
-                                    <ul className="list-disc list-inside text-sm text-red-400 space-y-1">
-                                         {troopConfigs.map(troop => (
-                                            <li key={`defender-loss-${troop.id}`}>{troop.nombre}: {formatNumber(battleReport.defenderLosses.find(l => l.id === troop.id)?.quantity || 0)}</li>
-                                        ))}
-                                    </ul>
-                                </CardContent>
-                            </Card>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <Card className="p-4 bg-muted/30">
-                                <CardHeader className="p-0 pb-2">
-                                    <CardTitle className="text-lg">Recursos Saqueados</CardTitle>
-                                </CardHeader>
-                                <CardContent className="p-0">
-                                    <div className="text-sm grid grid-cols-2 gap-2">
-                                        <p>Armas: <span className="font-mono text-green-400">{formatNumber(battleReport.lootedResources.armas)}</span></p>
-                                        <p>Munición: <span className="font-mono text-green-400">{formatNumber(battleReport.lootedResources.municion)}</span></p>
-                                        <p>Dólares: <span className="font-mono text-green-400">{formatNumber(battleReport.lootedResources.dolares)}</span></p>
-                                        <p>Alcohol: <span className="font-mono text-green-400">{formatNumber(battleReport.lootedResources.alcohol)}</span></p>
-                                    </div>
-                                </CardContent>
-                            </Card>
-
-                            <Card className="p-4 bg-muted/30">
-                                <CardHeader className="p-0 pb-2">
-                                    <CardTitle className="text-lg">Log de Batalla</CardTitle>
-                                </CardHeader>
-                                <CardContent className="p-0">
-                                    <ScrollArea className="h-24">
-                                        <div className="space-y-1 text-xs">
-                                            {battleReport.rounds.map(round => (
-                                                <p key={round.round} className="font-mono">
-                                                    <span className="font-bold">Ronda {round.round}:</span> Atk dealt <span className="text-red-500">{formatNumber(round.attackerAttack)}</span> | Def dealt <span className="text-blue-500">{formatNumber(round.defenderAttack)}</span>
-                                                </p>
-                                            ))}
+                        <ScrollArea className="h-[70vh]">
+                            <div className="space-y-4 pr-4">
+                                {battleReport.rounds.map(round => (
+                                    <div key={round.round} className="space-y-2">
+                                        <div className="bg-primary/80 text-primary-foreground text-center font-bold py-1">
+                                            RONDA DE BATALLA {round.round}
                                         </div>
-                                    </ScrollArea>
-                                </CardContent>
-                            </Card>
-                        </div>
+                                        <Table>
+                                            <TableHeader>
+                                                <TableRow className="border-b-primary/50">
+                                                    <TableHead className="text-white">TROPA</TableHead>
+                                                    <TableHead className="text-right text-white">CANTIDAD</TableHead>
+                                                    <TableHead className="text-right text-red-500">DESTRUIDO</TableHead>
+                                                    <TableHead className="text-white text-right">CANTIDAD</TableHead>
+                                                    <TableHead className="text-right text-red-500">DESTRUIDO</TableHead>
+                                                </TableRow>
+                                            </TableHeader>
+                                            <TableBody>
+                                                {troopConfigs.map(troop => {
+                                                    const attackerTroop = round.attacker.troops.find(t => t.id === troop.id);
+                                                    const defenderTroop = round.defender.troops.find(t => t.id === troop.id);
+                                                    if (!attackerTroop && !defenderTroop) return null;
+                                                    return (
+                                                        <TableRow key={`round-${round.round}-troop-${troop.id}`} className="border-b-primary/20">
+                                                            <TableCell>{troop.nombre}</TableCell>
+                                                            <TableCell className="text-right">{formatNumber(attackerTroop?.initialQuantity || 0)}</TableCell>
+                                                            <TableCell className="text-right text-red-500">{formatNumber(attackerTroop?.lostQuantity || 0)}</TableCell>
+                                                            <TableCell className="text-right">{formatNumber(defenderTroop?.initialQuantity || 0)}</TableCell>
+                                                            <TableCell className="text-right text-red-500">{formatNumber(defenderTroop?.lostQuantity || 0)}</TableCell>
+                                                        </TableRow>
+                                                    )
+                                                })}
+                                            </TableBody>
+                                        </Table>
+                                        <div className="bg-primary/80 text-primary-foreground text-center font-bold py-1">
+                                            INFORME DE BATALLA {round.round}
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-x-4 p-2 text-sm font-mono">
+                                             <div><span className="font-bold">A: Ataque:</span> {formatNumber(round.attacker.totalAttack)}</div>
+                                             <div className="text-right"><span className="font-bold">Defensa:</span> {formatNumber(round.defender.totalDefense)}</div>
+                                             <div><span className="font-bold">D: Ataque:</span> {formatNumber(round.defender.totalAttack)}</div>
+                                             <div className="text-right"><span className="font-bold">Defensa:</span> {formatNumber(round.attacker.totalDefense)}</div>
+                                        </div>
+                                    </div>
+                                ))}
+
+                                {battleReport.finalMessage && <p className="text-center font-bold text-lg pt-4">{battleReport.finalMessage}</p>}
+
+                                <div className="bg-primary/80 text-primary-foreground text-center font-bold py-1 mt-4">
+                                    ESTADÍSTICAS DE COMBATE
+                                </div>
+                                <Table>
+                                    <TableBody>
+                                        <TableRow className="border-none"><TableCell>Tropas perdidas</TableCell><TableCell className="text-right">{formatNumber(battleReport.finalStats.attacker.troopsLost)}</TableCell><TableCell className="text-right">{formatNumber(battleReport.finalStats.defender.troopsLost)}</TableCell></TableRow>
+                                        <TableRow className="border-none"><TableCell>Puntos perdidos</TableCell><TableCell className="text-right">{formatNumber(battleReport.finalStats.attacker.pointsLost)}</TableCell><TableCell className="text-right">{formatNumber(battleReport.finalStats.defender.pointsLost)}</TableCell></TableRow>
+                                        <TableRow className="border-none"><TableCell>Armas perdido</TableCell><TableCell className="text-right">{formatNumber(battleReport.finalStats.attacker.resourcesLost.armas)}</TableCell><TableCell className="text-right">{formatNumber(battleReport.finalStats.defender.resourcesLost.armas)}</TableCell></TableRow>
+                                        <TableRow className="border-none"><TableCell>Municion perdido</TableCell><TableCell className="text-right">{formatNumber(battleReport.finalStats.attacker.resourcesLost.municion)}</TableCell><TableCell className="text-right">{formatNumber(battleReport.finalStats.defender.resourcesLost.municion)}</TableCell></TableRow>
+                                        <TableRow className="border-none"><TableCell>Dolares perdido</TableCell><TableCell className="text-right">{formatNumber(battleReport.finalStats.attacker.resourcesLost.dolares)}</TableCell><TableCell className="text-right">{formatNumber(battleReport.finalStats.defender.resourcesLost.dolares)}</TableCell></TableRow>
+                                    </TableBody>
+                                </Table>
+
+                            </div>
+                        </ScrollArea>
                         <DialogFooter>
                             <DialogClose asChild>
-                                <Button className="bg-red-800 hover:bg-red-700">Cerrar</Button>
+                                <Button className="w-full bg-red-800 hover:bg-red-700 text-white">Cerrar</Button>
                             </DialogClose>
                         </DialogFooter>
                     </DialogContent>
