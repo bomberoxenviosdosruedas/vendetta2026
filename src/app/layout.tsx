@@ -1,9 +1,19 @@
 import type {Metadata, Viewport} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
-import { Inter } from 'next/font/google';
+import { Roboto, Bebas_Neue as BebasNeue } from 'next/font/google';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+const roboto = Roboto({
+  subsets: ['latin'],
+  weight: ['400', '500', '700'],
+  variable: '--font-roboto',
+});
+
+const bebas_neue = BebasNeue({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-bebas-neue',
+});
 
 const APP_NAME = "Vendetta";
 const APP_DEFAULT_TITLE = "Vendetta tu familia Vendettera";
@@ -64,7 +74,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className="dark">
-      <body className={`${inter.variable} font-sans antialiased bg-background`}>
+      <body className={`${roboto.variable} ${bebas_neue.variable} font-sans antialiased bg-background`}>
         {children}
         <Toaster />
       </body>

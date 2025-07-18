@@ -1,10 +1,11 @@
+
 @tailwind base;
 @tailwind utilities;
 @tailwind components;
  
 @layer base {
   :root {
-    --background: 240 10% 3.9%;
+    --background: 240 5% 5%;
     --foreground: 210 40% 98%;
  
     --card: 240 4% 10%;
@@ -13,19 +14,19 @@
     --popover: 240 10% 3.9%;
     --popover-foreground: 210 40% 98%;
  
-    /* Primary: Deep Crimson */
+    /* Primary: Deep Crimson / Blood Red */
     --primary: 0 100% 27.5%; /* #8B0000 */
     --primary-foreground: 210 40% 98%;
  
-    /* Secondary: Darker Gray */
+    /* Secondary: Darker Gray / Night */
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 210 40% 98%;
  
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 215 20.2% 65.1%;
  
-    /* Accent: Desaturated Yellow */
-    --accent: 56 33.3% 58.4%; /* #BDB76B */
+    /* Accent: Desaturated Gold */
+    --accent: 45 33.3% 58.4%; /* #BDB76B */
     --accent-foreground: 240 5.9% 10%;
  
     --destructive: 0 62.8% 30.6%;
@@ -33,7 +34,7 @@
 
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
-    --ring: 0 100% 27.5%;
+    --ring: 45 33.3% 58.4%;
  
     --radius: 0.5rem;
 
@@ -44,7 +45,7 @@
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 210 40% 98%;
     --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 0 100% 27.5%;
+    --sidebar-ring: 45 33.3% 58.4%;
 
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
@@ -73,7 +74,7 @@
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
  
-    --accent: 56 33.3% 58.4%;
+    --accent: 45 33.3% 58.4%;
     --accent-foreground: 222.2 47.4% 11.2%;
  
     --destructive: 0 84.2% 60.2%;
@@ -91,6 +92,24 @@
   }
   body {
     @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted));
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--secondary-foreground));
   }
   
   .shimmer {
@@ -120,6 +139,10 @@
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-heading;
   }
 }
 
