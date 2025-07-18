@@ -39,6 +39,7 @@ export default async function SimulatorPage() {
         <div className="main-view">
             <Suspense fallback={<SimulatorLoading />}>
                 <SimulatorView 
+                    user={user}
                     troopConfigs={troopConfigs}
                     trainingConfigs={trainingConfigs}
                     defenseConfigs={defenseConfigs}
@@ -47,4 +48,3 @@ export default async function SimulatorPage() {
         </div>
     );
 }
-

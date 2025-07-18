@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { BattleReport, runBattleSimulation, SimulationInput } from '@/lib/actions/simulation.actions';
 import type { ConfiguracionTropa, ConfiguracionEntrenamiento, ConfiguracionHabitacion } from '@prisma/client';
-import { Loader2, Trash2 } from 'lucide-react';
+import { Loader2, Trash2, Upload } from 'lucide-react';
 import {
     Dialog,
     DialogContent,
@@ -20,8 +20,11 @@ import {
     DialogClose,
 } from "@/components/ui/dialog"
 import { ScrollArea } from '../ui/scroll-area';
+import { UserWithProgress } from '@/lib/data';
+import { useProperty } from '@/contexts/property-context';
 
 interface SimulatorViewProps {
+    user: UserWithProgress;
     troopConfigs: ConfiguracionTropa[];
     trainingConfigs: ConfiguracionEntrenamiento[];
     defenseConfigs: ConfiguracionHabitacion[];
@@ -73,6 +76,7 @@ function SimulatorColumn({
     troopConfigs,
     trainingConfigs,
     defenseConfigs,
+    onLoadData,
     isDefender = false,
 }: {
     title: string;
@@ -81,6 +85,7 @@ function SimulatorColumn({
     troopConfigs: ConfiguracionTropa[];
     trainingConfigs: ConfiguracionEntrenamiento[];
     defenseConfigs: ConfiguracionHabitacion[];
+    onLoadData: () => void;
     isDefender?: boolean;
 }) {
 
@@ -110,10 +115,16 @@ function SimulatorColumn({
         <Card>
             <CardHeader className="flex-row items-center justify-between">
                 <CardTitle>{title}</CardTitle>
-                <Button variant="ghost" size="icon" onClick={handleClear} className="h-8 w-8">
-                    <Trash2 className="h-4 w-4" />
-                    <span className="sr-only">Limpiar {title}</span>
-                </Button>
+                <div className="flex items-center gap-2">
+                     <Button variant="outline" size="sm" onClick={onLoadData}>
+                        <Upload className="mr-2 h-4 w-4" />
+                        Cargar mis datos
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={handleClear} className="h-8 w-8">
+                        <Trash2 className="h-4 w-4" />
+                        <span className="sr-only">Limpiar {title}</span>
+                    </Button>
+                </div>
             </CardHeader>
             <CardContent className="space-y-4">
                  <ScrollArea className="h-96 pr-4">
@@ -173,7 +184,8 @@ function SimulatorColumn({
     )
 }
 
-export function SimulatorView({ troopConfigs, trainingConfigs, defenseConfigs }: SimulatorViewProps) {
+export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConfigs }: SimulatorViewProps) {
+    const { selectedProperty } = useProperty();
     const [isPending, startTransition] = useTransition();
     const [attackerState, setAttackerState] = useState<SimulatorColumnState>(initialColumnState);
     const [defenderState, setDefenderState] = useState<SimulatorColumnState>(initialColumnState);
@@ -187,6 +199,32 @@ export function SimulatorView({ troopConfigs, trainingConfigs, defenseConfigs }:
             buildingsLevel: state.buildingsLevel
         };
     };
+
+    const handleLoadUserData = (column: 'attacker' | 'defender') => {
+        if (!selectedProperty) return;
+
+        const troops = Object.fromEntries(
+            selectedProperty.tropas.map(t => [t.configuracionTropaId, t.cantidad])
+        );
+
+        const trainings = Object.fromEntries(
+            user.entrenamientos.map(t => [t.configuracionEntrenamientoId, t.nivel])
+        );
+
+        const newState = {
+            troops,
+            trainings,
+            defenses: {}, // Defenses are not user-specific in this way
+            buildingsLevel: 1 // Default
+        };
+
+        if (column === 'attacker') {
+            setAttackerState(newState);
+        } else {
+            setDefenderState(newState);
+        }
+    }
+
 
     const handleSimulate = () => {
         const attackerInput = formatSimulationInput(attackerState);
@@ -229,6 +267,7 @@ export function SimulatorView({ troopConfigs, trainingConfigs, defenseConfigs }:
                     troopConfigs={troopConfigs}
                     trainingConfigs={trainingConfigs}
                     defenseConfigs={defenseConfigs}
+                    onLoadData={() => handleLoadUserData('attacker')}
                 />
                 <SimulatorColumn 
                     title="Defensor"
@@ -238,6 +277,7 @@ export function SimulatorView({ troopConfigs, trainingConfigs, defenseConfigs }:
                     trainingConfigs={trainingConfigs}
                     defenseConfigs={defenseConfigs}
                     isDefender
+                    onLoadData={() => handleLoadUserData('defender')}
                 />
             </div>
             <div className="mt-6">
@@ -307,4 +347,3 @@ export function SimulatorView({ troopConfigs, trainingConfigs, defenseConfigs }:
         </div>
     );
 }
-
