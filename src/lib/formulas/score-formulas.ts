@@ -17,7 +17,8 @@ export function calcularPuntosTropas(user: UserWithProgress): number {
   if (!user.propiedades) return 0;
   
   return user.propiedades.reduce((totalPropiedades, propiedad) => {
-    const puntosPropiedad = propiedad.tropas.reduce((totalTropas, tropa) => {
+    if (!propiedad.TropaUsuario) return totalPropiedades;
+    const puntosPropiedad = propiedad.TropaUsuario.reduce((totalTropas, tropa) => {
       const puntos = tropa.configuracion.puntos * tropa.cantidad;
       return totalTropas + puntos;
     }, 0);
