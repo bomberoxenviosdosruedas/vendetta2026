@@ -35,11 +35,12 @@ export default function Home() {
     <main className="relative flex min-h-screen w-full flex-col items-center justify-center p-4">
         <div className="absolute inset-0 z-0">
             <Image
-                src="https://placehold.co/1920x1080.png"
+                src="/img/general/fondo.jpg"
                 alt="Fondo de la ciudad de Vendetta"
                 fill
                 className="object-cover"
                 data-ai-hint="dark rainy city street"
+                priority
             />
             <div className="absolute inset-0 bg-black/70 bg-gradient-to-t from-background via-black/50 to-transparent" />
         </div>
@@ -60,4 +61,3 @@ export default function Home() {
     </main>
   );
 }
-
