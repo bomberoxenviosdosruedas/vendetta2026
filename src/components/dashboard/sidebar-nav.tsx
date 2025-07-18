@@ -26,7 +26,8 @@ import {
     List, 
     Mail, 
     BarChart, 
-    Trophy 
+    Trophy,
+    Settings
 } from "lucide-react"
 import { PropertySelector } from "./property-selector"
 import type { UserWithProgress } from "@/lib/data"
@@ -65,6 +66,7 @@ const tertiaryNav: NavItem[] = [
     { href: "/messages", label: "Mensajes", icon: <Mail /> },
     { href: "/statistics", label: "Estadísticas", icon: <BarChart /> },
     { href: "/rankings", label: "Clasificaciones", icon: <Trophy /> },
+    { href: "/settings", label: "Ajustes", icon: <Settings /> },
 ]
 
 export function SidebarNav({ user }: SidebarNavProps) {
