@@ -1,3 +1,4 @@
+
 'use client'
 
 import { createContext, useContext, useState, useEffect, ReactNode, useMemo, Suspense } from 'react';
@@ -8,13 +9,35 @@ interface PropertyContextType {
   properties: FullPropiedad[];
   selectedProperty: FullPropiedad | null;
   setSelectedPropertyById: (id: string) => void;
+  setSelectedProperty: React.Dispatch<React.SetStateAction<FullPropiedad | null>>;
 }
 
 const PropertyContext = createContext<PropertyContextType | undefined>(undefined);
 
+
+// This new component contains the logic that uses the navigation hooks.
+function PropertyEffects() {
+    const { properties, selectedProperty, setSelectedProperty } = useProperty();
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        const propertyId = searchParams.get('propertyId');
+        if (propertyId && propertyId !== selectedProperty?.id) {
+            const propertyToSelect = properties.find(p => p.id === propertyId) || null;
+            setSelectedProperty(propertyToSelect);
+        } else if (!propertyId && properties.length > 0 && selectedProperty?.id !== properties[0].id) {
+            // Default to first property if no ID in URL
+            setSelectedProperty(properties[0]);
+        }
+    }, [searchParams, properties, selectedProperty?.id, setSelectedProperty]);
+
+    return null; // This component doesn't render anything
+}
+
+
 function PropertyProviderClient({ children, initialProperties }: { children: ReactNode, initialProperties: FullPropiedad[] }) {
-  const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const [properties] = useState<FullPropiedad[]>(initialProperties);
   
@@ -23,39 +46,30 @@ function PropertyProviderClient({ children, initialProperties }: { children: Rea
     return properties.find(p => p.id === propertyId) || (properties.length > 0 ? properties[0] : null);
   });
   
+  const router = useRouter();
+  const pathname = usePathname();
+
   const setSelectedPropertyById = (id: string) => {
     const property = properties.find(p => p.id === id);
     if (property) {
         setSelectedProperty(property);
         const params = new URLSearchParams(searchParams);
         params.set('propertyId', id);
-        // Usamos replace para no añadir al historial de navegación
         router.replace(`${pathname}?${params.toString()}`);
     }
   };
 
-  useEffect(() => {
-    const propertyId = searchParams.get('propertyId');
-    // Si no hay propertyId en la URL, se usa el de la primera propiedad (que ya está ordenada en el layout)
-    const currentId = propertyId || (properties.length > 0 ? properties[0].id : null);
-    
-    const propertyToSelect = properties.find(p => p.id === currentId) || null;
-
-    if (propertyToSelect?.id !== selectedProperty?.id) {
-        setSelectedProperty(propertyToSelect);
-    }
-  }, [searchParams, properties, selectedProperty?.id]);
-
-
   const value = useMemo(() => ({
     properties,
     selectedProperty,
-    setSelectedPropertyById
+    setSelectedPropertyById,
+    setSelectedProperty,
   }), [properties, selectedProperty]);
 
   return (
     <PropertyContext.Provider value={value}>
       {children}
+      {/* PropertyEffects is now a child of the provider, ensuring context is available */}
     </PropertyContext.Provider>
   );
 }
