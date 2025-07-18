@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { BattleReport, runBattleSimulation, SimulationInput } from '@/lib/actions/simulation.actions';
 import type { ConfiguracionTropa, ConfiguracionEntrenamiento, ConfiguracionHabitacion } from '@prisma/client';
-import { Loader2, Trash2, Upload } from 'lucide-react';
+import { Loader2, Trash2, Upload, Swords } from 'lucide-react';
 import {
     Dialog,
     DialogContent,
@@ -289,7 +289,7 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
 
             {battleReport && (
                  <Dialog open={!!battleReport} onOpenChange={(isOpen) => !isOpen && setBattleReport(null)}>
-                    <DialogContent className="max-w-3xl">
+                    <DialogContent className="max-w-4xl">
                         <DialogHeader>
                             <DialogTitle className="text-2xl">Reporte de Batalla</DialogTitle>
                             <DialogDescription className="flex flex-col sm:flex-row justify-between items-baseline">
@@ -297,48 +297,67 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
                                 <span className="text-xs text-muted-foreground">Atk: {formatNumber(battleReport.attackerPower)} vs Def: {formatNumber(battleReport.defenderPower)}</span>
                             </DialogDescription>
                         </DialogHeader>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 py-4">
-                            <Card className="p-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
+                            <Card className="p-4 bg-muted/30">
                                 <CardHeader className="p-0 pb-2">
                                     <CardTitle className="text-lg">Pérdidas del Atacante</CardTitle>
                                 </CardHeader>
                                 <CardContent className="p-0">
-                                    <ul className="list-disc list-inside text-sm text-red-400">
-                                        {battleReport.attackerLosses.length > 0 ? battleReport.attackerLosses.map(loss => (
-                                            <li key={`attacker-loss-${loss.id}`}>{troopConfigs.find(t=>t.id === loss.id)?.nombre}: {formatNumber(loss.quantity)}</li>
-                                        )) : <li>Sin pérdidas</li>}
+                                    <ul className="list-disc list-inside text-sm text-red-400 space-y-1">
+                                        {troopConfigs.map(troop => (
+                                            <li key={`attacker-loss-${troop.id}`}>{troop.nombre}: {formatNumber(battleReport.attackerLosses.find(l => l.id === troop.id)?.quantity || 0)}</li>
+                                        ))}
                                     </ul>
                                 </CardContent>
                             </Card>
-                            <Card className="p-4">
+                            <Card className="p-4 bg-muted/30">
                                 <CardHeader className="p-0 pb-2">
                                      <CardTitle className="text-lg">Pérdidas del Defensor</CardTitle>
                                 </CardHeader>
                                <CardContent className="p-0">
-                                    <ul className="list-disc list-inside text-sm text-red-400">
-                                        {battleReport.defenderLosses.length > 0 ? battleReport.defenderLosses.map(loss => (
-                                            <li key={`defender-loss-${loss.id}`}>{troopConfigs.find(t=>t.id === loss.id)?.nombre}: {formatNumber(loss.quantity)}</li>
-                                        )) : <li>Sin pérdidas</li>}
+                                    <ul className="list-disc list-inside text-sm text-red-400 space-y-1">
+                                         {troopConfigs.map(troop => (
+                                            <li key={`defender-loss-${troop.id}`}>{troop.nombre}: {formatNumber(battleReport.defenderLosses.find(l => l.id === troop.id)?.quantity || 0)}</li>
+                                        ))}
                                     </ul>
                                 </CardContent>
                             </Card>
                         </div>
-                         <Card className="p-4">
-                            <CardHeader className="p-0 pb-2">
-                                <CardTitle className="text-lg">Recursos Saqueados</CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-0">
-                                <div className="text-sm grid grid-cols-2 gap-2">
-                                    <p>Armas: <span className="font-mono text-green-400">{formatNumber(battleReport.lootedResources.armas)}</span></p>
-                                    <p>Munición: <span className="font-mono text-green-400">{formatNumber(battleReport.lootedResources.municion)}</span></p>
-                                    <p>Dólares: <span className="font-mono text-green-400">{formatNumber(battleReport.lootedResources.dolares)}</span></p>
-                                    <p>Alcohol: <span className="font-mono text-green-400">{formatNumber(battleReport.lootedResources.alcohol)}</span></p>
-                                </div>
-                            </CardContent>
-                        </Card>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <Card className="p-4 bg-muted/30">
+                                <CardHeader className="p-0 pb-2">
+                                    <CardTitle className="text-lg">Recursos Saqueados</CardTitle>
+                                </CardHeader>
+                                <CardContent className="p-0">
+                                    <div className="text-sm grid grid-cols-2 gap-2">
+                                        <p>Armas: <span className="font-mono text-green-400">{formatNumber(battleReport.lootedResources.armas)}</span></p>
+                                        <p>Munición: <span className="font-mono text-green-400">{formatNumber(battleReport.lootedResources.municion)}</span></p>
+                                        <p>Dólares: <span className="font-mono text-green-400">{formatNumber(battleReport.lootedResources.dolares)}</span></p>
+                                        <p>Alcohol: <span className="font-mono text-green-400">{formatNumber(battleReport.lootedResources.alcohol)}</span></p>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card className="p-4 bg-muted/30">
+                                <CardHeader className="p-0 pb-2">
+                                    <CardTitle className="text-lg">Log de Batalla</CardTitle>
+                                </CardHeader>
+                                <CardContent className="p-0">
+                                    <ScrollArea className="h-24">
+                                        <div className="space-y-1 text-xs">
+                                            {battleReport.rounds.map(round => (
+                                                <p key={round.round} className="font-mono">
+                                                    <span className="font-bold">Ronda {round.round}:</span> Atk dealt <span className="text-red-500">{formatNumber(round.attackerAttack)}</span> | Def dealt <span className="text-blue-500">{formatNumber(round.defenderAttack)}</span>
+                                                </p>
+                                            ))}
+                                        </div>
+                                    </ScrollArea>
+                                </CardContent>
+                            </Card>
+                        </div>
                         <DialogFooter>
                             <DialogClose asChild>
-                                <Button>Cerrar</Button>
+                                <Button className="bg-red-800 hover:bg-red-700">Cerrar</Button>
                             </DialogClose>
                         </DialogFooter>
                     </DialogContent>

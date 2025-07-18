@@ -1,7 +1,8 @@
 
 'use server';
 
-import { revalidatePath } from "next/cache";
+import { getTrainingConfigurations, getTroopConfigurations } from '../data';
+import { calcularStatsTropaConBonus } from '../formulas/troop-formulas';
 
 interface TroopData {
     id: string;
@@ -38,72 +39,146 @@ export interface BattleReport {
         alcohol: number;
     };
     log: string[];
+    rounds: BattleRoundReport[];
 }
 
-// Placeholder function for battle simulation
+export interface BattleRoundReport {
+    round: number;
+    attackerAttack: number;
+    defenderAttack: number;
+    attackerTroopsLeft: TroopData[];
+    defenderTroopsLeft: TroopData[];
+}
+
+interface ArmyUnit {
+    id: string;
+    quantity: number;
+    attack: number;
+    defense: number;
+}
+
 export async function runBattleSimulation(attacker: SimulationInput, defender: SimulationInput): Promise<BattleReport> {
-    
-    // --- Lógica de Simulación de Placeholder ---
-    // Esta es una implementación muy básica. Se puede expandir con fórmulas complejas.
-    
-    const log: string[] = [];
+    const [troopConfigs, trainingConfigs] = await Promise.all([
+        getTroopConfigurations(),
+        getTrainingConfigurations()
+    ]);
+    const troopConfigsMap = new Map(troopConfigs.map(t => [t.id, t]));
+    const trainingConfigsMap = new Map(trainingConfigs.map(t => [t.id, t]));
 
-    log.push("Iniciando simulación de batalla...");
-
-    // 1. Calcular el poder de cada bando (ejemplo simple)
-    const attackerPower = attacker.troops.reduce((sum, t) => sum + (t.quantity * 1.5), 0) + 
-                          attacker.trainings.reduce((sum, t) => sum + (t.level * 5), 0);
-    
-    const defenderPower = defender.troops.reduce((sum, t) => sum + t.quantity, 0) + 
-                          defender.trainings.reduce((sum, t) => sum + (t.level * 5), 0) +
-                          defender.defenses.reduce((sum, d) => sum + (d.level * 10), 0) +
-                          (defender.buildingsLevel * 10);
-
-    log.push(`Poder del Atacante: ${attackerPower.toFixed(2)}`);
-    log.push(`Poder del Defensor: ${defenderPower.toFixed(2)}`);
-
-    // 2. Determinar el ganador
-    let winner: 'attacker' | 'defender' | 'draw';
-    const powerRatio = attackerPower / (defenderPower || 1);
-
-    if (powerRatio > 1.2) {
-        winner = 'attacker';
-        log.push("El atacante tiene una ventaja decisiva.");
-    } else if (powerRatio < 0.8) {
-        winner = 'defender';
-        log.push("El defensor tiene una ventaja decisiva.");
-    } else {
-        winner = 'draw';
-        log.push("La batalla está muy reñida, resultando en un empate.");
-    }
-
-    // 3. Calcular pérdidas (ejemplo simple con aleatoriedad)
-    const calculateLosses = (troops: TroopData[], lossFactor: number): TroopData[] => {
-        return troops.map(t => ({
-            id: t.id,
-            quantity: Math.min(t.quantity, Math.floor(t.quantity * (Math.random() * 0.2 + lossFactor))) // Pierde entre X% y X+20%
+    const buildArmy = (simInput: SimulationInput): ArmyUnit[] => {
+        const userTrainings = simInput.trainings.map(t => ({
+            configuracionEntrenamientoId: t.id,
+            nivel: t.level,
+            configuracion: trainingConfigsMap.get(t.id)!
         }));
+
+        return simInput.troops.map(troop => {
+            const config = troopConfigsMap.get(troop.id);
+            if (!config) return null;
+            const { ataqueActual, defensaActual } = calcularStatsTropaConBonus(config, userTrainings as any);
+            return {
+                id: troop.id,
+                quantity: troop.quantity,
+                attack: ataqueActual,
+                defense: defensaActual,
+            };
+        }).filter((u): u is ArmyUnit => u !== null);
     };
 
-    let attackerLossFactor = 0.1;
-    let defenderLossFactor = 0.1;
+    let attackerArmy = buildArmy(attacker);
+    let defenderArmy = buildArmy(defender);
+    
+    const initialAttackerTroops = JSON.parse(JSON.stringify(attackerArmy));
+    const initialDefenderTroops = JSON.parse(JSON.stringify(defenderArmy));
 
-    if (winner === 'attacker') {
-        defenderLossFactor = 0.4;
-    } else if (winner === 'defender') {
-        attackerLossFactor = 0.4;
-    } else { // draw
-        attackerLossFactor = 0.25;
-        defenderLossFactor = 0.25;
+    const defenseBonus = defender.defenses.reduce((sum, d) => sum + (d.level * 5), 0) + (defender.buildingsLevel * 10);
+    const initialDefenderPower = defenderArmy.reduce((sum, u) => sum + u.defense * u.quantity, 0) + defenseBonus;
+    const initialAttackerPower = attackerArmy.reduce((sum, u) => sum + u.attack * u.quantity, 0);
+
+    const log: string[] = ["Iniciando simulación..."];
+    const rounds: BattleRoundReport[] = [];
+
+    for (let i = 1; i <= 5; i++) {
+        if (attackerArmy.length === 0 || defenderArmy.length === 0) break;
+
+        const attackerTotalAttack = attackerArmy.reduce((sum, u) => sum + u.attack * u.quantity, 0);
+        const defenderTotalAttack = defenderArmy.reduce((sum, u) => sum + u.attack * u.quantity, 0);
+        
+        const defenderTotalDefense = defenderArmy.reduce((sum, u) => sum + u.defense * u.quantity, 0) + defenseBonus;
+        
+        let attackerDamageDealt = defenderTotalAttack;
+        let defenderDamageDealt = attackerTotalAttack;
+
+        const distributeDamage = (army: ArmyUnit[], damage: number): ArmyUnit[] => {
+            let remainingDamage = damage;
+            const armyCopy = JSON.parse(JSON.stringify(army));
+            
+            while(remainingDamage > 0 && armyCopy.some((u: ArmyUnit) => u.quantity > 0)) {
+                const totalDefensePoints = armyCopy.reduce((sum: number, u: ArmyUnit) => sum + (u.defense * u.quantity), 0);
+                if (totalDefensePoints === 0) break;
+                
+                let damageDealtInLoop = false;
+                for(const unit of armyCopy) {
+                    if (unit.quantity > 0) {
+                        const proportion = (unit.defense * unit.quantity) / totalDefensePoints;
+                        const damageToUnit = Math.floor(remainingDamage * proportion);
+                        const losses = Math.min(unit.quantity, Math.floor(damageToUnit / (unit.defense || 1)));
+                        unit.quantity -= losses;
+                        remainingDamage -= losses * unit.defense;
+                        if(losses > 0) damageDealtInLoop = true;
+                    }
+                }
+                if(!damageDealtInLoop && remainingDamage > 0) {
+                    const randomUnit = armyCopy.find((u: ArmyUnit) => u.quantity > 0);
+                    if(randomUnit) {
+                        randomUnit.quantity--;
+                        remainingDamage -= randomUnit.defense;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            return armyCopy.filter((u: ArmyUnit) => u.quantity > 0);
+        };
+
+        const newAttackerArmy = distributeDamage(attackerArmy, attackerDamageDealt);
+        const newDefenderArmy = distributeDamage(defenderArmy, defenderDamageDealt);
+
+        rounds.push({
+            round: i,
+            attackerAttack: attackerTotalAttack,
+            defenderAttack: defenderTotalAttack,
+            attackerTroopsLeft: newAttackerArmy.map(u => ({id: u.id, quantity: u.quantity})),
+            defenderTroopsLeft: newDefenderArmy.map(u => ({id: u.id, quantity: u.quantity})),
+        });
+
+        attackerArmy = newAttackerArmy;
+        defenderArmy = newDefenderArmy;
+    }
+    
+    const finalAttackerTroops = new Map(attackerArmy.map(u => [u.id, u.quantity]));
+    const finalDefenderTroops = new Map(defenderArmy.map(u => [u.id, u.quantity]));
+
+    const attackerLosses = initialAttackerTroops.map((u: ArmyUnit) => ({
+        id: u.id,
+        quantity: u.quantity - (finalAttackerTroops.get(u.id) || 0)
+    }));
+
+    const defenderLosses = initialDefenderTroops.map((u: ArmyUnit) => ({
+        id: u.id,
+        quantity: u.quantity - (finalDefenderTroops.get(u.id) || 0)
+    }));
+    
+    const attackerHasTroops = attackerArmy.some(u => u.quantity > 0);
+    const defenderHasTroops = defenderArmy.some(u => u.quantity > 0);
+
+    let winner: 'attacker' | 'defender' | 'draw' = 'draw';
+    if(attackerHasTroops && !defenderHasTroops) {
+        winner = 'attacker';
+    } else if (!attackerHasTroops && defenderHasTroops) {
+        winner = 'defender';
     }
 
-    const attackerLosses = calculateLosses(attacker.troops, attackerLossFactor);
-    const defenderLosses = calculateLosses(defender.troops, defenderLossFactor);
-
-    log.push(`Pérdidas del atacante calculadas.`);
-    log.push(`Pérdidas del defensor calculadas.`);
-
-    // 4. Calcular recursos saqueados (si gana el atacante)
     const lootedResources = {
         armas: winner === 'attacker' ? Math.floor(Math.random() * 5000) : 0,
         municion: winner === 'attacker' ? Math.floor(Math.random() * 5000) : 0,
@@ -111,22 +186,14 @@ export async function runBattleSimulation(attacker: SimulationInput, defender: S
         alcohol: winner === 'attacker' ? Math.floor(Math.random() * 2000) : 0,
     };
 
-    if (winner === 'attacker') {
-        log.push("Recursos saqueados por el atacante.");
-    }
-
-    // 5. Construir el reporte final
-    const report: BattleReport = {
+    return {
         winner,
-        attackerPower,
-        defenderPower,
+        attackerPower: initialAttackerPower,
+        defenderPower: initialDefenderPower,
         attackerLosses,
         defenderLosses,
         lootedResources,
         log,
+        rounds,
     };
-
-    revalidatePath('/simulator'); // Revalidar la página del simulador si es necesario
-
-    return report;
 }
