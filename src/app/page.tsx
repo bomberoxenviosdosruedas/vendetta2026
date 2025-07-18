@@ -46,14 +46,6 @@ export default function Home() {
         </div>
         
         <div className="z-10 flex flex-col items-center justify-center space-y-8">
-            <Image 
-                src="/logo.jpg"
-                alt="Vendetta Logo"
-                width={400}
-                height={200}
-                className="object-contain"
-                priority
-            />
             <Suspense fallback={<AuthLoading />}>
                 <AuthForm />
             </Suspense>
