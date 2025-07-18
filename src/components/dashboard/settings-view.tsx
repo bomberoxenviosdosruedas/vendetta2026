@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -22,6 +22,13 @@ export function SettingsView({ user }: SettingsViewProps) {
     const [name, setName] = useState(user.name);
     const [title, setTitle] = useState(user.title || '');
     const [avatarUrl, setAvatarUrl] = useState(user.avatarUrl || '');
+    const [hasChanges, setHasChanges] = useState(false);
+
+    useEffect(() => {
+        const changesMade = name !== user.name || title !== (user.title || '') || avatarUrl !== (user.avatarUrl || '');
+        setHasChanges(changesMade);
+    }, [name, title, avatarUrl, user]);
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -51,13 +58,13 @@ export function SettingsView({ user }: SettingsViewProps) {
         <div>
             <h2 className="text-3xl font-bold tracking-tight mb-4">Ajustes de Perfil</h2>
             <Card>
-                <CardHeader>
-                    <CardTitle>Tu Perfil</CardTitle>
-                    <CardDescription>
-                        Personaliza cómo te ven los demás en el mundo de Vendetta.
-                    </CardDescription>
-                </CardHeader>
                 <form onSubmit={handleSubmit}>
+                    <CardHeader>
+                        <CardTitle>Tu Perfil</CardTitle>
+                        <CardDescription>
+                            Personaliza cómo te ven los demás en el mundo de Vendetta.
+                        </CardDescription>
+                    </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="space-y-2">
                             <Label htmlFor="name">Nombre de Jugador</Label>
@@ -90,7 +97,7 @@ export function SettingsView({ user }: SettingsViewProps) {
                         </div>
                     </CardContent>
                     <CardFooter>
-                        <Button type="submit" disabled={isPending}>
+                        <Button type="submit" disabled={isPending || !hasChanges}>
                             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             Guardar Cambios
                         </Button>
