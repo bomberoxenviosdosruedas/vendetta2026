@@ -4,7 +4,7 @@
 
 import prisma from "../prisma/prisma";
 import type { FullPropiedad, UserWithProgress } from "../data";
-import { calcularProduccionTotalPorSegundo } from "../formulas/room-formulas";
+import { calculateStorageCapacity, calcularProduccionTotalPorSegundo } from "../formulas/room-formulas";
 import { revalidatePath } from "next/cache";
 import { calcularPuntosEntrenamientos, calcularPuntosHabitaciones, calcularPuntosTropas } from "../formulas/score-formulas";
 import { getSessionUser } from "../auth";
@@ -42,6 +42,7 @@ export async function updateUserSettings(settings: UserSettings) {
     }
 }
 
+
 async function actualizarRecursosPropiedad(propiedad: FullPropiedad): Promise<FullPropiedad> {
     const ahora = new Date();
     const ultimaActualizacion = new Date(propiedad.ultimaActualizacion);
@@ -50,22 +51,33 @@ async function actualizarRecursosPropiedad(propiedad: FullPropiedad): Promise<Fu
     if (segundosTranscurridos <= 0) {
         return propiedad;
     }
+    
+    // 1. Calcular capacidad máxima de almacenamiento
+    const capacidad = calculateStorageCapacity(propiedad);
 
+    // 2. Calcular producción por segundo
     const produccionPorSegundo = calcularProduccionTotalPorSegundo(propiedad);
 
+    // 3. Calcular recursos generados
     const armasGeneradas = produccionPorSegundo.armas * segundosTranscurridos;
     const municionGenerada = produccionPorSegundo.municion * segundosTranscurridos;
     const alcoholGenerado = produccionPorSegundo.alcohol * segundosTranscurridos;
     const dolaresGenerados = produccionPorSegundo.dolares * segundosTranscurridos;
 
+    // 4. Calcular nuevos totales, aplicando el límite de capacidad
+    const nuevasArmas = Math.min(capacidad.armas, propiedad.armas + armasGeneradas);
+    const nuevaMunicion = Math.min(capacidad.municion, propiedad.municion + municionGenerada);
+    const nuevoAlcohol = Math.min(capacidad.alcohol, propiedad.alcohol + alcoholGenerado);
+    const nuevosDolares = Math.min(capacidad.dolares, propiedad.dolares + dolaresGenerados);
+
     try {
         const propiedadActualizada = await prisma.propiedad.update({
             where: { id: propiedad.id },
             data: {
-                armas: { increment: armasGeneradas },
-                municion: { increment: municionGenerada },
-                alcohol: { increment: alcoholGenerado },
-                dolares: { increment: dolaresGenerados },
+                armas: nuevasArmas,
+                municion: nuevaMunicion,
+                alcohol: nuevoAlcohol,
+                dolares: nuevosDolares,
                 ultimaActualizacion: ahora,
             },
             include: { 

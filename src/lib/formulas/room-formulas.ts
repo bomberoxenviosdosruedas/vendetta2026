@@ -137,3 +137,46 @@ export function calcularProduccionTotalPorSegundo(propiedad: FullPropiedad): { a
     dolares: produccionDolaresPorSegundo,
   };
 }
+
+
+/**
+ * Calcula la capacidad de almacenamiento de recursos de una propiedad.
+ * @param propiedad - La propiedad con sus habitaciones.
+ * @returns Un objeto con la capacidad máxima de cada recurso.
+ */
+export function calculateStorageCapacity(propiedad: FullPropiedad): { armas: number, municion: number, alcohol: number, dolares: number } {
+    const BASE_CAPACITY = 10000;
+    const CAPACITY_PER_LEVEL = 150000;
+
+    let capacidadArmas = BASE_CAPACITY;
+    let capacidadMunicion = BASE_CAPACITY;
+    let capacidadAlcohol = BASE_CAPACITY;
+    let capacidadDolares = BASE_CAPACITY;
+
+    const almacenArmas = propiedad.habitaciones.find(h => h.configuracionHabitacionId === 'almacen_de_armas');
+    if (almacenArmas) {
+        capacidadArmas += almacenArmas.nivel * CAPACITY_PER_LEVEL;
+    }
+
+    const depositoMunicion = propiedad.habitaciones.find(h => h.configuracionHabitacionId === 'deposito_de_municion');
+    if (depositoMunicion) {
+        capacidadMunicion += depositoMunicion.nivel * CAPACITY_PER_LEVEL;
+    }
+
+    const almacenAlcohol = propiedad.habitaciones.find(h => h.configuracionHabitacionId === 'almacen_de_alcohol');
+    if (almacenAlcohol) {
+        capacidadAlcohol += almacenAlcohol.nivel * CAPACITY_PER_LEVEL;
+    }
+
+    const cajaFuerte = propiedad.habitaciones.find(h => h.configuracionHabitacionId === 'caja_fuerte');
+    if (cajaFuerte) {
+        capacidadDolares += cajaFuerte.nivel * CAPACITY_PER_LEVEL;
+    }
+
+    return {
+        armas: capacidadArmas,
+        municion: capacidadMunicion,
+        alcohol: capacidadAlcohol,
+        dolares: capacidadDolares,
+    };
+}
