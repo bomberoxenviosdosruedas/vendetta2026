@@ -8,24 +8,37 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { getPropertiesByLocation, UserWithProgress } from '@/lib/data';
 import type { Propiedad, User as PrismaUser } from '@prisma/client';
-import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Loader2, Send } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip"
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    DialogFooter,
+    DialogClose,
+} from "@/components/ui/dialog"
 import Image from 'next/image';
 
 type PropertyWithOwner = Propiedad & { user: PrismaUser | null };
 
-const BuildingGrid = ({ properties, currentUser }: { properties: PropertyWithOwner[], currentUser: UserWithProgress }) => {
+const BuildingGrid = ({ properties, currentUser, currentCiudad, currentBarrio }: { properties: PropertyWithOwner[], currentUser: UserWithProgress, currentCiudad: number, currentBarrio: number }) => {
+    const router = useRouter();
     const buildings = Array.from({ length: 225 }, (_, i) => {
         const edificio = i + 1;
         const property = properties.find(p => p.edificio === edificio);
         return { edificio, property };
     });
+
+    const handleSendMission = (ciudad: number, barrio: number, edificio: number) => {
+        const params = new URLSearchParams();
+        params.set('ciudad', ciudad.toString());
+        params.set('barrio', barrio.toString());
+        params.set('edificio', edificio.toString());
+        router.push(`/missions?${params.toString()}`);
+    }
 
     return (
         <div className="relative w-full aspect-square rounded-lg border overflow-hidden">
@@ -42,30 +55,44 @@ const BuildingGrid = ({ properties, currentUser }: { properties: PropertyWithOwn
                     const hasOwner = !!property;
                     
                     return (
-                        <TooltipProvider key={edificio} delayDuration={0}>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <div className={cn(
-                                        "aspect-square flex items-center justify-center rounded-sm text-xs font-bold transition-colors",
-                                        isOwnedByCurrentUser ? "bg-primary/90 text-primary-foreground hover:bg-primary" : 
-                                        hasOwner ? "bg-destructive/90 text-destructive-foreground hover:bg-destructive" : 
-                                        "bg-black/40 hover:bg-black/60"
-                                    )}>
-                                        {hasOwner && <span>{edificio}</span>}
-                                    </div>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    {property ? (
-                                        <div>
-                                            <p>Jugador: <span className="font-bold">{property.user?.name || 'Desconocido'}</span></p>
-                                            <p>Coordenadas: <span className="font-bold">{`${property.ciudad}:${property.barrio}:${property.edificio}`}</span></p>
-                                        </div>
-                                    ) : (
-                                        <p>Solar Vacío [{edificio}]</p>
-                                    )}
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
+                        <Dialog key={edificio}>
+                            <DialogTrigger asChild>
+                                <div className={cn(
+                                    "aspect-square flex items-center justify-center rounded-sm text-xs font-bold transition-colors cursor-pointer",
+                                    isOwnedByCurrentUser ? "bg-primary/90 text-primary-foreground hover:bg-primary" : 
+                                    hasOwner ? "bg-destructive/90 text-destructive-foreground hover:bg-destructive" : 
+                                    "bg-black/40 hover:bg-black/60"
+                                )}>
+                                    {hasOwner && <span>{edificio}</span>}
+                                </div>
+                            </DialogTrigger>
+                             <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Propiedad en [{currentCiudad}:{currentBarrio}:{edificio}]</DialogTitle>
+                                     <DialogDescription>
+                                        {property ? (
+                                            `Esta propiedad pertenece a ${property.user?.name || 'Desconocido'}.`
+                                        ) : (
+                                            "Este solar está actualmente desocupado."
+                                        )}
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <div className="py-4">
+                                     <h4 className="mb-2 font-semibold">Información del Objetivo</h4>
+                                     <p><strong>Jugador:</strong> {property?.user?.name || 'N/A'}</p>
+                                     <p><strong>Coordenadas:</strong> {`${currentCiudad}:${currentBarrio}:${edificio}`}</p>
+                                </div>
+                                <DialogFooter>
+                                     <DialogClose asChild>
+                                        <Button variant="outline">Cerrar</Button>
+                                    </DialogClose>
+                                    <Button onClick={() => handleSendMission(currentCiudad, currentBarrio, edificio)}>
+                                        <Send className="mr-2 h-4 w-4" />
+                                        Enviar Misión
+                                    </Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
                     );
                 })}
             </div>
@@ -158,7 +185,7 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
                             <Loader2 className="h-8 w-8 animate-spin text-primary" />
                         </div>
                     )}
-                    <BuildingGrid properties={properties} currentUser={currentUser} />
+                    <BuildingGrid properties={properties} currentUser={currentUser} currentCiudad={ciudad} currentBarrio={barrio} />
                 </div>
             </CardContent>
         </Card>

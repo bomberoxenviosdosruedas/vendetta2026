@@ -15,6 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useProperty } from '@/contexts/property-context';
 import type { ConfiguracionTropa } from '@prisma/client';
 import { calcularDistancia, calcularDuracionViaje, calcularVelocidadFlota } from '@/lib/formulas/mission-formulas';
+import { useSearchParams } from 'next/navigation';
 
 type TroopInput = {
     id: string;
@@ -53,12 +54,13 @@ function formatDuration(seconds: number): string {
 export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, troopConfigs: ConfiguracionTropa[] }) {
     const { selectedProperty } = useProperty();
     const { toast } = useToast();
+    const searchParams = useSearchParams();
     const [isPending, startTransition] = useTransition();
     
     const [coordinates, setCoordinates] = useState({ 
-        ciudad: selectedProperty?.ciudad.toString() || '', 
-        barrio: selectedProperty?.barrio.toString() || '', 
-        edificio: selectedProperty?.edificio.toString() || '' 
+        ciudad: searchParams.get('ciudad') || selectedProperty?.ciudad.toString() || '', 
+        barrio: searchParams.get('barrio') || selectedProperty?.barrio.toString() || '', 
+        edificio: searchParams.get('edificio') || '' 
     });
 
     const [targetOwner, setTargetOwner] = useState<{ id: string, name: string } | null | undefined>(undefined);
@@ -70,14 +72,23 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
     const troopConfigsMap = new Map(troopConfigs.map(t => [t.id, t]));
 
     useEffect(() => {
-        if (selectedProperty) {
-            setCoordinates({
-                ciudad: selectedProperty.ciudad.toString(),
-                barrio: selectedProperty.barrio.toString(),
-                edificio: selectedProperty.edificio.toString(),
-            });
+        const ciudad = searchParams.get('ciudad');
+        const barrio = searchParams.get('barrio');
+        const edificio = searchParams.get('edificio');
+
+        const newCoords = {
+            ciudad: ciudad || selectedProperty?.ciudad.toString() || '',
+            barrio: barrio || selectedProperty?.barrio.toString() || '',
+            edificio: edificio || ''
         }
-    }, [selectedProperty]);
+        setCoordinates(newCoords);
+
+        if (newCoords.ciudad && newCoords.barrio && newCoords.edificio) {
+            setIsLoadingTarget(true);
+            debouncedFetchOwner(parseInt(newCoords.ciudad), parseInt(newCoords.barrio), parseInt(newCoords.edificio));
+        }
+
+    }, [searchParams, selectedProperty]);
 
     const calculateTravelTime = useCallback(async () => {
         if (!selectedProperty || tropas.length === 0 || !coordinates.ciudad || !coordinates.barrio || !coordinates.edificio) {
