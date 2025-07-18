@@ -6,7 +6,7 @@ import {
   CardContent,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Clock, PlusCircle, Ban } from "lucide-react"
+import { Clock, PlusCircle, Ban, Info } from "lucide-react"
 import { iniciarReclutamiento } from "@/lib/actions/troop.actions"
 import { useEffect, useState } from "react"
 import type { ConfiguracionTropa } from "@prisma/client"
@@ -15,6 +15,8 @@ import { Terminal } from "lucide-react"
 import { Input } from "../ui/input"
 import type { UserWithProgress } from "@/lib/data"
 import { useProperty } from "@/contexts/property-context"
+import { Dialog, DialogTrigger } from "../ui/dialog"
+import { TroopDetailsModal } from "./troop-details-modal"
 
 function formatNumber(num: number): string {
     return num.toLocaleString('de-DE');
@@ -185,56 +187,67 @@ export function RecruitmentView({ user, troopConfigs }: RecruitmentViewProps) {
         <CardContent className="p-0">
           <div className="divide-y divide-border">
               {troopsWithCounts.map((troop) => (
-                <div key={troop.id} className="p-4 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-                  <div className="md:col-span-3 flex items-start gap-4">
-                      <div className="w-20 h-16 relative rounded-md overflow-hidden border flex-shrink-0">
-                          <Image
-                              src={troop.urlImagen || "https://placehold.co/80x56.png"}
-                              alt={troop.nombre}
-                              fill
-                              className="object-contain"
-                              data-ai-hint="mafia character unit"
-                          />
-                      </div>
-                      <div>
-                          <div className="font-bold">{troop.nombre}</div>
-                          <div className="text-xs text-muted-foreground">
-                              Posees: <span className="text-primary font-bold">{troop.count}</span>
-                          </div>
-                      </div>
-                  </div>
+                <Dialog key={troop.id}>
+                    <div className="p-4 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                    <div className="md:col-span-3 flex items-start gap-4">
+                        <div className="w-20 h-16 relative rounded-md overflow-hidden border flex-shrink-0">
+                            <Image
+                                src={troop.urlImagen || "https://placehold.co/80x56.png"}
+                                alt={troop.nombre}
+                                fill
+                                className="object-contain"
+                                data-ai-hint="mafia character unit"
+                            />
+                        </div>
+                        <div>
+                            <div className="font-bold">{troop.nombre}</div>
+                            <div className="text-xs text-muted-foreground">
+                                Posees: <span className="text-primary font-bold">{troop.count}</span>
+                            </div>
+                        </div>
+                    </div>
 
-                  <div className="md:col-span-4">
-                      <p className="text-sm text-muted-foreground">{troop.descripcion}</p>
-                  </div>
-                  
-                  <div className="md:col-span-5">
-                      <div className="flex flex-wrap gap-x-4 gap-y-2 items-center">
-                          <div className="flex flex-col gap-2 text-sm flex-grow">
-                              <div className="grid grid-cols-2 gap-1 text-xs">
-                                  <div className="flex items-center gap-2" title="Ataque">
-                                    <Image src="/img/recursos/armas.svg" alt="Ataque" width={16} height={16} />
-                                    <span>{formatNumber(troop.ataque)}</span>
-                                  </div>
-                                  <div className="flex items-center gap-2" title="Defensa">
-                                    <Image src="/img/recursos/municion.svg" alt="Defensa" width={16} height={16} />
-                                    <span>{formatNumber(troop.defensa)}</span>
-                                  </div>
-                              </div>
-                              <div className="grid grid-cols-3 gap-x-3">
-                                  {troop.costoArmas > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoArmas.toLocaleString('de-DE')} Armas`}><Image src="/img/recursos/armas.svg" alt="Armas" width={16} height={16} /><span>{formatNumber(troop.costoArmas)}</span></div>}
-                                  {troop.costoMunicion > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoMunicion.toLocaleString('de-DE')} Munición`}><Image src="/img/recursos/municion.svg" alt="Munición" width={16} height={16} /><span>{formatNumber(troop.costoMunicion)}</span></div>}
-                                  {troop.costoDolares > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoDolares.toLocaleString('de-DE')} Dólares`}><Image src="/img/recursos/dolares.svg" alt="Dólares" width={16} height={16} /><span>{formatNumber(troop.costoDolares)}</span></div>}
-                              </div>
-                              <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
-                                  <Clock className="h-3 w-3" />
-                                  <span>{formatDuration(troop.duracion)} por unidad</span>
-                              </div>
-                          </div>
-                          <TroopForm troop={troop} user={user} />
-                      </div>
-                  </div>
-                </div>
+                    <div className="md:col-span-4">
+                        <p className="text-sm text-muted-foreground">{troop.descripcion}</p>
+                    </div>
+                    
+                    <div className="md:col-span-5">
+                        <div className="flex flex-wrap gap-x-4 gap-y-2 items-center">
+                            <div className="flex flex-col gap-2 text-sm flex-grow">
+                                <div className="grid grid-cols-2 gap-1 text-xs">
+                                    <div className="flex items-center gap-2" title="Ataque">
+                                        <Image src="/img/recursos/armas.svg" alt="Ataque" width={16} height={16} />
+                                        <span>{formatNumber(troop.ataque)}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2" title="Defensa">
+                                        <Image src="/img/recursos/municion.svg" alt="Defensa" width={16} height={16} />
+                                        <span>{formatNumber(troop.defensa)}</span>
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-3 gap-x-3">
+                                    {troop.costoArmas > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoArmas.toLocaleString('de-DE')} Armas`}><Image src="/img/recursos/armas.svg" alt="Armas" width={16} height={16} /><span>{formatNumber(troop.costoArmas)}</span></div>}
+                                    {troop.costoMunicion > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoMunicion.toLocaleString('de-DE')} Munición`}><Image src="/img/recursos/municion.svg" alt="Munición" width={16} height={16} /><span>{formatNumber(troop.costoMunicion)}</span></div>}
+                                    {troop.costoDolares > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoDolares.toLocaleString('de-DE')} Dólares`}><Image src="/img/recursos/dolares.svg" alt="Dólares" width={16} height={16} /><span>{formatNumber(troop.costoDolares)}</span></div>}
+                                </div>
+                                <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
+                                    <Clock className="h-3 w-3" />
+                                    <span>{formatDuration(troop.duracion)} por unidad</span>
+                                </div>
+                            </div>
+                             <div className="flex items-center gap-2">
+                                <DialogTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="h-9 w-9">
+                                        <Info className="h-5 w-5" />
+                                        <span className="sr-only">Detalles</span>
+                                    </Button>
+                                </DialogTrigger>
+                                <TroopForm troop={troop} user={user} />
+                             </div>
+                        </div>
+                    </div>
+                    </div>
+                    <TroopDetailsModal troop={troop} user={user} />
+                </Dialog>
               ))}
             </div>
         </CardContent>

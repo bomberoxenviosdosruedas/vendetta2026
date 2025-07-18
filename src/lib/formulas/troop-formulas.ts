@@ -1,4 +1,5 @@
-import type { ConfiguracionTropa } from '@prisma/client';
+import type { ConfiguracionEntrenamiento, ConfiguracionTropa } from '@prisma/client';
+import type { UserWithProgress } from '../data';
 
 /**
  * Calcula el tiempo total de reclutamiento para una cantidad de tropas.
@@ -25,3 +26,38 @@ export function calcularTiempoReclutamiento(
 
   return Math.max(1, Math.floor(tiempoTotal)); // Aseguramos un tiempo mínimo de reclutamiento.
 }
+
+
+export function calcularStatsTropaConBonus(
+    tropaConfig: ConfiguracionTropa, 
+    entrenamientos: UserWithProgress['entrenamientos']
+  ): { ataqueActual: number, defensaActual: number } {
+  
+    const entrenamientosMap = new Map(entrenamientos.map(e => [e.configuracionEntrenamientoId, e.nivel]));
+  
+    let ataqueActual = tropaConfig.ataque;
+    let defensaActual = tropaConfig.defensa;
+  
+    const bonusAtaqueIds = tropaConfig.bonusAtaque || [];
+    const bonusDefensaIds = tropaConfig.bonusDefensa || [];
+  
+    let bonusAtaqueTotal = 0;
+    for (const id of bonusAtaqueIds) {
+      bonusAtaqueTotal += (entrenamientosMap.get(id) || 0);
+    }
+  
+    let bonusDefensaTotal = 0;
+    for (const id of bonusDefensaIds) {
+      bonusDefensaTotal += (entrenamientosMap.get(id) || 0);
+    }
+  
+    // Aplicar un 5% de bonus por cada nivel de entrenamiento relevante
+    ataqueActual *= (1 + (bonusAtaqueTotal * 0.05));
+    defensaActual *= (1 + (bonusDefensaTotal * 0.05));
+  
+    return {
+      ataqueActual: Math.floor(ataqueActual),
+      defensaActual: Math.floor(defensaActual),
+    };
+  }
+  
