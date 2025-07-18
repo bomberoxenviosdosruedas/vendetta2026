@@ -129,6 +129,26 @@
               ]
             },
             {
+              "name": "settings",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "page.tsx",
+                  "type": "file"
+                }
+              ]
+            },
+            {
+              "name": "simulator",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "page.tsx",
+                  "type": "file"
+                }
+              ]
+            },
+            {
               "name": "training",
               "type": "directory",
               "children": [
@@ -162,6 +182,10 @@
       "name": "components",
       "type": "directory",
       "children": [
+        {
+          "name": "auth-form.tsx",
+          "type": "file"
+        },
         {
           "name": "dashboard",
           "type": "directory",
@@ -239,11 +263,23 @@
               "type": "file"
             },
             {
+              "name": "settings-view.tsx",
+              "type": "file"
+            },
+            {
               "name": "sidebar-nav.tsx",
               "type": "file"
             },
             {
+              "name": "simulator-view.tsx",
+              "type": "file"
+            },
+            {
               "name": "training-view.tsx",
+              "type": "file"
+            },
+            {
+              "name": "troop-details-modal.tsx",
               "type": "file"
             }
           ]
@@ -464,6 +500,10 @@
             },
             {
               "name": "room.actions.ts",
+              "type": "file"
+            },
+            {
+              "name": "simulation.actions.ts",
               "type": "file"
             },
             {
