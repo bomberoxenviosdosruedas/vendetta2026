@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "id": "cmd8aeo3m0007410v4ena3gly",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "habitacionId": "almacen_de_municion",
+    "nivelDestino": 101,
+    "duracion": 30603,
+    "fechaInicio": "2025-07-18T03:56:31.206Z",
+    "fechaFinalizacion": "2025-07-18T12:26:34.206Z",
+    "createdAt": "2025-07-18T03:56:30.464Z"
+  }
+]

@@ -6,36 +6,6 @@
     "nivel": 1
   },
   {
-    "id": "cmd6rdyqi000hzi0wsw3glet6",
-    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
-    "configuracionHabitacionId": "cerveceria",
-    "nivel": 1
-  },
-  {
-    "id": "cmd6rdzej000nzi0w5r8bcx97",
-    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
-    "configuracionHabitacionId": "almacen_de_armas",
-    "nivel": 1
-  },
-  {
-    "id": "cmd6rdzmp000pzi0wplh083bm",
-    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
-    "configuracionHabitacionId": "deposito_de_municion",
-    "nivel": 1
-  },
-  {
-    "id": "cmd6rdzum000rzi0wyd085isc",
-    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
-    "configuracionHabitacionId": "almacen_de_alcohol",
-    "nivel": 1
-  },
-  {
-    "id": "cmd6re028000tzi0wiinahwf7",
-    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
-    "configuracionHabitacionId": "caja_fuerte",
-    "nivel": 1
-  },
-  {
     "id": "cmd6re0it000xzi0wevjbmth0",
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionHabitacionId": "seguridad",
@@ -178,5 +148,35 @@
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionHabitacionId": "campo_de_entrenamiento",
     "nivel": 2
+  },
+  {
+    "id": "cmd6rdzej000nzi0w5r8bcx97",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionHabitacionId": "almacen_de_armas",
+    "nivel": 100
+  },
+  {
+    "id": "cmd6rdzum000rzi0wyd085isc",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionHabitacionId": "almacen_de_alcohol",
+    "nivel": 100
+  },
+  {
+    "id": "cmd6rdzmp000pzi0wplh083bm",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionHabitacionId": "deposito_de_municion",
+    "nivel": 100
+  },
+  {
+    "id": "cmd6rdyqi000hzi0wsw3glet6",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionHabitacionId": "cerveceria",
+    "nivel": 100
+  },
+  {
+    "id": "cmd6re028000tzi0wiinahwf7",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionHabitacionId": "caja_fuerte",
+    "nivel": 100
   }
 ]
