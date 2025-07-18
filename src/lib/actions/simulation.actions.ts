@@ -13,14 +13,22 @@ interface TrainingData {
     level: number;
 }
 
+interface DefenseData {
+    id: string;
+    level: number;
+}
+
 export interface SimulationInput {
     troops: TroopData[];
     trainings: TrainingData[];
+    defenses: DefenseData[];
     buildingsLevel: number;
 }
 
 export interface BattleReport {
     winner: 'attacker' | 'defender' | 'draw';
+    attackerPower: number;
+    defenderPower: number;
     attackerLosses: TroopData[];
     defenderLosses: TroopData[];
     lootedResources: {
@@ -43,22 +51,25 @@ export async function runBattleSimulation(attacker: SimulationInput, defender: S
     log.push("Iniciando simulación de batalla...");
 
     // 1. Calcular el poder de cada bando (ejemplo simple)
-    const attackerPower = attacker.troops.reduce((sum, t) => sum + t.quantity, 0) + 
-                          attacker.trainings.reduce((sum, t) => sum + t.level, 0);
+    const attackerPower = attacker.troops.reduce((sum, t) => sum + (t.quantity * 1.5), 0) + 
+                          attacker.trainings.reduce((sum, t) => sum + (t.level * 5), 0);
     
     const defenderPower = defender.troops.reduce((sum, t) => sum + t.quantity, 0) + 
-                          defender.trainings.reduce((sum, t) => sum + t.level, 0) +
-                          (defender.buildingsLevel * 10); // Los edificios defensivos añaden poder
+                          defender.trainings.reduce((sum, t) => sum + (t.level * 5), 0) +
+                          defender.defenses.reduce((sum, d) => sum + (d.level * 10), 0) +
+                          (defender.buildingsLevel * 10);
 
     log.push(`Poder del Atacante: ${attackerPower.toFixed(2)}`);
     log.push(`Poder del Defensor: ${defenderPower.toFixed(2)}`);
 
     // 2. Determinar el ganador
     let winner: 'attacker' | 'defender' | 'draw';
-    if (attackerPower > defenderPower * 1.1) {
+    const powerRatio = attackerPower / (defenderPower || 1);
+
+    if (powerRatio > 1.2) {
         winner = 'attacker';
         log.push("El atacante tiene una ventaja decisiva.");
-    } else if (defenderPower > attackerPower * 1.1) {
+    } else if (powerRatio < 0.8) {
         winner = 'defender';
         log.push("El defensor tiene una ventaja decisiva.");
     } else {
@@ -70,12 +81,24 @@ export async function runBattleSimulation(attacker: SimulationInput, defender: S
     const calculateLosses = (troops: TroopData[], lossFactor: number): TroopData[] => {
         return troops.map(t => ({
             id: t.id,
-            quantity: Math.floor(t.quantity * (Math.random() * 0.2 + lossFactor)) // Pierde entre X% y X+20%
+            quantity: Math.min(t.quantity, Math.floor(t.quantity * (Math.random() * 0.2 + lossFactor))) // Pierde entre X% y X+20%
         }));
     };
 
-    const attackerLosses = calculateLosses(attacker.troops, winner === 'defender' ? 0.3 : 0.1);
-    const defenderLosses = calculateLosses(defender.troops, winner === 'attacker' ? 0.3 : 0.1);
+    let attackerLossFactor = 0.1;
+    let defenderLossFactor = 0.1;
+
+    if (winner === 'attacker') {
+        defenderLossFactor = 0.4;
+    } else if (winner === 'defender') {
+        attackerLossFactor = 0.4;
+    } else { // draw
+        attackerLossFactor = 0.25;
+        defenderLossFactor = 0.25;
+    }
+
+    const attackerLosses = calculateLosses(attacker.troops, attackerLossFactor);
+    const defenderLosses = calculateLosses(defender.troops, defenderLossFactor);
 
     log.push(`Pérdidas del atacante calculadas.`);
     log.push(`Pérdidas del defensor calculadas.`);
@@ -95,6 +118,8 @@ export async function runBattleSimulation(attacker: SimulationInput, defender: S
     // 5. Construir el reporte final
     const report: BattleReport = {
         winner,
+        attackerPower,
+        defenderPower,
         attackerLosses,
         defenderLosses,
         lootedResources,
