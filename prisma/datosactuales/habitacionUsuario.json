@@ -36,12 +36,6 @@
     "nivel": 1
   },
   {
-    "id": "cmd6re0ag000vzi0wg7c59lm6",
-    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
-    "configuracionHabitacionId": "campo_de_entrenamiento",
-    "nivel": 1
-  },
-  {
     "id": "cmd6re0it000xzi0wevjbmth0",
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionHabitacionId": "seguridad",
@@ -99,18 +93,6 @@
     "id": "cmd6s83yl003qzi0wn3qaz2do",
     "propiedadId": "cmd6s83yl003nzi0wqwz31ijx",
     "configuracionHabitacionId": "escuela_especializacion",
-    "nivel": 1
-  },
-  {
-    "id": "cmd6s83yl003rzi0w151jwjpn",
-    "propiedadId": "cmd6s83yl003nzi0wqwz31ijx",
-    "configuracionHabitacionId": "armeria",
-    "nivel": 1
-  },
-  {
-    "id": "cmd6s83yl003szi0wxz9z0pgv",
-    "propiedadId": "cmd6s83yl003nzi0wqwz31ijx",
-    "configuracionHabitacionId": "almacen_de_municion",
     "nivel": 1
   },
   {
@@ -178,5 +160,23 @@
     "propiedadId": "cmd6s83yl003nzi0wqwz31ijx",
     "configuracionHabitacionId": "minas_ocultas",
     "nivel": 1
+  },
+  {
+    "id": "cmd6s83yl003rzi0w151jwjpn",
+    "propiedadId": "cmd6s83yl003nzi0wqwz31ijx",
+    "configuracionHabitacionId": "armeria",
+    "nivel": 2
+  },
+  {
+    "id": "cmd6s83yl003szi0wxz9z0pgv",
+    "propiedadId": "cmd6s83yl003nzi0wqwz31ijx",
+    "configuracionHabitacionId": "almacen_de_municion",
+    "nivel": 2
+  },
+  {
+    "id": "cmd6re0ag000vzi0wg7c59lm6",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionHabitacionId": "campo_de_entrenamiento",
+    "nivel": 2
   }
 ]

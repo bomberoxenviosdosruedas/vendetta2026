@@ -1,6 +1,9 @@
 import type {Metadata, Viewport} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
+import { Inter } from 'next/font/google';
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 const APP_NAME = "Vendetta";
 const APP_DEFAULT_TITLE = "Vendetta tu familia Vendettera";
@@ -49,7 +52,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#09090b",
+  themeColor: "#121212",
   colorScheme: "dark",
 };
 
@@ -61,11 +64,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className="dark">
-      <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-      </head>
-      <body className="font-body antialiased bg-background">
+      <body className={`${inter.variable} font-sans antialiased bg-background`}>
         {children}
         <Toaster />
       </body>

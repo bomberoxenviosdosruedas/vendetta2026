@@ -6,11 +6,11 @@
     "ciudad": 1,
     "barrio": 1,
     "edificio": 1,
-    "armas": 469785.4399999991,
-    "municion": 469972.8344444449,
-    "alcohol": 936.9722222222249,
-    "dolares": 1080513.880555555,
-    "ultimaActualizacion": "2025-07-17T20:29:20.855Z"
+    "armas": 561467.5272222211,
+    "municion": 555692.4411111117,
+    "alcohol": 1124.569444444448,
+    "dolares": 1300584.181944444,
+    "ultimaActualizacion": "2025-07-17T23:57:30.101Z"
   },
   {
     "id": "cmd6s83yl003nzi0wqwz31ijx",
@@ -19,10 +19,10 @@
     "ciudad": 1,
     "barrio": 1,
     "edificio": 2,
-    "armas": 10094.50833333332,
-    "municion": 10057.01666666666,
-    "alcohol": 10892.54166666662,
-    "dolares": 10410.56916666668,
-    "ultimaActualizacion": "2025-07-17T20:29:20.855Z"
+    "armas": 10173.30777777777,
+    "municion": 10145.93222222221,
+    "alcohol": 11080.13888888884,
+    "dolares": 10496.86388888891,
+    "ultimaActualizacion": "2025-07-17T23:57:30.101Z"
   }
 ]
