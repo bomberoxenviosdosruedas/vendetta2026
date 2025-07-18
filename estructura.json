@@ -39,7 +39,37 @@
               "type": "file"
             },
             {
+              "name": "map",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "page.tsx",
+                  "type": "file"
+                }
+              ]
+            },
+            {
+              "name": "missions",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "page.tsx",
+                  "type": "file"
+                }
+              ]
+            },
+            {
               "name": "overview",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "page.tsx",
+                  "type": "file"
+                }
+              ]
+            },
+            {
+              "name": "rankings",
               "type": "directory",
               "children": [
                 {
@@ -137,6 +167,14 @@
           "type": "directory",
           "children": [
             {
+              "name": "construction-queue.tsx",
+              "type": "file"
+            },
+            {
+              "name": "construction-status.tsx",
+              "type": "file"
+            },
+            {
               "name": "dashboard-client-layout.tsx",
               "type": "file"
             },
@@ -145,11 +183,39 @@
               "type": "file"
             },
             {
+              "name": "map-view.tsx",
+              "type": "file"
+            },
+            {
+              "name": "mission-status.tsx",
+              "type": "file"
+            },
+            {
+              "name": "missions-view.tsx",
+              "type": "file"
+            },
+            {
               "name": "overview-view.tsx",
               "type": "file"
             },
             {
               "name": "overview.tsx",
+              "type": "file"
+            },
+            {
+              "name": "property-selector.tsx",
+              "type": "file"
+            },
+            {
+              "name": "queue-status-card.tsx",
+              "type": "file"
+            },
+            {
+              "name": "rankings-view.tsx",
+              "type": "file"
+            },
+            {
+              "name": "recruitment-status.tsx",
               "type": "file"
             },
             {
@@ -162,6 +228,10 @@
             },
             {
               "name": "resources-view.tsx",
+              "type": "file"
+            },
+            {
+              "name": "room-details-modal.tsx",
               "type": "file"
             },
             {
@@ -180,6 +250,10 @@
         },
         {
           "name": "login-form.tsx",
+          "type": "file"
+        },
+        {
+          "name": "register-form.tsx",
           "type": "file"
         },
         {
@@ -335,6 +409,16 @@
       ]
     },
     {
+      "name": "contexts",
+      "type": "directory",
+      "children": [
+        {
+          "name": "property-context.tsx",
+          "type": "file"
+        }
+      ]
+    },
+    {
       "name": "data",
       "type": "directory",
       "children": [
@@ -367,8 +451,34 @@
       "type": "directory",
       "children": [
         {
-          "name": "actions.ts",
-          "type": "file"
+          "name": "actions",
+          "type": "directory",
+          "children": [
+            {
+              "name": "auth.actions.ts",
+              "type": "file"
+            },
+            {
+              "name": "mission.actions.ts",
+              "type": "file"
+            },
+            {
+              "name": "room.actions.ts",
+              "type": "file"
+            },
+            {
+              "name": "training.actions.ts",
+              "type": "file"
+            },
+            {
+              "name": "troop.actions.ts",
+              "type": "file"
+            },
+            {
+              "name": "user.actions.ts",
+              "type": "file"
+            }
+          ]
         },
         {
           "name": "auth.ts",
@@ -379,12 +489,30 @@
           "type": "file"
         },
         {
-          "name": "formulas-produccion.ts",
-          "type": "file"
-        },
-        {
-          "name": "formulas.ts",
-          "type": "file"
+          "name": "formulas",
+          "type": "directory",
+          "children": [
+            {
+              "name": "mission-formulas.ts",
+              "type": "file"
+            },
+            {
+              "name": "room-formulas.ts",
+              "type": "file"
+            },
+            {
+              "name": "score-formulas.ts",
+              "type": "file"
+            },
+            {
+              "name": "training-formulas.ts",
+              "type": "file"
+            },
+            {
+              "name": "troop-formulas.ts",
+              "type": "file"
+            }
+          ]
         },
         {
           "name": "prisma",

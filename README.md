@@ -1,91 +1,90 @@
-# Vendetta - README de Arquitectura
-
-Este documento proporciona una visión general técnica del proyecto "Vendetta", un juego de estrategia y gestión de recursos con temática de mafiosos. El objetivo es documentar el estado actual de la aplicación para facilitar la evaluación por parte de un experto en Next.js y proponer mejoras en la arquitectura.
+# Vendetta - Informe de Arquitectura Técnica
 
 ## 1. Visión General del Proyecto
 
-**Vendetta** es una aplicación web concebida como un juego de estrategia y gestión de recursos en tiempo real, similar en concepto a juegos como *OGame*. Los jugadores asumen el rol de un jefe mafioso, gestionando recursos (armas, munición, alcohol, dólares), construyendo y mejorando edificios, y reclutando unidades para expandir su imperio.
+**Vendetta** es una aplicación web de estrategia y gestión de recursos en tiempo real con temática de mafiosos. Los jugadores asumen el rol de un jefe mafioso, gestionando recursos, propiedades, tropas y entrenamientos para expandir su imperio.
 
-La aplicación está construida sobre un stack moderno, utilizando **Next.js** con el App Router, **TypeScript** para la seguridad de tipos, y **Prisma** como ORM para la interacción con la base de datos PostgreSQL.
+La aplicación está construida sobre un stack moderno, utilizando:
+- **Next.js**: Con el App Router para un enrutamiento y renderizado del lado del servidor eficientes.
+- **TypeScript**: Para seguridad de tipos y un desarrollo más robusto.
+- **Prisma**: Como ORM para la interacción con una base de datos PostgreSQL.
+- **Shadcn/UI & Tailwind CSS**: Para una interfaz de usuario moderna, responsiva y personalizable.
 
-## 2. Estructura del Directorio (`/src`)
+---
 
-La estructura del proyecto está organizada para separar las responsabilidades y promover la escalabilidad.
+## 2. Arquitectura del Directorio `src`
 
-- **/app**: Contiene todas las rutas, páginas y layouts de la aplicación, siguiendo las convenciones del App Router de Next.js. Las páginas son Server Components por defecto, lo que permite el acceso directo a datos en el backend.
-- **/components**: Alberga componentes de React reutilizables, divididos en componentes de UI genéricos (`/ui`, basados en shadcn/ui) y componentes específicos del dominio de la aplicación (`/dashboard`).
-- **/lib**: Es el núcleo de la lógica de negocio.
-    - `auth.ts`: Gestiona la autenticación y las sesiones de usuario mediante cookies.
-    - `data.ts`: Centraliza las funciones de acceso a la base de datos (lectura de datos).
-    - `prisma/`: Contiene la configuración y el cliente de Prisma.
-- **/ai**: Destinado a la integración con **Genkit** para futuras funcionalidades de inteligencia artificial.
-- **/prisma**: Contiene el `schema.prisma`, las migraciones y los scripts de *seeding* para poblar la base de datos con datos iniciales.
+La estructura del proyecto está organizada por dominios para promover la modularidad y la escalabilidad.
 
-## 3. Flujo de Autenticación y Sesión de Usuario
+-   **/app**: Contiene todas las rutas, páginas y layouts, siguiendo las convenciones del App Router.
+    -   `(dashboard)`: Un grupo de rutas que comparten un layout común (`layout.tsx`), el cual gestiona el estado del juego en cada carga. Las páginas son Server Components por defecto, lo que permite la lectura de datos directamente desde el servidor.
+    -   `page.tsx`: La página de inicio de sesión y registro.
+-   **/components**: Alberga componentes de React reutilizables.
+    -   `dashboard`: Componentes específicos del dominio del juego (ej. `RoomsView`, `ResourceBar`, `MissionsView`).
+    -   `ui`: Componentes de UI genéricos de `shadcn/ui`.
+-   **/contexts**: Contiene los Contextos de React para la gestión de estado en el cliente (ej. `property-context.tsx` para gestionar la propiedad seleccionada).
+-   **/lib**: Es el núcleo de la lógica de negocio del servidor.
+    -   `actions`: Contiene las **Server Actions** separadas por dominio (`room.actions.ts`, `troop.actions.ts`, etc.). Es la principal vía para que el frontend modifique datos en el backend.
+    -   `formulas`: Contiene funciones puras para cálculos del juego (costos, tiempos, producción), también organizadas por dominio.
+    -   `data.ts`: Capa de acceso a datos (Data Access Layer) que centraliza todas las **operaciones de lectura** de la base de datos. Utiliza `React.cache` para optimizar consultas de datos estáticos.
+    -   `auth.ts`: Gestiona la autenticación y las sesiones de usuario mediante cookies.
+    -   `prisma/prisma.ts`: Instancia y configura el cliente de Prisma.
+-   **/prisma**: Contiene todo lo relacionado con la base de datos.
+    -   `schema.prisma`: La definición de todos los modelos y relaciones de la base de datos.
+    -   `datosactuales`: Archivos JSON utilizados por los scripts de `seeding` para poblar la base de datos con datos de prueba y configuración inicial.
+    -   `seed.ts`: El script orquestador que ejecuta la importación de datos.
 
-El sistema de autenticación actual es una implementación simplificada diseñada para esta fase del desarrollo:
+---
 
-1.  **Inicio de Sesión**: El usuario introduce sus credenciales en el componente `LoginForm` (`/src/components/login-form.tsx`).
-2.  **Validación Estática**: Las credenciales se validan de forma estática en el propio componente. Actualmente, solo se permite el acceso al usuario `bomberox` con la contraseña `123456789`.
-3.  **Creación de Sesión**: Si las credenciales son correctas, se invoca la Server Action `login` desde `lib/auth.ts`. Esta función establece una cookie segura, `httpOnly`, llamada `vendetta-session` que almacena el nombre de usuario.
-4.  **Recuperación de Sesión**: En los Server Components, como `ResourceBar`, se utiliza la función `getSessionUser` de `lib/auth.ts`. Esta función lee la cookie `vendetta-session`, recupera el nombre de usuario y lo utiliza para obtener los datos completos del usuario desde la base de datos a través de `getUserByUsername`.
+## 3. Esquema de la Base de Datos (`prisma/schema.prisma`)
 
-Este mecanismo permite que los componentes del lado del servidor obtengan de forma segura el contexto del usuario autenticado en cada renderizado.
+El esquema está diseñado para separar claramente los datos de configuración estática, los datos dinámicos del jugador y las colas de eventos.
 
-## 4. Modelo de Datos Actual (Prisma)
+### Modelos de Configuración (Estáticos)
+Estos modelos definen las "reglas del juego". Se cargan una sola vez a través del seeding y son de solo lectura para la aplicación.
+-   `ConfiguracionHabitacion`: Define las propiedades base de cada tipo de edificio (costos, duración, puntos, etc.).
+-   `ConfiguracionEntrenamiento`: Define las propiedades de cada tipo de entrenamiento.
+-   `ConfiguracionTropa`: Define las estadísticas y costos de cada tipo de unidad reclutable.
 
-La base de datos se define en `prisma/schema.prisma`.
+### Modelos de Usuario y Propiedad (Dinámicos)
+-   `User`: Modelo central que representa a un jugador.
+-   `Propiedad`: Cada usuario puede tener múltiples propiedades. Cada propiedad tiene sus propios recursos (`armas`, `municion`, etc.) y su propio conjunto de edificios y tropas.
+-   `HabitacionUsuario`: Tabla pivote que almacena el `nivel` de una `ConfiguracionHabitacion` específica para una `Propiedad` de un usuario.
+-   `TropaUsuario`: Almacena la `cantidad` de cada tipo de `ConfiguracionTropa` en una `Propiedad`.
+-   `EntrenamientoUsuario`: Almacena el `nivel` de cada `ConfiguracionEntrenamiento` para un `User`.
+-   `PuntuacionUsuario`: Almacena los puntos totales y desglosados del usuario para facilitar el cálculo de rankings.
 
-### Modelo `User`
-El modelo `User` es central pero actualmente monolítico. Almacena tanto la información de perfil del jugador como sus recursos de juego en una única tabla.
+### Modelos de Colas de Eventos (Dinámicos)
+-   `ColaConstruccion`: Registra las órdenes de construcción de edificios en una propiedad. Permite hasta 5 construcciones en cola.
+-   `ColaReclutamiento`: Registra la orden de reclutamiento de tropas en una propiedad. Solo permite una orden activa por propiedad a la vez.
+-   `ColaMisiones`: Registra las flotas de tropas en movimiento (ataques, transportes, etc.), con sus tiempos de llegada y regreso.
 
-- **Datos de Perfil**: `id`, `name`, `username`, `password`, `title`, `avatarUrl`.
-- **Datos de Juego (Recursos)**: `armas`, `municion`, `alcohol`, `ingresos`, `ingresosAnterior`.
+---
 
-### Modelos de Configuración Estática
-Estos modelos definen las "reglas del juego" y se pueblan mediante un script de *seeding* (`prisma/seed.ts`) a partir de archivos JSON. Son datos de solo lectura para la aplicación.
+## 4. Flujo de Lógica y Datos
 
-- `ConfiguracionHabitacion`: Define las propiedades base de cada tipo de edificio (costes, tiempo de construcción, producción, etc.).
-- `ConfiguracionEntrenamiento`: Define las propiedades de cada tipo de entrenamiento disponible.
-- `ConfiguracionTropa`: Define las estadísticas y costes de cada tipo de unidad reclutable.
+El flujo de la aplicación está optimizado para aprovechar las capacidades de los Server Components y Server Actions de Next.js.
 
-## 5. Interacción Frontend-Backend
+### Bucle Principal del Juego (Game Tick del Servidor)
+En cada carga de una página dentro del `(dashboard)/layout.tsx`, se ejecuta una secuencia de acciones en el servidor para actualizar el estado del juego:
+1.  **Finalizar Eventos**: Se llaman en paralelo las funciones para verificar y finalizar eventos completados:
+    -   `verificarYFinalizarConstruccion`: Promueve el siguiente edificio en la cola de construcción.
+    -   `verificarYFinalizarReclutamiento`: Añade las tropas reclutadas a la propiedad.
+    -   `verificarYFinalizarMisiones`: Devuelve las tropas de misiones completadas.
+2.  **Actualizar Recursos**: La función `obtenerEstadoJuegoActualizado` calcula los recursos generados desde la última conexión y los actualiza en la base de datos.
+3.  **Recalcular Puntuación**: `actualizarPuntuacionUsuario` recalcula los puntos del jugador con los nuevos datos.
+4.  **Renderizado**: El estado final y actualizado del usuario se pasa a los componentes del cliente para su renderizado.
 
-### Lectura de Datos (Server-Side)
-La aplicación aprovecha intensivamente los Server Components de Next.js para la lectura de datos. Componentes como `ResourceBar` y `RoomsView` son asíncronos y utilizan funciones de `lib/data.ts` (ej. `getSessionUser`, `getRoomConfigurations`) para obtener datos directamente de la base de datos. Esto elimina la necesidad de endpoints de API para la lectura y reduce el *waterfall* de peticiones cliente-servidor.
+### Interacción Frontend-Backend
+-   **Lectura de Datos**: Los componentes de servidor (`async/await`) en las páginas obtienen los datos directamente llamando a funciones de `src/lib/data.ts`.
+-   **Escritura de Datos**: Las interacciones del usuario (como hacer clic en "Ampliar" o "Reclutar") llaman directamente a las **Server Actions** desde los componentes del cliente (`'use client'`). Estas acciones se encargan de la validación y la modificación de la base de datos.
 
-### Escritura de Datos (Flujo Propuesto)
-Actualmente, no hay implementaciones de escritura. El flujo propuesto para acciones del usuario (ej. hacer clic en "Ampliar" en `RoomsView`) es el siguiente:
+---
 
-1.  El usuario desencadena una acción en la UI.
-2.  Se invoca una **Server Action** o se realiza una petición a una **API Route**.
-3.  El backend valida si el usuario tiene los recursos necesarios.
-4.  Si la validación es exitosa, se crea un nuevo evento (ej. `CONSTRUCCION_INICIADA`) y se añade a una cola de eventos.
-5.  El backend actualiza el estado de la base de datos (ej. descuenta los recursos) y devuelve una respuesta a la UI.
-6.  La UI se actualiza, preferiblemente de forma optimista, para reflejar el inicio de la acción.
+## 5. Datos de Prueba (`prisma/datosactuales`)
 
-## 6. Puntos Críticos a Evaluar para Mejoras
-
-Se solicita al experto que evalúe la arquitectura actual y proponga mejoras, centrándose en las siguientes áreas:
-
-#### 1. Base de Datos
-- **Pregunta**: ¿Cómo se debería reestructurar el `schema` de Prisma para escalar de manera eficiente? La mezcla de datos de perfil y de juego en el modelo `User` parece insostenible.
-- **Hipótesis**: ¿Sería beneficioso crear modelos separados como `PerfilUsuario` y `ProgresoUsuario` o `RecursosUsuario`? ¿Cómo se relacionarían con el modelo `User` principal? ¿Qué impacto tendría esto en el rendimiento de las consultas?
-
-#### 2. Gestión de Recursos Continuos
-- **Pregunta**: ¿Cuál es la estrategia más eficiente y precisa para implementar la generación de recursos basada en el tiempo (el "truco de OGame")? Los recursos deben acumularse incluso cuando el usuario está desconectado.
-- **Opciones**:
-    a) **Cálculo en el momento de la solicitud**: Calcular los recursos generados desde la última conexión cada vez que el usuario realiza una acción.
-    b) **Proceso en segundo plano**: Utilizar un *worker* o *cron job* para actualizar los recursos de todos los usuarios a intervalos regulares. ¿Cuál es el *trade-off* en términos de coste, precisión y carga en la base de datos?
-
-#### 3. Cola de Eventos (Event Queue)
-- **Pregunta**: ¿Cuál es el diseño óptimo para una cola de eventos que gestione construcciones, entrenamientos y otras tareas asíncronas de larga duración?
-- **Opciones**: ¿Cómo se debe modelar la cola en Prisma? ¿Qué plataforma es más adecuada para procesar esta cola? ¿**Scheduled Functions** (Netlify/Firebase), **Vercel Cron Jobs**, o una solución más robusta como BullMQ en un servidor separado?
-
-#### 4. Server Actions vs. API Routes
-- **Pregunta**: Para las acciones de escritura iniciadas por el usuario, ¿cuándo se debe preferir el uso de **Server Actions** sobre las **API Routes** tradicionales?
-- **Contexto**: Considerar factores como la latencia percibida, la simplicidad del código (colocación), la reutilización de la lógica y la facilidad para implementar `Optimistic UI`.
-
-#### 5. Optimistic UI
-- **Pregunta**: ¿Cuál es la mejor manera de implementar una UI optimista en componentes como `RoomsView`?
-- **Contexto**: Después de que un usuario inicie una ampliación, la UI debería reflejar inmediatamente el estado "en construcción" sin esperar la confirmación completa del backend. ¿Cómo se gestionan los posibles errores de validación en el servidor y se revierte el estado en la UI?
+Este directorio es vital para el desarrollo y las pruebas, ya que permite recrear un estado consistente de la base de datos.
+-   **Archivos JSON**: Cada archivo `.json` corresponde a un modelo en `prisma/schema.prisma`.
+    -   `configuracion*.json`: Contienen los datos base del juego (costos, estadísticas, etc.). Son la "Biblia" del juego.
+    -   `user.json`, `propiedad.json`, etc.: Contienen datos de un usuario de prueba (`bomberox`) con un estado de juego predefinido (recursos, niveles de edificios, tropas) que permite probar todas las funcionalidades sin tener que empezar de cero cada vez.
+-   **Proceso de Seeding**: El comando `prisma db seed` (configurado en `package.json`) ejecuta el script `prisma/seed.ts`. Este script orquesta la ejecución de varios sub-scripts (`impoconfiguracion*.ts`, `impousuarioprueba.ts`) que leen los archivos JSON y utilizan `prisma.upsert()` para poblar la base de datos, asegurando un entorno de desarrollo predecible y funcional.
