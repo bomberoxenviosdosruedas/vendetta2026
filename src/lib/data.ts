@@ -1,7 +1,7 @@
 
 "use server"
 
-import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones } from '@prisma/client/edge'
+import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 import { cache } from 'react';
 
@@ -30,11 +30,18 @@ export type FullPropiedad = Propiedad & {
     tropas: FullTropaUsuario[];
 }
 
+export type FullFamilyMember = FamilyMember & { user: User };
+
+export type FullFamily = Family & {
+    members: FullFamilyMember[]
+}
+
 export type UserWithProgress = User & {
     propiedades: FullPropiedad[];
     entrenamientos: (EntrenamientoUsuario & { configuracion: ConfiguracionEntrenamiento })[];
     puntuacion: PuntuacionUsuario | null;
     misiones: ColaMisiones[];
+    familyMember: (FamilyMember & { family: Family }) | null;
 };
 
 export type UserForRanking = User & {
@@ -43,6 +50,59 @@ export type UserForRanking = User & {
         propiedades: number;
     }
 }
+
+export const getFamilyById = cache(async(id: string) => {
+    try {
+        const family = await prisma.family.findUnique({
+            where: { id },
+            include: {
+                members: {
+                    include: {
+                        user: true
+                    },
+                    orderBy: {
+                        role: 'asc'
+                    }
+                }
+            }
+        });
+        return family as FullFamily | null;
+    } catch (e) {
+        console.error("Error fetching family by id", e);
+        return null;
+    }
+});
+
+export const getUserFamily = cache(async(userId: string) => {
+    try {
+        const familyMember = await prisma.familyMember.findUnique({
+            where: { userId },
+            include: {
+                family: {
+                    include: {
+                        members: {
+                            include: {
+                                user: {
+                                    select: {
+                                        id: true,
+                                        name: true,
+                                        title: true,
+                                        avatarUrl: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        return familyMember?.family || null;
+    } catch(e) {
+        console.error("Error fetching user family", e);
+        return null;
+    }
+});
+
 
 export const getPropertyOwner = cache(async (coords: { ciudad: number, barrio: number, edificio: number }): Promise<{id: string, name: string} | null> => {
     try {
@@ -197,6 +257,11 @@ const userInclude = {
             fechaLlegada: 'asc'
         }
     },
+    familyMember: {
+        include: {
+            family: true
+        }
+    }
 };
 
 export async function getUserByUsername(username: string): Promise<UserWithProgress | null> {
