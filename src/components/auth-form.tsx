@@ -100,7 +100,7 @@ export function AuthForm() {
     };
 
     return (
-        <Card className="w-full max-w-md bg-black/60 text-white border-white/20 backdrop-blur-sm animate-fade-in">
+        <Card className="w-full max-w-md bg-background/70 text-white border-white/20 backdrop-blur-md animate-fade-in">
             <CardHeader className="text-center">
                 <CardTitle className="text-2xl font-bold tracking-wider">
                     {isLoginView ? 'INICIAR SESIÓN' : 'CREAR CUENTA'}
