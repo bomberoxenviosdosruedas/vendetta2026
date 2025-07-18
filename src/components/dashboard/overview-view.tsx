@@ -98,7 +98,6 @@ export async function OverviewView() {
                 <Card className="md:col-span-1 md:row-span-2 relative min-h-[250px]">
                     <CardContent className="p-4 flex flex-col items-center justify-center gap-2 h-full">
                         <Avatar className="h-24 w-24 border-2 border-primary">
-                            <AvatarImage src="https://placehold.co/128x128.png" alt="Logo Familia" data-ai-hint="mafia family crest" />
                             <AvatarFallback>B</AvatarFallback>
                         </Avatar>
                         <p className="text-sm text-muted-foreground">Familia</p>
