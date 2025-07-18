@@ -9,10 +9,11 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { BattleReport, runBattleSimulation, SimulationInput } from '@/lib/actions/simulation.actions';
 import type { ConfiguracionTropa, ConfiguracionEntrenamiento, ConfiguracionHabitacion } from '@prisma/client';
-import { Loader2, Trash2, Upload } from 'lucide-react';
+import { Loader2, Trash2, Upload, Swords } from 'lucide-react';
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogFooter,
@@ -241,11 +242,6 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
         setDefenderState(initialColumnState);
         setBattleReport(null);
     }
-
-    const finalMessage = battleReport ?
-        battleReport.winner === 'attacker' ? "El atacante ha ganado la batalla." :
-        battleReport.winner === 'defender' ? "El defensor ha repelido el ataque." : "La batalla ha terminado en empate."
-        : "";
 
     return (
         <div>
