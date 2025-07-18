@@ -160,22 +160,30 @@ export async function runBattleSimulation(attacker: SimulationInput, defender: S
         battleRounds.push({
             round: i,
             attacker: {
-                troops: roundAttackerArmy.map((u: ArmyUnit) => ({
-                    id: u.id,
-                    nombre: u.nombre,
-                    initialQuantity: u.quantity,
-                    lostQuantity: attackerLossesThisRound.find(l => l.id === u.id)?.quantity || 0,
-                })),
+                troops: troopConfigs.map(config => {
+                    const troop = roundAttackerArmy.find((t: ArmyUnit) => t.id === config.id);
+                    const loss = attackerLossesThisRound.find(l => l.id === config.id);
+                    return {
+                        id: config.id,
+                        nombre: config.nombre,
+                        initialQuantity: troop?.quantity || 0,
+                        lostQuantity: loss?.quantity || 0,
+                    };
+                }),
                 totalAttack: attackerTotalAttack,
                 totalDefense: attackerTotalDefense
             },
             defender: {
-                troops: roundDefenderArmy.map((u: ArmyUnit) => ({
-                    id: u.id,
-                    nombre: u.nombre,
-                    initialQuantity: u.quantity,
-                    lostQuantity: defenderLossesThisRound.find(l => l.id === u.id)?.quantity || 0,
-                })),
+                 troops: troopConfigs.map(config => {
+                    const troop = roundDefenderArmy.find((t: ArmyUnit) => t.id === config.id);
+                    const loss = defenderLossesThisRound.find(l => l.id === config.id);
+                    return {
+                        id: config.id,
+                        nombre: config.nombre,
+                        initialQuantity: troop?.quantity || 0,
+                        lostQuantity: loss?.quantity || 0,
+                    };
+                }),
                 totalAttack: defenderTotalAttack,
                 totalDefense: defenderTotalDefense,
             },

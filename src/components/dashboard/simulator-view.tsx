@@ -301,41 +301,61 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
                                         <div className="bg-primary/80 text-primary-foreground text-center font-bold py-1">
                                             RONDA DE BATALLA {round.round}
                                         </div>
-                                        <Table>
-                                            <TableHeader>
-                                                <TableRow className="border-b-primary/50">
-                                                    <TableHead className="text-white">TROPA</TableHead>
-                                                    <TableHead className="text-right text-white">CANTIDAD</TableHead>
-                                                    <TableHead className="text-right text-red-500">DESTRUIDO</TableHead>
-                                                    <TableHead className="text-white text-right">CANTIDAD</TableHead>
-                                                    <TableHead className="text-right text-red-500">DESTRUIDO</TableHead>
-                                                </TableRow>
-                                            </TableHeader>
-                                            <TableBody>
-                                                {troopConfigs.map(troop => {
-                                                    const attackerTroop = round.attacker.troops.find(t => t.id === troop.id);
-                                                    const defenderTroop = round.defender.troops.find(t => t.id === troop.id);
-                                                    if (!attackerTroop && !defenderTroop) return null;
-                                                    return (
-                                                        <TableRow key={`round-${round.round}-troop-${troop.id}`} className="border-b-primary/20">
-                                                            <TableCell>{troop.nombre}</TableCell>
-                                                            <TableCell className="text-right">{formatNumber(attackerTroop?.initialQuantity || 0)}</TableCell>
-                                                            <TableCell className="text-right text-red-500">{formatNumber(attackerTroop?.lostQuantity || 0)}</TableCell>
-                                                            <TableCell className="text-right">{formatNumber(defenderTroop?.initialQuantity || 0)}</TableCell>
-                                                            <TableCell className="text-right text-red-500">{formatNumber(defenderTroop?.lostQuantity || 0)}</TableCell>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            {/* Columna Atacante */}
+                                            <div>
+                                                <h4 className='font-bold text-center mb-1'>Atacante</h4>
+                                                <Table>
+                                                    <TableHeader>
+                                                        <TableRow className="border-b-primary/50">
+                                                            <TableHead className="text-white">Tropa</TableHead>
+                                                            <TableHead className="text-right text-white">Cant.</TableHead>
+                                                            <TableHead className="text-right text-red-500">Pérdidas</TableHead>
                                                         </TableRow>
-                                                    )
-                                                })}
-                                            </TableBody>
-                                        </Table>
-                                        <div className="bg-primary/80 text-primary-foreground text-center font-bold py-1">
-                                            INFORME DE BATALLA {round.round}
+                                                    </TableHeader>
+                                                    <TableBody>
+                                                        {round.attacker.troops.map(t => (
+                                                            <TableRow key={t.id} className="border-b-primary/20">
+                                                                <TableCell>{t.nombre}</TableCell>
+                                                                <TableCell className="text-right">{formatNumber(t.initialQuantity)}</TableCell>
+                                                                <TableCell className="text-right text-red-500">{formatNumber(t.lostQuantity)}</TableCell>
+                                                            </TableRow>
+                                                        ))}
+                                                    </TableBody>
+                                                </Table>
+                                            </div>
+                                             {/* Columna Defensor */}
+                                            <div>
+                                                 <h4 className='font-bold text-center mb-1'>Defensor</h4>
+                                                <Table>
+                                                    <TableHeader>
+                                                        <TableRow className="border-b-primary/50">
+                                                            <TableHead className="text-white">Tropa</TableHead>
+                                                            <TableHead className="text-right text-white">Cant.</TableHead>
+                                                            <TableHead className="text-right text-red-500">Pérdidas</TableHead>
+                                                        </TableRow>
+                                                    </TableHeader>
+                                                    <TableBody>
+                                                        {round.defender.troops.map(t => (
+                                                            <TableRow key={t.id} className="border-b-primary/20">
+                                                                <TableCell>{t.nombre}</TableCell>
+                                                                <TableCell className="text-right">{formatNumber(t.initialQuantity)}</TableCell>
+                                                                <TableCell className="text-right text-red-500">{formatNumber(t.lostQuantity)}</TableCell>
+                                                            </TableRow>
+                                                        ))}
+                                                    </TableBody>
+                                                </Table>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="bg-primary/80 text-primary-foreground text-center font-bold py-1 mt-2">
+                                            ESTADO RONDA {round.round}
                                         </div>
                                         <div className="grid grid-cols-2 gap-x-4 p-2 text-sm font-mono">
-                                             <div><span className="font-bold">A: Ataque:</span> {formatNumber(round.attacker.totalAttack)}</div>
-                                             <div className="text-right"><span className="font-bold">Defensa:</span> {formatNumber(round.defender.totalDefense)}</div>
-                                             <div><span className="font-bold">D: Ataque:</span> {formatNumber(round.defender.totalAttack)}</div>
-                                             <div className="text-right"><span className="font-bold">Defensa:</span> {formatNumber(round.attacker.totalDefense)}</div>
+                                             <div><span className="font-bold">Ataque Atacante:</span> {formatNumber(round.attacker.totalAttack)}</div>
+                                             <div className="text-right"><span className="font-bold">Defensa Defensor:</span> {formatNumber(round.defender.totalDefense)}</div>
+                                             <div><span className="font-bold">Ataque Defensor:</span> {formatNumber(round.defender.totalAttack)}</div>
+                                             <div className="text-right"><span className="font-bold">Defensa Atacante:</span> {formatNumber(round.attacker.totalDefense)}</div>
                                         </div>
                                     </div>
                                 ))}
@@ -343,15 +363,20 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
                                 {battleReport.finalMessage && <p className="text-center font-bold text-lg pt-4">{battleReport.finalMessage}</p>}
 
                                 <div className="bg-primary/80 text-primary-foreground text-center font-bold py-1 mt-4">
-                                    ESTADÍSTICAS DE COMBATE
+                                    ESTADÍSTICAS FINALES
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-3 text-center text-sm p-2">
+                                    <div className='font-bold'>-</div>
+                                    <div className='font-bold'>Atacante</div>
+                                    <div className='font-bold'>Defensor</div>
                                 </div>
                                 <Table>
                                     <TableBody>
-                                        <TableRow className="border-none"><TableCell>Tropas perdidas</TableCell><TableCell className="text-right">{formatNumber(battleReport.finalStats.attacker.troopsLost)}</TableCell><TableCell className="text-right">{formatNumber(battleReport.finalStats.defender.troopsLost)}</TableCell></TableRow>
-                                        <TableRow className="border-none"><TableCell>Puntos perdidos</TableCell><TableCell className="text-right">{formatNumber(battleReport.finalStats.attacker.pointsLost)}</TableCell><TableCell className="text-right">{formatNumber(battleReport.finalStats.defender.pointsLost)}</TableCell></TableRow>
-                                        <TableRow className="border-none"><TableCell>Armas perdido</TableCell><TableCell className="text-right">{formatNumber(battleReport.finalStats.attacker.resourcesLost.armas)}</TableCell><TableCell className="text-right">{formatNumber(battleReport.finalStats.defender.resourcesLost.armas)}</TableCell></TableRow>
-                                        <TableRow className="border-none"><TableCell>Municion perdido</TableCell><TableCell className="text-right">{formatNumber(battleReport.finalStats.attacker.resourcesLost.municion)}</TableCell><TableCell className="text-right">{formatNumber(battleReport.finalStats.defender.resourcesLost.municion)}</TableCell></TableRow>
-                                        <TableRow className="border-none"><TableCell>Dolares perdido</TableCell><TableCell className="text-right">{formatNumber(battleReport.finalStats.attacker.resourcesLost.dolares)}</TableCell><TableCell className="text-right">{formatNumber(battleReport.finalStats.defender.resourcesLost.dolares)}</TableCell></TableRow>
+                                        <TableRow className="border-none"><TableCell>Tropas perdidas</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.attacker.troopsLost)}</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.defender.troopsLost)}</TableCell></TableRow>
+                                        <TableRow className="border-none"><TableCell>Puntos perdidos</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.attacker.pointsLost)}</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.defender.pointsLost)}</TableCell></TableRow>
+                                        <TableRow className="border-none"><TableCell>Armas perdido</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.attacker.resourcesLost.armas)}</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.defender.resourcesLost.armas)}</TableCell></TableRow>
+                                        <TableRow className="border-none"><TableCell>Municion perdido</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.attacker.resourcesLost.municion)}</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.defender.resourcesLost.municion)}</TableCell></TableRow>
+                                        <TableRow className="border-none"><TableCell>Dolares perdido</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.attacker.resourcesLost.dolares)}</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.defender.resourcesLost.dolares)}</TableCell></TableRow>
                                     </TableBody>
                                 </Table>
 
