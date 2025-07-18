@@ -1,4 +1,3 @@
-
 'use client'
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -8,7 +7,21 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator";
 import type { FullFamily, UserWithProgress } from "@/lib/data";
 import { FamilyRole } from "@prisma/client";
-import { Crown, Shield, User, Users } from "lucide-react";
+import { Crown, Shield, User, Users, Loader2 } from "lucide-react";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+  } from "@/components/ui/alert-dialog"
+import { useTransition } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { leaveFamily } from "@/lib/actions/family.actions";
 
 
 interface FamilyDashboardViewProps {
@@ -23,6 +36,19 @@ const roleIcons: Record<FamilyRole, React.ReactNode> = {
 }
 
 export function FamilyDashboardView({ family, currentUser }: FamilyDashboardViewProps) {
+    const { toast } = useToast();
+    const [isPending, startTransition] = useTransition();
+
+    const handleLeaveFamily = () => {
+        startTransition(async () => {
+            const result = await leaveFamily();
+             if (result.error) {
+                toast({ variant: 'destructive', title: 'Error', description: result.error });
+            } else {
+                toast({ title: 'Has abandonado la familia', description: result.success });
+            }
+        });
+    }
     
     const canInvite = currentUser.familyMember?.role === FamilyRole.LEADER || currentUser.familyMember?.role === FamilyRole.CO_LEADER;
 
@@ -99,7 +125,26 @@ export function FamilyDashboardView({ family, currentUser }: FamilyDashboardView
                             </div>
                         </CardContent>
                     </Card>
-                     <Button variant="destructive" className="w-full mt-4">Abandonar Familia</Button>
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button variant="destructive" className="w-full mt-4">Abandonar Familia</Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                            <AlertDialogTitle>¿Estás seguro de que quieres abandonar la familia?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                Esta acción no se puede deshacer. Perderás todos los beneficios y la protección de la familia.
+                            </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                            <AlertDialogAction onClick={handleLeaveFamily} disabled={isPending}>
+                                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                Sí, abandonar familia
+                            </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
                 </div>
             </div>
         </div>

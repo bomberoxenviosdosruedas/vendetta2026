@@ -116,7 +116,7 @@ export async function leaveFamily() {
             where: { familyId: user.familyMember.familyId }
         });
         if (members > 1) {
-            return { error: "Debes nombrar a un nuevo líder antes de irte." }
+            return { error: "Eres el líder. Debes nombrar a un nuevo líder o ser el último miembro para poder abandonar la familia." }
         }
         // If leader is the last member, the family will be deleted
     }

@@ -1,4 +1,3 @@
-
 'use client'
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,6 +22,7 @@ export function CreateOrJoinFamilyView() {
                 toast({ variant: 'destructive', title: 'Error', description: result.error });
             } else {
                 toast({ title: '¡Éxito!', description: result.success });
+                // The revalidation on the server action will handle the UI update
             }
         });
     };
