@@ -204,7 +204,7 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
         if (!selectedProperty) return;
 
         const troops = Object.fromEntries(
-            selectedProperty.tropas.map(t => [t.configuracionTropaId, t.cantidad])
+            selectedProperty.TropaUsuario.map(t => [t.configuracionTropaId, t.cantidad])
         );
 
         const trainings = Object.fromEntries(
@@ -305,6 +305,7 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
                                             RONDA DE BATALLA {round.round}
                                         </div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            {/* Columna Atacante */}
                                             <div>
                                                 <h4 className='font-bold text-center mb-1'>Atacante</h4>
                                                 <Table>
@@ -316,16 +317,17 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
                                                         </TableRow>
                                                     </TableHeader>
                                                     <TableBody>
-                                                        {Object.entries(round.tropas).map(([tropaId, data]) => (
-                                                            <TableRow key={`attacker-round-${round.round}-${tropaId}`} className="border-b-primary/20">
-                                                                <TableCell>{troopConfigs.find(tc => tc.id === tropaId)?.nombre}</TableCell>
-                                                                <TableCell className="text-right">{formatNumber(data.a)}</TableCell>
-                                                                <TableCell className="text-right text-red-500">{formatNumber(data.muertesA)}</TableCell>
+                                                        {round.attacker.troops.map(t => (
+                                                            <TableRow key={t.id} className="border-b-primary/20">
+                                                                <TableCell>{t.nombre}</TableCell>
+                                                                <TableCell className="text-right">{formatNumber(t.initialQuantity)}</TableCell>
+                                                                <TableCell className="text-right text-red-500">{formatNumber(t.lostQuantity)}</TableCell>
                                                             </TableRow>
                                                         ))}
                                                     </TableBody>
                                                 </Table>
                                             </div>
+                                             {/* Columna Defensor */}
                                             <div>
                                                  <h4 className='font-bold text-center mb-1'>Defensor</h4>
                                                 <Table>
@@ -337,11 +339,11 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
                                                         </TableRow>
                                                     </TableHeader>
                                                     <TableBody>
-                                                    {Object.entries(round.tropas).map(([tropaId, data]) => (
-                                                            <TableRow key={`defender-round-${round.round}-${tropaId}`} className="border-b-primary/20">
-                                                                <TableCell>{troopConfigs.find(tc => tc.id === tropaId)?.nombre}</TableCell>
-                                                                <TableCell className="text-right">{formatNumber(data.d)}</TableCell>
-                                                                <TableCell className="text-right text-red-500">{formatNumber(data.muertesD)}</TableCell>
+                                                        {round.defender.troops.map(t => (
+                                                            <TableRow key={t.id} className="border-b-primary/20">
+                                                                <TableCell>{t.nombre}</TableCell>
+                                                                <TableCell className="text-right">{formatNumber(t.initialQuantity)}</TableCell>
+                                                                <TableCell className="text-right text-red-500">{formatNumber(t.lostQuantity)}</TableCell>
                                                             </TableRow>
                                                         ))}
                                                     </TableBody>
@@ -353,15 +355,33 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
                                             ESTADO RONDA {round.round}
                                         </div>
                                         <div className="grid grid-cols-2 gap-x-4 p-2 text-sm font-mono">
-                                             <div><span className="font-bold">Ataque Atacante:</span> {formatNumber(round.PAA)}</div>
-                                             <div className="text-right"><span className="font-bold">Defensa Defensor:</span> {formatNumber(round.PDD)}</div>
-                                             <div><span className="font-bold">Ataque Defensor:</span> {formatNumber(round.PAD)}</div>
-                                             <div className="text-right"><span className="font-bold">Defensa Atacante:</span> {formatNumber(round.PDA)}</div>
+                                             <div><span className="font-bold">Ataque Atacante:</span> {formatNumber(round.attacker.totalAttack)}</div>
+                                             <div className="text-right"><span className="font-bold">Defensa Defensor:</span> {formatNumber(round.defender.totalDefense)}</div>
+                                             <div><span className="font-bold">Ataque Defensor:</span> {formatNumber(round.defender.totalAttack)}</div>
+                                             <div className="text-right"><span className="font-bold">Defensa Atacante:</span> {formatNumber(round.attacker.totalDefense)}</div>
                                         </div>
                                     </div>
                                 ))}
 
-                                <p className="text-center font-bold text-lg pt-4">{finalMessage}</p>
+                                {battleReport.finalMessage && <p className="text-center font-bold text-lg pt-4">{battleReport.finalMessage}</p>}
+
+                                <div className="bg-primary/80 text-primary-foreground text-center font-bold py-1 mt-4">
+                                    ESTADÍSTICAS FINALES
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-3 text-center text-sm p-2">
+                                    <div className='font-bold'>-</div>
+                                    <div className='font-bold'>Atacante</div>
+                                    <div className='font-bold'>Defensor</div>
+                                </div>
+                                <Table>
+                                    <TableBody>
+                                        <TableRow className="border-none"><TableCell>Tropas perdidas</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.attacker.troopsLost)}</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.defender.troopsLost)}</TableCell></TableRow>
+                                        <TableRow className="border-none"><TableCell>Puntos perdidos</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.attacker.pointsLost)}</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.defender.pointsLost)}</TableCell></TableRow>
+                                        <TableRow className="border-none"><TableCell>Armas perdido</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.attacker.resourcesLost.armas)}</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.defender.resourcesLost.armas)}</TableCell></TableRow>
+                                        <TableRow className="border-none"><TableCell>Municion perdido</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.attacker.resourcesLost.municion)}</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.defender.resourcesLost.municion)}</TableCell></TableRow>
+                                        <TableRow className="border-none"><TableCell>Dolares perdido</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.attacker.resourcesLost.dolares)}</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.defender.resourcesLost.dolares)}</TableCell></TableRow>
+                                    </TableBody>
+                                </Table>
 
                             </div>
                         </ScrollArea>

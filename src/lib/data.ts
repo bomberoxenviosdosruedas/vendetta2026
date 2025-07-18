@@ -27,7 +27,7 @@ export type FullPropiedad = Propiedad & {
     habitaciones: FullHabitacionUsuario[];
     colaConstruccion: ColaConstruccion[];
     colaReclutamiento: FullColaReclutamiento | null;
-    tropas: FullTropaUsuario[];
+    TropaUsuario: FullTropaUsuario[];
 }
 
 export type FullFamilyMember = FamilyMember & { user: User };
@@ -96,7 +96,8 @@ export const getUserFamily = cache(async(userId: string) => {
                 }
             }
         });
-        return familyMember?.family || null;
+        if (!familyMember) return null;
+        return getFamilyById(familyMember.familyId);
     } catch(e) {
         console.error("Error fetching user family", e);
         return null;
@@ -226,7 +227,7 @@ const userInclude = {
                     configuracionHabitacionId: 'asc'
                 }
             },
-            tropas: {
+            TropaUsuario: {
                 include: {
                     configuracion: true
                 }
@@ -270,6 +271,10 @@ export async function getUserByUsername(username: string): Promise<UserWithProgr
             where: { username },
             include: userInclude
         });
+        // This is a temporary type assertion to match the frontend expectations
+        if (user) {
+            user.propiedades = user.propiedades.map(p => ({ ...p, tropas: p.TropaUsuario }));
+        }
         return user as UserWithProgress | null;
     } catch (error) {
         console.error(`Error fetching user ${username}:`, error);
@@ -284,6 +289,10 @@ export async function getUserWithProgressByUsername(username: string): Promise<U
             where: { username },
             include: userInclude
         });
+        // This is a temporary type assertion to match the frontend expectations
+        if (user) {
+            user.propiedades = user.propiedades.map(p => ({ ...p, tropas: p.TropaUsuario as any }));
+        }
         return user as UserWithProgress | null;
     } catch (error) {
         console.error(`Error fetching user ${username} with progress:`, error);

@@ -162,12 +162,12 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
     }
 
     const setMaxTroops = (troopId: string) => {
-        const available = selectedProperty?.tropas.find(t => t.configuracionTropaId === troopId)?.cantidad || 0;
+        const available = selectedProperty?.TropaUsuario.find(t => t.configuracionTropaId === troopId)?.cantidad || 0;
         handleTroopChange(troopId, available);
     };
 
     const setAllMaxTroops = () => {
-        const newTroopInputs = selectedProperty?.tropas.map(tropa => ({
+        const newTroopInputs = selectedProperty?.TropaUsuario.map(tropa => ({
             id: tropa.configuracionTropaId,
             cantidad: tropa.cantidad,
         })) || [];
@@ -271,7 +271,7 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
                 </CardHeader>
                 <CardContent>
                     <div className='space-y-2'>
-                        {selectedProperty.tropas.filter(t => t.cantidad > 0).map(tropa => (
+                        {selectedProperty.TropaUsuario.filter(t => t.cantidad > 0).map(tropa => (
                             <div key={tropa.configuracionTropaId} className='p-3 border rounded-lg flex flex-col sm:flex-row sm:items-center gap-4'>
                                 <div className='flex items-center gap-3 flex-1'>
                                     <div className="w-12 h-10 relative rounded-md overflow-hidden border flex-shrink-0">

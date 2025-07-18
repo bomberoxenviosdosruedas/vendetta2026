@@ -162,7 +162,7 @@ export function RecruitmentView({ user, troopConfigs }: RecruitmentViewProps) {
     return indexA - indexB;
   });
 
-  const userTroopsMap = new Map(selectedProperty.tropas.map(t => [t.configuracionTropaId, t]));
+  const userTroopsMap = new Map(selectedProperty.TropaUsuario.map(t => [t.configuracionTropaId, t]));
 
   const troopsWithCounts = sortedTroops.map(config => {
     const userTropa = userTroopsMap.get(config.id);
