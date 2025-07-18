@@ -84,7 +84,13 @@ export function SidebarNav({ user }: SidebarNavProps) {
   const renderNav = (items: NavItem[]) => (
     <SidebarMenu>
       {items.map((item) => {
-        const href = propertyId ? `${item.href}?propertyId=${propertyId}` : item.href;
+        const params = new URLSearchParams(searchParams);
+        if (propertyId) {
+            params.set('propertyId', propertyId);
+        } else {
+            params.delete('propertyId');
+        }
+        const href = `${item.href}?${params.toString()}`;
         return (
           <SidebarMenuItem key={item.href}>
             <SidebarMenuButton
