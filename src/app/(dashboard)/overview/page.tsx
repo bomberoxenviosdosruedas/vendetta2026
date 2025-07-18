@@ -4,22 +4,22 @@ import { Suspense } from "react";
 
 function OverviewLoading() {
     return (
-        <div className="grid h-full gap-4 md:grid-cols-3 md:grid-rows-[min-content,1fr]">
-            <div className="md:col-span-1 md:row-span-1">
-                <Skeleton className="h-24 w-full rounded-lg shimmer" />
+        <div className="flex-grow p-4 md:p-6 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-[min-content,1fr] gap-4 h-full">
+                <div className="md:col-span-1 md:row-span-1">
+                    <Skeleton className="h-[88px] w-full rounded-lg" />
+                </div>
+                <div className="md:col-span-1 md:row-span-2">
+                     <Skeleton className="h-full min-h-[250px] w-full rounded-lg" />
+                </div>
+                <div className="md:col-span-1 md:row-span-2">
+                     <Skeleton className="h-full min-h-[250px] w-full rounded-lg" />
+                </div>
+                 <div className="md:col-span-3">
+                     <Skeleton className="h-[200px] w-full rounded-lg" />
+                </div>
             </div>
-            <div className="md:col-span-1 md:row-span-2">
-                 <Skeleton className="h-full min-h-64 w-full rounded-lg shimmer" />
-            </div>
-            <div className="md:col-span-1 md:row-span-2">
-                 <Skeleton className="h-full min-h-64 w-full rounded-lg shimmer" />
-            </div>
-            <div className="md:col-span-3">
-                 <Skeleton className="h-48 w-full rounded-lg shimmer" />
-            </div>
-            <div className="md:col-span-3">
-                <Skeleton className="h-16 w-full rounded-lg shimmer" />
-            </div>
+             <Skeleton className="h-[74px] w-full rounded-lg" />
         </div>
     )
 }
@@ -27,7 +27,7 @@ function OverviewLoading() {
 
 export default function OverviewPage() {
   return (
-    <div className="main-view">
+    <div className="main-view h-full">
       <Suspense fallback={<OverviewLoading/>}>
           <OverviewView />
       </Suspense>

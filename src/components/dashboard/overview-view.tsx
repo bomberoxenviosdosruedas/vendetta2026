@@ -1,35 +1,43 @@
 import { getSessionUser } from "@/lib/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { Bell, Briefcase, MessageSquare, ShieldCheck, Swords, UserPlus } from "lucide-react";
+import { Bell, Briefcase, MessageSquare, UserPlus } from "lucide-react";
 import { QueueStatusCard } from "./queue-status-card";
 import { getRoomConfigurations } from "@/lib/data";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 
 
-async function ActionIcons() {
+function ActionIcons() {
     // Estas son acciones placeholder, puedes darles funcionalidad en el futuro
     const actions = [
         { icon: <Bell className="h-5 w-5" />, notification: 0, label: "Notificaciones" },
-        { icon: <MessageSquare className="h-5 w-5" />, notification: 0, label: "Mensajes" },
+        { icon: <MessageSquare className="h-5 w-5" />, notification: 3, label: "Mensajes" },
         { icon: <Briefcase className="h-5 w-5" />, notification: 0, label: "Operaciones" },
-        { icon: <UserPlus className="h-5 w-5" />, notification: 0, label: "Invitaciones" },
+        { icon: <UserPlus className="h-5 w-5" />, notification: 1, label: "Invitaciones" },
     ]
     return (
         <div className="absolute top-4 right-4 flex flex-col items-center gap-3">
             {actions.map((action, index) => (
-                <div key={index} className="relative">
-                    <Button variant="outline" size="icon" className="h-9 w-9 bg-background/50 border-white/20 hover:bg-white/10 text-white">
-                        {action.icon}
-                        <span className="sr-only">{action.label}</span>
-                    </Button>
-                    {action.notification > 0 && 
-                        <Badge variant="destructive" className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0">{action.notification}</Badge>
-                    }
-                </div>
+                 <TooltipProvider key={index} delayDuration={0}>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button variant="outline" size="icon" className="h-9 w-9 bg-background/50 border-white/20 hover:bg-white/10 text-white relative">
+                                {action.icon}
+                                <span className="sr-only">{action.label}</span>
+                                {action.notification > 0 && 
+                                    <Badge variant="destructive" className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center p-0">{action.notification}</Badge>
+                                }
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent side="left">
+                            <p>{action.label}</p>
+                        </TooltipContent>
+                    </Tooltip>
+                 </TooltipProvider>
             ))}
         </div>
     )
@@ -53,7 +61,7 @@ export async function OverviewView() {
 
 
     return (
-        <div className="flex-grow p-4 md:p-6 space-y-4">
+        <div className="flex-grow space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-[min-content,1fr] gap-4 h-full">
                 
                 {/* Player Card */}
@@ -71,7 +79,7 @@ export async function OverviewView() {
                 </Card>
 
                 {/* Main Property Card */}
-                <Card className="md:col-span-1 md:row-span-2 relative overflow-hidden">
+                <Card className="md:col-span-1 md:row-span-2 relative overflow-hidden min-h-[250px]">
                     <Image 
                         src="https://placehold.co/600x400.png"
                         alt="Vista de la propiedad principal"
@@ -87,7 +95,7 @@ export async function OverviewView() {
                 </Card>
 
                 {/* Family Card */}
-                <Card className="md:col-span-1 md:row-span-2 relative">
+                <Card className="md:col-span-1 md:row-span-2 relative min-h-[250px]">
                     <CardContent className="p-4 flex flex-col items-center justify-center gap-2 h-full">
                         <Avatar className="h-24 w-24 border-2 border-primary">
                             <AvatarImage src="https://placehold.co/128x128.png" alt="Logo Familia" data-ai-hint="mafia family crest" />
