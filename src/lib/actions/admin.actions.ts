@@ -5,7 +5,6 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import prisma from "../prisma/prisma";
-import { z } from "zod";
 import { ConfiguracionHabitacion, ConfiguracionTropa, ConfiguracionEntrenamiento, TipoTropa } from "@prisma/client";
 
 const ADMIN_COOKIE_NAME = 'vendetta-admin-session';
@@ -20,7 +19,7 @@ export async function loginAdmin(password: string) {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         maxAge: 60 * 60 * 8, // 8 hours
-        path: '/admin',
+        path: '/', // Corrected path to root
     });
 
     redirect('/admin/panel');
@@ -52,6 +51,10 @@ export async function saveRoomConfig(formData: FormData) {
 
     const originalId = parseString(formData.get('originalId'));
     const id = parseString(formData.get('id'));
+
+    if (!id) {
+        return { error: "El ID de la habitación es obligatorio." };
+    }
 
     const data: Omit<ConfiguracionHabitacion, 'createdAt' | 'updatedAt'> = {
         id,
@@ -136,6 +139,10 @@ export async function saveTrainingConfig(formData: FormData) {
 
     const originalId = parseString(formData.get('originalId'));
     const id = parseString(formData.get('id'));
+    
+    if (!id) {
+        return { error: "El ID del entrenamiento es obligatorio." };
+    }
 
     const data: Omit<ConfiguracionEntrenamiento, 'createdAt' | 'updatedAt'> = {
         id,
@@ -160,6 +167,7 @@ export async function saveTrainingConfig(formData: FormData) {
     try {
         await prisma.$transaction(async (tx) => {
             if (originalId && originalId !== id) {
+                 await tx.trainingRequirement.deleteMany({ where: { OR: [{ trainingId: originalId }, { requiredTrainingId: originalId }] } });
                  await tx.configuracionEntrenamiento.delete({ where: { id: originalId } });
             }
 
@@ -214,8 +222,13 @@ export async function saveTroopConfig(formData: FormData) {
     const isAdmin = await getAdminSession();
     if (!isAdmin) return { error: "No autorizado" };
     
-    const data = {
-        id: parseString(formData.get('id')),
+    const id = parseString(formData.get('id'));
+     if (!id) {
+        return { error: "El ID de la tropa es obligatorio." };
+    }
+
+    const data: Omit<ConfiguracionTropa, 'createdAt' | 'updatedAt'> = {
+        id,
         nombre: parseString(formData.get('nombre')),
         urlImagen: parseString(formData.get('urlImagen')),
         descripcion: parseString(formData.get('descripcion')),
