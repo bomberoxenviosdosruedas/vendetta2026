@@ -11,23 +11,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 6,
-    "createdAt": "2025-07-19T06:53:24.710Z",
-    "updatedAt": "2025-07-19T06:53:24.710Z"
-  },
-  {
-    "id": "escuela_especializacion",
-    "nombre": "Escuela de especialización",
-    "descripcion": "Como ya dice el nombre, esta habitación permite el entrenamiento de \"los chicos\" en nuevas ténicas, permitiéndoles tener más experiencia en combate. Al igual que para la oficina de El Jefe, cuánto más rápido se haga el entrenamiento, más rápido se desarrollan las habilidades.",
-    "urlImagen": "/img/habitaciones/B2K.png",
-    "costoArmas": 1000,
-    "costoMunicion": 1000,
-    "costoDolares": 25,
-    "duracion": 1000,
-    "produccionBase": 0,
-    "produccionRecurso": null,
-    "puntos": 31.75,
-    "createdAt": "2025-07-19T06:53:25.134Z",
-    "updatedAt": "2025-07-19T06:53:25.134Z"
+    "createdAt": "2025-07-19T07:00:57.855Z",
+    "updatedAt": "2025-07-19T07:00:57.855Z"
   },
   {
     "id": "armeria",
@@ -41,8 +26,8 @@
     "produccionBase": 10,
     "produccionRecurso": "armas",
     "puntos": 2.32,
-    "createdAt": "2025-07-19T06:53:25.926Z",
-    "updatedAt": "2025-07-19T06:53:25.926Z"
+    "createdAt": "2025-07-19T07:00:58.478Z",
+    "updatedAt": "2025-07-19T07:00:58.478Z"
   },
   {
     "id": "almacen_de_municion",
@@ -56,8 +41,8 @@
     "produccionBase": 20,
     "produccionRecurso": "municion",
     "puntos": 1.39,
-    "createdAt": "2025-07-19T06:53:26.726Z",
-    "updatedAt": "2025-07-19T06:53:26.726Z"
+    "createdAt": "2025-07-19T07:00:58.752Z",
+    "updatedAt": "2025-07-19T07:00:58.752Z"
   },
   {
     "id": "cerveceria",
@@ -71,8 +56,8 @@
     "produccionBase": 50,
     "produccionRecurso": "alcohol",
     "puntos": 1.6,
-    "createdAt": "2025-07-19T06:53:27.011Z",
-    "updatedAt": "2025-07-19T06:53:27.011Z"
+    "createdAt": "2025-07-19T07:00:59.025Z",
+    "updatedAt": "2025-07-19T07:00:59.025Z"
   },
   {
     "id": "taberna",
@@ -86,8 +71,8 @@
     "produccionBase": 2,
     "produccionRecurso": "dolares_por_alcohol",
     "puntos": 2.1,
-    "createdAt": "2025-07-19T06:53:27.300Z",
-    "updatedAt": "2025-07-19T06:53:27.300Z"
+    "createdAt": "2025-07-19T07:00:59.798Z",
+    "updatedAt": "2025-07-19T07:00:59.798Z"
   },
   {
     "id": "almacen_de_armas",
@@ -101,8 +86,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 12,
-    "createdAt": "2025-07-19T06:53:27.583Z",
-    "updatedAt": "2025-07-19T06:53:27.583Z"
+    "createdAt": "2025-07-19T07:01:00.074Z",
+    "updatedAt": "2025-07-19T07:01:00.074Z"
   },
   {
     "id": "deposito_de_municion",
@@ -116,8 +101,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 18,
-    "createdAt": "2025-07-19T06:53:28.366Z",
-    "updatedAt": "2025-07-19T06:53:28.366Z"
+    "createdAt": "2025-07-19T07:01:00.344Z",
+    "updatedAt": "2025-07-19T07:01:00.344Z"
   },
   {
     "id": "almacen_de_alcohol",
@@ -131,8 +116,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 7,
-    "createdAt": "2025-07-19T06:53:28.656Z",
-    "updatedAt": "2025-07-19T06:53:28.656Z"
+    "createdAt": "2025-07-19T07:01:00.623Z",
+    "updatedAt": "2025-07-19T07:01:00.623Z"
   },
   {
     "id": "caja_fuerte",
@@ -146,8 +131,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 91,
-    "createdAt": "2025-07-19T06:53:29.443Z",
-    "updatedAt": "2025-07-19T06:53:29.443Z"
+    "createdAt": "2025-07-19T07:01:00.897Z",
+    "updatedAt": "2025-07-19T07:01:00.897Z"
   },
   {
     "id": "campo_de_entrenamiento",
@@ -161,8 +146,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 61,
-    "createdAt": "2025-07-19T06:53:29.724Z",
-    "updatedAt": "2025-07-19T06:53:29.724Z"
+    "createdAt": "2025-07-19T07:01:01.168Z",
+    "updatedAt": "2025-07-19T07:01:01.168Z"
   },
   {
     "id": "seguridad",
@@ -176,8 +161,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 45,
-    "createdAt": "2025-07-19T06:53:30.001Z",
-    "updatedAt": "2025-07-19T06:53:30.001Z"
+    "createdAt": "2025-07-19T07:01:01.438Z",
+    "updatedAt": "2025-07-19T07:01:01.438Z"
   },
   {
     "id": "torreta_de_fuego_automatico",
@@ -191,8 +176,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 57,
-    "createdAt": "2025-07-19T06:53:30.276Z",
-    "updatedAt": "2025-07-19T06:53:30.276Z"
+    "createdAt": "2025-07-19T07:01:01.705Z",
+    "updatedAt": "2025-07-19T07:01:01.705Z"
   },
   {
     "id": "minas_ocultas",
@@ -206,8 +191,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 65.5,
-    "createdAt": "2025-07-19T06:53:31.066Z",
-    "updatedAt": "2025-07-19T06:53:31.066Z"
+    "createdAt": "2025-07-19T07:01:01.978Z",
+    "updatedAt": "2025-07-19T07:01:01.978Z"
   },
   {
     "id": "contrabando",
@@ -221,7 +206,22 @@
     "produccionBase": 21,
     "produccionRecurso": "dolares",
     "puntos": 136,
-    "createdAt": "2025-07-19T06:53:31.336Z",
-    "updatedAt": "2025-07-19T06:53:31.336Z"
+    "createdAt": "2025-07-19T07:01:02.250Z",
+    "updatedAt": "2025-07-19T07:01:02.250Z"
+  },
+  {
+    "id": "escuela_especializacion",
+    "nombre": "Escuela de especialización",
+    "descripcion": "Como ya dice el nombre, esta habitación permite el entrenamiento de \"los chicos\" en nuevas ténicas, permitiéndoles tener más experiencia en combate. Al igual que para la oficina de El Jefe, cuánto más rápido se haga el entrenamiento, más rápido se desarrollan las habilidades.",
+    "urlImagen": "/img/habitaciones/B2K.png",
+    "costoArmas": 1000,
+    "costoMunicion": 1000,
+    "costoDolares": 25,
+    "duracion": 1000,
+    "produccionBase": 0,
+    "produccionRecurso": null,
+    "puntos": 31.75,
+    "createdAt": "2025-07-19T07:00:58.210Z",
+    "updatedAt": "2025-07-19T07:10:14.541Z"
   }
 ]

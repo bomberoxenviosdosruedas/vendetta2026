@@ -1,1 +1,7 @@
-[]
+[
+  {
+    "roomId": "escuela_especializacion",
+    "requiredRoomId": "oficina_del_jefe",
+    "requiredLevel": 1
+  }
+]
