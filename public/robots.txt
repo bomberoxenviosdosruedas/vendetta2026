@@ -1,6 +1,4 @@
-# Allow all user agents to crawl the entire site
 User-agent: *
 Allow: /
 
-# Sitemap location
-Sitemap: https://vendetta.app/sitemap.xml
+Sitemap: https://vendettadashboardredis.vercel.app/sitemap.xml

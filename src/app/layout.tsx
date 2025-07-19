@@ -19,6 +19,7 @@ const APP_NAME = "Vendetta";
 const APP_DEFAULT_TITLE = "Vendetta tu familia Vendettera";
 const APP_TITLE_TEMPLATE = "%s | Vendetta";
 const APP_DESCRIPTION = "Gestiona tu imperio mafioso, construye edificios, recluta tropas y domina la ciudad en Vendetta, un juego de estrategia en tiempo real.";
+const APP_URL = "https://vendettadashboardredis.vercel.app";
 
 export const metadata: Metadata = {
   applicationName: APP_NAME,
@@ -44,7 +45,15 @@ export const metadata: Metadata = {
       template: APP_TITLE_TEMPLATE,
     },
     description: APP_DESCRIPTION,
-    url: new URL("https://vendetta.app"), // Replace with your actual domain
+    url: new URL(APP_URL),
+    images: [
+        {
+          url: `${APP_URL}/icons/og-image.png`,
+          width: 1200,
+          height: 630,
+          alt: "Vendetta Game Banner",
+        },
+      ],
   },
   twitter: {
     card: "summary_large_image",
@@ -53,6 +62,12 @@ export const metadata: Metadata = {
       template: APP_TITLE_TEMPLATE,
     },
     description: APP_DESCRIPTION,
+    images: [
+        {
+          url: `${APP_URL}/icons/og-image.png`,
+          alt: "Vendetta Game Banner",
+        },
+      ],
   },
   keywords: ["vendetta", "mafia", "estrategia", "juego online", "gestión de recursos", "juego de navegador"],
   authors: [{ name: "Vendetta Team" }],
