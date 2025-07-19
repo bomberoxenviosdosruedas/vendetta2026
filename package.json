@@ -9,7 +9,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate",
+    "postinstall": "if [ \"$VERCEL_ENV\" = \"production\" ]; then prisma generate --no-engine; else prisma generate; fi",
     "typecheck": "tsc --noEmit",
     "generate": "prisma generate",
     "db:export": "bun /prisma/exportacion.ts"
