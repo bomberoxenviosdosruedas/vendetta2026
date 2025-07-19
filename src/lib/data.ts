@@ -282,6 +282,39 @@ const userInclude = {
     }
 };
 
+export const getGlobalStatistics = cache(async () => {
+    try {
+        const [
+            allRoomConfigs, 
+            allTrainingConfigs, 
+            allTroopConfigs, 
+            roomStats, 
+            trainingStats, 
+            troopStats
+        ] = await Promise.all([
+            getRoomConfigurations(),
+            getTrainingConfigurations(),
+            getTroopConfigurations(),
+            prisma.habitacionUsuario.findMany(),
+            prisma.entrenamientoUsuario.findMany(),
+            prisma.tropaUsuario.findMany(),
+        ]);
+
+        return { allRoomConfigs, allTrainingConfigs, allTroopConfigs, roomStats, trainingStats, troopStats };
+    } catch (error) {
+        console.error("Error fetching global statistics:", error);
+        return { 
+            allRoomConfigs: [], 
+            allTrainingConfigs: [], 
+            allTroopConfigs: [], 
+            roomStats: [], 
+            trainingStats: [], 
+            troopStats: [] 
+        };
+    }
+});
+
+
 export async function getUserByUsername(username: string): Promise<UserWithProgress | null> {
     try {
         const user = await prisma.user.findUnique({
