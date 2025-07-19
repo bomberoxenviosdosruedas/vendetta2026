@@ -14,9 +14,10 @@ interface TrainingConfigTableProps {
     initialData: FullConfiguracionEntrenamiento[];
 }
 
-function formatRequirements(requirements: FullConfiguracionEntrenamiento['requirements']) {
+function formatRequirements(requirements: FullConfiguracionEntrenamiento['requirements'], allTrainings: FullConfiguracionEntrenamiento[]) {
     if (!requirements || requirements.length === 0) return '-';
-    return requirements.map(req => `${req.requiredTrainingId} (Nvl ${req.requiredLevel})`).join(', ');
+    const allTrainingsMap = new Map(allTrainings.map(t => [t.id, t.nombre]));
+    return requirements.map(req => `${allTrainingsMap.get(req.requiredTrainingId) || req.requiredTrainingId} (Nvl ${req.requiredLevel})`).join(', ');
 }
 
 
@@ -58,11 +59,11 @@ export function TrainingConfigTable({ initialData }: TrainingConfigTableProps) {
                         <TableRow key={training.id}>
                             <TableCell className="font-mono text-xs">{training.id}</TableCell>
                             <TableCell className="font-medium">{training.nombre}</TableCell>
-                            <TableCell className="text-xs">{formatRequirements(training.requirements)}</TableCell>
+                            <TableCell className="text-xs">{formatRequirements(training.requirements, initialData)}</TableCell>
                             <TableCell>{training.puntos}</TableCell>
-                            <TableCell className="text-right">{training.costoArmas.toLocaleString()}</TableCell>
-                            <TableCell className="text-right">{training.costoMunicion.toLocaleString()}</TableCell>
-                            <TableCell className="text-right">{training.costoDolares.toLocaleString()}</TableCell>
+                            <TableCell className="text-right">{training.costoArmas.toLocaleString('de-DE')}</TableCell>
+                            <TableCell className="text-right">{training.costoMunicion.toLocaleString('de-DE')}</TableCell>
+                            <TableCell className="text-right">{training.costoDolares.toLocaleString('de-DE')}</TableCell>
                             <TableCell className="text-right">{training.duracion}</TableCell>
                             <TableCell className="text-right space-x-2">
                                 <Button variant="outline" size="sm" onClick={() => handleEdit(training)}>Editar</Button>

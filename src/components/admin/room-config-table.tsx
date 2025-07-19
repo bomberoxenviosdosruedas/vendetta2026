@@ -8,13 +8,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { RoomConfigForm } from "./forms/room-config-form";
 import { deleteRoomConfig } from "@/lib/actions/admin.actions";
 import { DeleteConfigButton } from "./delete-config-button";
-import type { FullConfiguracionHabitacion } from "@/lib/data";
+import { ConfiguracionHabitacion } from "@prisma/client";
 
 interface RoomConfigTableProps {
-    initialData: FullConfiguracionHabitacion[];
+    initialData: (ConfiguracionHabitacion & { requirements: { requiredRoomId: string; requiredLevel: number }[] })[];
 }
 
-function formatRequirements(requirements: FullConfiguracionHabitacion['requirements'], allRooms: FullConfiguracionHabitacion[]) {
+function formatRequirements(requirements: RoomConfigTableProps['initialData'][0]['requirements'], allRooms: RoomConfigTableProps['initialData']) {
     if (!requirements || requirements.length === 0) return '-';
     const allRoomsMap = new Map(allRooms.map(r => [r.id, r.nombre]));
     return requirements.map(req => `${allRoomsMap.get(req.requiredRoomId) || req.requiredRoomId} (Nvl ${req.requiredLevel})`).join(', ');
@@ -23,9 +23,9 @@ function formatRequirements(requirements: FullConfiguracionHabitacion['requireme
 
 export function RoomConfigTable({ initialData }: RoomConfigTableProps) {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedRoom, setSelectedRoom] = useState<FullConfiguracionHabitacion | null>(null);
+    const [selectedRoom, setSelectedRoom] = useState<(ConfiguracionHabitacion & { requirements: { requiredRoomId: string; requiredLevel: number }[] }) | null>(null);
 
-    const handleEdit = (room: FullConfiguracionHabitacion) => {
+    const handleEdit = (room: ConfiguracionHabitacion & { requirements: { requiredRoomId: string; requiredLevel: number }[] }) => {
         setSelectedRoom(room);
         setIsOpen(true);
     };
@@ -58,7 +58,7 @@ export function RoomConfigTable({ initialData }: RoomConfigTableProps) {
                             <TableCell className="font-medium">{room.nombre}</TableCell>
                             <TableCell className="text-xs">{formatRequirements(room.requirements, initialData)}</TableCell>
                             <TableCell>{room.puntos}</TableCell>
-                            <TableCell className="text-right">{room.costoArmas.toLocaleString()}</TableCell>
+                            <TableCell className="text-right">{room.costoArmas.toLocaleString('de-DE')}</TableCell>
                             <TableCell className="text-right space-x-2">
                                 <Button variant="outline" size="sm" onClick={() => handleEdit(room)}>Editar</Button>
                                 <DeleteConfigButton id={room.id} action={deleteRoomConfig} />
