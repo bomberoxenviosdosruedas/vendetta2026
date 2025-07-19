@@ -6,7 +6,7 @@ import prisma from "../prisma/prisma";
 import type { FullPropiedad, UserWithProgress } from "../data";
 import { calculateStorageCapacity, calcularProduccionTotalPorSegundo } from "../formulas/room-formulas";
 import { revalidatePath } from "next/cache";
-import { calcularPuntosEntrenamientos, calcularPuntosHabitaciones, calcularPuntosTropas } from "../formulas/score-formulas";
+import { calcularPuntosEntrenamientos, calcularPuntosHabitaciones, calcularPuntosTropas } from "./score-formulas";
 import { getSessionUser } from "../auth";
 
 interface UserSettings {
@@ -81,7 +81,7 @@ async function actualizarRecursosPropiedad(propiedad: FullPropiedad): Promise<Fu
                 ultimaActualizacion: ahora,
             },
             include: { 
-                habitaciones: { include: { configuracion: { include: { escalado: true } } } },
+                habitaciones: { include: { configuracion: true } },
                 colaConstruccion: { orderBy: { createdAt: 'asc' } }, 
                 colaReclutamiento: { include: { tropaConfig: true } },
                 TropaUsuario: { include: { configuracion: true } }
@@ -164,7 +164,7 @@ async function verificarYFinalizarConstruccionDePropiedad(propiedad: FullPropied
     const propiedadRefrescada = await prisma.propiedad.findUnique({
       where: { id: propiedad.id },
       include: { 
-        habitaciones: { include: { configuracion: { include: { escalado: true } } } },
+        habitaciones: { include: { configuracion: true } },
         colaConstruccion: { orderBy: { createdAt: 'asc' } }, 
         colaReclutamiento: { include: { tropaConfig: true } },
         TropaUsuario: { include: { configuracion: true } }
@@ -228,7 +228,7 @@ async function verificarYFinalizarReclutamientoDePropiedad(propiedad: FullPropie
         const propiedadRefrescada = await prisma.propiedad.findUnique({
              where: { id: propiedad.id },
              include: { 
-                habitaciones: { include: { configuracion: { include: { escalado: true } } } },
+                habitaciones: { include: { configuracion: true } },
                 colaConstruccion: { orderBy: { createdAt: 'asc' } }, 
                 colaReclutamiento: { include: { tropaConfig: true } },
                 TropaUsuario: { include: { configuracion: true } }
@@ -297,7 +297,7 @@ export async function verificarYFinalizarMisiones(user: UserWithProgress): Promi
             include: {
                 propiedades: {
                     include: { 
-                        habitaciones: { include: { configuracion: { include: { escalado: true } } } },
+                        habitaciones: { include: { configuracion: true } },
                         colaConstruccion: { orderBy: { createdAt: 'asc' } }, 
                         colaReclutamiento: { include: { tropaConfig: true } },
                         TropaUsuario: { include: { configuracion: true } }
