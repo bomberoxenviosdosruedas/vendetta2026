@@ -1,3 +1,4 @@
+
 import type { ConfiguracionTropa } from '@prisma/client';
 import type { UserWithProgress } from '../data';
 
@@ -41,19 +42,21 @@ export function calcularStatsTropaConBonus(
     const bonusAtaqueIds = tropaConfig.bonusAtaque || [];
     const bonusDefensaIds = tropaConfig.bonusDefensa || [];
   
-    let bonusAtaqueTotal = 0;
+    // Aplicar bonus de ataque
     for (const id of bonusAtaqueIds) {
-      bonusAtaqueTotal += (entrenamientosMap.get(id) || 0);
+      const nivel = entrenamientosMap.get(id);
+      if (nivel && nivel > 0) {
+        ataqueActual *= Math.pow(nivel + 1, 2);
+      }
     }
   
-    let bonusDefensaTotal = 0;
+    // Aplicar bonus de defensa
     for (const id of bonusDefensaIds) {
-      bonusDefensaTotal += (entrenamientosMap.get(id) || 0);
+        const nivel = entrenamientosMap.get(id);
+        if (nivel && nivel > 0) {
+            defensaActual *= Math.pow(nivel + 1, 2);
+        }
     }
-  
-    // Aplicar un 5% de bonus por cada nivel de entrenamiento relevante
-    ataqueActual *= (1 + (bonusAtaqueTotal * 0.05));
-    defensaActual *= (1 + (bonusDefensaTotal * 0.05));
   
     return {
       ataqueActual: Math.floor(ataqueActual),
