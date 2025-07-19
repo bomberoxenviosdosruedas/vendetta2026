@@ -110,18 +110,14 @@ export async function saveTrainingConfig(formData: FormData) {
         puntos: parseNumber(formData.get('puntos')),
     };
 
-    const requirementsString = parseString(formData.get('requirements'));
-    const newRequirements = requirementsString.split(',')
-        .map(s => s.trim())
-        .filter(Boolean)
-        .map(req => {
-            const [requiredTrainingId, requiredLevelStr] = req.split(':');
-            const requiredLevel = parseInt(requiredLevelStr, 10);
-            if (!requiredTrainingId || isNaN(requiredLevel)) {
-                throw new Error(`Formato de requisito inválido: ${req}`);
-            }
-            return { requiredTrainingId, requiredLevel };
-        });
+    const requirementIds = formData.getAll('requirement_ids').map(String);
+    const newRequirements = requirementIds.map(reqId => {
+        const level = parseNumber(formData.get(`requirement_level_${reqId}`));
+        if (level <= 0) {
+            throw new Error(`Nivel inválido para el requisito ${reqId}`);
+        }
+        return { requiredTrainingId: reqId, requiredLevel: level };
+    });
 
     try {
         await prisma.$transaction(async (tx) => {

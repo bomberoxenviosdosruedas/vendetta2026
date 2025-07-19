@@ -77,7 +77,11 @@ export function TrainingConfigTable({ initialData }: TrainingConfigTableProps) {
                     <DialogHeader>
                         <DialogTitle>{selectedItem ? 'Editar' : 'Crear'} Entrenamiento</DialogTitle>
                     </DialogHeader>
-                    <TrainingConfigForm training={selectedItem} onFinished={() => setIsOpen(false)} />
+                    <TrainingConfigForm 
+                        training={selectedItem} 
+                        allTrainings={initialData}
+                        onFinished={() => setIsOpen(false)} 
+                    />
                 </DialogContent>
             </Dialog>
         </Card>
