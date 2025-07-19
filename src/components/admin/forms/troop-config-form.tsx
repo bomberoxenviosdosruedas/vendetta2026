@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useTransition, useState } from "react";
@@ -16,6 +17,7 @@ import { FullConfiguracionTropa } from "@/lib/data";
 interface TroopConfigFormProps {
     troop: FullConfiguracionTropa | null;
     allTroops: ConfiguracionTropa[];
+    tiposTropa: string[];
     onFinished: () => void;
 }
 
@@ -24,7 +26,7 @@ type BonusContrincanteState = {
     factorPrioridad: number;
 }
 
-export function TroopConfigForm({ troop, allTroops, onFinished }: TroopConfigFormProps) {
+export function TroopConfigForm({ troop, allTroops, tiposTropa, onFinished }: TroopConfigFormProps) {
     const [isPending, startTransition] = useTransition();
     const { toast } = useToast();
     const [bonusContrincantes, setBonusContrincantes] = useState<BonusContrincanteState[]>(troop?.bonusContrincante || []);
@@ -134,7 +136,7 @@ export function TroopConfigForm({ troop, allTroops, onFinished }: TroopConfigFor
                         <SelectValue placeholder="Selecciona un tipo" />
                     </SelectTrigger>
                     <SelectContent>
-                        {Object.values(TipoTropa).map(tipo => (
+                        {tiposTropa.map(tipo => (
                             <SelectItem key={tipo} value={tipo}>{tipo}</SelectItem>
                         ))}
                     </SelectContent>

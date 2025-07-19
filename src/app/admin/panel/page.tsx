@@ -11,6 +11,7 @@ import { getRoomConfigurations, getTrainingConfigurations, getTroopConfiguration
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import prisma from "@/lib/prisma/prisma";
+import { TipoTropa } from "@prisma/client";
 
 async function LogoutButton() {
     'use server';
@@ -49,6 +50,8 @@ export default async function AdminPanelPage() {
     const rooms = await getRoomConfigurations();
     const trainings = await getTrainingConfigurations();
     const troops = await getTroopConfigurations();
+    const tiposTropa = Object.values(TipoTropa);
+
 
     return (
         <div className="space-y-6">
@@ -78,7 +81,7 @@ export default async function AdminPanelPage() {
                 </TabsContent>
                 <TabsContent value="tropas">
                     <Suspense fallback={<TableSkeleton />}>
-                        <TroopConfigTable initialData={troops} />
+                        <TroopConfigTable initialData={troops} tiposTropa={tiposTropa} />
                     </Suspense>
                 </TabsContent>
             </Tabs>

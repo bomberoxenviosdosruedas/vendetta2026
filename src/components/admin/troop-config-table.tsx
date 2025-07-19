@@ -1,4 +1,5 @@
 
+
 'use client';
 import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
@@ -6,16 +7,17 @@ import { Card } from "../ui/card";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { TroopConfigForm } from "./forms/troop-config-form";
-import type { ConfiguracionTropa } from "@prisma/client";
+import type { ConfiguracionTropa, TipoTropa } from "@prisma/client";
 import { DeleteConfigButton } from "./delete-config-button";
 import { deleteTroopConfig } from "@/lib/actions/admin.actions";
 import { FullConfiguracionTropa } from "@/lib/data";
 
 interface TroopConfigTableProps {
     initialData: FullConfiguracionTropa[];
+    tiposTropa: string[];
 }
 
-export function TroopConfigTable({ initialData }: TroopConfigTableProps) {
+export function TroopConfigTable({ initialData, tiposTropa }: TroopConfigTableProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<FullConfiguracionTropa | null>(null);
 
@@ -55,11 +57,11 @@ export function TroopConfigTable({ initialData }: TroopConfigTableProps) {
                             <TableCell className="font-mono text-xs">{troop.id}</TableCell>
                             <TableCell className="font-medium">{troop.nombre}</TableCell>
                             <TableCell>{troop.puntos}</TableCell>
-                            <TableCell className="text-right">{troop.ataque}</TableCell>
-                            <TableCell className="text-right">{troop.defensa}</TableCell>
-                            <TableCell className="text-right">{troop.velocidad}</TableCell>
-                            <TableCell className="text-right">{troop.capacidad}</TableCell>
-                            <TableCell className="text-right">{troop.salario}</TableCell>
+                            <TableCell className="text-right">{troop.ataque.toLocaleString('de-DE')}</TableCell>
+                            <TableCell className="text-right">{troop.defensa.toLocaleString('de-DE')}</TableCell>
+                            <TableCell className="text-right">{troop.velocidad.toLocaleString('de-DE')}</TableCell>
+                            <TableCell className="text-right">{troop.capacidad.toLocaleString('de-DE')}</TableCell>
+                            <TableCell className="text-right">{troop.salario.toLocaleString('de-DE')}</TableCell>
                             <TableCell>{troop.tipo}</TableCell>
                             <TableCell className="text-right space-x-2">
                                 <Button variant="outline" size="sm" onClick={() => handleEdit(troop)}>Editar</Button>
@@ -74,7 +76,12 @@ export function TroopConfigTable({ initialData }: TroopConfigTableProps) {
                     <DialogHeader>
                         <DialogTitle>{selectedItem ? 'Editar' : 'Crear'} Tropa</DialogTitle>
                     </DialogHeader>
-                    <TroopConfigForm troop={selectedItem} allTroops={initialData} onFinished={() => setIsOpen(false)} />
+                    <TroopConfigForm 
+                        troop={selectedItem} 
+                        allTroops={initialData} 
+                        tiposTropa={tiposTropa}
+                        onFinished={() => setIsOpen(false)} 
+                    />
                 </DialogContent>
             </Dialog>
         </Card>
