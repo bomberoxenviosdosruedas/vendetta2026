@@ -29,6 +29,11 @@ async function main() {
     'colaConstruccion',
     'colaReclutamiento',
     'colaMisiones',
+    'family',
+    'familyMember',
+    'familyInvitation',
+    'roomRequirement',
+    'trainingRequirement',
   ];
 
   for (const modelName of modelsToExport) {
