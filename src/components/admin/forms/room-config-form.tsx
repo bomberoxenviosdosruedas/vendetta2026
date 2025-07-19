@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useTransition } from "react";
+import { useTransition, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,18 +9,50 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { saveRoomConfig } from "@/lib/actions/admin.actions";
 import { Loader2 } from "lucide-react";
-import type { ConfiguracionHabitacion } from "@prisma/client";
+import type { FullConfiguracionHabitacion } from "@/lib/data";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface RoomConfigFormProps {
-    room: ConfiguracionHabitacion | null;
+    room: FullConfiguracionHabitacion | null;
+    allRooms: FullConfiguracionHabitacion[];
     onFinished: () => void;
 }
 
-export function RoomConfigForm({ room, onFinished }: RoomConfigFormProps) {
+export function RoomConfigForm({ room, allRooms, onFinished }: RoomConfigFormProps) {
     const [isPending, startTransition] = useTransition();
     const { toast } = useToast();
 
+    const initialRequirements = new Map(
+        room?.requirements.map(req => [req.requiredRoomId, req.requiredLevel])
+    );
+    const [requirements, setRequirements] = useState<Map<string, number>>(initialRequirements);
+
+    const handleRequirementChange = (roomId: string, checked: boolean) => {
+        const newRequirements = new Map(requirements);
+        if (checked) {
+            newRequirements.set(roomId, 1);
+        } else {
+            newRequirements.delete(roomId);
+        }
+        setRequirements(newRequirements);
+    };
+
+    const handleLevelChange = (roomId: string, level: number) => {
+        const newRequirements = new Map(requirements);
+        if (level > 0) {
+            newRequirements.set(roomId, level);
+        } else {
+            newRequirements.delete(roomId);
+        }
+        setRequirements(newRequirements);
+    };
+
     const handleSubmit = (formData: FormData) => {
+         requirements.forEach((level, id) => {
+            formData.append('requirement_ids', id);
+            formData.append(`requirement_level_${id}`, level.toString());
+        });
+        
         startTransition(async () => {
             const result = await saveRoomConfig(formData);
             if (result.error) {
@@ -31,9 +63,12 @@ export function RoomConfigForm({ room, onFinished }: RoomConfigFormProps) {
             }
         });
     }
+    
+    const availableRequirements = allRooms.filter(r => r.id !== room?.id);
 
     return (
-        <form action={handleSubmit} className="space-y-4">
+        <form action={handleSubmit} className="space-y-4 max-h-[80vh] overflow-y-auto p-1 pr-4">
+            <input type="hidden" name="originalId" value={room?.id || ''} />
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                     <Label htmlFor="id">ID</Label>
@@ -82,6 +117,41 @@ export function RoomConfigForm({ room, onFinished }: RoomConfigFormProps) {
                 <div className="space-y-2">
                     <Label htmlFor="produccionRecurso">Recurso Producido</Label>
                     <Input id="produccionRecurso" name="produccionRecurso" defaultValue={room?.produccionRecurso || ''} placeholder="armas, municion..." />
+                </div>
+            </div>
+             <div className="space-y-2">
+                <Label>Requisitos</Label>
+                <div className="border rounded-md p-4 space-y-2 max-h-48 overflow-y-auto">
+                    {availableRequirements.map(reqRoom => {
+                        const isChecked = requirements.has(reqRoom.id);
+                        return (
+                            <div key={reqRoom.id} className="flex items-center gap-4">
+                                <div className="flex items-center gap-2 flex-1">
+                                    <Checkbox
+                                        id={`req-${reqRoom.id}`}
+                                        checked={isChecked}
+                                        onCheckedChange={(checked) => handleRequirementChange(reqRoom.id, !!checked)}
+                                    />
+                                    <Label htmlFor={`req-${reqRoom.id}`} className="font-normal">
+                                        {reqRoom.nombre}
+                                    </Label>
+                                </div>
+                                {isChecked && (
+                                    <div className="flex items-center gap-2">
+                                        <Label htmlFor={`level-${reqRoom.id}`} className="text-xs">Nivel:</Label>
+                                        <Input
+                                            id={`level-${reqRoom.id}`}
+                                            type="number"
+                                            value={requirements.get(reqRoom.id) || 1}
+                                            onChange={(e) => handleLevelChange(reqRoom.id, parseInt(e.target.value, 10))}
+                                            className="h-8 w-20"
+                                            min="1"
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        )
+                    })}
                 </div>
             </div>
             <div className="flex justify-end gap-2">
