@@ -52,10 +52,9 @@ export function calcularStatsTropaConBonus(
         return sum + (entrenamientosMap.get(id) || 0);
     }, 0);
 
-    // Aplicar la fórmula: ENTERO(D25*RAIZ(INICIO!D66+...)/10+D25)
-    // que es equivalente a: Math.floor(base * (1 + Math.sqrt(sum_levels)/10))
-    const ataqueActual = Math.floor(ataqueBase * (1 + Math.sqrt(sumaNivelesAtaque) / 10));
-    const defensaActual = Math.floor(defensaBase * (1 + Math.sqrt(sumaNivelesDefensa) / 10));
+    // Aplicar la fórmula: ENTERO(BASE*RAIZ(SUMA_NIVELES)/10+BASE)
+    const ataqueActual = Math.floor(ataqueBase * (Math.sqrt(sumaNivelesAtaque) / 10) + ataqueBase);
+    const defensaActual = Math.floor(defensaBase * (Math.sqrt(sumaNivelesDefensa) / 10) + defensaBase);
   
     return {
       ataqueActual,
