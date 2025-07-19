@@ -131,7 +131,7 @@ function TroopForm({ troopId }: { troopId: string }) {
                 {colaReclutamientoActiva ? <Ban className="mr-2 h-4 w-4" /> : <PlusCircle className="mr-2 h-4 w-4" />}
                 {isPending ? 'Enviando...' : (colaReclutamientoActiva ? 'En cola' : 'Reclutar')}
             </Button>
-            {error && <p className="text-xs text-destructive">{error}</p>}\
+            {error && <p className="text-xs text-destructive">{error}</p>}
         </form>
     )
 }
@@ -166,7 +166,7 @@ export function RecruitmentView({ user, troopConfigsWithStats }: RecruitmentView
     return indexA - indexB;
   });
 
-  const userTroopsMap = new Map(selectedProperty.tropas.map(t => [t.configuracionTropaId, t]));
+  const userTroopsMap = new Map(selectedProperty.TropaUsuario.map(t => [t.configuracionTropaId, t]));
 
   const troopsWithCounts = sortedTroops.map(config => {
     const userTropa = userTroopsMap.get(config.id);
