@@ -46,14 +46,16 @@ export const metadata: Metadata = {
     },
     description: APP_DESCRIPTION,
     url: new URL(APP_URL),
+    locale: "es_ES",
     images: [
         {
           url: `${APP_URL}/icons/og-image.png`,
           width: 1200,
           height: 630,
-          alt: "Vendetta Game Banner",
+          alt: "Banner de Vendetta, un juego de estrategia de mafia.",
+          type: "image/png",
         },
-      ],
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -65,7 +67,7 @@ export const metadata: Metadata = {
     images: [
         {
           url: `${APP_URL}/icons/og-image.png`,
-          alt: "Vendetta Game Banner",
+          alt: "Banner de Vendetta, un juego de estrategia de mafia.",
         },
       ],
   },
