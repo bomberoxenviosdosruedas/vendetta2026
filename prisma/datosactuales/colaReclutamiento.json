@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "id": "cmd9imdwo000l050vrqo4sga1",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "tropaId": "mercenario",
+    "cantidad": 1,
+    "fechaInicio": "2025-07-19T00:34:13.535Z",
+    "fechaFinalizacion": "2025-07-19T10:34:13.535Z"
+  }
+]

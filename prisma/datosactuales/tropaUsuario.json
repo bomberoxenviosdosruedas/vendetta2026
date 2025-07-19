@@ -1,11 +1,5 @@
 [
   {
-    "id": "cmd6re4qh001zzi0wil07h24e",
-    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
-    "configuracionTropaId": "acuchillador",
-    "cantidad": 1
-  },
-  {
     "id": "cmd6re4ym0021zi0wc0534w2p",
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionTropaId": "asesino",
@@ -81,6 +75,12 @@
     "id": "cmd6re68n002dzi0wd56b3ml8",
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionTropaId": "mercenario",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd6re4qh001zzi0wil07h24e",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "acuchillador",
     "cantidad": 1
   }
 ]

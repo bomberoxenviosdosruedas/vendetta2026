@@ -170,12 +170,9 @@ export const getUsersForRanking = cache(async (): Promise<UserForRanking[]> => {
     }
 });
 
-export const getRoomConfigurations = cache(async (): Promise<FullConfiguracionHabitacion[]> => {
+export const getRoomConfigurations = cache(async (): Promise<ConfiguracionHabitacion[]> => {
   try {
     const roomConfigurations = await prisma.configuracionHabitacion.findMany({
-      include: {
-        escalado: true,
-      },
       orderBy: { id: 'asc' },
     });
     return roomConfigurations;

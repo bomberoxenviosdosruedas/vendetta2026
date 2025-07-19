@@ -30,12 +30,6 @@
     "nivel": 100
   },
   {
-    "id": "cmd6rdyiu000fzi0w4p5f7k1m",
-    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
-    "configuracionHabitacionId": "almacen_de_municion",
-    "nivel": 100
-  },
-  {
     "id": "cmd6rdxvg0009zi0wnhiwl5be",
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionHabitacionId": "oficina_del_jefe",
@@ -178,5 +172,11 @@
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionHabitacionId": "caja_fuerte",
     "nivel": 100
+  },
+  {
+    "id": "cmd6rdyiu000fzi0w4p5f7k1m",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionHabitacionId": "almacen_de_municion",
+    "nivel": 101
   }
 ]

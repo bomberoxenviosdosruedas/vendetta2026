@@ -1,12 +1,32 @@
 [
   {
-    "id": "cmd8aeo3m0007410v4ena3gly",
+    "id": "cmd8l45gd000h6j0v0uyw5us7",
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "habitacionId": "almacen_de_municion",
-    "nivelDestino": 101,
-    "duracion": 30603,
-    "fechaInicio": "2025-07-18T03:56:31.206Z",
-    "fechaFinalizacion": "2025-07-18T12:26:34.206Z",
-    "createdAt": "2025-07-18T03:56:30.464Z"
+    "nivelDestino": 102,
+    "duracion": 31212,
+    "fechaInicio": "2025-07-19T00:33:36.527Z",
+    "fechaFinalizacion": "2025-07-19T09:13:48.527Z",
+    "createdAt": "2025-07-18T08:56:15.515Z"
+  },
+  {
+    "id": "cmd9owcfa00050u0wdhuxlab8",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "habitacionId": "almacen_de_municion",
+    "nivelDestino": 103,
+    "duracion": 31827,
+    "fechaInicio": "2025-07-19T09:13:49.527Z",
+    "fechaFinalizacion": "2025-07-19T18:04:16.527Z",
+    "createdAt": "2025-07-19T03:29:55.939Z"
+  },
+  {
+    "id": "cmd9ox6ic00090u0wirm06xca",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "habitacionId": "almacen_de_municion",
+    "nivelDestino": 104,
+    "duracion": 32448,
+    "fechaInicio": "2025-07-19T18:04:17.527Z",
+    "fechaFinalizacion": "2025-07-20T03:05:05.527Z",
+    "createdAt": "2025-07-19T03:30:34.931Z"
   }
 ]
