@@ -49,7 +49,7 @@ function CountdownTimer({ label, endDate, onFinish }: {label: string, endDate: s
     return (
         <div className="flex justify-between items-center text-sm">
             <span>{label}</span>
-            <span className="font-mono text-primary">{timeLeft}</span>
+            <span className="font-mono text-accent">{timeLeft}</span>
         </div>
     );
 }
@@ -60,8 +60,6 @@ export function ConstructionStatus({ constructions, totalSlots, allRooms }: Cons
     const handleRefresh = () => {
         router.refresh();
     };
-
-    const totalQueueCount = constructions.reduce((acc, c) => acc + (c.propiedad?.colaConstruccion?.length || 0), 0)
 
     return (
         <div className="space-y-1">

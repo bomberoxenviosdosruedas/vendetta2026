@@ -119,7 +119,7 @@ function MissionCountdown({ mission }: { mission: ColaMisiones }) {
             </div>
             <div className="flex items-center gap-2">
                 <span className="text-xs text-muted-foreground">{status.label}</span>
-                <span className="font-mono text-primary font-bold">{status.timeLeft}</span>
+                <span className="font-mono text-accent font-bold">{status.timeLeft}</span>
                 {mission.tipoMision !== 'REGRESO' && new Date() < new Date(mission.fechaLlegada) && (
                      <AlertDialog>
                         <AlertDialogTrigger asChild>

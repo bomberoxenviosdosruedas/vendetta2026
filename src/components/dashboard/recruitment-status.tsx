@@ -48,7 +48,7 @@ function CountdownTimer({ label, endDate, onFinish }: {label: string, endDate: s
     return (
         <div className="flex justify-between items-center text-sm">
             <span>{label}</span>
-            <span className="font-mono text-primary">{timeLeft}</span>
+            <span className="font-mono text-accent">{timeLeft}</span>
         </div>
     );
 }

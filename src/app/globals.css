@@ -14,9 +14,9 @@
     --popover: 240 10% 3.9%;
     --popover-foreground: 210 40% 98%;
  
-    /* Primary: Deep Crimson / Blood Red */
-    --primary: 0 100% 27.5%; /* #8B0000 */
-    --primary-foreground: 210 40% 98%;
+    /* Primary: Brighter, more vibrant red */
+    --primary: 0 75% 50%; /* #BF2020 */
+    --primary-foreground: 0 0% 100%;
  
     /* Secondary: Darker Gray / Night */
     --secondary: 240 3.7% 15.9%;
@@ -25,8 +25,8 @@
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 215 20.2% 65.1%;
  
-    /* Accent: Desaturated Gold */
-    --accent: 45 33.3% 58.4%; /* #BDB76B */
+    /* Accent: More vibrant gold */
+    --accent: 45 90% 50%; /* #FFC700 */
     --accent-foreground: 240 5.9% 10%;
  
     --destructive: 0 62.8% 30.6%;
@@ -34,18 +34,18 @@
 
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
-    --ring: 45 33.3% 58.4%;
+    --ring: 0 75% 50%;
  
     --radius: 0.5rem;
 
     --sidebar-background: 240 5% 5%;
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 0 100% 27.5%;
-    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-primary: 0 75% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 210 40% 98%;
     --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 45 33.3% 58.4%;
+    --sidebar-ring: 0 75% 50%;
 
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
@@ -65,7 +65,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
  
-    --primary: 0 100% 27.5%;
+    --primary: 0 75% 50%;
     --primary-foreground: 355.7 100% 97.3%;
  
     --secondary: 210 40% 96.1%;
@@ -74,7 +74,7 @@
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
  
-    --accent: 45 33.3% 58.4%;
+    --accent: 45 90% 50%;
     --accent-foreground: 222.2 47.4% 11.2%;
  
     --destructive: 0 84.2% 60.2%;
@@ -82,7 +82,7 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 0 100% 27.5%;
+    --ring: 0 75% 50%;
   }
 }
  

@@ -25,7 +25,7 @@ export function LiveClock() {
 
     return (
         <div className="hidden items-center gap-2 rounded-md bg-black/50 px-3 py-1 text-sm font-medium text-white lg:flex">
-            <Clock className="h-4 w-4 text-red-500" />
+            <Clock className="h-4 w-4 text-primary" />
             <span className="tabular-nums">{currentTime}</span>
         </div>
     );

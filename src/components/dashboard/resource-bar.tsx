@@ -21,10 +21,10 @@ function formatNumber(num: number | undefined) {
 }
 
 function getCapacityColor(current: number, max: number): string {
-    const percentage = (current / max) * 100;
+    const percentage = max > 0 ? (current / max) * 100 : 0;
     if (percentage > 95) return 'text-red-500';
     if (percentage > 80) return 'text-yellow-500';
-    return 'text-foreground';
+    return 'text-accent';
 }
 
 interface ResourceBarProps {
@@ -62,7 +62,7 @@ export function ResourceBar({ user }: ResourceBarProps) {
                             <Image src={res.icon} alt={res.name} width={20} height={20} className="h-5 w-5" />
                             <div className="flex flex-col">
                                 <span className="hidden sm:inline text-xs font-semibold tracking-wider uppercase text-muted-foreground">{res.name}</span>
-                                <span className={cn("font-bold tabular-nums", getCapacityColor(res.value, res.capacity))}>
+                                <span className={cn("font-bold tabular-nums text-foreground")}>
                                     {formatNumber(res.value)}
                                 </span>
                             </div>
