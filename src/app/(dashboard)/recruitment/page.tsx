@@ -1,10 +1,10 @@
-
 import { RecruitmentView } from "@/components/dashboard/recruitment-view"
 import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getTroopConfigurations, UserWithProgress } from "@/lib/data"
 import { getSessionUser } from "@/lib/auth"
 import { redirect } from "next/navigation"
+import { calcularStatsTropaConBonus } from "@/lib/formulas/troop-formulas"
 
 function RecruitmentLoading() {
     return (
@@ -41,10 +41,19 @@ export default async function RecruitmentPage() {
 
   const troopConfigs = await getTroopConfigurations();
 
+  const troopsWithStats = troopConfigs.map(config => {
+      const { ataqueActual, defensaActual } = calcularStatsTropaConBonus(config, user.entrenamientos);
+      return {
+          ...config,
+          ataqueActual,
+          defensaActual,
+      }
+  })
+
   return (
     <div className="main-view">
       <Suspense fallback={<RecruitmentLoading />}>
-          <RecruitmentView user={user} troopConfigs={troopConfigs} />
+          <RecruitmentView user={user} troopConfigsWithStats={troopsWithStats} />
       </Suspense>
     </div>
   )

@@ -1,4 +1,3 @@
-
 import { RoomsView } from "@/components/dashboard/rooms-view"
 import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -52,12 +51,11 @@ export default async function RoomsPage() {
   }
 
   // Pre-calculate data for the view component on the server
-  const roomsDataForProperty = (propertyId: string) => {
+  const getRoomsDataForProperty = (propertyId: string) => {
       const selectedProperty = user.propiedades.find(p => p.id === propertyId);
       if (!selectedProperty) return [];
 
       const userRoomsMap = new Map(selectedProperty.habitaciones.map(h => [h.configuracionHabitacionId, h]));
-      const allRoomsMap = new Map(allRoomConfigs.map(r => [r.id, r.nombre]));
       
       const desiredOrder = [
           'oficina_del_jefe', 'escuela_especializacion', 'armeria', 'almacen_de_municion',
@@ -87,7 +85,7 @@ export default async function RoomsPage() {
           const requirements = config.requirements || [];
           const meetsRequirements = requirements.every(req => (userRoomsMap.get(req.requiredRoomId)?.nivel || 0) >= req.requiredLevel);
           const requirementsText = !meetsRequirements
-              ? requirements.map(req => `${allRoomsMap.get(req.requiredRoomId) || req.requiredRoomId} (Nvl ${req.requiredLevel})`).join(', ')
+              ? requirements.map(req => `${allRoomConfigs.find(r=>r.id === req.requiredRoomId)?.nombre || req.requiredRoomId} (Nvl ${req.requiredLevel})`).join(', ')
               : null;
 
           return {
@@ -110,7 +108,7 @@ export default async function RoomsPage() {
           <RoomsView 
             user={user} 
             allRoomConfigs={allRoomConfigs} 
-            getRoomsDataForProperty={roomsDataForProperty}
+            getRoomsDataForProperty={getRoomsDataForProperty}
           />
       </Suspense>
     </div>
