@@ -284,12 +284,29 @@ const userInclude = {
 
 export const getGlobalStatistics = cache(async () => {
     try {
+        const troopStatsByProperty = await prisma.tropaUsuario.groupBy({
+            by: ['configuracionTropaId'],
+            _sum: {
+                cantidad: true,
+            },
+        });
+
+        const troopStatsByUser = await prisma.tropaUsuario.groupBy({
+            by: ['configuracionTropaId', 'propiedadId'],
+            _sum: {
+                cantidad: true,
+            },
+            _max: {
+                cantidad: true,
+            }
+        })
+
         const [
             allRoomConfigs, 
             allTrainingConfigs, 
             allTroopConfigs, 
             roomStats, 
-            trainingStats, 
+            trainingStats,
             troopStats
         ] = await Promise.all([
             getRoomConfigurations(),
@@ -297,10 +314,22 @@ export const getGlobalStatistics = cache(async () => {
             getTroopConfigurations(),
             prisma.habitacionUsuario.findMany(),
             prisma.entrenamientoUsuario.findMany(),
-            prisma.tropaUsuario.findMany(),
+            prisma.tropaUsuario.groupBy({
+                by: ['configuracionTropaId', 'userId'],
+                _sum: {
+                    cantidad: true
+                }
+            })
         ]);
+        
+        // Transform the grouped troop stats into a more useful format
+        const finalTroopStats = troopStats.map(stat => ({
+            userId: stat.userId,
+            configuracionTropaId: stat.configuracionTropaId,
+            total: stat._sum.cantidad || 0
+        }));
 
-        return { allRoomConfigs, allTrainingConfigs, allTroopConfigs, roomStats, trainingStats, troopStats };
+        return { allRoomConfigs, allTrainingConfigs, allTroopConfigs, roomStats, trainingStats, troopStats: finalTroopStats };
     } catch (error) {
         console.error("Error fetching global statistics:", error);
         return { 

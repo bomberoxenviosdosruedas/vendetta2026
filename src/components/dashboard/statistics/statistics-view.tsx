@@ -1,9 +1,15 @@
 
 'use client';
 
-import { ConfiguracionHabitacion, ConfiguracionTropa, ConfiguracionEntrenamiento, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario } from "@prisma/client";
+import { ConfiguracionHabitacion, ConfiguracionTropa, ConfiguracionEntrenamiento, HabitacionUsuario, EntrenamientoUsuario } from "@prisma/client";
 import { UserWithProgress } from "@/lib/data";
 import { StatCategoryCard, StatItem } from "./stat-category-card";
+
+interface TroopStat {
+    userId: string;
+    total: number;
+    configuracionTropaId: string;
+}
 
 interface StatisticsViewProps {
     currentUser: UserWithProgress;
@@ -12,7 +18,7 @@ interface StatisticsViewProps {
     allTroopConfigs: ConfiguracionTropa[];
     roomStats: HabitacionUsuario[];
     trainingStats: EntrenamientoUsuario[];
-    troopStats: TropaUsuario[];
+    troopStats: TroopStat[];
 }
 
 export function StatisticsView({
@@ -33,7 +39,16 @@ export function StatisticsView({
             maxRoomLevels.set(stat.configuracionHabitacionId, stat.nivel);
         }
     });
-    const currentUserRoomLevels = new Map(currentUser.propiedades.flatMap(p => p.habitaciones).map(h => [h.configuracionHabitacionId, h.nivel]));
+
+    const currentUserRoomLevels = new Map<string, number>();
+    currentUser.propiedades.forEach(p => {
+        p.habitaciones.forEach(h => {
+            const currentLevel = currentUserRoomLevels.get(h.configuracionHabitacionId) || 0;
+            if (h.nivel > currentLevel) {
+                 currentUserRoomLevels.set(h.configuracionHabitacionId, h.nivel);
+            }
+        });
+    });
 
     const roomStatItems: StatItem[] = allRoomConfigs.map(config => ({
         id: config.id,
@@ -62,18 +77,15 @@ export function StatisticsView({
     const maxTroopCounts = new Map<string, number>();
     troopStats.forEach(stat => {
         const currentMax = maxTroopCounts.get(stat.configuracionTropaId) || 0;
-        if (stat.cantidad > currentMax) {
-            maxTroopCounts.set(stat.configuracionTropaId, stat.cantidad);
+        if (stat.total > currentMax) {
+            maxTroopCounts.set(stat.configuracionTropaId, stat.total);
         }
     });
 
     const currentUserTroopCounts = new Map<string, number>();
-     currentUser.propiedades.forEach(p => {
-        p.TropaUsuario.forEach(t => {
-            const currentCount = currentUserTroopCounts.get(t.configuracionTropaId) || 0;
-            currentUserTroopCounts.set(t.configuracionTropaId, currentCount + t.cantidad);
-        })
-     });
+    troopStats.filter(t => t.userId === currentUser.id).forEach(t => {
+        currentUserTroopCounts.set(t.configuracionTropaId, t.total);
+    });
 
     const troopStatItems: StatItem[] = allTroopConfigs.map(config => ({
         id: config.id,
@@ -94,7 +106,7 @@ export function StatisticsView({
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                 <StatCategoryCard title="Niveles de Habitaciones" items={roomStatItems} />
                 <StatCategoryCard title="Niveles de Entrenamiento" items={trainingStatItems} />
                 <StatCategoryCard title="Cantidad de Tropas" items={troopStatItems} />
@@ -102,4 +114,3 @@ export function StatisticsView({
         </div>
     );
 }
-
