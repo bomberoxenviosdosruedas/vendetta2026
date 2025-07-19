@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Clock, PlusCircle, Ban, Info, Hourglass } from "lucide-react"
-import { calcularCostosNivel, calcularTiempoConstruccion } from "@/lib/formulas/room-formulas"
 import { iniciarAmpliacion } from "@/lib/actions/room.actions"
 import { ConstructionQueue } from "./construction-queue"
 import { FullConfiguracionHabitacion, UserWithProgress } from "@/lib/data"
@@ -62,13 +61,28 @@ function formatDuration(seconds: number): string {
 }
 
 
+type RoomData = (FullConfiguracionHabitacion & {
+    nivel: number;
+    nivelProyectado: number;
+    nivelSiguiente: number;
+    costos: {
+        armas: number;
+        municion: number;
+        dolares: number;
+    };
+    tiempo: number;
+    enConstruccion: boolean;
+    meetsRequirements: boolean;
+    requirementsText: string | null;
+})
 
 type RoomsViewProps = {
     user: UserWithProgress;
     allRoomConfigs: FullConfiguracionHabitacion[];
+    getRoomsDataForProperty: (propertyId: string) => RoomData[];
 }
 
-export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
+export function RoomsView({ user, allRoomConfigs, getRoomsDataForProperty }: RoomsViewProps) {
     const router = useRouter();
     const { selectedProperty } = useProperty();
     const [isSubmitting, setIsSubmitting] = useState<string | null>(null);
@@ -87,8 +101,8 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
       )
     }
 
-    const userRoomsMap = new Map(selectedProperty.habitaciones.map(h => [h.configuracionHabitacionId, h]));
     const construccionEnCola = selectedProperty.colaConstruccion;
+    const sortedRoomsData = getRoomsDataForProperty(selectedProperty.id);
 
     useEffect(() => {
         if (!construccionEnCola || construccionEnCola.length === 0) return;
@@ -108,53 +122,7 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
         return () => clearInterval(interval);
     }, [construccionEnCola, router]);
 
-    const desiredOrder = [
-        'oficina_del_jefe', 'escuela_especializacion', 'armeria', 'almacen_de_municion',
-        'cerveceria', 'taberna', 'contrabando', 'almacen_de_armas', 'deposito_de_municion',
-        'almacen_de_alcohol', 'caja_fuerte', 'campo_de_entrenamiento', 'seguridad',
-        'torreta_de_fuego_automatico', 'minas_ocultas'
-    ];
-    
     const isQueueFull = construccionEnCola.length >= 5;
-    const allRoomsMap = new Map(allRoomConfigs.map(r => [r.id, r.nombre]));
-
-    const sortedRoomsData = desiredOrder.map(id => {
-        const config = allRoomConfigs.find(c => c.id === id);
-        if (!config) return null;
-
-        const userRoom = userRoomsMap.get(id);
-        const nivelBase = userRoom ? userRoom.nivel : 0;
-        
-        const mejorasEnCola = construccionEnCola.filter(c => c.habitacionId === id).length;
-        const nivelProyectado = nivelBase + mejorasEnCola;
-        const nivelSiguiente = nivelProyectado + 1;
-
-        const nivelOficinaJefe = userRoomsMap.get('oficina_del_jefe')?.nivel || 1;
-        
-        const enConstruccion = construccionEnCola.some(c => c.habitacionId === id);
-
-        const costosSiguienteNivel = calcularCostosNivel(nivelSiguiente, config);
-        const tiempoSiguienteNivel = calcularTiempoConstruccion(nivelSiguiente, config, nivelOficinaJefe);
-        
-        const requirements = config.requirements || [];
-        const meetsRequirements = requirements.every(req => (userRoomsMap.get(req.requiredRoomId)?.nivel || 0) >= req.requiredLevel);
-        const requirementsText = !meetsRequirements
-            ? requirements.map(req => `${allRoomsMap.get(req.requiredRoomId) || req.requiredRoomId} (Nvl ${req.requiredLevel})`).join(', ')
-            : null;
-
-        return {
-            ...config,
-            nivel: nivelBase,
-            nivelProyectado,
-            nivelSiguiente,
-            costos: costosSiguienteNivel,
-            tiempo: tiempoSiguienteNivel,
-            enConstruccion,
-            meetsRequirements,
-            requirementsText,
-        };
-    }).filter((r): r is NonNullable<typeof r> => r !== null);
-
 
     const handleAmpliacion = async (habitacionId: string) => {
         if (!selectedProperty) return;
