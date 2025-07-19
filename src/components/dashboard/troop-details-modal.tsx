@@ -4,18 +4,18 @@
 import Image from 'next/image';
 import { DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { calcularStatsTropaConBonus } from '@/lib/formulas/troop-formulas';
 import { X } from 'lucide-react';
 import { ScrollArea } from '../ui/scroll-area';
 import { Button } from '../ui/button';
 import type { ConfiguracionTropa } from '@prisma/client';
 import type { UserWithProgress } from '@/lib/data';
-import { Separator } from '../ui/separator';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 
 interface TroopDetailsModalProps {
   troop: ConfiguracionTropa;
   user: UserWithProgress;
+  ataqueActual: number;
+  defensaActual: number;
 }
 
 function formatNumber(num: number): string {
@@ -23,8 +23,7 @@ function formatNumber(num: number): string {
     return num.toLocaleString('de-DE');
 }
 
-export function TroopDetailsModal({ troop, user }: TroopDetailsModalProps) {
-    const { ataqueActual, defensaActual } = calcularStatsTropaConBonus(troop, user.entrenamientos);
+export function TroopDetailsModal({ troop, user, ataqueActual, defensaActual }: TroopDetailsModalProps) {
     const stats = [
         { label: 'Ataque', base: troop.ataque, actual: ataqueActual },
         { label: 'Defensa', base: troop.defensa, actual: defensaActual },

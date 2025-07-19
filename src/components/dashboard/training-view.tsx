@@ -1,4 +1,3 @@
-
 'use client'
 
 import Image from "next/image"
@@ -8,7 +7,6 @@ import {
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Clock, BrainCircuit, Info } from "lucide-react"
-import { calcularCostosEntrenamiento, calcularTiempoEntrenamiento } from "@/lib/formulas/training-formulas"
 import { iniciarEntrenamiento } from "@/lib/actions/training.actions"
 import type { FullConfiguracionEntrenamiento, UserWithProgress } from "@/lib/data"
 import { useProperty } from "@/contexts/property-context"
@@ -47,17 +45,13 @@ function formatDuration(seconds: number): string {
 }
 
 function TrainingForm({ 
-    training, 
-    user, 
+    trainingId,
     propertyId,
-    allTrainings,
     meetsRequirements,
     requirementsText
 }: { 
-    training: any, 
-    user: UserWithProgress, 
+    trainingId: string, 
     propertyId: string,
-    allTrainings: FullConfiguracionEntrenamiento[],
     meetsRequirements: boolean,
     requirementsText: string | null
 }) {
@@ -66,7 +60,7 @@ function TrainingForm({
 
     const handleAction = async () => {
         setIsPending(true);
-        const result = await iniciarEntrenamiento(training.id, propertyId);
+        const result = await iniciarEntrenamiento(trainingId, propertyId);
         if (result.error) {
             toast({ variant: 'destructive', title: 'Error', description: result.error });
         } else if (result.success) {
@@ -94,7 +88,7 @@ function TrainingForm({
             ) : (
                 <TooltipProvider>
                     <Tooltip>
-                        <TooltipTrigger asChild>{button}</TooltipTrigger>
+                        <TooltipTrigger asChild><span tabIndex={0}>{button}</span></TooltipTrigger>
                         <TooltipContent>
                             <p className="text-xs">Requisitos no cumplidos:</p>
                             <p className="text-xs font-semibold">{requirementsText}</p>
@@ -106,12 +100,24 @@ function TrainingForm({
     )
 }
 
-interface TrainingViewProps {
-    user: UserWithProgress;
-    allTrainingConfigs: FullConfiguracionEntrenamiento[];
+type TrainingData = FullConfiguracionEntrenamiento & {
+    nivel: number;
+    costos: {
+        armas: number;
+        municion: number;
+        dolares: number;
+    };
+    tiempo: number;
+    meetsRequirements: boolean;
+    requirementsText: string | null;
 }
 
-export function TrainingView({ user, allTrainingConfigs }: TrainingViewProps) {
+interface TrainingViewProps {
+    user: UserWithProgress;
+    trainingsData: TrainingData[];
+}
+
+export function TrainingView({ user, trainingsData }: TrainingViewProps) {
   const { selectedProperty } = useProperty();
 
   if (!selectedProperty) {
@@ -122,50 +128,6 @@ export function TrainingView({ user, allTrainingConfigs }: TrainingViewProps) {
         </div>
       )
   }
-
-  const userTrainingsMap = new Map(user.entrenamientos.map(t => [t.configuracionEntrenamientoId, t.nivel]));
-  const nivelEscuela = selectedProperty.habitaciones.find(h => h.configuracionHabitacionId === 'escuela_especializacion')?.nivel || 0;
-  
-  const desiredOrder = [
-    'rutas', 'encargos', 'extorsion', 'administracion', 'contrabando', 'espionaje', 
-    'seguridad', 'proteccion', 'combate', 'armas', 'tiro', 'explosivos', 
-    'guerrilla', 'psicologico', 'quimico', 'honor'
-  ];
-
-  const sortedTrainingsData = desiredOrder.map(id => {
-      const config = allTrainingConfigs.find(c => c.id === id);
-      if (!config) return null;
-
-      const userTraining = userTrainingsMap.get(id);
-      const nivel = userTraining ? userTraining.nivel : 0;
-      
-      const costosSiguienteNivel = calcularCostosEntrenamiento(nivel + 1, config);
-      const tiempoSiguienteNivel = calcularTiempoEntrenamiento(nivel + 1, config, nivelEscuela);
-      
-      const requirements = config.requirements || [];
-      const meetsRequirements = requirements.every(req => (userTrainingsMap.get(req.requiredTrainingId) || 0) >= req.requiredLevel);
-      const requirementsText = !meetsRequirements 
-        ? requirements
-            .map(req => {
-                const reqConfig = allTrainingConfigs.find(c => c.id === req.requiredTrainingId);
-                return `${reqConfig?.nombre || req.requiredTrainingId} (Nvl ${req.requiredLevel})`
-            })
-            .join(', ')
-        : null;
-
-
-      return {
-          id: config.id,
-          nombre: config.nombre,
-          urlImagen: config.urlImagen,
-          nivel,
-          costos: costosSiguienteNivel,
-          tiempo: tiempoSiguienteNivel,
-          meetsRequirements,
-          requirementsText
-      };
-  }).filter((t): t is NonNullable<typeof t> => t !== null);
-
 
   return (
     <div className="space-y-4">
@@ -180,7 +142,7 @@ export function TrainingView({ user, allTrainingConfigs }: TrainingViewProps) {
       <Card>
         <CardContent className="p-0">
           <div className="divide-y divide-border">
-              {sortedTrainingsData.map((training) => (
+              {trainingsData.map((training) => (
                 <div key={training.id} className="p-4 grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
                     {/* Imagen y Nombre */}
                     <div className="md:col-span-3 flex items-start gap-4">
@@ -232,10 +194,8 @@ export function TrainingView({ user, allTrainingConfigs }: TrainingViewProps) {
                                 </div>
                             </div>
                            <TrainingForm 
-                             training={training} 
-                             user={user} 
-                             propertyId={selectedProperty.id} 
-                             allTrainings={allTrainingConfigs}
+                             trainingId={training.id}
+                             propertyId={selectedProperty.id}
                              meetsRequirements={training.meetsRequirements}
                              requirementsText={training.requirementsText}
                            />

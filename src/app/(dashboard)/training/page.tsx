@@ -90,4 +90,6 @@ export default async function TrainingPage() {
       <Suspense fallback={<TrainingLoading />}>
           <TrainingView user={user} trainingsData={sortedTrainingsData} />
       </Suspense>
-    
+    </div>
+  );
+}
