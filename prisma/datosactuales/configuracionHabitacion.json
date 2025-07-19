@@ -11,8 +11,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 6,
-    "createdAt": "2025-07-19T07:00:57.855Z",
-    "updatedAt": "2025-07-19T07:00:57.855Z"
+    "createdAt": "2025-07-19T07:20:41.321Z",
+    "updatedAt": "2025-07-19T07:20:41.321Z"
   },
   {
     "id": "armeria",
@@ -26,8 +26,8 @@
     "produccionBase": 10,
     "produccionRecurso": "armas",
     "puntos": 2.32,
-    "createdAt": "2025-07-19T07:00:58.478Z",
-    "updatedAt": "2025-07-19T07:00:58.478Z"
+    "createdAt": "2025-07-19T07:20:42.101Z",
+    "updatedAt": "2025-07-19T07:20:42.101Z"
   },
   {
     "id": "almacen_de_municion",
@@ -41,8 +41,8 @@
     "produccionBase": 20,
     "produccionRecurso": "municion",
     "puntos": 1.39,
-    "createdAt": "2025-07-19T07:00:58.752Z",
-    "updatedAt": "2025-07-19T07:00:58.752Z"
+    "createdAt": "2025-07-19T07:20:42.860Z",
+    "updatedAt": "2025-07-19T07:20:42.860Z"
   },
   {
     "id": "cerveceria",
@@ -56,8 +56,8 @@
     "produccionBase": 50,
     "produccionRecurso": "alcohol",
     "puntos": 1.6,
-    "createdAt": "2025-07-19T07:00:59.025Z",
-    "updatedAt": "2025-07-19T07:00:59.025Z"
+    "createdAt": "2025-07-19T07:20:43.142Z",
+    "updatedAt": "2025-07-19T07:20:43.142Z"
   },
   {
     "id": "taberna",
@@ -71,8 +71,8 @@
     "produccionBase": 2,
     "produccionRecurso": "dolares_por_alcohol",
     "puntos": 2.1,
-    "createdAt": "2025-07-19T07:00:59.798Z",
-    "updatedAt": "2025-07-19T07:00:59.798Z"
+    "createdAt": "2025-07-19T07:20:43.940Z",
+    "updatedAt": "2025-07-19T07:20:43.940Z"
   },
   {
     "id": "almacen_de_armas",
@@ -86,8 +86,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 12,
-    "createdAt": "2025-07-19T07:01:00.074Z",
-    "updatedAt": "2025-07-19T07:01:00.074Z"
+    "createdAt": "2025-07-19T07:20:44.712Z",
+    "updatedAt": "2025-07-19T07:20:44.712Z"
   },
   {
     "id": "deposito_de_municion",
@@ -101,8 +101,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 18,
-    "createdAt": "2025-07-19T07:01:00.344Z",
-    "updatedAt": "2025-07-19T07:01:00.344Z"
+    "createdAt": "2025-07-19T07:20:44.974Z",
+    "updatedAt": "2025-07-19T07:20:44.974Z"
   },
   {
     "id": "almacen_de_alcohol",
@@ -116,8 +116,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 7,
-    "createdAt": "2025-07-19T07:01:00.623Z",
-    "updatedAt": "2025-07-19T07:01:00.623Z"
+    "createdAt": "2025-07-19T07:20:45.256Z",
+    "updatedAt": "2025-07-19T07:20:45.256Z"
   },
   {
     "id": "caja_fuerte",
@@ -131,8 +131,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 91,
-    "createdAt": "2025-07-19T07:01:00.897Z",
-    "updatedAt": "2025-07-19T07:01:00.897Z"
+    "createdAt": "2025-07-19T07:20:46.015Z",
+    "updatedAt": "2025-07-19T07:20:46.015Z"
   },
   {
     "id": "campo_de_entrenamiento",
@@ -146,8 +146,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 61,
-    "createdAt": "2025-07-19T07:01:01.168Z",
-    "updatedAt": "2025-07-19T07:01:01.168Z"
+    "createdAt": "2025-07-19T07:20:46.767Z",
+    "updatedAt": "2025-07-19T07:20:46.767Z"
   },
   {
     "id": "seguridad",
@@ -161,8 +161,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 45,
-    "createdAt": "2025-07-19T07:01:01.438Z",
-    "updatedAt": "2025-07-19T07:01:01.438Z"
+    "createdAt": "2025-07-19T07:20:47.507Z",
+    "updatedAt": "2025-07-19T07:20:47.507Z"
   },
   {
     "id": "torreta_de_fuego_automatico",
@@ -176,8 +176,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 57,
-    "createdAt": "2025-07-19T07:01:01.705Z",
-    "updatedAt": "2025-07-19T07:01:01.705Z"
+    "createdAt": "2025-07-19T07:20:47.774Z",
+    "updatedAt": "2025-07-19T07:20:47.774Z"
   },
   {
     "id": "minas_ocultas",
@@ -191,23 +191,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 65.5,
-    "createdAt": "2025-07-19T07:01:01.978Z",
-    "updatedAt": "2025-07-19T07:01:01.978Z"
-  },
-  {
-    "id": "contrabando",
-    "nombre": "Contrabando",
-    "descripcion": "Mejor que la taberna funciona el contrabando, podrás vender alcohol con un impacto mucho mayor, lo que naturalmente, beneficia a la caja de los gángsters. Desgraciadamente, esta táctica es arriesgada, y mucho más costosa.",
-    "urlImagen": "/img/habitaciones/B7K.png",
-    "costoArmas": 2000,
-    "costoMunicion": 5000,
-    "costoDolares": 500,
-    "duracion": 1500,
-    "produccionBase": 21,
-    "produccionRecurso": "dolares",
-    "puntos": 136,
-    "createdAt": "2025-07-19T07:01:02.250Z",
-    "updatedAt": "2025-07-19T07:01:02.250Z"
+    "createdAt": "2025-07-19T07:20:48.046Z",
+    "updatedAt": "2025-07-19T07:20:48.046Z"
   },
   {
     "id": "escuela_especializacion",
@@ -221,7 +206,22 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 31.75,
-    "createdAt": "2025-07-19T07:00:58.210Z",
-    "updatedAt": "2025-07-19T07:10:14.541Z"
+    "createdAt": "2025-07-19T07:20:48.585Z",
+    "updatedAt": "2025-07-19T07:20:48.585Z"
+  },
+  {
+    "id": "contrabando",
+    "nombre": "Contrabando",
+    "descripcion": "Mejor que la taberna funciona el contrabando, podrás vender alcohol con un impacto mucho mayor, lo que naturalmente, beneficia a la caja de los gángsters. Desgraciadamente, esta táctica es arriesgada, y mucho más costosa.",
+    "urlImagen": "/img/habitaciones/B7K.png",
+    "costoArmas": 2000,
+    "costoMunicion": 5000,
+    "costoDolares": 500,
+    "duracion": 1500,
+    "produccionBase": 21,
+    "produccionRecurso": "dolares",
+    "puntos": 136,
+    "createdAt": "2025-07-19T07:20:48.307Z",
+    "updatedAt": "2025-07-19T07:22:56.043Z"
   }
 ]

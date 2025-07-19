@@ -3,5 +3,15 @@
     "roomId": "escuela_especializacion",
     "requiredRoomId": "oficina_del_jefe",
     "requiredLevel": 1
+  },
+  {
+    "roomId": "contrabando",
+    "requiredRoomId": "oficina_del_jefe",
+    "requiredLevel": 5
+  },
+  {
+    "roomId": "contrabando",
+    "requiredRoomId": "taberna",
+    "requiredLevel": 8
   }
 ]

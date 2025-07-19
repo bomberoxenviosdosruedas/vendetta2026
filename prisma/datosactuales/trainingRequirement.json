@@ -1,1 +1,7 @@
-[]
+[
+  {
+    "trainingId": "honor",
+    "requiredTrainingId": "tiro",
+    "requiredLevel": 11
+  }
+]
