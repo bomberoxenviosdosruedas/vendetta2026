@@ -30,7 +30,7 @@ function CountdownTimer({ label, endDate, onFinish }: {label: string, endDate: s
             const now = new Date().getTime();
             const difference = Math.floor((end - now) / 1000);
 
-            if (difference <= 0) {
+            if (difference < -1) { // 1 second grace period
                 setTimeLeft('00:00:00');
                 clearInterval(intervalId);
                 onFinish();
@@ -61,6 +61,8 @@ export function ConstructionStatus({ constructions, totalSlots, allRooms }: Cons
         router.refresh();
     };
 
+    const totalQueueCount = constructions.reduce((acc, c) => acc + (c.propiedad?.colaConstruccion?.length || 0), 0)
+
     return (
         <div className="space-y-1">
             <div className="bg-primary text-primary-foreground px-4 py-1.5 rounded-t-md flex justify-between items-center font-bold mt-2">
@@ -71,11 +73,12 @@ export function ConstructionStatus({ constructions, totalSlots, allRooms }: Cons
                 {constructions.length > 0 ? (
                     constructions.map(queueItem => {
                         const room = allRooms.find(r => r.id === queueItem.habitacionId);
+                        if (!room || !queueItem.fechaFinalizacion) return null;
                         return (
                              <CountdownTimer 
                                 key={queueItem.id}
-                                label={`${queueItem.propiedadNombre}: ${room?.nombre || 'Hab.'} (Nvl ${queueItem.nivelDestino})`}
-                                endDate={new Date(queueItem.fechaFinalizacion!).toISOString()}
+                                label={`${queueItem.propiedadNombre}: ${room.nombre} (Nvl ${queueItem.nivelDestino})`}
+                                endDate={new Date(queueItem.fechaFinalizacion).toISOString()}
                                 onFinish={handleRefresh}
                              />
                         )

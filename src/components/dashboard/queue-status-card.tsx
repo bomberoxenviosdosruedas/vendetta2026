@@ -12,11 +12,17 @@ type QueueCardProps = {
 };
 
 export function QueueStatusCard({ user, allRooms }: QueueCardProps) {
+    
+    // Filtra para obtener solo las construcciones que están activamente en cuenta regresiva.
     const activeConstructions = user.propiedades
         .flatMap(p => 
             p.colaConstruccion.map(c => ({ ...c, propiedadNombre: p.nombre }))
         )
-        .filter(c => c.fechaFinalizacion);
+        .filter(c => c.fechaFinalizacion && new Date(c.fechaFinalizacion) > new Date());
+    
+    // Cuenta el total de items en todas las colas de construcción para el slot.
+    const totalConstructionQueueItems = user.propiedades.reduce((acc, p) => acc + p.colaConstruccion.length, 0);
+
 
     const activeRecruitments = user.propiedades
         .filter(p => p.colaReclutamiento)
