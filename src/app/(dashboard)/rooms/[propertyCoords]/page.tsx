@@ -51,65 +51,12 @@ export default async function RoomsPage() {
     )
   }
 
-  // Pre-calculate data for the view component on the server
-  const getRoomsDataForProperty = (propertyId: string) => {
-      const selectedProperty = user.propiedades.find(p => p.id === propertyId);
-      if (!selectedProperty) return [];
-
-      const userRoomsMap = new Map(selectedProperty.habitaciones.map(h => [h.configuracionHabitacionId, h]));
-      
-      const desiredOrder = [
-          'oficina_del_jefe', 'escuela_especializacion', 'armeria', 'almacen_de_municion',
-          'cerveceria', 'taberna', 'contrabando', 'almacen_de_armas', 'deposito_de_municion',
-          'almacen_de_alcohol', 'caja_fuerte', 'campo_de_entrenamiento', 'seguridad',
-          'torreta_de_fuego_automatico', 'minas_ocultas'
-      ];
-      
-      return desiredOrder.map(id => {
-          const config = allRoomConfigs.find(c => c.id === id);
-          if (!config) return null;
-
-          const userRoom = userRoomsMap.get(id);
-          const nivelBase = userRoom ? userRoom.nivel : 0;
-          
-          const mejorasEnCola = selectedProperty.colaConstruccion.filter(c => c.habitacionId === id).length;
-          const nivelProyectado = nivelBase + mejorasEnCola;
-          const nivelSiguiente = nivelProyectado + 1;
-
-          const nivelOficinaJefe = userRoomsMap.get('oficina_del_jefe')?.nivel || 1;
-          
-          const enConstruccion = selectedProperty.colaConstruccion.some(c => c.habitacionId === id);
-
-          const costosSiguienteNivel = calcularCostosNivel(nivelSiguiente, config);
-          const tiempoSiguienteNivel = calcularTiempoConstruccion(nivelSiguiente, config, nivelOficinaJefe);
-          
-          const requirements = config.requirements || [];
-          const meetsRequirements = requirements.every(req => (userRoomsMap.get(req.requiredRoomId)?.nivel || 0) >= req.requiredLevel);
-          const requirementsText = !meetsRequirements
-              ? requirements.map(req => `${allRoomConfigs.find(r=>r.id === req.requiredRoomId)?.nombre || req.requiredRoomId} (Nvl ${req.requiredLevel})`).join(', ')
-              : null;
-
-          return {
-              ...config,
-              nivel: nivelBase,
-              nivelProyectado,
-              nivelSiguiente,
-              costos: costosSiguienteNivel,
-              tiempo: tiempoSiguienteNivel,
-              enConstruccion,
-              meetsRequirements,
-              requirementsText,
-          };
-      }).filter((r): r is NonNullable<typeof r> => r !== null);
-  }
-
   return (
     <div className="main-view">
       <Suspense fallback={<RoomsLoading />}>
           <RoomsView 
             user={user} 
             allRoomConfigs={allRoomConfigs} 
-            getRoomsDataForProperty={getRoomsDataForProperty}
           />
       </Suspense>
     </div>

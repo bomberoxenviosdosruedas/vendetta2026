@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation"
 import { RoomDetailsModal } from "./room-details-modal"
 import { useProperty } from "@/contexts/property-context"
 import { Tooltip, TooltipProvider, TooltipTrigger } from "../ui/tooltip"
+import { calcularCostosNivel, calcularTiempoConstruccion } from "@/lib/formulas/room-formulas"
 
 function formatNumber(num: number): string {
   if (num < 1000) {
@@ -60,29 +61,12 @@ function formatDuration(seconds: number): string {
     return result.trim() || '0s';
 }
 
-
-type RoomData = (FullConfiguracionHabitacion & {
-    nivel: number;
-    nivelProyectado: number;
-    nivelSiguiente: number;
-    costos: {
-        armas: number;
-        municion: number;
-        dolares: number;
-    };
-    tiempo: number;
-    enConstruccion: boolean;
-    meetsRequirements: boolean;
-    requirementsText: string | null;
-})
-
 type RoomsViewProps = {
     user: UserWithProgress;
     allRoomConfigs: FullConfiguracionHabitacion[];
-    getRoomsDataForProperty: (propertyId: string) => RoomData[];
 }
 
-export function RoomsView({ user, allRoomConfigs, getRoomsDataForProperty }: RoomsViewProps) {
+export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
     const router = useRouter();
     const { selectedProperty } = useProperty();
     const [isSubmitting, setIsSubmitting] = useState<string | null>(null);
@@ -102,7 +86,53 @@ export function RoomsView({ user, allRoomConfigs, getRoomsDataForProperty }: Roo
     }
 
     const construccionEnCola = selectedProperty.colaConstruccion;
-    const sortedRoomsData = getRoomsDataForProperty(selectedProperty.id);
+
+    const userRoomsMap = new Map(selectedProperty.habitaciones.map(h => [h.configuracionHabitacionId, h]));
+      
+    const desiredOrder = [
+        'oficina_del_jefe', 'escuela_especializacion', 'armeria', 'almacen_de_municion',
+        'cerveceria', 'taberna', 'contrabando', 'almacen_de_armas', 'deposito_de_municion',
+        'almacen_de_alcohol', 'caja_fuerte', 'campo_de_entrenamiento', 'seguridad',
+        'torreta_de_fuego_automatico', 'minas_ocultas'
+    ];
+      
+    const roomsData = desiredOrder.map(id => {
+        const config = allRoomConfigs.find(c => c.id === id);
+        if (!config) return null;
+
+        const userRoom = userRoomsMap.get(id);
+        const nivelBase = userRoom ? userRoom.nivel : 0;
+        
+        const mejorasEnCola = selectedProperty.colaConstruccion.filter(c => c.habitacionId === id).length;
+        const nivelProyectado = nivelBase + mejorasEnCola;
+        const nivelSiguiente = nivelProyectado + 1;
+
+        const nivelOficinaJefe = userRoomsMap.get('oficina_del_jefe')?.nivel || 1;
+        
+        const enConstruccion = selectedProperty.colaConstruccion.some(c => c.habitacionId === id);
+
+        const costosSiguienteNivel = calcularCostosNivel(nivelSiguiente, config);
+        const tiempoSiguienteNivel = calcularTiempoConstruccion(nivelSiguiente, config, nivelOficinaJefe);
+        
+        const requirements = config.requirements || [];
+        const meetsRequirements = requirements.every(req => (userRoomsMap.get(req.requiredRoomId)?.nivel || 0) >= req.requiredLevel);
+        const requirementsText = !meetsRequirements
+            ? requirements.map(req => `${allRoomConfigs.find(r=>r.id === req.requiredRoomId)?.nombre || req.requiredRoomId} (Nvl ${req.requiredLevel})`).join(', ')
+            : null;
+
+        return {
+            ...config,
+            nivel: nivelBase,
+            nivelProyectado,
+            nivelSiguiente,
+            costos: costosSiguienteNivel,
+            tiempo: tiempoSiguienteNivel,
+            enConstruccion,
+            meetsRequirements,
+            requirementsText,
+        };
+    }).filter((r): r is NonNullable<typeof r> => r !== null);
+
 
     useEffect(() => {
         if (!construccionEnCola || construccionEnCola.length === 0) return;
@@ -159,7 +189,7 @@ export function RoomsView({ user, allRoomConfigs, getRoomsDataForProperty }: Roo
             <Card>
                 <CardContent className="p-0">
                     <div className="divide-y divide-border">
-                        {sortedRoomsData.map((room) => {
+                        {roomsData.map((room) => {
                             const button = (
                                 <Button type="submit" variant="outline" size="sm" disabled={isQueueFull || isSubmitting === room.id || !room.meetsRequirements}>
                                     {isQueueFull ? <Ban className="mr-2 h-4 w-4" /> : <PlusCircle className="mr-2 h-4 w-4" />}
