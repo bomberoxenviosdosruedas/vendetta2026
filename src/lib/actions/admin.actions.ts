@@ -1,42 +1,11 @@
 
 'use server';
 
-import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import prisma from "../prisma/prisma";
 import { ConfiguracionHabitacion, ConfiguracionTropa, ConfiguracionEntrenamiento, TipoTropa } from "@prisma/client";
+import { verifyAdminSession } from "../auth-admin";
 
-const ADMIN_COOKIE_NAME = 'vendetta-admin-session';
-const ADMIN_PASSWORD = 'Bomberox';
-
-export async function loginAdmin(password: string) {
-    if (password !== ADMIN_PASSWORD) {
-        return { success: false, error: "Contraseña incorrecta." };
-    }
-
-    cookies().set(ADMIN_COOKIE_NAME, 'true', {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 60 * 60 * 8, // 8 hours
-        path: '/', // Corrected path to root
-    });
-
-    redirect('/admin/panel');
-}
-
-export async function logoutAdmin() {
-    cookies().delete(ADMIN_COOKIE_NAME);
-    revalidatePath('/admin');
-}
-
-export async function getAdminSession(): Promise<boolean> {
-    const cookie = cookies().get(ADMIN_COOKIE_NAME);
-    return cookie?.value === 'true';
-}
-
-
-// --- CRUD Actions ---
 
 const parseNumber = (val: FormDataEntryValue | null) => Number(val) || 0;
 const parseString = (val: FormDataEntryValue | null) => String(val || '');
@@ -46,7 +15,7 @@ const parseStringArray = (val: FormDataEntryValue | null) => parseString(val).sp
 
 // Room Config CRUD
 export async function saveRoomConfig(formData: FormData) {
-    const isAdmin = await getAdminSession();
+    const isAdmin = await verifyAdminSession();
     if (!isAdmin) return { error: "No autorizado" };
 
     const originalId = parseString(formData.get('originalId'));
@@ -114,7 +83,7 @@ export async function saveRoomConfig(formData: FormData) {
 }
 
 export async function deleteRoomConfig(id: string) {
-    const isAdmin = await getAdminSession();
+    const isAdmin = await verifyAdminSession();
     if (!isAdmin) return { error: "No autorizado" };
 
     try {
@@ -134,7 +103,7 @@ export async function deleteRoomConfig(id: string) {
 
 // Training Config CRUD
 export async function saveTrainingConfig(formData: FormData) {
-    const isAdmin = await getAdminSession();
+    const isAdmin = await verifyAdminSession();
     if (!isAdmin) return { error: "No autorizado" };
 
     const originalId = parseString(formData.get('originalId'));
@@ -199,7 +168,7 @@ export async function saveTrainingConfig(formData: FormData) {
 }
 
 export async function deleteTrainingConfig(id: string) {
-    const isAdmin = await getAdminSession();
+    const isAdmin = await verifyAdminSession();
     if (!isAdmin) return { error: "No autorizado" };
 
     try {
@@ -219,7 +188,7 @@ export async function deleteTrainingConfig(id: string) {
 
 // Troop Config CRUD
 export async function saveTroopConfig(formData: FormData) {
-    const isAdmin = await getAdminSession();
+    const isAdmin = await verifyAdminSession();
     if (!isAdmin) return { error: "No autorizado" };
     
     const id = parseString(formData.get('id'));
@@ -262,7 +231,7 @@ export async function saveTroopConfig(formData: FormData) {
 }
 
 export async function deleteTroopConfig(id: string) {
-    const isAdmin = await getAdminSession();
+    const isAdmin = await verifyAdminSession();
     if (!isAdmin) return { error: "No autorizado" };
 
     try {

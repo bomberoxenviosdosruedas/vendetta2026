@@ -1,7 +1,7 @@
 
 
 import { AdminLoginForm } from "@/components/admin/admin-login-form";
-import { getAdminSession } from "@/lib/actions/admin.actions";
+import { getAdminSession } from "@/lib/auth-admin";
 import { redirect } from "next/navigation";
 
 export default async function AdminPage() {

@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { loginAdmin } from "@/lib/actions/admin.actions";
+import { loginAdmin } from "@/lib/auth-admin";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
