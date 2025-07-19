@@ -53,6 +53,25 @@ export async function iniciarAmpliacion(propiedadId: string, habitacionId: strin
     }
 
     const duracion = calcularTiempoConstruccion(nivelSiguiente, config, nivelOficinaJefe);
+
+    // Encontrar la fecha de finalización de la última construcción en la cola para esta propiedad
+    const ultimaConstruccion = await prisma.colaConstruccion.findFirst({
+        where: { propiedadId: propiedadId },
+        orderBy: { fechaFinalizacion: 'desc' },
+    });
+
+    const ahora = new Date();
+    let fechaInicio: Date;
+
+    if (ultimaConstruccion && ultimaConstruccion.fechaFinalizacion) {
+        // La nueva construcción empieza 1 segundo después de la anterior
+        fechaInicio = new Date(ultimaConstruccion.fechaFinalizacion.getTime() + 1000);
+    } else {
+        // Si no hay nada en la cola, empieza ahora
+        fechaInicio = ahora;
+    }
+
+    const fechaFinalizacion = new Date(fechaInicio.getTime() + duracion * 1000);
   
     try {
       await prisma.$transaction([
@@ -70,8 +89,8 @@ export async function iniciarAmpliacion(propiedadId: string, habitacionId: strin
                 habitacionId: habitacionId,
                 nivelDestino: nivelSiguiente,
                 duracion: duracion,
-                fechaInicio: null,
-                fechaFinalizacion: null,
+                fechaInicio: fechaInicio,
+                fechaFinalizacion: fechaFinalizacion,
             }
         })
       ]);
