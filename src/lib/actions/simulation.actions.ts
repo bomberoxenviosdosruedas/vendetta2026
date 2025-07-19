@@ -3,7 +3,7 @@
 
 import { getTrainingConfigurations, getTroopConfigurations } from '../data';
 import { calcularStatsTropaConBonus } from '../formulas/troop-formulas';
-import type { ConfiguracionTropa } from '@prisma/client';
+import type { ConfiguracionTropa, TropaBonusContrincante } from '@prisma/client';
 
 // --- INPUT TYPES ---
 interface TroopData {
@@ -32,7 +32,7 @@ export interface SimulationInput {
 interface ArmyUnit {
     id: string;
     nombre: string;
-    config: ConfiguracionTropa;
+    config: ConfiguracionTropa & { bonusContrincante: TropaBonusContrincante[] };
     quantity: number;
     attack: number;
     defense: number;
@@ -116,7 +116,7 @@ export async function runBattleSimulation(attacker: SimulationInput, defender: S
             return {
                 id: troop.id,
                 nombre: config.nombre,
-                config,
+                config: config,
                 quantity: troop.quantity,
                 attack: ataqueActual,
                 defense: defensaActual,
@@ -140,37 +140,34 @@ export async function runBattleSimulation(attacker: SimulationInput, defender: S
     let finalMessage = "";
     
     for (let i = 1; i <= 5; i++) {
-        const attackerTroopCount = attackerArmy.reduce((sum, u) => sum + u.quantity, 0);
-        const defenderTroopCount = defenderArmy.reduce((sum, u) => sum + u.quantity, 0);
+        let attackerTroopCount = attackerArmy.reduce((sum, u) => sum + u.quantity, 0);
+        let defenderTroopCount = defenderArmy.reduce((sum, u) => sum + u.quantity, 0);
 
-        if (attackerTroopCount === 0 || defenderTroopCount === 0) {
-            break;
-        }
+        if (attackerTroopCount === 0 || defenderTroopCount === 0) break;
 
         const roundAttackerArmyBefore = JSON.parse(JSON.stringify(attackerArmy));
         const roundDefenderArmyBefore = JSON.parse(JSON.stringify(defenderArmy));
-
-        const attackerTotalAttack = attackerArmy.reduce((sum, u) => sum + u.attack * u.quantity, 0);
-        const defenderTotalAttack = defenderArmy.reduce((sum, u) => sum + u.attack * u.quantity, 0);
-        
-        const attackerTotalDefense = attackerArmy.reduce((sum, u) => sum + u.defense * u.quantity, 0);
-        const defenderTotalDefense = defenderArmy.reduce((sum, u) => sum + u.defense * u.quantity, 0);
-
-        const attackerLossRatio = defenderTotalAttack > attackerTotalDefense ? 1 : defenderTotalAttack / (attackerTotalDefense || 1);
-        const defenderLossRatio = attackerTotalAttack > defenderTotalDefense ? 1 : attackerTotalAttack / (defenderTotalDefense || 1);
-        
         const attackerLossesThisRound = new Map<string, number>();
         const defenderLossesThisRound = new Map<string, number>();
 
+        let attackerTotalAttack = attackerArmy.reduce((sum, u) => sum + u.attack * u.quantity, 0);
+        let defenderTotalAttack = defenderArmy.reduce((sum, u) => sum + u.attack * u.quantity, 0);
+        let attackerTotalDefense = attackerArmy.reduce((sum, u) => sum + u.defense * u.quantity, 0);
+        let defenderTotalDefense = defenderArmy.reduce((sum, u) => sum + u.defense * u.quantity, 0);
+
+        // --- Battle Calculations ---
+        const attackerLossRatio = defenderTotalAttack > attackerTotalDefense ? 1 : defenderTotalAttack / (attackerTotalDefense || 1);
+        const defenderLossRatio = attackerTotalAttack > defenderTotalDefense ? 1 : attackerTotalAttack / (defenderTotalDefense || 1);
+        
         attackerArmy.forEach(u => {
             const losses = Math.floor(u.quantity * attackerLossRatio);
-            attackerLossesThisRound.set(u.id, losses);
+            attackerLossesThisRound.set(u.id, (attackerLossesThisRound.get(u.id) || 0) + losses);
             u.quantity -= losses;
         });
 
         defenderArmy.forEach(u => {
             const losses = Math.floor(u.quantity * defenderLossRatio);
-            defenderLossesThisRound.set(u.id, losses);
+            defenderLossesThisRound.set(u.id, (defenderLossesThisRound.get(u.id) || 0) + losses);
             u.quantity -= losses;
         });
         

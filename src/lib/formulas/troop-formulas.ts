@@ -1,4 +1,4 @@
-import type { ConfiguracionEntrenamiento, ConfiguracionTropa } from '@prisma/client';
+import type { ConfiguracionTropa } from '@prisma/client';
 import type { UserWithProgress } from '../data';
 
 /**

@@ -9,11 +9,10 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { BattleReport, runBattleSimulation, SimulationInput } from '@/lib/actions/simulation.actions';
 import type { ConfiguracionTropa, ConfiguracionEntrenamiento, ConfiguracionHabitacion } from '@prisma/client';
-import { Loader2, Trash2, Upload, Swords } from 'lucide-react';
+import { Loader2, Trash2, Upload } from 'lucide-react';
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogFooter,
@@ -212,11 +211,16 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
             user.entrenamientos.map(t => [t.configuracionEntrenamientoId, t.nivel])
         );
 
-        const newState = {
+        const defenses = Object.fromEntries(
+            selectedProperty.habitaciones.filter(h => defenseConfigs.some(dc => dc.id === h.configuracionHabitacionId))
+            .map(h => [h.configuracionHabitacionId, h.nivel])
+        );
+
+        const newState: SimulatorColumnState = {
             troops,
             trainings,
-            defenses: {},
-            buildingsLevel: 1 
+            defenses: column === 'defender' ? defenses : {},
+            buildingsLevel: 1, // You might want to calculate an average level or set a default
         };
 
         if (column === 'attacker') {
