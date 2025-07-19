@@ -1,3 +1,4 @@
+
 'use client'
 
 import Image from "next/image"
@@ -6,23 +7,21 @@ import {
   CardContent,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Clock, BrainCircuit } from "lucide-react"
+import { Clock, BrainCircuit, Info } from "lucide-react"
 import { calcularCostosEntrenamiento, calcularTiempoEntrenamiento } from "@/lib/formulas/training-formulas"
 import { iniciarEntrenamiento } from "@/lib/actions/training.actions"
-import type { ConfiguracionEntrenamiento } from "@prisma/client"
+import type { FullConfiguracionEntrenamiento, UserWithProgress } from "@/lib/data"
 import { useProperty } from "@/contexts/property-context"
-import type { UserWithProgress } from "@/lib/data"
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip"
 
 function formatNumber(num: number): string {
     return num.toLocaleString('de-DE');
 }
 
-
 function formatDuration(seconds: number): string {
     if (seconds <= 0) return "0s";
-
     const units: {name: string, seconds: number}[] = [
         { name: 'año', seconds: 31536000 },
         { name: 'sem', seconds: 604800 },
@@ -31,11 +30,9 @@ function formatDuration(seconds: number): string {
         { name: 'm', seconds: 60 },
         { name: 's', seconds: 1 }
     ];
-
     let remainingSeconds = seconds;
     let result = '';
     let parts = 0;
-
     for (const unit of units) {
         if (remainingSeconds >= unit.seconds && parts < 3) {
             const amount = Math.floor(remainingSeconds / unit.seconds);
@@ -46,11 +43,24 @@ function formatDuration(seconds: number): string {
             }
         }
     }
-
     return result.trim() || '0s';
 }
 
-function TrainingForm({ training, user, propertyId }: { training: any, user: UserWithProgress, propertyId: string }) {
+function TrainingForm({ 
+    training, 
+    user, 
+    propertyId,
+    allTrainings,
+    meetsRequirements,
+    requirementsText
+}: { 
+    training: any, 
+    user: UserWithProgress, 
+    propertyId: string,
+    allTrainings: FullConfiguracionEntrenamiento[],
+    meetsRequirements: boolean,
+    requirementsText: string | null
+}) {
     const [isPending, setIsPending] = useState(false);
     const { toast } = useToast();
 
@@ -65,18 +75,40 @@ function TrainingForm({ training, user, propertyId }: { training: any, user: Use
         setIsPending(false);
     }
     
+    const button = (
+        <Button 
+            type="submit" 
+            variant="outline" 
+            size="sm" 
+            disabled={isPending || !meetsRequirements}
+        >
+            <BrainCircuit className="mr-2 h-4 w-4" /> 
+            {isPending ? 'Entrenando...' : 'Entrenar'}
+        </Button>
+    )
+
     return (
         <form action={handleAction}>
-            <Button type="submit" variant="outline" size="sm" disabled={isPending}>
-                <BrainCircuit className="mr-2 h-4 w-4" /> {isPending ? 'Entrenando...' : 'Entrenar'}
-            </Button>
+            {meetsRequirements ? (
+                button
+            ) : (
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger asChild>{button}</TooltipTrigger>
+                        <TooltipContent>
+                            <p className="text-xs">Requisitos no cumplidos:</p>
+                            <p className="text-xs font-semibold">{requirementsText}</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
+            )}
         </form>
     )
 }
 
 interface TrainingViewProps {
     user: UserWithProgress;
-    allTrainingConfigs: ConfiguracionEntrenamiento[];
+    allTrainingConfigs: FullConfiguracionEntrenamiento[];
 }
 
 export function TrainingView({ user, allTrainingConfigs }: TrainingViewProps) {
@@ -91,7 +123,7 @@ export function TrainingView({ user, allTrainingConfigs }: TrainingViewProps) {
       )
   }
 
-  const userTrainingsMap = new Map(user.entrenamientos.map(t => [t.configuracionEntrenamientoId, t]));
+  const userTrainingsMap = new Map(user.entrenamientos.map(t => [t.configuracionEntrenamientoId, t.nivel]));
   const nivelEscuela = selectedProperty.habitaciones.find(h => h.configuracionHabitacionId === 'escuela_especializacion')?.nivel || 0;
   
   const desiredOrder = [
@@ -109,6 +141,18 @@ export function TrainingView({ user, allTrainingConfigs }: TrainingViewProps) {
       
       const costosSiguienteNivel = calcularCostosEntrenamiento(nivel + 1, config);
       const tiempoSiguienteNivel = calcularTiempoEntrenamiento(nivel + 1, config, nivelEscuela);
+      
+      const requirements = config.requirements || [];
+      const meetsRequirements = requirements.every(req => (userTrainingsMap.get(req.requiredTrainingId) || 0) >= req.requiredLevel);
+      const requirementsText = !meetsRequirements 
+        ? requirements
+            .map(req => {
+                const reqConfig = allTrainingConfigs.find(c => c.id === req.requiredTrainingId);
+                return `${reqConfig?.nombre || req.requiredTrainingId} (Nvl ${req.requiredLevel})`
+            })
+            .join(', ')
+        : null;
+
 
       return {
           id: config.id,
@@ -117,8 +161,10 @@ export function TrainingView({ user, allTrainingConfigs }: TrainingViewProps) {
           nivel,
           costos: costosSiguienteNivel,
           tiempo: tiempoSiguienteNivel,
+          meetsRequirements,
+          requirementsText
       };
-  }).filter(Boolean);
+  }).filter((t): t is NonNullable<typeof t> => t !== null);
 
 
   return (
@@ -152,6 +198,18 @@ export function TrainingView({ user, allTrainingConfigs }: TrainingViewProps) {
                             <div className="text-sm text-primary">
                               Nivel {training.nivel}
                             </div>
+                            {!training.meetsRequirements && (
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger>
+                                            <Info className="h-4 w-4 text-destructive mt-1"/>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p className="text-xs">{training.requirementsText}</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                            )}
                         </div>
                     </div>
                     {/* Descripción (placeholder) */}
@@ -173,7 +231,14 @@ export function TrainingView({ user, allTrainingConfigs }: TrainingViewProps) {
                                     <span>{formatDuration(training.tiempo)}</span>
                                 </div>
                             </div>
-                           <TrainingForm training={training} user={user} propertyId={selectedProperty.id} />
+                           <TrainingForm 
+                             training={training} 
+                             user={user} 
+                             propertyId={selectedProperty.id} 
+                             allTrainings={allTrainingConfigs}
+                             meetsRequirements={training.meetsRequirements}
+                             requirementsText={training.requirementsText}
+                           />
                         </div>
                     </div>
                 </div>

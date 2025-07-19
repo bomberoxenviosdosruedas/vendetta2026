@@ -1,7 +1,7 @@
 
 "use server"
 
-import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember } from '@prisma/client/edge'
+import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember, TrainingRequirement } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 import { cache } from 'react';
 
@@ -10,6 +10,10 @@ const prisma = new PrismaClient().$extends(withAccelerate())
 export type FullConfiguracionHabitacion = ConfiguracionHabitacion & {
   escalado: ConfiguracionEscaladoHabitacion | null;
 };
+
+export type FullConfiguracionEntrenamiento = ConfiguracionEntrenamiento & {
+    requirements: TrainingRequirement[];
+}
 
 export type FullHabitacionUsuario = HabitacionUsuario & { 
   configuracion: FullConfiguracionHabitacion 
@@ -191,10 +195,14 @@ export const getTroopConfigurations = cache(async () => {
     }
 });
 
-export const getTrainingConfigurations = cache(async () => {
+export const getTrainingConfigurations = cache(async (): Promise<FullConfiguracionEntrenamiento[]> => {
     try {
-        const trainingConfigurations = await prisma.configuracionEntrenamiento.findMany();
-        return trainingConfigurations;
+        const trainingConfigurations = await prisma.configuracionEntrenamiento.findMany({
+            include: {
+                requirements: true
+            }
+        });
+        return trainingConfigurations as FullConfiguracionEntrenamiento[];
     } catch (error) {
         console.error("Error fetching training configurations:", error);
         return [];
@@ -273,7 +281,7 @@ export async function getUserByUsername(username: string): Promise<UserWithProgr
         });
         // This is a temporary type assertion to match the frontend expectations
         if (user) {
-            user.propiedades = user.propiedades.map(p => ({ ...p, tropas: p.TropaUsuario }));
+            (user as any).propiedades = user.propiedades.map(p => ({ ...p, tropas: p.TropaUsuario }));
         }
         return user as UserWithProgress | null;
     } catch (error) {
@@ -291,7 +299,7 @@ export async function getUserWithProgressByUsername(username: string): Promise<U
         });
         // This is a temporary type assertion to match the frontend expectations
         if (user) {
-            user.propiedades = user.propiedades.map(p => ({ ...p, tropas: p.TropaUsuario as any }));
+            (user as any).propiedades = user.propiedades.map(p => ({ ...p, tropas: p.TropaUsuario as any }));
         }
         return user as UserWithProgress | null;
     } catch (error) {

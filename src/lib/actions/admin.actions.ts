@@ -95,9 +95,12 @@ export async function deleteRoomConfig(id: string) {
 export async function saveTrainingConfig(formData: FormData) {
     const isAdmin = await getAdminSession();
     if (!isAdmin) return { error: "No autorizado" };
-     
-    const data = {
-        id: parseString(formData.get('id')),
+
+    const originalId = parseString(formData.get('originalId'));
+    const id = parseString(formData.get('id'));
+
+    const data: Omit<ConfiguracionEntrenamiento, 'createdAt' | 'updatedAt'> = {
+        id,
         nombre: parseString(formData.get('nombre')),
         urlImagen: parseString(formData.get('urlImagen')),
         costoArmas: parseNumber(formData.get('costoArmas')),
@@ -107,11 +110,44 @@ export async function saveTrainingConfig(formData: FormData) {
         puntos: parseNumber(formData.get('puntos')),
     };
 
+    const requirementsString = parseString(formData.get('requirements'));
+    const newRequirements = requirementsString.split(',')
+        .map(s => s.trim())
+        .filter(Boolean)
+        .map(req => {
+            const [requiredTrainingId, requiredLevelStr] = req.split(':');
+            const requiredLevel = parseInt(requiredLevelStr, 10);
+            if (!requiredTrainingId || isNaN(requiredLevel)) {
+                throw new Error(`Formato de requisito inválido: ${req}`);
+            }
+            return { requiredTrainingId, requiredLevel };
+        });
+
     try {
-        await prisma.configuracionEntrenamiento.upsert({
-            where: { id: data.id },
-            update: data,
-            create: data,
+        await prisma.$transaction(async (tx) => {
+            if (originalId && originalId !== id) {
+                 await tx.configuracionEntrenamiento.delete({ where: { id: originalId } });
+            }
+
+            await tx.configuracionEntrenamiento.upsert({
+                where: { id: id },
+                update: data,
+                create: data,
+            });
+
+            await tx.trainingRequirement.deleteMany({
+                where: { trainingId: id }
+            });
+
+            if (newRequirements.length > 0) {
+                await tx.trainingRequirement.createMany({
+                    data: newRequirements.map(req => ({
+                        trainingId: id,
+                        requiredTrainingId: req.requiredTrainingId,
+                        requiredLevel: req.requiredLevel
+                    }))
+                });
+            }
         });
         revalidatePath('/admin/panel');
         return { success: true };
@@ -125,7 +161,12 @@ export async function deleteTrainingConfig(id: string) {
     if (!isAdmin) return { error: "No autorizado" };
 
     try {
-        await prisma.configuracionEntrenamiento.delete({ where: { id } });
+        await prisma.$transaction(async (tx) => {
+            await tx.trainingRequirement.deleteMany({
+                where: { OR: [{ trainingId: id }, { requiredTrainingId: id }] }
+            });
+            await tx.configuracionEntrenamiento.delete({ where: { id } });
+        });
         revalidatePath('/admin/panel');
         return { success: true };
     } catch (e: any) {

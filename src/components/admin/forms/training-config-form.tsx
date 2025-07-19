@@ -8,11 +8,17 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { saveTrainingConfig } from "@/lib/actions/admin.actions";
 import { Loader2 } from "lucide-react";
-import type { ConfiguracionEntrenamiento } from "@prisma/client";
+import type { FullConfiguracionEntrenamiento } from "@/lib/data";
+import { Textarea } from "@/components/ui/textarea";
 
 interface TrainingConfigFormProps {
-    training: ConfiguracionEntrenamiento | null;
+    training: FullConfiguracionEntrenamiento | null;
     onFinished: () => void;
+}
+
+function formatRequirements(requirements: FullConfiguracionEntrenamiento['requirements']) {
+    if (!requirements || requirements.length === 0) return '';
+    return requirements.map(req => `${req.requiredTrainingId}:${req.requiredLevel}`).join(', ');
 }
 
 export function TrainingConfigForm({ training, onFinished }: TrainingConfigFormProps) {
@@ -32,11 +38,12 @@ export function TrainingConfigForm({ training, onFinished }: TrainingConfigFormP
     }
 
     return (
-        <form action={handleSubmit} className="space-y-4">
+        <form action={handleSubmit} className="space-y-4 max-h-[80vh] overflow-y-auto p-1 pr-4">
+            <input type="hidden" name="originalId" value={training?.id || ''} />
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                     <Label htmlFor="id">ID</Label>
-                    <Input id="id" name="id" defaultValue={training?.id} required disabled={!!training} />
+                    <Input id="id" name="id" defaultValue={training?.id} required />
                 </div>
                 <div className="space-y-2">
                     <Label htmlFor="nombre">Nombre</Label>
@@ -70,6 +77,15 @@ export function TrainingConfigForm({ training, onFinished }: TrainingConfigFormP
                     <Label htmlFor="duracion">Duración (s)</Label>
                     <Input id="duracion" name="duracion" type="number" defaultValue={training?.duracion} />
                 </div>
+            </div>
+             <div className="space-y-2">
+                <Label htmlFor="requirements">Requisitos</Label>
+                 <Textarea 
+                    id="requirements" 
+                    name="requirements" 
+                    defaultValue={formatRequirements(training?.requirements || [])} 
+                    placeholder="id_entrenamiento:nivel, otro_id:otro_nivel..."
+                />
             </div>
             <div className="flex justify-end gap-2">
                 <Button type="button" variant="ghost" onClick={onFinished}>Cancelar</Button>
