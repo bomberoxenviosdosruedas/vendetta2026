@@ -36,31 +36,30 @@ export function calcularStatsTropaConBonus(
   
     const entrenamientosMap = new Map(entrenamientos.map(e => [e.configuracionEntrenamientoId, e.nivel]));
   
-    let ataqueActual = tropaConfig.ataque;
-    let defensaActual = tropaConfig.defensa;
+    let ataqueBase = tropaConfig.ataque;
+    let defensaBase = tropaConfig.defensa;
   
     const bonusAtaqueIds = tropaConfig.bonusAtaque || [];
     const bonusDefensaIds = tropaConfig.bonusDefensa || [];
   
-    // Aplicar bonus de ataque
-    for (const id of bonusAtaqueIds) {
-      const nivel = entrenamientosMap.get(id);
-      if (nivel && nivel > 0) {
-        ataqueActual *= Math.pow(nivel + 1, 2);
-      }
-    }
-  
-    // Aplicar bonus de defensa
-    for (const id of bonusDefensaIds) {
-        const nivel = entrenamientosMap.get(id);
-        if (nivel && nivel > 0) {
-            defensaActual *= Math.pow(nivel + 1, 2);
-        }
-    }
+    // Sumar los niveles de todos los entrenamientos relevantes para el ataque
+    const sumaNivelesAtaque = bonusAtaqueIds.reduce((sum, id) => {
+        return sum + (entrenamientosMap.get(id) || 0);
+    }, 0);
+
+    // Sumar los niveles de todos los entrenamientos relevantes para la defensa
+    const sumaNivelesDefensa = bonusDefensaIds.reduce((sum, id) => {
+        return sum + (entrenamientosMap.get(id) || 0);
+    }, 0);
+
+    // Aplicar la fórmula: ENTERO(D25*RAIZ(INICIO!D66+...)/10+D25)
+    // que es equivalente a: Math.floor(base * (1 + Math.sqrt(sum_levels)/10))
+    const ataqueActual = Math.floor(ataqueBase * (1 + Math.sqrt(sumaNivelesAtaque) / 10));
+    const defensaActual = Math.floor(defensaBase * (1 + Math.sqrt(sumaNivelesDefensa) / 10));
   
     return {
-      ataqueActual: Math.floor(ataqueActual),
-      defensaActual: Math.floor(defensaActual),
+      ataqueActual,
+      defensaActual,
     };
   }
   
