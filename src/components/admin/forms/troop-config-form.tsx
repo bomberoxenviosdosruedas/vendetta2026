@@ -12,11 +12,13 @@ import { saveTroopConfig } from "@/lib/actions/admin.actions";
 import { Loader2, Trash2 } from "lucide-react";
 import type { ConfiguracionTropa, TipoTropa } from "@prisma/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FullConfiguracionTropa } from "@/lib/data";
+import { FullConfiguracionEntrenamiento, FullConfiguracionTropa } from "@/lib/data";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface TroopConfigFormProps {
     troop: FullConfiguracionTropa | null;
     allTroops: ConfiguracionTropa[];
+    allTrainings: FullConfiguracionEntrenamiento[];
     tiposTropa: string[];
     onFinished: () => void;
 }
@@ -26,10 +28,49 @@ type BonusContrincanteState = {
     factorPrioridad: number;
 }
 
-export function TroopConfigForm({ troop, allTroops, tiposTropa, onFinished }: TroopConfigFormProps) {
+function CheckboxList({ title, items, selectedItems, onSelectionChange }: { title: string, items: {id: string, nombre: string}[], selectedItems: Set<string>, onSelectionChange: (id: string, checked: boolean) => void}) {
+    return (
+        <div className="space-y-2">
+            <Label>{title}</Label>
+            <div className="border rounded-md p-4 space-y-2 max-h-40 overflow-y-auto">
+                {items.map(item => (
+                    <div key={item.id} className="flex items-center gap-2">
+                        <Checkbox
+                            id={`${title}-${item.id}`}
+                            checked={selectedItems.has(item.id)}
+                            onCheckedChange={(checked) => onSelectionChange(item.id, !!checked)}
+                        />
+                         <Label htmlFor={`${title}-${item.id}`} className="font-normal">
+                            {item.nombre}
+                        </Label>
+                    </div>
+                ))}
+            </div>
+        </div>
+    )
+}
+
+export function TroopConfigForm({ troop, allTroops, allTrainings, tiposTropa, onFinished }: TroopConfigFormProps) {
     const [isPending, startTransition] = useTransition();
     const { toast } = useToast();
+    
+    const [bonusAtaque, setBonusAtaque] = useState(new Set(troop?.bonusAtaque || []));
+    const [bonusDefensa, setBonusDefensa] = useState(new Set(troop?.bonusDefensa || []));
+    const [requisitos, setRequisitos] = useState(new Set(troop?.requisitos || []));
+
     const [bonusContrincantes, setBonusContrincantes] = useState<BonusContrincanteState[]>(troop?.bonusContrincante || []);
+
+    const handleSelectionChange = (setter: React.Dispatch<React.SetStateAction<Set<string>>>, id: string, checked: boolean) => {
+        setter(prev => {
+            const newSet = new Set(prev);
+            if (checked) {
+                newSet.add(id);
+            } else {
+                newSet.delete(id);
+            }
+            return newSet;
+        });
+    }
 
     const handleAddBonus = () => {
         setBonusContrincantes([...bonusContrincantes, { contrincanteId: '', factorPrioridad: 1.0 }]);
@@ -50,6 +91,9 @@ export function TroopConfigForm({ troop, allTroops, tiposTropa, onFinished }: Tr
     }
 
     const handleSubmit = (formData: FormData) => {
+        formData.append('bonusAtaque', Array.from(bonusAtaque).join(','));
+        formData.append('bonusDefensa', Array.from(bonusDefensa).join(','));
+        formData.append('requisitos', Array.from(requisitos).join(','));
         formData.append('bonusContrincantes', JSON.stringify(bonusContrincantes));
         startTransition(async () => {
             const result = await saveTroopConfig(formData);
@@ -142,18 +186,28 @@ export function TroopConfigForm({ troop, allTroops, tiposTropa, onFinished }: Tr
                     </SelectContent>
                 </Select>
             </div>
-            <div className="space-y-2">
-                <Label htmlFor="bonusAtaque">Bonus Ataque (IDs de entrenamiento, separados por coma)</Label>
-                <Input id="bonusAtaque" name="bonusAtaque" defaultValue={troop?.bonusAtaque.join(', ')} />
-            </div>
-            <div className="space-y-2">
-                <Label htmlFor="bonusDefensa">Bonus Defensa (IDs de entrenamiento, separados por coma)</Label>
-                <Input id="bonusDefensa" name="bonusDefensa" defaultValue={troop?.bonusDefensa.join(', ')} />
-            </div>
-             <div className="space-y-2">
-                <Label htmlFor="requisitos">Requisitos (IDs de tropa, separados por coma)</Label>
-                <Input id="requisitos" name="requisitos" defaultValue={troop?.requisitos.join(', ')} />
-            </div>
+            
+            <CheckboxList 
+                title="Bonus Ataque"
+                items={allTrainings}
+                selectedItems={bonusAtaque}
+                onSelectionChange={(id, checked) => handleSelectionChange(setBonusAtaque, id, checked)}
+            />
+
+            <CheckboxList 
+                title="Bonus Defensa"
+                items={allTrainings}
+                selectedItems={bonusDefensa}
+                onSelectionChange={(id, checked) => handleSelectionChange(setBonusDefensa, id, checked)}
+            />
+
+            <CheckboxList 
+                title="Requisitos de Tropa"
+                items={allTroops.filter(t => t.id !== troop?.id)}
+                selectedItems={requisitos}
+                onSelectionChange={(id, checked) => handleSelectionChange(setRequisitos, id, checked)}
+            />
+
              <div className="space-y-4 rounded-md border p-4">
                 <div className="flex justify-between items-center">
                     <Label>Bonus de Prioridad vs Contrincante</Label>
@@ -202,3 +256,4 @@ export function TroopConfigForm({ troop, allTroops, tiposTropa, onFinished }: Tr
         </form>
     );
 }
+

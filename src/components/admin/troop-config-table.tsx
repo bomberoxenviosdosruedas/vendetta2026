@@ -10,14 +10,15 @@ import { TroopConfigForm } from "./forms/troop-config-form";
 import type { ConfiguracionTropa, TipoTropa } from "@prisma/client";
 import { DeleteConfigButton } from "./delete-config-button";
 import { deleteTroopConfig } from "@/lib/actions/admin.actions";
-import { FullConfiguracionTropa } from "@/lib/data";
+import { FullConfiguracionEntrenamiento, FullConfiguracionTropa } from "@/lib/data";
 
 interface TroopConfigTableProps {
     initialData: FullConfiguracionTropa[];
+    allTrainings: FullConfiguracionEntrenamiento[];
     tiposTropa: string[];
 }
 
-export function TroopConfigTable({ initialData, tiposTropa }: TroopConfigTableProps) {
+export function TroopConfigTable({ initialData, allTrainings, tiposTropa }: TroopConfigTableProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<FullConfiguracionTropa | null>(null);
 
@@ -79,6 +80,7 @@ export function TroopConfigTable({ initialData, tiposTropa }: TroopConfigTablePr
                     <TroopConfigForm 
                         troop={selectedItem} 
                         allTroops={initialData} 
+                        allTrainings={allTrainings}
                         tiposTropa={tiposTropa}
                         onFinished={() => setIsOpen(false)} 
                     />

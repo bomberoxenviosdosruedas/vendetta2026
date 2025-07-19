@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { revalidatePath } from "next/cache";
@@ -260,3 +261,4 @@ export async function deleteTroopConfig(id: string) {
         return { error: e.message };
     }
 }
+

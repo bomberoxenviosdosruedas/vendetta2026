@@ -81,10 +81,15 @@ export default async function AdminPanelPage() {
                 </TabsContent>
                 <TabsContent value="tropas">
                     <Suspense fallback={<TableSkeleton />}>
-                        <TroopConfigTable initialData={troops} tiposTropa={tiposTropa} />
+                        <TroopConfigTable 
+                            initialData={troops} 
+                            allTrainings={trainings}
+                            tiposTropa={tiposTropa} 
+                        />
                     </Suspense>
                 </TabsContent>
             </Tabs>
         </div>
     )
 }
+
