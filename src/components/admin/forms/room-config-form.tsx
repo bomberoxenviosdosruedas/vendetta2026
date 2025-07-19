@@ -9,12 +9,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { saveRoomConfig } from "@/lib/actions/admin.actions";
 import { Loader2 } from "lucide-react";
-import type { FullConfiguracionHabitacion } from "@/lib/data";
+import type { ConfiguracionHabitacion } from "@prisma/client";
 import { Checkbox } from "@/components/ui/checkbox";
 
 interface RoomConfigFormProps {
-    room: FullConfiguracionHabitacion | null;
-    allRooms: FullConfiguracionHabitacion[];
+    room: (ConfiguracionHabitacion & { requirements: { requiredRoomId: string; requiredLevel: number }[] }) | null;
+    allRooms: ConfiguracionHabitacion[];
     onFinished: () => void;
 }
 
@@ -23,7 +23,7 @@ export function RoomConfigForm({ room, allRooms, onFinished }: RoomConfigFormPro
     const { toast } = useToast();
 
     const initialRequirements = new Map(
-        room?.requirements.map(req => [req.requiredRoomId, req.requiredLevel])
+        (room?.requirements || []).map(req => [req.requiredRoomId, req.requiredLevel])
     );
     const [requirements, setRequirements] = useState<Map<string, number>>(initialRequirements);
 
@@ -48,7 +48,7 @@ export function RoomConfigForm({ room, allRooms, onFinished }: RoomConfigFormPro
     };
 
     const handleSubmit = (formData: FormData) => {
-         requirements.forEach((level, id) => {
+        requirements.forEach((level, id) => {
             formData.append('requirement_ids', id);
             formData.append(`requirement_level_${id}`, level.toString());
         });
