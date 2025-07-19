@@ -1,10 +1,11 @@
 
 'use client'
 
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 import Image from "next/image";
 import { AuthForm } from "@/components/auth-form";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 
 function AuthLoading() {
   return (
@@ -49,6 +50,11 @@ export default function Home() {
             <Suspense fallback={<AuthLoading />}>
                 <AuthForm />
             </Suspense>
+        </div>
+        <div className="absolute bottom-4 right-4 z-10">
+            <Link href="/admin" className="text-xs text-muted-foreground hover:text-primary transition-colors">
+                Admin
+            </Link>
         </div>
     </main>
   );
