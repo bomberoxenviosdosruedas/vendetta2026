@@ -7,10 +7,11 @@ import { redirect } from "next/navigation";
 import { RoomConfigTable } from "@/components/admin/room-config-table";
 import { TrainingConfigTable } from "@/components/admin/training-config-table";
 import { TroopConfigTable } from "@/components/admin/troop-config-table";
-import { getRoomConfigurations, getTrainingConfigurations, getTroopConfigurations } from "@/lib/data";
+import { getTrainingConfigurations, getTroopConfigurations } from "@/lib/data";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { ConfiguracionHabitacion } from "@prisma/client";
+import prisma from "@/lib/prisma/prisma";
 
 async function LogoutButton() {
     'use server';
@@ -85,3 +86,4 @@ export default async function AdminPanelPage() {
         </div>
     )
 }
+
