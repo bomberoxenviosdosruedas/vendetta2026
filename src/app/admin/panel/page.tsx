@@ -7,10 +7,9 @@ import { redirect } from "next/navigation";
 import { RoomConfigTable } from "@/components/admin/room-config-table";
 import { TrainingConfigTable } from "@/components/admin/training-config-table";
 import { TroopConfigTable } from "@/components/admin/troop-config-table";
-import { getTrainingConfigurations, getTroopConfigurations } from "@/lib/data";
+import { getRoomConfigurations, getTrainingConfigurations, getTroopConfigurations } from "@/lib/data";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { ConfiguracionHabitacion } from "@prisma/client";
 import prisma from "@/lib/prisma/prisma";
 
 async function LogoutButton() {
@@ -47,7 +46,7 @@ export default async function AdminPanelPage() {
         redirect('/admin');
     }
 
-    const rooms = await prisma.configuracionHabitacion.findMany({ include: { requirements: true }});
+    const rooms = await getRoomConfigurations();
     const trainings = await getTrainingConfigurations();
     const troops = await getTroopConfigurations();
 
@@ -69,7 +68,7 @@ export default async function AdminPanelPage() {
                 </TabsList>
                 <TabsContent value="habitaciones">
                     <Suspense fallback={<TableSkeleton />}>
-                        <RoomConfigTable initialData={rooms as (ConfiguracionHabitacion & { requirements: { requiredRoomId: string; requiredLevel: number; }[] })[]} />
+                        <RoomConfigTable initialData={rooms} />
                     </Suspense>
                 </TabsContent>
                 <TabsContent value="entrenamientos">
@@ -86,4 +85,3 @@ export default async function AdminPanelPage() {
         </div>
     )
 }
-

@@ -19,9 +19,7 @@ export async function saveRoomConfig(formData: FormData) {
     if (!isAdmin) return { error: "No autorizado" };
 
     const originalId = parseString(formData.get('originalId'));
-    const idFromForm = parseString(formData.get('id'));
-
-    const id = idFromForm || originalId;
+    const id = parseString(formData.get('id')) || originalId;
 
     if (!id) {
         return { error: "El ID de la habitación es obligatorio." };
@@ -193,7 +191,7 @@ export async function saveTroopConfig(formData: FormData) {
     const isAdmin = await verifyAdminSession();
     if (!isAdmin) return { error: "No autorizado" };
     
-    const id = parseString(formData.get('id'));
+    const id = parseString(formData.get('idForm')) || parseString(formData.get('id'));
      if (!id) {
         return { error: "El ID de la tropa es obligatorio." };
     }
@@ -219,11 +217,29 @@ export async function saveTroopConfig(formData: FormData) {
         bonusDefensa: parseStringArray(formData.get('bonusDefensa')),
     };
 
+    const bonusContrincantes = JSON.parse(parseString(formData.get('bonusContrincantes')) || '[]');
+
     try {
-        await prisma.configuracionTropa.upsert({
-            where: { id: data.id },
-            update: data,
-            create: data,
+        await prisma.$transaction(async (tx) => {
+            await tx.configuracionTropa.upsert({
+                where: { id: data.id },
+                update: data,
+                create: data,
+            });
+
+            await tx.tropaBonusContrincante.deleteMany({
+                where: { tropaAtacanteId: id }
+            });
+
+            if (bonusContrincantes.length > 0) {
+                 await tx.tropaBonusContrincante.createMany({
+                    data: bonusContrincantes.map((b: any) => ({
+                        tropaAtacanteId: id,
+                        tropaDefensoraId: b.contrincanteId,
+                        factorPrioridad: b.factorPrioridad
+                    }))
+                });
+            }
         });
         revalidatePath('/admin/panel');
         return { success: true };

@@ -34,6 +34,7 @@ async function main() {
     'familyInvitation',
     'roomRequirement',
     'trainingRequirement',
+    'tropaBonusContrincante'
   ];
 
   for (const modelName of modelsToExport) {

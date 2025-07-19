@@ -1,18 +1,23 @@
 
+
 "use server"
 
-import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEscaladoHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember, TrainingRequirement } from '@prisma/client/edge'
+import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember, TrainingRequirement, RoomRequirement, TropaBonusContrincante } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 import { cache } from 'react';
 
 const prisma = new PrismaClient().$extends(withAccelerate())
 
 export type FullConfiguracionHabitacion = ConfiguracionHabitacion & {
-  escalado: ConfiguracionEscaladoHabitacion | null;
+  requirements: RoomRequirement[];
 };
 
 export type FullConfiguracionEntrenamiento = ConfiguracionEntrenamiento & {
     requirements: TrainingRequirement[];
+}
+
+export type FullConfiguracionTropa = ConfiguracionTropa & {
+    bonusContrincante: TropaBonusContrincante[];
 }
 
 export type FullHabitacionUsuario = HabitacionUsuario & { 
@@ -170,22 +175,29 @@ export const getUsersForRanking = cache(async (): Promise<UserForRanking[]> => {
     }
 });
 
-export const getRoomConfigurations = cache(async (): Promise<ConfiguracionHabitacion[]> => {
+export const getRoomConfigurations = cache(async (): Promise<FullConfiguracionHabitacion[]> => {
   try {
     const roomConfigurations = await prisma.configuracionHabitacion.findMany({
+        include: {
+            requirements: true,
+        },
       orderBy: { id: 'asc' },
     });
-    return roomConfigurations;
+    return roomConfigurations as FullConfiguracionHabitacion[];
   } catch (error) {
     console.error("Error fetching room configurations:", error);
     return [];
   }
 });
 
-export const getTroopConfigurations = cache(async () => {
+export const getTroopConfigurations = cache(async (): Promise<FullConfiguracionTropa[]> => {
     try {
-        const troopConfigurations = await prisma.configuracionTropa.findMany();
-        return troopConfigurations;
+        const troopConfigurations = await prisma.configuracionTropa.findMany({
+            include: {
+                bonusContrincante: true,
+            }
+        });
+        return troopConfigurations as FullConfiguracionTropa[];
     } catch (error) {
         console.error("Error fetching troop configurations:", error);
         return [];
@@ -224,7 +236,7 @@ const userInclude = {
                 include: {
                     configuracion: {
                       include: {
-                        escalado: true
+                        requirements: true
                       }
                     }
                 },

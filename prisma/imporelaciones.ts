@@ -1,10 +1,12 @@
 
+
 import { PrismaClient } from '@prisma/client/edge';
 import * as datosFamilies from './datosactuales/family.json';
 import * as datosFamilyMembers from './datosactuales/familyMember.json';
 import * as datosFamilyInvitations from './datosactuales/familyInvitation.json';
 import * as datosRoomRequirements from './datosactuales/roomRequirement.json';
 import * as datosTrainingRequirements from './datosactuales/trainingRequirement.json';
+import * as datosTropaBonus from './datosactuales/tropaBonusContrincante.json';
 
 const prisma = new PrismaClient();
 
@@ -16,6 +18,7 @@ async function main() {
     const familyInvitations = (datosFamilyInvitations as any).default || datosFamilyInvitations;
     const roomRequirements = (datosRoomRequirements as any).default || datosRoomRequirements;
     const trainingRequirements = (datosTrainingRequirements as any).default || datosTrainingRequirements;
+    const tropaBonus = (datosTropaBonus as any).default || datosTropaBonus;
 
     for (const familyData of families) {
         try {
@@ -75,6 +78,18 @@ async function main() {
       } catch(e) {
           console.error(`Error con requisito de entrenamiento ${req.trainingId}`, e);
       }
+    }
+
+    for (const bonus of tropaBonus) {
+        try {
+            await prisma.tropaBonusContrincante.upsert({
+                where: { tropaAtacanteId_tropaDefensoraId: { tropaAtacanteId: bonus.tropaAtacanteId, tropaDefensoraId: bonus.tropaDefensoraId } },
+                update: bonus,
+                create: bonus,
+            });
+        } catch (e) {
+            console.error(`Error con bonus de tropa ${bonus.tropaAtacanteId}`, e);
+        }
     }
   
     console.log('🎉 Importación de datos relacionales finalizada.');

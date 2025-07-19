@@ -9,16 +9,17 @@ import { TroopConfigForm } from "./forms/troop-config-form";
 import type { ConfiguracionTropa } from "@prisma/client";
 import { DeleteConfigButton } from "./delete-config-button";
 import { deleteTroopConfig } from "@/lib/actions/admin.actions";
+import { FullConfiguracionTropa } from "@/lib/data";
 
 interface TroopConfigTableProps {
-    initialData: ConfiguracionTropa[];
+    initialData: FullConfiguracionTropa[];
 }
 
 export function TroopConfigTable({ initialData }: TroopConfigTableProps) {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedItem, setSelectedItem] = useState<ConfiguracionTropa | null>(null);
+    const [selectedItem, setSelectedItem] = useState<FullConfiguracionTropa | null>(null);
 
-    const handleEdit = (item: ConfiguracionTropa) => {
+    const handleEdit = (item: FullConfiguracionTropa) => {
         setSelectedItem(item);
         setIsOpen(true);
     };
@@ -73,7 +74,7 @@ export function TroopConfigTable({ initialData }: TroopConfigTableProps) {
                     <DialogHeader>
                         <DialogTitle>{selectedItem ? 'Editar' : 'Crear'} Tropa</DialogTitle>
                     </DialogHeader>
-                    <TroopConfigForm troop={selectedItem} onFinished={() => setIsOpen(false)} />
+                    <TroopConfigForm troop={selectedItem} allTroops={initialData} onFinished={() => setIsOpen(false)} />
                 </DialogContent>
             </Dialog>
         </Card>
