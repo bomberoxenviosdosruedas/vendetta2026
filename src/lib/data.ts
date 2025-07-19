@@ -284,30 +284,14 @@ const userInclude = {
 
 export const getGlobalStatistics = cache(async () => {
     try {
-        const troopStatsByProperty = await prisma.tropaUsuario.groupBy({
-            by: ['configuracionTropaId'],
-            _sum: {
-                cantidad: true,
-            },
-        });
-
-        const troopStatsByUser = await prisma.tropaUsuario.groupBy({
-            by: ['configuracionTropaId', 'propiedadId'],
-            _sum: {
-                cantidad: true,
-            },
-            _max: {
-                cantidad: true,
-            }
-        })
-
         const [
             allRoomConfigs, 
             allTrainingConfigs, 
             allTroopConfigs, 
             roomStats, 
             trainingStats,
-            troopStats
+            troopStatsRaw,
+            properties
         ] = await Promise.all([
             getRoomConfigurations(),
             getTrainingConfigurations(),
@@ -315,19 +299,38 @@ export const getGlobalStatistics = cache(async () => {
             prisma.habitacionUsuario.findMany(),
             prisma.entrenamientoUsuario.findMany(),
             prisma.tropaUsuario.groupBy({
-                by: ['configuracionTropaId', 'userId'],
+                by: ['propiedadId', 'configuracionTropaId'],
                 _sum: {
                     cantidad: true
                 }
-            })
+            }),
+            prisma.propiedad.findMany({ select: { id: true, userId: true } })
         ]);
+
+        const propertyIdToUserIdMap = new Map(properties.map(p => [p.id, p.userId]));
         
-        // Transform the grouped troop stats into a more useful format
-        const finalTroopStats = troopStats.map(stat => ({
-            userId: stat.userId,
-            configuracionTropaId: stat.configuracionTropaId,
-            total: stat._sum.cantidad || 0
-        }));
+        const userTroopTotals = new Map<string, Map<string, number>>();
+
+        troopStatsRaw.forEach(stat => {
+            const userId = propertyIdToUserIdMap.get(stat.propiedadId);
+            if (!userId) return;
+
+            if (!userTroopTotals.has(userId)) {
+                userTroopTotals.set(userId, new Map());
+            }
+
+            const userTroops = userTroopTotals.get(userId)!;
+            const currentTotal = userTroops.get(stat.configuracionTropaId) || 0;
+            userTroops.set(stat.configuracionTropaId, currentTotal + (stat._sum.cantidad || 0));
+        });
+
+        const finalTroopStats = Array.from(userTroopTotals.entries()).flatMap(([userId, troopMap]) => 
+            Array.from(troopMap.entries()).map(([configuracionTropaId, total]) => ({
+                userId,
+                configuracionTropaId,
+                total
+            }))
+        );
 
         return { allRoomConfigs, allTrainingConfigs, allTroopConfigs, roomStats, trainingStats, troopStats: finalTroopStats };
     } catch (error) {
@@ -378,3 +381,4 @@ export async function getUserWithProgressByUsername(username: string): Promise<U
         return null;
     }
 }
+
