@@ -50,8 +50,11 @@ export async function saveRoomConfig(formData: FormData) {
     const isAdmin = await getAdminSession();
     if (!isAdmin) return { error: "No autorizado" };
 
-    const data = {
-        id: parseString(formData.get('id')),
+    const originalId = parseString(formData.get('originalId'));
+    const id = parseString(formData.get('id'));
+
+    const data: Omit<ConfiguracionHabitacion, 'createdAt' | 'updatedAt'> = {
+        id,
         nombre: parseString(formData.get('nombre')),
         descripcion: parseString(formData.get('descripcion')),
         urlImagen: parseString(formData.get('urlImagen')),
@@ -64,11 +67,41 @@ export async function saveRoomConfig(formData: FormData) {
         puntos: parseNumber(formData.get('puntos')),
     };
 
+    const requirementIds = formData.getAll('requirement_ids').map(String);
+    const newRequirements = requirementIds.map(reqId => {
+        const level = parseNumber(formData.get(`requirement_level_${reqId}`));
+        if (level <= 0) {
+            throw new Error(`Nivel inválido para el requisito ${reqId}`);
+        }
+        return { requiredRoomId: reqId, requiredLevel: level };
+    });
+
     try {
-        await prisma.configuracionHabitacion.upsert({
-            where: { id: data.id },
-            update: data,
-            create: data,
+        await prisma.$transaction(async (tx) => {
+             if (originalId && originalId !== id) {
+                await tx.roomRequirement.deleteMany({ where: { OR: [{ roomId: originalId }, { requiredRoomId: originalId }] } });
+                await tx.configuracionHabitacion.delete({ where: { id: originalId } });
+            }
+
+            await tx.configuracionHabitacion.upsert({
+                where: { id: id },
+                update: data,
+                create: data,
+            });
+
+            await tx.roomRequirement.deleteMany({
+                where: { roomId: id }
+            });
+
+            if (newRequirements.length > 0) {
+                await tx.roomRequirement.createMany({
+                    data: newRequirements.map(req => ({
+                        roomId: id,
+                        requiredRoomId: req.requiredRoomId,
+                        requiredLevel: req.requiredLevel
+                    }))
+                });
+            }
         });
         revalidatePath('/admin/panel');
         return { success: true };
@@ -82,7 +115,12 @@ export async function deleteRoomConfig(id: string) {
     if (!isAdmin) return { error: "No autorizado" };
 
     try {
-        await prisma.configuracionHabitacion.delete({ where: { id } });
+         await prisma.$transaction(async (tx) => {
+            await tx.roomRequirement.deleteMany({
+                where: { OR: [{ roomId: id }, { requiredRoomId: id }] }
+            });
+            await tx.configuracionHabitacion.delete({ where: { id } });
+        });
         revalidatePath('/admin/panel');
         return { success: true };
     } catch (e: any) {
