@@ -1,12 +1,14 @@
 
 import { getAdminSession, logoutAdmin } from "@/lib/actions/admin.actions";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { redirect } from "next/navigation";
 import { RoomConfigTable } from "@/components/admin/room-config-table";
 import { TrainingConfigTable } from "@/components/admin/training-config-table";
 import { TroopConfigTable } from "@/components/admin/troop-config-table";
+import { getRoomConfigurations, getTrainingConfigurations, getTroopConfigurations } from "@/lib/data";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 async function LogoutButton() {
     'use server';
@@ -21,11 +23,31 @@ async function LogoutButton() {
     )
 }
 
+function TableSkeleton() {
+    return (
+        <div className="space-y-4">
+            <Skeleton className="h-10 w-48" />
+            <div className="border rounded-md">
+                <Skeleton className="h-12 w-full rounded-t-md" />
+                <div className="p-4 space-y-3">
+                    <Skeleton className="h-8 w-full" />
+                    <Skeleton className="h-8 w-full" />
+                    <Skeleton className="h-8 w-full" />
+                </div>
+            </div>
+        </div>
+    )
+}
+
 export default async function AdminPanelPage() {
     const isAdmin = await getAdminSession();
     if (!isAdmin) {
         redirect('/admin');
     }
+
+    const rooms = await getRoomConfigurations();
+    const trainings = await getTrainingConfigurations();
+    const troops = await getTroopConfigurations();
 
     return (
         <div className="space-y-6">
@@ -44,13 +66,19 @@ export default async function AdminPanelPage() {
                     <TabsTrigger value="tropas">Tropas</TabsTrigger>
                 </TabsList>
                 <TabsContent value="habitaciones">
-                   <RoomConfigTable />
+                    <Suspense fallback={<TableSkeleton />}>
+                        <RoomConfigTable initialData={rooms} />
+                    </Suspense>
                 </TabsContent>
                 <TabsContent value="entrenamientos">
-                    <TrainingConfigTable />
+                     <Suspense fallback={<TableSkeleton />}>
+                        <TrainingConfigTable initialData={trainings} />
+                    </Suspense>
                 </TabsContent>
                 <TabsContent value="tropas">
-                    <TroopConfigTable />
+                    <Suspense fallback={<TableSkeleton />}>
+                        <TroopConfigTable initialData={troops} />
+                    </Suspense>
                 </TabsContent>
             </Tabs>
         </div>
