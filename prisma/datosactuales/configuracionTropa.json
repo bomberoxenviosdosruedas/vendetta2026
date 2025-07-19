@@ -24,8 +24,8 @@
       "extorsion",
       "cuerpo"
     ],
-    "createdAt": "2025-07-19T07:20:53.469Z",
-    "updatedAt": "2025-07-19T07:20:53.469Z"
+    "createdAt": "2025-07-19T06:53:36.802Z",
+    "updatedAt": "2025-07-19T06:53:36.802Z"
   },
   {
     "id": "pistolero",
@@ -51,8 +51,8 @@
       "seguridad",
       "proteccion"
     ],
-    "createdAt": "2025-07-19T07:20:53.749Z",
-    "updatedAt": "2025-07-19T07:20:53.749Z"
+    "createdAt": "2025-07-19T06:53:37.095Z",
+    "updatedAt": "2025-07-19T06:53:37.095Z"
   },
   {
     "id": "portero",
@@ -78,8 +78,8 @@
       "extorsion",
       "seguridad"
     ],
-    "createdAt": "2025-07-19T07:20:54.025Z",
-    "updatedAt": "2025-07-19T07:20:54.025Z"
+    "createdAt": "2025-07-19T06:53:37.389Z",
+    "updatedAt": "2025-07-19T06:53:37.389Z"
   },
   {
     "id": "asesino",
@@ -112,8 +112,8 @@
       "guerrilla",
       "psicologico"
     ],
-    "createdAt": "2025-07-19T07:20:54.298Z",
-    "updatedAt": "2025-07-19T07:20:54.298Z"
+    "createdAt": "2025-07-19T06:53:37.672Z",
+    "updatedAt": "2025-07-19T06:53:37.672Z"
   },
   {
     "id": "maton",
@@ -134,8 +134,8 @@
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": [],
-    "createdAt": "2025-07-19T07:20:54.585Z",
-    "updatedAt": "2025-07-19T07:20:54.585Z"
+    "createdAt": "2025-07-19T06:53:37.975Z",
+    "updatedAt": "2025-07-19T06:53:37.975Z"
   },
   {
     "id": "ocupacion",
@@ -156,8 +156,8 @@
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": [],
-    "createdAt": "2025-07-19T07:20:54.855Z",
-    "updatedAt": "2025-07-19T07:20:54.855Z"
+    "createdAt": "2025-07-19T06:53:38.253Z",
+    "updatedAt": "2025-07-19T06:53:38.253Z"
   },
   {
     "id": "porteador",
@@ -182,8 +182,8 @@
     "bonusDefensa": [
       "combate"
     ],
-    "createdAt": "2025-07-19T07:20:55.142Z",
-    "updatedAt": "2025-07-19T07:20:55.142Z"
+    "createdAt": "2025-07-19T06:53:38.544Z",
+    "updatedAt": "2025-07-19T06:53:38.544Z"
   },
   {
     "id": "transportista",
@@ -209,154 +209,8 @@
       "proteccion",
       "psicologico"
     ],
-    "createdAt": "2025-07-19T07:20:55.420Z",
-    "updatedAt": "2025-07-19T07:20:55.420Z"
-  },
-  {
-    "id": "ninja",
-    "nombre": "Ninja",
-    "urlImagen": "/img/U13K.gif",
-    "descripcion": "Un guerrero legendario del lejano oriente, el ninja combina artes marciales mortales con un sigilo sobrenatural.",
-    "costoArmas": 2000,
-    "costoMunicion": 1000,
-    "costoDolares": 30000,
-    "duracion": 20000,
-    "puntos": 236,
-    "ataque": 400,
-    "defensa": 1200,
-    "capacidad": 5000,
-    "velocidad": 8000,
-    "salario": 60,
-    "tipo": "ATAQUE",
-    "requisitos": [],
-    "bonusAtaque": [
-      "combate",
-      "armas",
-      "guerrilla",
-      "psicologico"
-    ],
-    "bonusDefensa": [
-      "combate",
-      "armas",
-      "guerrilla",
-      "psicologico"
-    ],
-    "createdAt": "2025-07-19T07:20:55.973Z",
-    "updatedAt": "2025-07-19T07:20:55.973Z"
-  },
-  {
-    "id": "cia",
-    "nombre": "Agente de la CIA",
-    "urlImagen": "/img/U8K.gif",
-    "descripcion": "Un agente de élite con entrenamiento gubernamental, altamente efectivo en operaciones ofensivas y defensivas.",
-    "costoArmas": 7000,
-    "costoMunicion": 10000,
-    "costoDolares": 2500,
-    "duracion": 8500,
-    "puntos": 87,
-    "ataque": 100,
-    "defensa": 180,
-    "capacidad": 3000,
-    "velocidad": 3400,
-    "salario": 30,
-    "tipo": "ATAQUE",
-    "requisitos": [],
-    "bonusAtaque": [
-      "armas",
-      "tiro",
-      "guerrilla"
-    ],
-    "bonusDefensa": [
-      "proteccion",
-      "guerrilla"
-    ],
-    "createdAt": "2025-07-19T07:20:56.254Z",
-    "updatedAt": "2025-07-19T07:20:56.254Z"
-  },
-  {
-    "id": "fbi",
-    "nombre": "Agente del FBI",
-    "urlImagen": "/img/U9K.gif",
-    "descripcion": "Especialista en investigación y tácticas, este agente es perfecto para misiones que requieren precisión y estrategia.",
-    "costoArmas": 4000,
-    "costoMunicion": 6000,
-    "costoDolares": 1000,
-    "duracion": 7750,
-    "puntos": 48,
-    "ataque": 60,
-    "defensa": 100,
-    "capacidad": 2000,
-    "velocidad": 3000,
-    "salario": 20,
-    "tipo": "ATAQUE",
-    "requisitos": [],
-    "bonusAtaque": [
-      "proteccion",
-      "tiro"
-    ],
-    "bonusDefensa": [
-      "proteccion",
-      "tiro"
-    ],
-    "createdAt": "2025-07-19T07:20:56.526Z",
-    "updatedAt": "2025-07-19T07:20:56.526Z"
-  },
-  {
-    "id": "espia",
-    "nombre": "Espia",
-    "urlImagen": "/img/U6K.gif",
-    "descripcion": "Maestro del sigilo y la infiltración, el espía puede obtener información valiosa sin ser detectado.",
-    "costoArmas": 500,
-    "costoMunicion": 200,
-    "costoDolares": 0,
-    "duracion": 70,
-    "puntos": 3,
-    "ataque": 0,
-    "defensa": 1,
-    "capacidad": 50,
-    "velocidad": 400000,
-    "salario": 1,
-    "tipo": "ATAQUE",
-    "requisitos": [],
-    "bonusAtaque": [
-      "espionaje"
-    ],
-    "bonusDefensa": [
-      "espionaje"
-    ],
-    "createdAt": "2025-07-19T07:20:56.806Z",
-    "updatedAt": "2025-07-19T07:20:56.806Z"
-  },
-  {
-    "id": "francotirador",
-    "nombre": "Francotirador",
-    "urlImagen": "/img/U11K.gif",
-    "descripcion": "Letal a distancia, el francotirador puede eliminar objetivos clave antes de que el enemigo sepa qué está pasando.",
-    "costoArmas": 20000,
-    "costoMunicion": 5000,
-    "costoDolares": 5000,
-    "duracion": 10000,
-    "puntos": 28,
-    "ataque": 200,
-    "defensa": 20,
-    "capacidad": 1000,
-    "velocidad": 6000,
-    "salario": 20,
-    "tipo": "ATAQUE",
-    "requisitos": [],
-    "bonusAtaque": [
-      "seguridad",
-      "tiro",
-      "guerrilla",
-      "psicologico"
-    ],
-    "bonusDefensa": [
-      "tiro",
-      "guerrilla",
-      "psicologico"
-    ],
-    "createdAt": "2025-07-19T07:20:57.084Z",
-    "updatedAt": "2025-07-19T07:20:57.084Z"
+    "createdAt": "2025-07-19T06:53:38.825Z",
+    "updatedAt": "2025-07-19T06:53:38.825Z"
   },
   {
     "id": "mercenario",
@@ -395,7 +249,153 @@
       "guerrilla",
       "psicologico"
     ],
-    "createdAt": "2025-07-19T07:20:55.692Z",
-    "updatedAt": "2025-07-19T07:28:50.039Z"
+    "createdAt": "2025-07-19T06:53:39.097Z",
+    "updatedAt": "2025-07-19T06:53:39.097Z"
+  },
+  {
+    "id": "ninja",
+    "nombre": "Ninja",
+    "urlImagen": "/img/U13K.gif",
+    "descripcion": "Un guerrero legendario del lejano oriente, el ninja combina artes marciales mortales con un sigilo sobrenatural.",
+    "costoArmas": 2000,
+    "costoMunicion": 1000,
+    "costoDolares": 30000,
+    "duracion": 20000,
+    "puntos": 236,
+    "ataque": 400,
+    "defensa": 1200,
+    "capacidad": 5000,
+    "velocidad": 8000,
+    "salario": 60,
+    "tipo": "ATAQUE",
+    "requisitos": [],
+    "bonusAtaque": [
+      "combate",
+      "armas",
+      "guerrilla",
+      "psicologico"
+    ],
+    "bonusDefensa": [
+      "combate",
+      "armas",
+      "guerrilla",
+      "psicologico"
+    ],
+    "createdAt": "2025-07-19T06:53:39.380Z",
+    "updatedAt": "2025-07-19T06:53:39.380Z"
+  },
+  {
+    "id": "cia",
+    "nombre": "Agente de la CIA",
+    "urlImagen": "/img/U8K.gif",
+    "descripcion": "Un agente de élite con entrenamiento gubernamental, altamente efectivo en operaciones ofensivas y defensivas.",
+    "costoArmas": 7000,
+    "costoMunicion": 10000,
+    "costoDolares": 2500,
+    "duracion": 8500,
+    "puntos": 87,
+    "ataque": 100,
+    "defensa": 180,
+    "capacidad": 3000,
+    "velocidad": 3400,
+    "salario": 30,
+    "tipo": "ATAQUE",
+    "requisitos": [],
+    "bonusAtaque": [
+      "armas",
+      "tiro",
+      "guerrilla"
+    ],
+    "bonusDefensa": [
+      "proteccion",
+      "guerrilla"
+    ],
+    "createdAt": "2025-07-19T06:53:39.670Z",
+    "updatedAt": "2025-07-19T06:53:39.670Z"
+  },
+  {
+    "id": "fbi",
+    "nombre": "Agente del FBI",
+    "urlImagen": "/img/U9K.gif",
+    "descripcion": "Especialista en investigación y tácticas, este agente es perfecto para misiones que requieren precisión y estrategia.",
+    "costoArmas": 4000,
+    "costoMunicion": 6000,
+    "costoDolares": 1000,
+    "duracion": 7750,
+    "puntos": 48,
+    "ataque": 60,
+    "defensa": 100,
+    "capacidad": 2000,
+    "velocidad": 3000,
+    "salario": 20,
+    "tipo": "ATAQUE",
+    "requisitos": [],
+    "bonusAtaque": [
+      "proteccion",
+      "tiro"
+    ],
+    "bonusDefensa": [
+      "proteccion",
+      "tiro"
+    ],
+    "createdAt": "2025-07-19T06:53:39.957Z",
+    "updatedAt": "2025-07-19T06:53:39.957Z"
+  },
+  {
+    "id": "espia",
+    "nombre": "Espia",
+    "urlImagen": "/img/U6K.gif",
+    "descripcion": "Maestro del sigilo y la infiltración, el espía puede obtener información valiosa sin ser detectado.",
+    "costoArmas": 500,
+    "costoMunicion": 200,
+    "costoDolares": 0,
+    "duracion": 70,
+    "puntos": 3,
+    "ataque": 0,
+    "defensa": 1,
+    "capacidad": 50,
+    "velocidad": 400000,
+    "salario": 1,
+    "tipo": "ATAQUE",
+    "requisitos": [],
+    "bonusAtaque": [
+      "espionaje"
+    ],
+    "bonusDefensa": [
+      "espionaje"
+    ],
+    "createdAt": "2025-07-19T06:53:40.236Z",
+    "updatedAt": "2025-07-19T06:53:40.236Z"
+  },
+  {
+    "id": "francotirador",
+    "nombre": "Francotirador",
+    "urlImagen": "/img/U11K.gif",
+    "descripcion": "Letal a distancia, el francotirador puede eliminar objetivos clave antes de que el enemigo sepa qué está pasando.",
+    "costoArmas": 20000,
+    "costoMunicion": 5000,
+    "costoDolares": 5000,
+    "duracion": 10000,
+    "puntos": 28,
+    "ataque": 200,
+    "defensa": 20,
+    "capacidad": 1000,
+    "velocidad": 6000,
+    "salario": 20,
+    "tipo": "ATAQUE",
+    "requisitos": [],
+    "bonusAtaque": [
+      "seguridad",
+      "tiro",
+      "guerrilla",
+      "psicologico"
+    ],
+    "bonusDefensa": [
+      "tiro",
+      "guerrilla",
+      "psicologico"
+    ],
+    "createdAt": "2025-07-19T06:53:40.522Z",
+    "updatedAt": "2025-07-19T06:53:40.522Z"
   }
 ]
