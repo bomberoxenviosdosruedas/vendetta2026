@@ -9,16 +9,11 @@ import * as datosPuntuacion from './datosactuales/puntuacionUsuario.json';
 import * as datosColaConstruccion from './datosactuales/colaConstruccion.json';
 import * as datosColaReclutamiento from './datosactuales/colaReclutamiento.json';
 import * as datosColaMisiones from './datosactuales/colaMisiones.json';
-import * as datosFamilies from './datosactuales/family.json';
-import * as datosFamilyMembers from './datosactuales/familyMember.json';
-import * as datosFamilyInvitations from './datosactuales/familyInvitation.json';
-import * as datosRoomRequirements from './datosactuales/roomRequirement.json';
-import * as datosTrainingRequirements from './datosactuales/trainingRequirement.json';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🚀 Iniciando la importación de datos completos de usuarios y relacionados...');
+  console.log('🚀 Iniciando la importación de datos de usuarios y su progreso...');
   
   const usuarios = (datosUsuarios as any).default || datosUsuarios;
   const propiedades = (datosPropiedades as any).default || datosPropiedades;
@@ -29,11 +24,6 @@ async function main() {
   const colasConstruccion = (datosColaConstruccion as any).default || datosColaConstruccion;
   const colasReclutamiento = (datosColaReclutamiento as any).default || datosColaReclutamiento;
   const colasMisiones = (datosColaMisiones as any).default || datosColaMisiones;
-  const families = (datosFamilies as any).default || datosFamilies;
-  const familyMembers = (datosFamilyMembers as any).default || datosFamilyMembers;
-  const familyInvitations = (datosFamilyInvitations as any).default || datosFamilyInvitations;
-  const roomRequirements = (datosRoomRequirements as any).default || datosRoomRequirements;
-  const trainingRequirements = (datosTrainingRequirements as any).default || datosTrainingRequirements;
 
   for (const userData of usuarios) {
     try {
@@ -109,9 +99,14 @@ async function main() {
      }
   }
   
+  // Limpiar colas existentes para evitar duplicados en cada seed
+  await prisma.colaMisiones.deleteMany({});
+  await prisma.colaReclutamiento.deleteMany({});
+  await prisma.colaConstruccion.deleteMany({});
+
   for (const cola of colasConstruccion) {
       try {
-        await prisma.colaConstruccion.create({ data: {...cola, fechaInicio: new Date(cola.fechaInicio), fechaFinalizacion: new Date(cola.fechaFinalizacion), createdAt: new Date(cola.createdAt)} });
+        await prisma.colaConstruccion.create({ data: {...cola, fechaInicio: cola.fechaInicio ? new Date(cola.fechaInicio) : null, fechaFinalizacion: cola.fechaFinalizacion ? new Date(cola.fechaFinalizacion) : null, createdAt: new Date(cola.createdAt)} });
       } catch (e) {
           console.error(`Error creando cola construccion ${cola.id}`, e);
       }
@@ -125,78 +120,18 @@ async function main() {
   }
   for (const cola of colasMisiones) {
      try {
-      await prisma.colaMisiones.create({ data: {...cola, fechaLlegada: new Date(cola.fechaLlegada), fechaRegreso: new Date(cola.fechaRegreso)} });
+      await prisma.colaMisiones.create({ data: {...cola, fechaLlegada: new Date(cola.fechaLlegada), fechaRegreso: cola.fechaRegreso ? new Date(cola.fechaRegreso) : null, fechaInicio: new Date(cola.fechaInicio)} });
      } catch(e) {
          console.error(`Error creando cola mision ${cola.id}`, e);
      }
   }
 
-  for (const familyData of families) {
-      try {
-        await prisma.family.upsert({
-            where: { id: familyData.id },
-            update: familyData,
-            create: familyData,
-        });
-      } catch(e) {
-         console.error(`Error con familia ${familyData.id}`, e);
-      }
-  }
-
-  for (const memberData of familyMembers) {
-      try {
-        await prisma.familyMember.upsert({
-            where: { userId: memberData.userId },
-            update: memberData,
-            create: memberData,
-        });
-      } catch(e) {
-         console.error(`Error con miembro de familia ${memberData.userId}`, e);
-      }
-  }
-
-  for (const invitationData of familyInvitations) {
-      try {
-        await prisma.familyInvitation.upsert({
-            where: { id: invitationData.id },
-            update: { ...invitationData, expiresAt: new Date(invitationData.expiresAt) },
-            create: { ...invitationData, expiresAt: new Date(invitationData.expiresAt) },
-        });
-      } catch(e) {
-         console.error(`Error con invitacion de familia ${invitationData.id}`, e);
-      }
-  }
-
-  for (const req of roomRequirements) {
-    try {
-        await prisma.roomRequirement.upsert({
-            where: { roomId_requiredRoomId: { roomId: req.roomId, requiredRoomId: req.requiredRoomId } },
-            update: req,
-            create: req,
-        });
-    } catch(e) {
-        console.error(`Error con requisito de habitacion ${req.roomId}`, e);
-    }
-  }
-  
-  for (const req of trainingRequirements) {
-    try {
-        await prisma.trainingRequirement.upsert({
-            where: { trainingId_requiredTrainingId: { trainingId: req.trainingId, requiredTrainingId: req.requiredTrainingId } },
-            update: req,
-            create: req,
-        });
-    } catch(e) {
-        console.error(`Error con requisito de entrenamiento ${req.trainingId}`, e);
-    }
-  }
-
-  console.log('🎉 Importación de datos completos finalizada.');
+  console.log('🎉 Importación de datos de usuario finalizada.');
 }
 
 main()
   .catch(async (e) => {
-    console.error('❌ Error general en el script de importación de datos completos:', e);
+    console.error('❌ Error general en el script de importación de datos de usuario:', e);
     await prisma.$disconnect();
     process.exit(1);
   })

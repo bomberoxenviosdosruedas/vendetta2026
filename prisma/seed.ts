@@ -8,7 +8,8 @@ const scriptsToRun = [
   'impoconfiguracionHabitacion.ts',
   'impoconfiguracionEntrenamiento.ts',
   'impoconfiguracionTropa.ts',
-  'impousuarioprueba.ts', // Este script ahora carga todos los datos de usuario
+  'impousuarioprueba.ts',
+  'imporelaciones.ts', // Nuevo script para relaciones
 ];
 // ---------------------
 
