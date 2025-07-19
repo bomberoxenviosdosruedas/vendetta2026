@@ -19,7 +19,9 @@ export async function saveRoomConfig(formData: FormData) {
     if (!isAdmin) return { error: "No autorizado" };
 
     const originalId = parseString(formData.get('originalId'));
-    const id = parseString(formData.get('id'));
+    const idFromForm = parseString(formData.get('id'));
+
+    const id = idFromForm || originalId;
 
     if (!id) {
         return { error: "El ID de la habitación es obligatorio." };
@@ -107,7 +109,7 @@ export async function saveTrainingConfig(formData: FormData) {
     if (!isAdmin) return { error: "No autorizado" };
 
     const originalId = parseString(formData.get('originalId'));
-    const id = parseString(formData.get('id'));
+    const id = parseString(formData.get('id')) || originalId;
     
     if (!id) {
         return { error: "El ID del entrenamiento es obligatorio." };
