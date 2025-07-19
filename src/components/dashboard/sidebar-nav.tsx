@@ -48,9 +48,7 @@ const mainNav: NavItem[] = [
   { href: "/overview", label: "Visión General", icon: <Home /> },
   { href: "/rooms", label: "Habitaciones", icon: <DoorOpen /> },
   { href: "/recruitment", label: "Reclutamiento", icon: <Users /> },
-  { href: "/security", label: "Seguridad", icon: <Shield /> },
   { href: "/training", label: "Entrenamiento", icon: <Target /> },
-  { href: "/search", label: "Buscar", icon: <Search /> },
 ]
 
 const secondaryNav: NavItem[] = [
@@ -68,6 +66,8 @@ const tertiaryNav: NavItem[] = [
     { href: "/statistics", label: "Estadísticas", icon: <BarChart /> },
     { href: "/rankings", label: "Clasificaciones", icon: <Trophy /> },
     { href: "/settings", label: "Ajustes", icon: <Settings /> },
+    { href: "/security", label: "Seguridad", icon: <Shield /> },
+    { href: "/search", label: "Buscar", icon: <Search /> },
 ]
 
 export function SidebarNav({ user }: SidebarNavProps) {
@@ -75,8 +75,6 @@ export function SidebarNav({ user }: SidebarNavProps) {
   const searchParams = useSearchParams();
   const { selectedProperty } = useProperty();
   const { setOpenMobile, isMobile } = useSidebar();
-
-  const propertyId = selectedProperty?.id;
 
   const handleClick = () => {
     if (isMobile) {
@@ -88,17 +86,24 @@ export function SidebarNav({ user }: SidebarNavProps) {
     <SidebarMenu>
       {items.map((item) => {
         const params = new URLSearchParams(searchParams);
-        if (propertyId) {
-            params.set('propertyId', propertyId);
+        if (selectedProperty?.id) {
+            params.set('propertyId', selectedProperty.id);
         } else {
             params.delete('propertyId');
         }
-        const href = `${item.href}?${params.toString()}`;
+        
+        let finalHref = item.href;
+        if(item.href === '/rooms' && selectedProperty) {
+            finalHref = `/rooms/${selectedProperty.ciudad}:${selectedProperty.barrio}:${selectedProperty.edificio}`;
+        } else {
+            finalHref = `${item.href}?${params.toString()}`;
+        }
+
         return (
           <SidebarMenuItem key={item.href}>
             <SidebarMenuButton
               as={Link}
-              href={href}
+              href={finalHref}
               isActive={pathname.startsWith(item.href)}
               tooltip={item.label}
               onClick={handleClick}
