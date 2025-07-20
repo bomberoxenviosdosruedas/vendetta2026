@@ -9,10 +9,11 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { BattleReport, runBattleSimulation, SimulationInput } from '@/lib/actions/simulation.actions';
 import type { ConfiguracionTropa, ConfiguracionEntrenamiento, ConfiguracionHabitacion } from '@prisma/client';
-import { Loader2, Trash2, Upload } from 'lucide-react';
+import { Loader2, Trash2, Upload, Swords, Minus, Plus } from 'lucide-react';
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogFooter,
@@ -51,19 +52,47 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
     </div>
 );
 
-const InputRow = ({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) => (
-    <div className="flex items-center justify-between">
-        <Label htmlFor={label} className="text-sm truncate pr-2">{label}</Label>
-        <Input
-            id={label}
-            type="number"
-            min="0"
-            value={value}
-            onChange={(e) => onChange(parseInt(e.target.value, 10) || 0)}
-            className="w-24 h-8"
-        />
-    </div>
-);
+const InputRow = ({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) => {
+    const handleIncrement = () => onChange(value + 1);
+    const handleDecrement = () => onChange(Math.max(0, value - 1));
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const val = e.target.value;
+        // Permite un campo vacío para que el usuario pueda borrar antes de escribir.
+        if (val === '') {
+            onChange(0);
+        } else {
+            const num = parseInt(val, 10);
+            if (!isNaN(num)) {
+                onChange(num);
+            }
+        }
+    };
+    
+    return (
+        <div className="flex items-center justify-between">
+            <Label htmlFor={label} className="text-sm truncate pr-2">{label}</Label>
+             <div className="flex items-center gap-2">
+                <Button type="button" variant="outline" size="icon" className="h-8 w-8" onClick={handleDecrement}>
+                    <Minus className="h-4 w-4" />
+                </Button>
+                <Input
+                    id={label}
+                    type="number"
+                    min="0"
+                    value={value || ''}
+                    onChange={handleInputChange}
+                    placeholder="0"
+                    className="w-20 h-8 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                />
+                 <Button type="button" variant="outline" size="icon" className="h-8 w-8" onClick={handleIncrement}>
+                    <Plus className="h-4 w-4" />
+                </Button>
+            </div>
+        </div>
+    );
+};
+
 
 function formatNumber(num: number): string {
     if(num === undefined || num === null) return "0";
