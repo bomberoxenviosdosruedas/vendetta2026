@@ -160,8 +160,8 @@ export async function runBattleSimulation(attacker: SimulationInput, defender: S
 
         let attackerTotalAttack = attackerArmy.reduce((sum, u) => sum + u.attack * u.quantity, 0) * (poderAtaqueAtacante / 100);
         let defenderTotalAttack = defenderArmy.reduce((sum, u) => sum + u.attack * u.quantity, 0) * (poderAtaqueDefensor / 100);
-        let attackerTotalDefense = attackerArmy.reduce((sum, u) => sum + u.defense * u.quantity, 0);
-        let defenderTotalDefense = defenderArmy.reduce((sum, u) => sum + u.defense * u.quantity, 0);
+        let attackerTotalDefense = attackerArmy.reduce((sum, u) => sum + u.defense * u.quantity, 0) * (poderAtaqueAtacante / 100);
+        let defenderTotalDefense = defenderArmy.reduce((sum, u) => sum + u.defense * u.quantity, 0) * (poderAtaqueDefensor / 100);
 
         const attackerLossRatio = defenderTotalAttack > attackerTotalDefense ? 1 : defenderTotalAttack / (attackerTotalDefense || 1);
         const defenderLossRatio = attackerTotalAttack > defenderTotalDefense ? 1 : attackerTotalAttack / (defenderTotalDefense || 1);
