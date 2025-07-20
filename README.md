@@ -45,6 +45,7 @@ Estos modelos definen las "reglas del juego". Se cargan una sola vez a través d
 -   `ConfiguracionHabitacion`: Define las propiedades base de cada tipo de edificio (costos, duración, puntos, etc.).
 -   `ConfiguracionEntrenamiento`: Define las propiedades de cada tipo de entrenamiento.
 -   `ConfiguracionTropa`: Define las estadísticas y costos de cada tipo de unidad reclutable.
+-   `PoderAtaque`: Almacena la tabla de modificadores de ataque basados en el número de propiedades y el nivel de honor.
 
 ### Modelos de Usuario y Propiedad (Dinámicos)
 -   `User`: Modelo central que representa a un jugador.
@@ -58,6 +59,7 @@ Estos modelos definen las "reglas del juego". Se cargan una sola vez a través d
 -   `ColaConstruccion`: Registra las órdenes de construcción de edificios en una propiedad. Permite hasta 5 construcciones en cola.
 -   `ColaReclutamiento`: Registra la orden de reclutamiento de tropas en una propiedad. Solo permite una orden activa por propiedad a la vez.
 -   `ColaMisiones`: Registra las flotas de tropas en movimiento (ataques, transportes, etc.), con sus tiempos de llegada y regreso.
+-   `ColaEntrenamiento`: Registra las órdenes de investigación de tecnologías para un usuario.
 
 ---
 
@@ -81,10 +83,27 @@ En cada carga de una página dentro del `(dashboard)/layout.tsx`, se ejecuta una
 
 ---
 
-## 5. Datos de Prueba (`prisma/datosactuales`)
+## 5. Panel de Administración (`/admin`)
+
+Para facilitar la gestión y el balanceo del juego, se ha implementado un panel de administración protegido.
+
+-   **Acceso**: El panel está protegido por una contraseña simple definida en `src/lib/auth-admin.ts`. La sesión de administrador se gestiona a través de una cookie segura.
+-   **Rutas**: La interfaz del panel se encuentra en las rutas que comienzan con `/app/admin/`.
+-   **Funcionalidades**:
+    -   **Gestión de Configuraciones**: Permite realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre las entidades de configuración del juego a través de tablas interactivas y formularios modales:
+        -   Habitaciones (`ConfiguracionHabitacion`)
+        -   Entrenamientos (`ConfiguracionEntrenamiento`)
+        -   Tropas (`ConfiguracionTropa`)
+    -   **Matriz de Bonus de Ataque**: Ofrece una interfaz de matriz visual para gestionar las bonificaciones de daño entre diferentes tipos de tropas (`TropaBonusContrincante`), permitiendo un ajuste fino y rápido del balance de combate.
+    -   **Responsivo**: La interfaz está diseñada para ser funcional en dispositivos móviles, utilizando componentes como `ScrollArea` para manejar tablas de datos complejas.
+
+---
+
+## 6. Datos de Prueba (`prisma/datosactuales`)
 
 Este directorio es vital para el desarrollo y las pruebas, ya que permite recrear un estado consistente de la base de datos.
 -   **Archivos JSON**: Cada archivo `.json` corresponde a un modelo en `prisma/schema.prisma`.
     -   `configuracion*.json`: Contienen los datos base del juego (costos, estadísticas, etc.). Son la "Biblia" del juego.
     -   `user.json`, `propiedad.json`, etc.: Contienen datos de un usuario de prueba (`bomberox`) con un estado de juego predefinido (recursos, niveles de edificios, tropas) que permite probar todas las funcionalidades sin tener que empezar de cero cada vez.
 -   **Proceso de Seeding**: El comando `prisma db seed` (configurado en `package.json`) ejecuta el script `prisma/seed.ts`. Este script orquesta la ejecución de varios sub-scripts (`impoconfiguracion*.ts`, `impousuarioprueba.ts`) que leen los archivos JSON y utilizan `prisma.upsert()` para poblar la base de datos, asegurando un entorno de desarrollo predecible y funcional.
+```
