@@ -86,21 +86,21 @@ export function BonusConfigMatrix({ attackTroops, defenseTroops, initialBonusCon
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <ScrollArea className="w-full whitespace-nowrap rounded-md border">
+                <ScrollArea className="w-full whitespace-nowrap rounded-md border h-[75vh]">
                     <table className="min-w-full border-collapse text-sm">
                         <thead>
                             <tr className="bg-muted/50">
-                                <th className="sticky left-0 z-10 bg-muted/80 p-2 border-b border-r text-xs font-semibold w-[150px] backdrop-blur-sm">Atacante / Defensor</th>
+                                <th className="sticky top-0 left-0 z-20 bg-muted/80 p-2 border-b border-r text-xs font-semibold w-[150px] backdrop-blur-sm">Atacante / Defensor</th>
                                 {attackTroops.map(defender => (
-                                     <th key={defender.id} className="p-2 border-b border-r text-xs font-semibold w-24 h-24 relative bg-blue-950/40">
-                                        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 origin-bottom-left -rotate-45 w-32 text-left">
+                                     <th key={defender.id} className="sticky top-0 z-10 p-2 border-b border-r text-xs font-semibold w-28 h-28 bg-blue-950/40 backdrop-blur-sm">
+                                        <div className="[writing-mode:vertical-rl] origin-center -rotate-180">
                                             <span className="truncate block">{defender.nombre}</span>
                                         </div>
                                     </th>
                                 ))}
                                 {defenseTroops.map(defender => (
-                                     <th key={defender.id} className="p-2 border-b border-r text-xs font-semibold w-24 h-24 relative bg-red-950/40">
-                                        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 origin-bottom-left -rotate-45 w-32 text-left">
+                                     <th key={defender.id} className="sticky top-0 z-10 p-2 border-b border-r text-xs font-semibold w-28 h-28 bg-red-950/40 backdrop-blur-sm">
+                                        <div className="[writing-mode:vertical-rl] origin-center -rotate-180">
                                             <span className="truncate block">{defender.nombre}</span>
                                         </div>
                                     </th>
