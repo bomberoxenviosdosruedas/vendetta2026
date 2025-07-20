@@ -11,8 +11,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 6,
-    "createdAt": "2025-07-20T04:19:37.534Z",
-    "updatedAt": "2025-07-20T04:19:37.534Z"
+    "createdAt": "2025-07-20T04:38:01.992Z",
+    "updatedAt": "2025-07-20T04:38:01.992Z"
   },
   {
     "id": "armeria",
@@ -26,8 +26,8 @@
     "produccionBase": 10,
     "produccionRecurso": "armas",
     "puntos": 2.32,
-    "createdAt": "2025-07-20T04:19:38.304Z",
-    "updatedAt": "2025-07-20T04:19:38.304Z"
+    "createdAt": "2025-07-20T04:38:02.872Z",
+    "updatedAt": "2025-07-20T04:38:02.872Z"
   },
   {
     "id": "almacen_de_municion",
@@ -41,8 +41,8 @@
     "produccionBase": 20,
     "produccionRecurso": "municion",
     "puntos": 1.39,
-    "createdAt": "2025-07-20T04:19:39.051Z",
-    "updatedAt": "2025-07-20T04:19:39.051Z"
+    "createdAt": "2025-07-20T04:38:03.677Z",
+    "updatedAt": "2025-07-20T04:38:03.677Z"
   },
   {
     "id": "cerveceria",
@@ -56,8 +56,8 @@
     "produccionBase": 50,
     "produccionRecurso": "alcohol",
     "puntos": 1.6,
-    "createdAt": "2025-07-20T04:19:39.816Z",
-    "updatedAt": "2025-07-20T04:19:39.816Z"
+    "createdAt": "2025-07-20T04:38:04.443Z",
+    "updatedAt": "2025-07-20T04:38:04.443Z"
   },
   {
     "id": "taberna",
@@ -71,8 +71,8 @@
     "produccionBase": 2,
     "produccionRecurso": "dolares_por_alcohol",
     "puntos": 2.1,
-    "createdAt": "2025-07-20T04:19:40.110Z",
-    "updatedAt": "2025-07-20T04:19:40.110Z"
+    "createdAt": "2025-07-20T04:38:04.726Z",
+    "updatedAt": "2025-07-20T04:38:04.726Z"
   },
   {
     "id": "almacen_de_armas",
@@ -86,8 +86,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 12,
-    "createdAt": "2025-07-20T04:19:40.380Z",
-    "updatedAt": "2025-07-20T04:19:40.380Z"
+    "createdAt": "2025-07-20T04:38:05.534Z",
+    "updatedAt": "2025-07-20T04:38:05.534Z"
   },
   {
     "id": "deposito_de_municion",
@@ -101,8 +101,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 18,
-    "createdAt": "2025-07-20T04:19:41.186Z",
-    "updatedAt": "2025-07-20T04:19:41.186Z"
+    "createdAt": "2025-07-20T04:38:06.308Z",
+    "updatedAt": "2025-07-20T04:38:06.308Z"
   },
   {
     "id": "almacen_de_alcohol",
@@ -116,8 +116,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 7,
-    "createdAt": "2025-07-20T04:19:41.500Z",
-    "updatedAt": "2025-07-20T04:19:41.500Z"
+    "createdAt": "2025-07-20T04:38:06.587Z",
+    "updatedAt": "2025-07-20T04:38:06.587Z"
   },
   {
     "id": "caja_fuerte",
@@ -131,8 +131,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 91,
-    "createdAt": "2025-07-20T04:19:41.799Z",
-    "updatedAt": "2025-07-20T04:19:41.799Z"
+    "createdAt": "2025-07-20T04:38:06.883Z",
+    "updatedAt": "2025-07-20T04:38:06.883Z"
   },
   {
     "id": "campo_de_entrenamiento",
@@ -146,8 +146,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 61,
-    "createdAt": "2025-07-20T04:19:42.591Z",
-    "updatedAt": "2025-07-20T04:19:42.591Z"
+    "createdAt": "2025-07-20T04:38:07.669Z",
+    "updatedAt": "2025-07-20T04:38:07.669Z"
   },
   {
     "id": "seguridad",
@@ -161,8 +161,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 45,
-    "createdAt": "2025-07-20T04:19:42.882Z",
-    "updatedAt": "2025-07-20T04:19:42.882Z"
+    "createdAt": "2025-07-20T04:38:07.967Z",
+    "updatedAt": "2025-07-20T04:38:07.967Z"
   },
   {
     "id": "torreta_de_fuego_automatico",
@@ -176,8 +176,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 57,
-    "createdAt": "2025-07-20T04:19:43.177Z",
-    "updatedAt": "2025-07-20T04:19:43.177Z"
+    "createdAt": "2025-07-20T04:38:08.259Z",
+    "updatedAt": "2025-07-20T04:38:08.259Z"
   },
   {
     "id": "minas_ocultas",
@@ -191,8 +191,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 65.5,
-    "createdAt": "2025-07-20T04:19:43.464Z",
-    "updatedAt": "2025-07-20T04:19:43.464Z"
+    "createdAt": "2025-07-20T04:38:09.034Z",
+    "updatedAt": "2025-07-20T04:38:09.034Z"
   },
   {
     "id": "escuela_especializacion",
@@ -206,8 +206,8 @@
     "produccionBase": 0,
     "produccionRecurso": null,
     "puntos": 31.75,
-    "createdAt": "2025-07-20T04:19:43.742Z",
-    "updatedAt": "2025-07-20T04:19:43.742Z"
+    "createdAt": "2025-07-20T04:38:09.318Z",
+    "updatedAt": "2025-07-20T04:38:09.318Z"
   },
   {
     "id": "contrabando",
@@ -221,7 +221,7 @@
     "produccionBase": 21,
     "produccionRecurso": "dolares",
     "puntos": 136,
-    "createdAt": "2025-07-20T04:19:44.029Z",
-    "updatedAt": "2025-07-20T04:19:44.029Z"
+    "createdAt": "2025-07-20T04:38:09.619Z",
+    "updatedAt": "2025-07-20T04:38:09.619Z"
   }
 ]
