@@ -29,6 +29,7 @@ async function main() {
     'colaConstruccion',
     'colaReclutamiento',
     'colaMisiones',
+    'colaEntrenamiento',
     'family',
     'familyMember',
     'familyInvitation',

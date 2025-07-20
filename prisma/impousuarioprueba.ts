@@ -9,6 +9,7 @@ import * as datosPuntuacion from './datosactuales/puntuacionUsuario.json';
 import * as datosColaConstruccion from './datosactuales/colaConstruccion.json';
 import * as datosColaReclutamiento from './datosactuales/colaReclutamiento.json';
 import * as datosColaMisiones from './datosactuales/colaMisiones.json';
+import * as datosColaEntrenamiento from './datosactuales/colaEntrenamiento.json';
 
 const prisma = new PrismaClient();
 
@@ -24,6 +25,7 @@ async function main() {
   const colasConstruccion = (datosColaConstruccion as any).default || datosColaConstruccion;
   const colasReclutamiento = (datosColaReclutamiento as any).default || datosColaReclutamiento;
   const colasMisiones = (datosColaMisiones as any).default || datosColaMisiones;
+  const colasEntrenamiento = (datosColaEntrenamiento as any).default || datosColaEntrenamiento;
 
   for (const userData of usuarios) {
     try {
@@ -89,10 +91,11 @@ async function main() {
   
   for (const puntData of puntuaciones) {
      try {
+      const { ...restOfPuntData } = puntData;
       await prisma.puntuacionUsuario.upsert({
-          where: { id: puntData.id },
-          update: puntData,
-          create: puntData,
+          where: { id: restOfPuntData.id },
+          update: restOfPuntData,
+          create: restOfPuntData,
       });
      } catch (e) {
         console.error(`Error con puntuacion ${puntData.id}`, e);
@@ -103,6 +106,8 @@ async function main() {
   await prisma.colaMisiones.deleteMany({});
   await prisma.colaReclutamiento.deleteMany({});
   await prisma.colaConstruccion.deleteMany({});
+  await prisma.colaEntrenamiento.deleteMany({});
+
 
   for (const cola of colasConstruccion) {
       try {
@@ -124,6 +129,14 @@ async function main() {
      } catch(e) {
          console.error(`Error creando cola mision ${cola.id}`, e);
      }
+  }
+
+  for (const cola of colasEntrenamiento) {
+    try {
+      await prisma.colaEntrenamiento.create({ data: {...cola, fechaInicio: new Date(cola.fechaInicio), fechaFinalizacion: new Date(cola.fechaFinalizacion)} });
+    } catch(e) {
+        console.error(`Error creando cola entrenamiento ${cola.id}`, e);
+    }
   }
 
   console.log('🎉 Importación de datos de usuario finalizada.');
