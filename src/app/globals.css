@@ -90,6 +90,9 @@
   * {
     @apply border-border;
   }
+  html {
+    @apply font-sans;
+  }
   body {
     @apply bg-background text-foreground;
     -webkit-font-smoothing: antialiased;
@@ -120,29 +123,19 @@
     @apply absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-background/20 to-transparent;
     animation: shimmer 1.5s infinite;
   }
-  @keyframes shimmer {
-    100% {
-      transform: translateX(100%);
-    }
-  }
-
-  /* Fade-in animation */
-  .animate-fade-in {
-    animation: fadeIn 0.5s ease-in-out forwards;
-  }
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
+  
   h1, h2, h3, h4 {
     @apply font-heading;
+  }
+
+  /* Remove arrows from number inputs */
+  input[type=number]::-webkit-inner-spin-button, 
+  input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0; 
+  }
+  input[type=number] {
+    -moz-appearance: textfield;
   }
 }
 
