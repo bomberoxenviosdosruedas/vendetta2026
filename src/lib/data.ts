@@ -316,6 +316,59 @@ const userInclude = {
     }
 };
 
+export const getMaximumResourceCapacity = cache(async () => {
+    const properties = await prisma.propiedad.findMany({
+        include: { habitaciones: { include: { configuracion: true } } }
+    });
+    return [
+        { name: "Armas", maxValue: Math.max(...properties.map(p => calculateStorageCapacity(p as FullPropiedad).armas)) },
+        { name: "Munición", maxValue: Math.max(...properties.map(p => calculateStorageCapacity(p as FullPropiedad).municion)) },
+        { name: "Alcohol", maxValue: Math.max(...properties.map(p => calculateStorageCapacity(p as FullPropiedad).alcohol)) },
+        { name: "Dólares", maxValue: Math.max(...properties.map(p => calculateStorageCapacity(p as FullPropiedad).dolares)) },
+    ];
+});
+
+export const getGlobalStatistics = cache(async () => {
+    try {
+        const [
+            allRoomConfigs,
+            allTrainingConfigs,
+            allTroopConfigs,
+            roomStats,
+            trainingStats,
+            troopStats,
+        ] = await Promise.all([
+            getRoomConfigurations(),
+            getTrainingConfigurations(),
+            getTroopConfigurations(),
+            prisma.habitacionUsuario.findMany(),
+            prisma.entrenamientoUsuario.findMany(),
+            prisma.tropaUsuario.groupBy({
+                by: ['userId', 'configuracionTropaId'],
+                _sum: { cantidad: true },
+            }),
+        ]);
+        const troopStatsFormatted = troopStats.map(stat => ({
+            userId: stat.userId,
+            total: stat._sum.cantidad || 0,
+            configuracionTropaId: stat.configuracionTropaId,
+        }))
+
+        return {
+            allRoomConfigs,
+            allTrainingConfigs,
+            allTroopConfigs,
+            roomStats,
+            trainingStats,
+            troopStats: troopStatsFormatted,
+        };
+
+    } catch (e) {
+        console.error("Error fetching global statistics", e);
+        throw new Error("Could not fetch global statistics");
+    }
+});
+
 export async function getUserByUsername(username: string): Promise<UserWithProgress | null> {
     try {
         const user = await prisma.user.findUnique({
