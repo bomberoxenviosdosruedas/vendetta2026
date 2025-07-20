@@ -204,7 +204,7 @@ export function TrainingView({ user, trainingsData }: TrainingViewProps) {
                             <div>
                                 <div className="font-bold">{training.nombre}</div>
                                 <div className="text-sm text-primary">
-                                Nivel {training.nivel}
+                                  Nivel {training.nivel}
                                 </div>
                                 {isTrainingInQueue && <div className="text-xs text-amber-500 flex items-center gap-1"><Hourglass className="h-3 w-3" /> En cola</div>}
                                 {!training.meetsRequirements && (
