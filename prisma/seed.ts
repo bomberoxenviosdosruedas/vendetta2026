@@ -1,4 +1,5 @@
 
+
 import { execSync } from 'child_process';
 import path from 'path';
 
@@ -8,6 +9,7 @@ const scriptsToRun = [
   'impoconfiguracionHabitacion.ts',
   'impoconfiguracionEntrenamiento.ts',
   'impoconfiguracionTropa.ts',
+  'impopoderataque.ts',
   'impousuarioprueba.ts',
   'imporelaciones.ts', // Nuevo script para relaciones
 ];

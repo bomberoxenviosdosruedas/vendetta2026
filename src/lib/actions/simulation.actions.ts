@@ -1,7 +1,9 @@
 
+
 'use server';
 
 import { getTrainingConfigurations, getTroopConfigurations } from '../data';
+import { calcularPoderAtaque } from '../formulas/score-formulas';
 import { calcularStatsTropaConBonus } from '../formulas/troop-formulas';
 import type { ConfiguracionTropa, TropaBonusContrincante } from '@prisma/client';
 
@@ -26,6 +28,7 @@ export interface SimulationInput {
     trainings: TrainingData[];
     defenses: DefenseData[];
     buildingsLevel: number;
+    propertyCount: number;
 }
 
 // --- BATTLE LOGIC INTERNAL TYPES ---
@@ -130,11 +133,16 @@ export async function runBattleSimulation(attacker: SimulationInput, defender: S
     const initialAttackerArmy = JSON.parse(JSON.stringify(attackerArmy));
     const initialDefenderArmy = JSON.parse(JSON.stringify(defenderArmy));
 
-    // Apply defense bonus to defender army
     const defenseBonus = defender.defenses.reduce((sum, d) => sum + (d.level * 0.05), 1) * (1 + (defender.buildingsLevel * 0.1));
     defenderArmy.forEach(unit => {
         unit.defense = Math.floor(unit.defense * defenseBonus);
     });
+
+    const honorAtacante = attacker.trainings.find(t => t.id === 'honor')?.level || 0;
+    const honorDefensor = defender.trainings.find(t => t.id === 'honor')?.level || 0;
+    
+    const poderAtaqueAtacante = await calcularPoderAtaque(attacker.propertyCount, honorAtacante);
+    const poderAtaqueDefensor = await calcularPoderAtaque(defender.propertyCount, honorDefensor);
 
     const battleRounds: BattleRoundReport[] = [];
     let finalMessage = "";
@@ -150,12 +158,11 @@ export async function runBattleSimulation(attacker: SimulationInput, defender: S
         const attackerLossesThisRound = new Map<string, number>();
         const defenderLossesThisRound = new Map<string, number>();
 
-        let attackerTotalAttack = attackerArmy.reduce((sum, u) => sum + u.attack * u.quantity, 0);
-        let defenderTotalAttack = defenderArmy.reduce((sum, u) => sum + u.attack * u.quantity, 0);
+        let attackerTotalAttack = attackerArmy.reduce((sum, u) => sum + u.attack * u.quantity, 0) * (poderAtaqueAtacante / 100);
+        let defenderTotalAttack = defenderArmy.reduce((sum, u) => sum + u.attack * u.quantity, 0) * (poderAtaqueDefensor / 100);
         let attackerTotalDefense = attackerArmy.reduce((sum, u) => sum + u.defense * u.quantity, 0);
         let defenderTotalDefense = defenderArmy.reduce((sum, u) => sum + u.defense * u.quantity, 0);
 
-        // --- Battle Calculations ---
         const attackerLossRatio = defenderTotalAttack > attackerTotalDefense ? 1 : defenderTotalAttack / (attackerTotalDefense || 1);
         const defenderLossRatio = attackerTotalAttack > defenderTotalDefense ? 1 : attackerTotalAttack / (defenderTotalDefense || 1);
         
