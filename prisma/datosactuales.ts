@@ -32,6 +32,7 @@ async function main() {
     'family',
     'familyMember',
     'familyInvitation',
+    'message',
     'roomRequirement',
     'trainingRequirement',
     'tropaBonusContrincante'

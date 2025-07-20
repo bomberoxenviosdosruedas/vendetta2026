@@ -7,11 +7,12 @@ import * as datosFamilyInvitations from './datosactuales/familyInvitation.json';
 import * as datosRoomRequirements from './datosactuales/roomRequirement.json';
 import * as datosTrainingRequirements from './datosactuales/trainingRequirement.json';
 import * as datosTropaBonus from './datosactuales/tropaBonusContrincante.json';
+import * as datosMessages from './datosactuales/message.json';
 
 const prisma = new PrismaClient();
 
 async function main() {
-    console.log('🤝 Iniciando la importación de datos relacionales (familias, requisitos, etc.)...');
+    console.log('🤝 Iniciando la importación de datos relacionales (familias, requisitos, mensajes, etc.)...');
     
     const families = (datosFamilies as any).default || datosFamilies;
     const familyMembers = (datosFamilyMembers as any).default || datosFamilyMembers;
@@ -19,6 +20,8 @@ async function main() {
     const roomRequirements = (datosRoomRequirements as any).default || datosRoomRequirements;
     const trainingRequirements = (datosTrainingRequirements as any).default || datosTrainingRequirements;
     const tropaBonus = (datosTropaBonus as any).default || datosTropaBonus;
+    const messages = (datosMessages as any).default || datosMessages;
+
 
     for (const familyData of families) {
         try {
@@ -89,6 +92,18 @@ async function main() {
             });
         } catch (e) {
             console.error(`Error con bonus de tropa ${bonus.tropaAtacanteId}`, e);
+        }
+    }
+
+    for (const messageData of messages) {
+        try {
+            await prisma.message.upsert({
+                where: { id: messageData.id },
+                update: { ...messageData, createdAt: new Date(messageData.createdAt) },
+                create: { ...messageData, createdAt: new Date(messageData.createdAt) },
+            });
+        } catch(e) {
+            console.error(`Error con mensaje ${messageData.id}`, e);
         }
     }
   
