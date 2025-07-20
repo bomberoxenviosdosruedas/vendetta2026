@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useTransition } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../ui/card";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Loader2 } from "lucide-react";
@@ -50,10 +50,11 @@ export function BonusConfigMatrix({ troops, initialBonusConfig }: BonusConfigMat
     };
 
     const handleSubmit = () => {
-        const bonusData: TropaBonusContrincante[] = [];
+        const bonusData: { tropaAtacanteId: string; tropaDefensoraId: string; factorPrioridad: number }[] = [];
         matrix.forEach((defenderMap, attackerId) => {
             defenderMap.forEach((factor, defenderId) => {
-                if(factor !== 1) { // Only save non-default values
+                // Solo guardamos si el factor es diferente de 1 para no llenar la DB
+                if (factor !== 1) { 
                     bonusData.push({
                         tropaAtacanteId: attackerId,
                         tropaDefensoraId: defenderId,
@@ -77,33 +78,35 @@ export function BonusConfigMatrix({ troops, initialBonusConfig }: BonusConfigMat
         <Card>
             <CardHeader>
                 <CardTitle>Matriz de Bonus de Ataque vs Tropas</CardTitle>
+                <CardDescription>
+                    Define el factor de prioridad de ataque. Un valor de 1.5 significa un 50% más de daño contra esa unidad. Un valor de 1 es el normal.
+                </CardDescription>
             </CardHeader>
             <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                    Define el factor de prioridad de ataque. Un valor de 1.5 significa un 50% más de daño contra esa unidad. Un valor de 1 es el normal.
-                </p>
-                <ScrollArea className="w-full whitespace-nowrap">
-                    <table className="min-w-full border-collapse">
+                <ScrollArea className="w-full whitespace-nowrap rounded-md border">
+                    <table className="min-w-full border-collapse text-sm">
                         <thead>
-                            <tr>
-                                <th className="sticky left-0 bg-card p-2 border text-xs w-[150px]">Atacante / Defensor</th>
+                            <tr className="bg-muted/50">
+                                <th className="sticky left-0 z-10 bg-muted/80 p-2 border-b border-r text-xs font-semibold w-[150px] backdrop-blur-sm">Atacante / Defensor</th>
                                 {troops.map(defender => (
-                                    <th key={defender.id} className="p-2 border text-xs w-[100px] -rotate-45">
-                                        <div className="w-20 truncate">{defender.nombre}</div>
+                                     <th key={defender.id} className="p-2 border-b border-r text-xs font-semibold w-24 h-24 relative">
+                                        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 origin-bottom-left -rotate-45 w-32 text-left">
+                                            <span className="truncate block">{defender.nombre}</span>
+                                        </div>
                                     </th>
                                 ))}
                             </tr>
                         </thead>
                         <tbody>
                             {troops.map(attacker => (
-                                <tr key={attacker.id}>
-                                    <td className="sticky left-0 bg-card p-2 border font-semibold text-sm w-[150px]">{attacker.nombre}</td>
+                                <tr key={attacker.id} className="even:bg-muted/20">
+                                    <td className="sticky left-0 z-10 bg-card p-2 border-b border-r font-semibold w-[150px]">{attacker.nombre}</td>
                                     {troops.map(defender => (
-                                        <td key={defender.id} className={cn("p-1 border", attacker.id === defender.id && "bg-muted/30")}>
+                                        <td key={defender.id} className={cn("p-1 border-b border-r", attacker.id === defender.id && "bg-muted/30")}>
                                             <Input
                                                 type="number"
                                                 step="0.1"
-                                                className="w-24 h-8 text-center"
+                                                className="w-20 h-8 text-center tabular-nums"
                                                 placeholder="1"
                                                 disabled={attacker.id === defender.id}
                                                 value={matrix.get(attacker.id)?.get(defender.id) ?? ''}
