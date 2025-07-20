@@ -1,3 +1,4 @@
+
 'use client'
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -22,6 +23,7 @@ import {
 import { useTransition } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { leaveFamily } from "@/lib/actions/family.actions";
+import Image from "next/image";
 
 
 interface FamilyDashboardViewProps {
@@ -56,7 +58,7 @@ export function FamilyDashboardView({ family, currentUser }: FamilyDashboardView
         <div className="main-view space-y-6">
             <Card className="overflow-hidden">
                 <div className="relative h-32 bg-muted">
-                    <img src="https://placehold.co/1200x200.png" alt="Family Banner" className="w-full h-full object-cover" data-ai-hint="mafia pattern" />
+                    <Image src="/img/login_bg.jpg" alt="Family Banner" fill className="object-cover" data-ai-hint="mafia pattern" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                     <div className="absolute bottom-4 left-4 flex items-end gap-4">
                          <Avatar className="h-24 w-24 border-4 border-background">
