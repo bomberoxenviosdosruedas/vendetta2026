@@ -2,7 +2,7 @@
 
 "use server"
 
-import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember, TrainingRequirement, RoomRequirement, TropaBonusContrincante } from '@prisma/client/edge'
+import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember, TrainingRequirement, RoomRequirement, TropaBonusContrincante, Message, MessageCategory } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 import { cache } from 'react';
 import { calculateStorageCapacity } from './formulas/room-formulas';
@@ -46,6 +46,10 @@ export type FullFamily = Family & {
     members: FullFamilyMember[]
 }
 
+export type FullMessage = Message & {
+    sender: { name: string; id: string } | null;
+}
+
 export type UserWithProgress = User & {
     propiedades: FullPropiedad[];
     entrenamientos: (EntrenamientoUsuario & { configuracion: ConfiguracionEntrenamiento })[];
@@ -60,6 +64,30 @@ export type UserForRanking = User & {
         propiedades: number;
     }
 }
+
+export const getMessagesForUser = cache(async (userId: string): Promise<FullMessage[]> => {
+    try {
+        const messages = await prisma.message.findMany({
+            where: { recipientId: userId },
+            include: {
+                sender: {
+                    select: {
+                        id: true,
+                        name: true,
+                    }
+                }
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        });
+        return messages as FullMessage[];
+    } catch (e) {
+        console.error("Error fetching messages for user", e);
+        return [];
+    }
+});
+
 
 export const getFamilyById = cache(async(id: string) => {
     try {
@@ -222,7 +250,12 @@ export const getTrainingConfigurations = cache(async (): Promise<FullConfiguraci
 
 export const getUsers = cache(async () => {
     try {
-        const users = await prisma.user.findMany();
+        const users = await prisma.user.findMany({
+            select: {
+                id: true,
+                name: true,
+            }
+        });
         return users;
     } catch (error) {
         console.error("Error fetching users:", error);
