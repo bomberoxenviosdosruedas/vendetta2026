@@ -4,6 +4,14 @@ import * as datosTropas from './datosactuales/configuracionTropa.json';
 
 const prisma = new PrismaClient();
 
+const tropasDefensaIds = [
+    "trabajador_ilegal",
+    "centinela",
+    "policia",
+    "guardaespaldas",
+    "guardia_de_honor"
+];
+
 interface TropaData {
     id: string;
     nombre: string;
@@ -19,7 +27,7 @@ interface TropaData {
     capacidad: number;
     velocidad: number;
     salario: number;
-    tipo: TipoTropa;
+    tipo?: TipoTropa;
     requisitos: string[];
     bonusAtaque: string[];
     bonusDefensa: string[];
@@ -32,6 +40,8 @@ async function main() {
 
   for (const tropa of tropas) {
     try {
+        const tipoTropa = tropasDefensaIds.includes(tropa.id) ? TipoTropa.DEFENSA : tropa.tipo || TipoTropa.ATAQUE;
+
       await prisma.configuracionTropa.upsert({
         where: { id: tropa.id },
         update: {
@@ -48,7 +58,7 @@ async function main() {
           capacidad: tropa.capacidad,
           velocidad: tropa.velocidad,
           salario: tropa.salario,
-          tipo: tropa.tipo || TipoTropa.ATAQUE, 
+          tipo: tipoTropa,
           requisitos: tropa.requisitos,
           bonusAtaque: tropa.bonusAtaque,
           bonusDefensa: tropa.bonusDefensa,
@@ -68,7 +78,7 @@ async function main() {
           capacidad: tropa.capacidad,
           velocidad: tropa.velocidad,
           salario: tropa.salario,
-          tipo: tropa.tipo || TipoTropa.ATAQUE,
+          tipo: tipoTropa,
           requisitos: tropa.requisitos,
           bonusAtaque: tropa.bonusAtaque,
           bonusDefensa: tropa.bonusDefensa,
@@ -92,3 +102,4 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
+

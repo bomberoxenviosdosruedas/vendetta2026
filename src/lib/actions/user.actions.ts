@@ -52,19 +52,15 @@ async function actualizarRecursosPropiedad(propiedad: FullPropiedad): Promise<Fu
         return propiedad;
     }
     
-    // 1. Calcular capacidad máxima de almacenamiento
     const capacidad = calculateStorageCapacity(propiedad);
 
-    // 2. Calcular producción por segundo
     const produccionPorSegundo = calcularProduccionTotalPorSegundo(propiedad);
 
-    // 3. Calcular recursos generados
     const armasGeneradas = produccionPorSegundo.armas * segundosTranscurridos;
     const municionGenerada = produccionPorSegundo.municion * segundosTranscurridos;
     const alcoholGenerado = produccionPorSegundo.alcohol * segundosTranscurridos;
     const dolaresGenerados = produccionPorSegundo.dolares * segundosTranscurridos;
 
-    // 4. Calcular nuevos totales, aplicando el límite de capacidad
     const nuevasArmas = Math.min(capacidad.armas, propiedad.armas + armasGeneradas);
     const nuevaMunicion = Math.min(capacidad.municion, propiedad.municion + municionGenerada);
     const nuevoAlcohol = Math.min(capacidad.alcohol, propiedad.alcohol + alcoholGenerado);
@@ -193,33 +189,60 @@ async function verificarYFinalizarReclutamientoDePropiedad(propiedad: FullPropie
 
     try {
         await prisma.$transaction(async (tx) => {
-            const tropaExistente = await tx.tropaUsuario.findUnique({
-                where: {
-                    propiedadId_configuracionTropaId: {
+            const esTropaDeDefensa = reclutamientoActivo.tropaConfig.tipo === 'DEFENSA';
+            
+            if (esTropaDeDefensa) {
+                const tropaSeguridadExistente = await tx.tropaSeguridadUsuario.findFirst({
+                    where: {
                         propiedadId: propiedad.id,
                         configuracionTropaId: reclutamientoActivo.tropaId,
                     }
-                }
-            });
+                });
 
-            if (tropaExistente) {
-                await tx.tropaUsuario.update({
+                if (tropaSeguridadExistente) {
+                    await tx.tropaSeguridadUsuario.update({
+                        where: { id: tropaSeguridadExistente.id },
+                        data: { cantidad: { increment: reclutamientoActivo.cantidad } }
+                    });
+                } else {
+                    await tx.tropaSeguridadUsuario.create({
+                        data: {
+                            propiedadId: propiedad.id,
+                            configuracionTropaId: reclutamientoActivo.tropaId,
+                            cantidad: reclutamientoActivo.cantidad,
+                        }
+                    });
+                }
+
+            } else {
+                const tropaExistente = await tx.tropaUsuario.findUnique({
                     where: {
                         propiedadId_configuracionTropaId: {
                             propiedadId: propiedad.id,
                             configuracionTropaId: reclutamientoActivo.tropaId,
                         }
-                    },
-                    data: { cantidad: { increment: reclutamientoActivo.cantidad } }
-                });
-            } else {
-                await tx.tropaUsuario.create({
-                    data: {
-                        propiedadId: propiedad.id,
-                        configuracionTropaId: reclutamientoActivo.tropaId,
-                        cantidad: reclutamientoActivo.cantidad,
                     }
                 });
+
+                if (tropaExistente) {
+                    await tx.tropaUsuario.update({
+                        where: {
+                            propiedadId_configuracionTropaId: {
+                                propiedadId: propiedad.id,
+                                configuracionTropaId: reclutamientoActivo.tropaId,
+                            }
+                        },
+                        data: { cantidad: { increment: reclutamientoActivo.cantidad } }
+                    });
+                } else {
+                    await tx.tropaUsuario.create({
+                        data: {
+                            propiedadId: propiedad.id,
+                            configuracionTropaId: reclutamientoActivo.tropaId,
+                            cantidad: reclutamientoActivo.cantidad,
+                        }
+                    });
+                }
             }
 
             await tx.colaReclutamiento.delete({ where: { id: reclutamientoActivo.id } });
@@ -390,3 +413,4 @@ export async function actualizarPuntuacionUsuario(user: UserWithProgress): Promi
     return user;
   }
 }
+

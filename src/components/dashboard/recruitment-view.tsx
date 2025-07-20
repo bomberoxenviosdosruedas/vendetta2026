@@ -158,13 +158,15 @@ export function RecruitmentView({ user, troopConfigsWithStats }: RecruitmentView
     'francotirador', 'asesino', 'ninja', 'mercenario'
   ];
 
-  const sortedTroops = [...troopConfigsWithStats].sort((a, b) => {
-    const indexA = desiredOrder.indexOf(a.id);
-    const indexB = desiredOrder.indexOf(b.id);
-    if (indexA === -1) return 1;
-    if (indexB === -1) return -1;
-    return indexA - indexB;
-  });
+  const sortedTroops = [...troopConfigsWithStats]
+    .filter(t => t.tipo !== 'DEFENSA')
+    .sort((a, b) => {
+        const indexA = desiredOrder.indexOf(a.id);
+        const indexB = desiredOrder.indexOf(b.id);
+        if (indexA === -1) return 1;
+        if (indexB === -1) return -1;
+        return indexA - indexB;
+    });
 
   const userTroopsMap = new Map(selectedProperty.TropaUsuario.map(t => [t.configuracionTropaId, t]));
 

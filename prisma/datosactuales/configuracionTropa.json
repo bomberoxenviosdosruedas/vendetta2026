@@ -141,7 +141,7 @@
     "capacidad": 50,
     "velocidad": 400000,
     "salario": 1,
-    "tipo": "ATAQUE",
+    "tipo": "ESPIONAJE",
     "requisitos": [],
     "bonusAtaque": [
       "espionaje"
@@ -167,7 +167,7 @@
     "capacidad": 10000,
     "velocidad": 2400,
     "salario": 5,
-    "tipo": "ATAQUE",
+    "tipo": "TRANSPORTE",
     "requisitos": [],
     "bonusAtaque": [
       "combate"
@@ -250,7 +250,7 @@
     "capacidad": 40000,
     "velocidad": 5000,
     "salario": 10,
-    "tipo": "ATAQUE",
+    "tipo": "TRANSPORTE",
     "requisitos": [],
     "bonusAtaque": [
       "psicologico"
@@ -398,5 +398,85 @@
     ],
     "createdAt": "2025-07-20T04:38:14.794Z",
     "updatedAt": "2025-07-20T04:38:14.794Z"
+  },
+  {
+    "id": "trabajador_ilegal",
+    "nombre": "Trabajador Ilegal",
+    "urlImagen": "/img/defensa/T1.gif",
+    "descripcion": "Mano de obra barata para las tareas menos deseables.",
+    "costoArmas": 500,
+    "costoMunicion": 500,
+    "costoDolares": 0,
+    "duracion": 500,
+    "puntos": 2,
+    "ataque": 1,
+    "defensa": 1,
+    "capacidad": 0,
+    "velocidad": 0,
+    "salario": 1
+  },
+  {
+    "id": "centinela",
+    "nombre": "Centinela",
+    "urlImagen": "/img/defensa/T2.gif",
+    "descripcion": "Vigilante básico para la protección de tus propiedades.",
+    "costoArmas": 2000,
+    "costoMunicion": 3000,
+    "costoDolares": 100,
+    "duracion": 1250,
+    "puntos": 10,
+    "ataque": 5,
+    "defensa": 15,
+    "capacidad": 0,
+    "velocidad": 0,
+    "salario": 5
+  },
+  {
+    "id": "policia",
+    "nombre": "Policía",
+    "urlImagen": "/img/defensa/T3.gif",
+    "descripcion": "Agente de la ley corrupto que trabaja para tu familia.",
+    "costoArmas": 5000,
+    "costoMunicion": 7500,
+    "costoDolares": 500,
+    "duracion": 3000,
+    "puntos": 25,
+    "ataque": 10,
+    "defensa": 40,
+    "capacidad": 0,
+    "velocidad": 0,
+    "salario": 10
+  },
+  {
+    "id": "guardaespaldas",
+    "nombre": "Guardaespaldas",
+    "urlImagen": "/img/defensa/T4.gif",
+    "descripcion": "Profesional altamente entrenado para la protección personal.",
+    "costoArmas": 3000,
+    "costoMunicion": 1000,
+    "costoDolares": 4000,
+    "duracion": 7800,
+    "puntos": 20,
+    "ataque": 15,
+    "defensa": 60,
+    "capacidad": 0,
+    "velocidad": 0,
+    "salario": 20
+  },
+  {
+    "id": "guardia_de_honor",
+    "nombre": "Guardia de honor",
+    "urlImagen": "/img/defensa/T5.gif",
+    "descripcion": "La élite de tu fuerza de seguridad, leales hasta la muerte.",
+    "costoArmas": 15000,
+    "costoMunicion": 40000,
+    "costoDolares": 20000,
+    "duracion": 10000,
+    "puntos": 100,
+    "ataque": 50,
+    "defensa": 200,
+    "capacidad": 0,
+    "velocidad": 0,
+    "salario": 50
   }
 ]
