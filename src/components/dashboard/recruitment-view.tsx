@@ -19,8 +19,14 @@ import { Dialog, DialogTrigger } from "../ui/dialog"
 import { TroopDetailsModal } from "./troop-details-modal"
 
 function formatNumber(num: number): string {
-    return num.toLocaleString('de-DE');
-}
+    if (num < 1000) {
+      return num.toString();
+    }
+    const suffixes = ["", "K", "M", "B", "T"];
+    const i = Math.floor(Math.log10(num) / 3);
+    const shortValue = (num / Math.pow(1000, i));
+    return shortValue.toFixed(i > 0 ? 2 : 0) + suffixes[i];
+  }
 
 function formatDuration(seconds: number): string {
     if (seconds <= 0) return "0s";
