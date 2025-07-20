@@ -49,6 +49,7 @@ const mainNav: NavItem[] = [
   { href: "/rooms", label: "Habitaciones", icon: <DoorOpen /> },
   { href: "/recruitment", label: "Reclutamiento", icon: <Users /> },
   { href: "/training", label: "Entrenamiento", icon: <Target /> },
+  { href: "/security", label: "Seguridad", icon: <Shield /> },
 ]
 
 const secondaryNav: NavItem[] = [
@@ -66,7 +67,6 @@ const tertiaryNav: NavItem[] = [
     { href: "/statistics", label: "Estadísticas", icon: <BarChart /> },
     { href: "/rankings", label: "Clasificaciones", icon: <Trophy /> },
     { href: "/settings", label: "Ajustes", icon: <Settings /> },
-    { href: "/security", label: "Seguridad", icon: <Shield /> },
     { href: "/search", label: "Buscar", icon: <Search /> },
 ]
 

@@ -1,18 +1,63 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SecurityView } from "@/components/dashboard/security-view";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getTroopConfigurations, UserWithProgress } from "@/lib/data";
+import { getSessionUser } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { calcularStatsTropaConBonus } from "@/lib/formulas/troop-formulas";
 
-export default function SecurityPage() {
+function SecurityLoading() {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <Skeleton className="h-8 w-64 mb-2 shimmer" />
+            <Skeleton className="h-4 w-80 shimmer" />
+          </div>
+        </div>
+        <div className="border rounded-lg p-0">
+            <div className="divide-y">
+                {[...Array(5)].map((_, i) => (
+                    <div key={i} className="p-4 flex items-center space-x-4">
+                        <Skeleton className="h-16 w-20 rounded-md shimmer" />
+                        <div className="space-y-2 flex-1">
+                            <Skeleton className="h-4 w-3/4 shimmer" />
+                            <Skeleton className="h-4 w-1/2 shimmer" />
+                        </div>
+                        <Skeleton className="h-10 w-32 rounded-md shimmer" />
+                    </div>
+                ))}
+            </div>
+        </div>
+      </div>
+    )
+}
+
+export default async function SecurityPage() {
+  const user = await getSessionUser();
+  if (!user) {
+    redirect('/');
+  }
+
+  const troopConfigs = await getTroopConfigurations();
+  
+  const defenseTroops = troopConfigs.filter(t => t.tipo === 'DEFENSA');
+
+  const troopsWithStats = defenseTroops.map(config => {
+      const { ataqueActual, defensaActual } = calcularStatsTropaConBonus(config, user.entrenamientos);
+      return {
+          ...config,
+          ataqueActual,
+          defensaActual,
+      }
+  })
+
   return (
     <div className="main-view">
-      <h2 className="text-3xl font-bold tracking-tight">Seguridad</h2>
-      <Card>
-        <CardHeader>
-          <CardTitle>Estado de la Seguridad</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>Próximamente: Aquí podrás gestionar tus defensas, ver informes de ataques y configurar tu seguridad.</p>
-        </CardContent>
-      </Card>
+      <Suspense fallback={<SecurityLoading />}>
+          <SecurityView user={user} defenseTroops={troopsWithStats} />
+      </Suspense>
     </div>
-  );
+  )
 }
