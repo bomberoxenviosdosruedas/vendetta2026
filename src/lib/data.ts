@@ -210,6 +210,25 @@ export const getUsersForRanking = cache(async (): Promise<UserForRanking[]> => {
     }
 });
 
+export const getFamiliesForRanking = cache(async (): Promise<FullFamily[]> => {
+    try {
+        const families = await prisma.family.findMany({
+            include: {
+                members: {
+                    include: {
+                        user: true
+                    }
+                }
+            }
+        });
+        // You might want to calculate and sort by total points here in the future
+        return families as FullFamily[];
+    } catch (error) {
+        console.error("Error fetching families for ranking:", error);
+        return [];
+    }
+});
+
 export const getRoomConfigurations = cache(async (): Promise<FullConfiguracionHabitacion[]> => {
   try {
     const roomConfigurations = await prisma.configuracionHabitacion.findMany({

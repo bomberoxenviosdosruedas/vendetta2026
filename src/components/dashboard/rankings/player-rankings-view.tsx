@@ -1,3 +1,4 @@
+
 import {
     Table,
     TableBody,
@@ -8,9 +9,9 @@ import {
 } from "@/components/ui/table"
 import { Card, CardContent } from "@/components/ui/card"
 import type { UserForRanking } from "@/lib/data";
-import { Separator } from "../ui/separator";
+import { Separator } from "@/components/ui/separator";
 
-interface RankingsViewProps {
+interface PlayerRankingsViewProps {
     users: UserForRanking[];
 }
 
@@ -19,7 +20,7 @@ function formatPoints(points: number | null | undefined): string {
     return Math.floor(points).toLocaleString('de-DE');
 }
 
-export function RankingsView({ users }: RankingsViewProps) {
+export function PlayerRankingsView({ users }: PlayerRankingsViewProps) {
     return (
         <Card>
             <CardContent className="p-0">
@@ -87,4 +88,10 @@ export function RankingsView({ users }: RankingsViewProps) {
                                     </div>
                                 </div>
                             </Card>
-                        ))
+                        ))}
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+    )
+}
