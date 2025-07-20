@@ -1,3 +1,4 @@
+
 'use client'
 
 import Image from "next/image"
@@ -6,13 +7,15 @@ import {
   CardContent,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Clock, BrainCircuit, Info } from "lucide-react"
+import { Clock, BrainCircuit, Info, Hourglass, Ban } from "lucide-react"
 import { iniciarEntrenamiento } from "@/lib/actions/training.actions"
 import type { FullConfiguracionEntrenamiento, UserWithProgress } from "@/lib/data"
 import { useProperty } from "@/contexts/property-context"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip"
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
+import { Terminal } from "lucide-react"
 
 function formatNumber(num: number): string {
     return num.toLocaleString('de-DE');
@@ -44,23 +47,59 @@ function formatDuration(seconds: number): string {
     return result.trim() || '0s';
 }
 
+function TrainingQueueAlert({ user }: { user: UserWithProgress }) {
+    const { selectedProperty } = useProperty();
+    const [tiempoRestante, setTiempoRestante] = useState("");
+    const colaEntrenamiento = user.colaEntrenamientos.find(c => c.propiedadId === selectedProperty?.id);
+
+    useEffect(() => {
+        if (!colaEntrenamiento) return;
+
+        const interval = setInterval(() => {
+            const ahora = new Date().getTime();
+            const fin = new Date(colaEntrenamiento.fechaFinalizacion).getTime();
+            const diferencia = Math.max(0, fin - ahora);
+            setTiempoRestante(formatDuration(Math.floor(diferencia / 1000)));
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [colaEntrenamiento]);
+
+    if (!selectedProperty || !colaEntrenamiento) return null;
+
+    return (
+        <Alert>
+            <Terminal className="h-4 w-4" />
+            <AlertTitle>Entrenamiento en curso en {selectedProperty?.nombre}</AlertTitle>
+            <AlertDescription>
+                Entrenando {colaEntrenamiento.entrenamiento.nombre} a Nivel {colaEntrenamiento.nivelDestino}. Tiempo restante: {tiempoRestante}
+            </AlertDescription>
+        </Alert>
+    )
+}
+
+
 function TrainingForm({ 
-    trainingId,
+    training,
     propertyId,
     meetsRequirements,
-    requirementsText
+    requirementsText,
+    isTrainingInQueue,
+    isPropertyBusy
 }: { 
-    trainingId: string, 
+    training: TrainingData,
     propertyId: string,
     meetsRequirements: boolean,
-    requirementsText: string | null
+    requirementsText: string | null,
+    isTrainingInQueue: boolean,
+    isPropertyBusy: boolean
 }) {
     const [isPending, setIsPending] = useState(false);
     const { toast } = useToast();
 
     const handleAction = async () => {
         setIsPending(true);
-        const result = await iniciarEntrenamiento(trainingId, propertyId);
+        const result = await iniciarEntrenamiento(training.id, propertyId);
         if (result.error) {
             toast({ variant: 'destructive', title: 'Error', description: result.error });
         } else if (result.success) {
@@ -69,15 +108,17 @@ function TrainingForm({
         setIsPending(false);
     }
     
+    const isDisabled = isPending || !meetsRequirements || isTrainingInQueue || isPropertyBusy;
+
     const button = (
         <Button 
             type="submit" 
             variant="outline" 
             size="sm" 
-            disabled={isPending || !meetsRequirements}
+            disabled={isDisabled}
         >
-            <BrainCircuit className="mr-2 h-4 w-4" /> 
-            {isPending ? 'Entrenando...' : 'Entrenar'}
+            {isTrainingInQueue ? <Hourglass className="mr-2 h-4 w-4 text-amber-500" /> : isPropertyBusy ? <Ban className="mr-2 h-4 w-4"/> : <BrainCircuit className="mr-2 h-4 w-4" />}
+            {isPending ? 'Enviando...' : isTrainingInQueue ? 'En cola' : isPropertyBusy ? 'Ocupado' : 'Entrenar'}
         </Button>
     )
 
@@ -129,6 +170,8 @@ export function TrainingView({ user, trainingsData }: TrainingViewProps) {
       )
   }
 
+  const isPropertyBusy = user.colaEntrenamientos.some(c => c.propiedadId === selectedProperty.id);
+
   return (
     <div className="space-y-4">
        <div className="flex items-center justify-between">
@@ -139,70 +182,76 @@ export function TrainingView({ user, trainingsData }: TrainingViewProps) {
                 </p>
             </div>
        </div>
+       <TrainingQueueAlert user={user} />
       <Card>
         <CardContent className="p-0">
           <div className="divide-y divide-border">
-              {trainingsData.map((training) => (
-                <div key={training.id} className="p-4 grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
-                    {/* Imagen y Nombre */}
-                    <div className="md:col-span-3 flex items-start gap-4">
-                        <div className="w-20 h-16 relative rounded-md overflow-hidden border flex-shrink-0">
-                            <Image
-                                src={training.urlImagen || "https://placehold.co/80x56.png"}
-                                alt={training.nombre}
-                                fill
-                                className="object-cover"
-                                data-ai-hint="skill icon"
+              {trainingsData.map((training) => {
+                  const isTrainingInQueue = user.colaEntrenamientos.some(c => c.entrenamientoId === training.id);
+                  return (
+                    <div key={training.id} className="p-4 grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+                        {/* Imagen y Nombre */}
+                        <div className="md:col-span-3 flex items-start gap-4">
+                            <div className="w-20 h-16 relative rounded-md overflow-hidden border flex-shrink-0">
+                                <Image
+                                    src={training.urlImagen || "https://placehold.co/80x56.png"}
+                                    alt={training.nombre}
+                                    fill
+                                    className="object-cover"
+                                    data-ai-hint="skill icon"
+                                />
+                            </div>
+                            <div>
+                                <div className="font-bold">{training.nombre}</div>
+                                <div className="text-sm text-primary">
+                                Nivel {training.nivel}
+                                </div>
+                                {isTrainingInQueue && <div className="text-xs text-amber-500 flex items-center gap-1"><Hourglass className="h-3 w-3" /> En cola</div>}
+                                {!training.meetsRequirements && (
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                <Info className="h-4 w-4 text-destructive mt-1"/>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p className="text-xs">{training.requirementsText}</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
+                                )}
+                            </div>
+                        </div>
+                        {/* Descripción (placeholder) */}
+                        <div className="md:col-span-4">
+                            <p className="text-sm text-muted-foreground">Mejora de {training.nombre.toLowerCase()} para desbloquear nuevas capacidades.</p>
+                        </div>
+                        {/* Costos y Acciones */}
+                        <div className="md:col-span-5">
+                        <div className="font-semibold text-sm mb-2">Mejora a Nivel: {training.nivel + 1}</div>
+                            <div className="flex flex-wrap gap-x-4 gap-y-2 items-center">
+                                <div className="flex flex-col gap-1 text-sm flex-grow">
+                                    <div className="grid grid-cols-3 gap-x-3">
+                                        {training.costos.armas > 0 && <div className="flex items-center gap-1.5" title={`${training.costos.armas.toLocaleString('de-DE')} Armas`}><Image src="/img/recursos/armas.svg" alt="Armas" width={16} height={16} /><span>{formatNumber(training.costos.armas)}</span></div>}
+                                        {training.costos.municion > 0 && <div className="flex items-center gap-1.5" title={`${training.costos.municion.toLocaleString('de-DE')} Munición`}><Image src="/img/recursos/municion.svg" alt="Munición" width={16} height={16} /><span>{formatNumber(training.costos.municion)}</span></div>}
+                                        {training.costos.dolares > 0 && <div className="flex items-center gap-1.5" title={`${training.costos.dolares.toLocaleString('de-DE')} Dólares`}><Image src="/img/recursos/dolares.svg" alt="Dólares" width={16} height={16} /><span>{formatNumber(training.costos.dolares)}</span></div>}
+                                    </div>
+                                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
+                                        <Clock className="h-3 w-3" />
+                                        <span>{formatDuration(training.tiempo)}</span>
+                                    </div>
+                                </div>
+                            <TrainingForm 
+                                training={training}
+                                propertyId={selectedProperty.id}
+                                meetsRequirements={training.meetsRequirements}
+                                requirementsText={training.requirementsText}
+                                isTrainingInQueue={isTrainingInQueue}
+                                isPropertyBusy={isPropertyBusy}
                             />
-                        </div>
-                        <div>
-                            <div className="font-bold">{training.nombre}</div>
-                            <div className="text-sm text-primary">
-                              Nivel {training.nivel}
                             </div>
-                            {!training.meetsRequirements && (
-                                <TooltipProvider>
-                                    <Tooltip>
-                                        <TooltipTrigger>
-                                            <Info className="h-4 w-4 text-destructive mt-1"/>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p className="text-xs">{training.requirementsText}</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
-                            )}
                         </div>
                     </div>
-                    {/* Descripción (placeholder) */}
-                    <div className="md:col-span-4">
-                        <p className="text-sm text-muted-foreground">Mejora de {training.nombre.toLowerCase()} para desbloquear nuevas capacidades.</p>
-                    </div>
-                    {/* Costos y Acciones */}
-                    <div className="md:col-span-5">
-                       <div className="font-semibold text-sm mb-2">Mejora a Nivel: {training.nivel + 1}</div>
-                        <div className="flex flex-wrap gap-x-4 gap-y-2 items-center">
-                            <div className="flex flex-col gap-1 text-sm flex-grow">
-                                <div className="grid grid-cols-3 gap-x-3">
-                                    {training.costos.armas > 0 && <div className="flex items-center gap-1.5" title={`${training.costos.armas.toLocaleString('de-DE')} Armas`}><Image src="/img/recursos/armas.svg" alt="Armas" width={16} height={16} /><span>{formatNumber(training.costos.armas)}</span></div>}
-                                    {training.costos.municion > 0 && <div className="flex items-center gap-1.5" title={`${training.costos.municion.toLocaleString('de-DE')} Munición`}><Image src="/img/recursos/municion.svg" alt="Munición" width={16} height={16} /><span>{formatNumber(training.costos.municion)}</span></div>}
-                                    {training.costos.dolares > 0 && <div className="flex items-center gap-1.5" title={`${training.costos.dolares.toLocaleString('de-DE')} Dólares`}><Image src="/img/recursos/dolares.svg" alt="Dólares" width={16} height={16} /><span>{formatNumber(training.costos.dolares)}</span></div>}
-                                </div>
-                                <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
-                                    <Clock className="h-3 w-3" />
-                                    <span>{formatDuration(training.tiempo)}</span>
-                                </div>
-                            </div>
-                           <TrainingForm 
-                             trainingId={training.id}
-                             propertyId={selectedProperty.id}
-                             meetsRequirements={training.meetsRequirements}
-                             requirementsText={training.requirementsText}
-                           />
-                        </div>
-                    </div>
-                </div>
-              ))}
+                  )})}
           </div>
         </CardContent>
       </Card>

@@ -5,6 +5,7 @@ import type { UserWithProgress } from '@/lib/data';
 import { MissionStatus } from './mission-status';
 import { ConstructionStatus } from './construction-status';
 import { RecruitmentStatus } from './recruitment-status';
+import { TrainingStatus } from './training-status';
 
 type QueueCardProps = {
     user: UserWithProgress;
@@ -33,15 +34,7 @@ export function QueueStatusCard({ user, allRooms }: QueueCardProps) {
             <MissionStatus missions={user.misiones} />
             <ConstructionStatus constructions={activeConstructions} totalSlots={user.propiedades.length * 5} allRooms={allRooms} />
             <RecruitmentStatus recruitments={activeRecruitments} totalSlots={user.propiedades.length} />
-             
-             {/* Placeholder para otras colas */}
-            <div className="bg-primary text-primary-foreground px-4 py-1.5 rounded-t-md flex justify-between items-center font-bold mt-2">
-                <span>ENTRENAMIENTO</span>
-                 <span>(0/1)</span>
-            </div>
-            <div className="bg-card text-muted-foreground px-4 py-3 rounded-b-md text-center text-sm">
-                -
-            </div>
+            <TrainingStatus trainings={user.colaEntrenamientos} totalSlots={user.propiedades.length} />
         </div>
     );
 }

@@ -1,10 +1,11 @@
+
 'use server';
 
 import { revalidatePath } from "next/cache";
 import prisma from "../prisma/prisma";
 import { getSessionUser } from "../auth";
 import { getTrainingConfigurations } from "../data";
-import { calcularCostosEntrenamiento } from "../formulas/training-formulas";
+import { calcularCostosEntrenamiento, calcularTiempoEntrenamiento } from "../formulas/training-formulas";
 
 export async function iniciarEntrenamiento(trainingId: string, propertyId: string) {
     const user = await getSessionUser();
@@ -16,6 +17,16 @@ export async function iniciarEntrenamiento(trainingId: string, propertyId: strin
     const propiedadActual = user.propiedades.find(p => p.id === propertyId);
     if (!propiedadActual) {
         return { error: 'Propiedad no encontrada para este usuario.' };
+    }
+
+    const colaEntrenamientoUsuario = await prisma.colaEntrenamiento.findMany({ where: { userId: user.id } });
+
+    if (colaEntrenamientoUsuario.some(c => c.propiedadId === propertyId)) {
+        return { error: 'Ya hay un entrenamiento en curso en esta propiedad.' };
+    }
+    
+    if (colaEntrenamientoUsuario.some(c => c.entrenamientoId === trainingId)) {
+        return { error: 'Ya estás investigando este entrenamiento en otra propiedad.' };
     }
 
     const allTrainingConfigs = await getTrainingConfigurations();
@@ -39,6 +50,12 @@ export async function iniciarEntrenamiento(trainingId: string, propertyId: strin
     ) {
       return { error: 'No tienes suficientes recursos en esta propiedad para el entrenamiento.' };
     }
+
+    const nivelEscuela = propiedadActual.habitaciones.find(h => h.configuracionHabitacionId === 'escuela_especializacion')?.nivel || 0;
+    const duracion = calcularTiempoEntrenamiento(nivelSiguiente, config, nivelEscuela);
+
+    const fechaInicio = new Date();
+    const fechaFinalizacion = new Date(fechaInicio.getTime() + duracion * 1000);
   
     try {
       await prisma.$transaction(async (tx) => {
@@ -51,35 +68,24 @@ export async function iniciarEntrenamiento(trainingId: string, propertyId: strin
           },
         });
 
-        if (userTraining) {
-            await tx.entrenamientoUsuario.update({
-                where: {
-                    userId_configuracionEntrenamientoId: {
-                        userId: user.id,
-                        configuracionEntrenamientoId: trainingId,
-                    }
-                },
-                data: {
-                    nivel: { increment: 1 },
-                }
-            });
-        } else {
-             await tx.entrenamientoUsuario.create({
-                data: {
-                    userId: user.id,
-                    configuracionEntrenamientoId: trainingId,
-                    nivel: 1
-                }
-             })
-        }
+        await tx.colaEntrenamiento.create({
+            data: {
+                userId: user.id,
+                propiedadId: propertyId,
+                entrenamientoId: trainingId,
+                nivelDestino: nivelSiguiente,
+                fechaInicio,
+                fechaFinalizacion,
+            }
+        });
       });
   
       revalidatePath('/training');
       revalidatePath('/overview'); 
   
-      return { success: `¡${config.nombre} mejorado a nivel ${nivelSiguiente}!` };
+      return { success: `¡El entrenamiento de ${config.nombre} a nivel ${nivelSiguiente} ha comenzado!` };
     } catch (error) {
       console.error('Error durante la transacción de entrenamiento:', error);
       return { error: 'Ocurrió un error en el servidor al intentar entrenar.' };
     }
-  }
+}

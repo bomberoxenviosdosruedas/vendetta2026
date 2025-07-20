@@ -2,7 +2,7 @@
 import { Suspense } from "react"
 import { ResourceBar } from "@/components/dashboard/resource-bar";
 import { DashboardClientLayout } from "@/components/dashboard/dashboard-client-layout";
-import { verificarYFinalizarConstruccion, verificarYFinalizarReclutamiento, actualizarPuntuacionUsuario, obtenerEstadoJuegoActualizado, verificarYFinalizarMisiones } from "@/lib/actions/user.actions";
+import { verificarYFinalizarConstruccion, verificarYFinalizarReclutamiento, verificarYFinalizarEntrenamientos, actualizarPuntuacionUsuario, obtenerEstadoJuegoActualizado, verificarYFinalizarMisiones } from "@/lib/actions/user.actions";
 import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -31,14 +31,15 @@ export default async function DashboardLayout({
   }
 
   // Se ejecutan en paralelo para optimizar la carga
-  const [userAfterConstructionCheck, userAfterRecruitmentCheck, userAfterMissionCheck] = await Promise.all([
+  const [userAfterConstructionCheck, userAfterRecruitmentCheck, userAfterMissionCheck, userAfterTrainingCheck] = await Promise.all([
     verificarYFinalizarConstruccion(sessionUser),
     verificarYFinalizarReclutamiento(sessionUser),
     verificarYFinalizarMisiones(sessionUser),
+    verificarYFinalizarEntrenamientos(sessionUser),
   ]);
   
   // Combina los resultados. Si no hubo cambios, usa la versión anterior.
-  let combinedUser = { ...sessionUser, ...userAfterConstructionCheck, ...userAfterRecruitmentCheck, ...userAfterMissionCheck };
+  let combinedUser = { ...sessionUser, ...userAfterConstructionCheck, ...userAfterRecruitmentCheck, ...userAfterMissionCheck, ...userAfterTrainingCheck };
 
   const userWithUpdatedProgress = await obtenerEstadoJuegoActualizado(combinedUser);
   const finalUser = await actualizarPuntuacionUsuario(userWithUpdatedProgress);

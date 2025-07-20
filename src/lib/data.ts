@@ -2,7 +2,7 @@
 
 "use server"
 
-import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember, TrainingRequirement, RoomRequirement, TropaBonusContrincante, Message, MessageCategory } from '@prisma/client/edge'
+import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember, TrainingRequirement, RoomRequirement, TropaBonusContrincante, Message, MessageCategory, ColaEntrenamiento } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 import { cache } from 'react';
 import { calculateStorageCapacity } from './formulas/room-formulas';
@@ -28,6 +28,11 @@ export type FullHabitacionUsuario = HabitacionUsuario & {
 export type FullColaReclutamiento = ColaReclutamiento & {
   tropaConfig: ConfiguracionTropa;
 };
+
+export type FullColaEntrenamiento = ColaEntrenamiento & {
+    entrenamiento: ConfiguracionEntrenamiento;
+    propiedad: { nombre: string };
+}
 
 export type FullTropaUsuario = TropaUsuario & {
     configuracion: ConfiguracionTropa;
@@ -55,6 +60,7 @@ export type UserWithProgress = User & {
     entrenamientos: (EntrenamientoUsuario & { configuracion: ConfiguracionEntrenamiento })[];
     puntuacion: PuntuacionUsuario | null;
     misiones: ColaMisiones[];
+    colaEntrenamientos: FullColaEntrenamiento[];
     familyMember: (FamilyMember & { family: Family }) | null;
 };
 
@@ -307,6 +313,17 @@ const userInclude = {
     misiones: {
         orderBy: {
             fechaLlegada: 'asc'
+        }
+    },
+    colaEntrenamientos: {
+        include: {
+            entrenamiento: true,
+            propiedad: {
+                select: { nombre: true }
+            }
+        },
+        orderBy: {
+            fechaFinalizacion: 'asc'
         }
     },
     familyMember: {

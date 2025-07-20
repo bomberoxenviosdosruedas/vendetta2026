@@ -6,7 +6,7 @@ import prisma from "../prisma/prisma";
 import type { FullPropiedad, UserWithProgress } from "../data";
 import { calculateStorageCapacity, calcularProduccionTotalPorSegundo } from "../formulas/room-formulas";
 import { revalidatePath } from "next/cache";
-import { calcularPuntosEntrenamientos, calcularPuntosHabitaciones, calcularPuntosTropas } from "./score-formulas";
+import { calcularPuntosEntrenamientos, calcularPuntosHabitaciones, calcularPuntosTropas } from "../formulas/score-formulas";
 import { getSessionUser } from "../auth";
 
 interface UserSettings {
@@ -81,7 +81,7 @@ async function actualizarRecursosPropiedad(propiedad: FullPropiedad): Promise<Fu
                 ultimaActualizacion: ahora,
             },
             include: { 
-                habitaciones: { include: { configuracion: true } },
+                habitaciones: { include: { configuracion: { include: { requirements: true } } } },
                 colaConstruccion: { orderBy: { createdAt: 'asc' } }, 
                 colaReclutamiento: { include: { tropaConfig: true } },
                 TropaUsuario: { include: { configuracion: true } }
@@ -164,7 +164,7 @@ async function verificarYFinalizarConstruccionDePropiedad(propiedad: FullPropied
     const propiedadRefrescada = await prisma.propiedad.findUnique({
       where: { id: propiedad.id },
       include: { 
-        habitaciones: { include: { configuracion: true } },
+        habitaciones: { include: { configuracion: { include: { requirements: true } } } },
         colaConstruccion: { orderBy: { createdAt: 'asc' } }, 
         colaReclutamiento: { include: { tropaConfig: true } },
         TropaUsuario: { include: { configuracion: true } }
@@ -228,7 +228,7 @@ async function verificarYFinalizarReclutamientoDePropiedad(propiedad: FullPropie
         const propiedadRefrescada = await prisma.propiedad.findUnique({
              where: { id: propiedad.id },
              include: { 
-                habitaciones: { include: { configuracion: true } },
+                habitaciones: { include: { configuracion: { include: { requirements: true } } } },
                 colaConstruccion: { orderBy: { createdAt: 'asc' } }, 
                 colaReclutamiento: { include: { tropaConfig: true } },
                 TropaUsuario: { include: { configuracion: true } }
@@ -249,6 +249,49 @@ export async function verificarYFinalizarReclutamiento(user: UserWithProgress): 
     );
     return { ...user, propiedades: propiedadesActualizadas };
 }
+
+export async function verificarYFinalizarEntrenamientos(user: UserWithProgress): Promise<UserWithProgress> {
+    if (!user.colaEntrenamientos || user.colaEntrenamientos.length === 0) return user;
+
+    const ahora = new Date();
+    let seHizoUnCambio = false;
+
+    const entrenamientosTerminados = user.colaEntrenamientos.filter(e => ahora >= new Date(e.fechaFinalizacion));
+
+    if (entrenamientosTerminados.length > 0) {
+        try {
+            await prisma.$transaction(async (tx) => {
+                for (const terminado of entrenamientosTerminados) {
+                    await tx.entrenamientoUsuario.update({
+                        where: {
+                            userId_configuracionEntrenamientoId: {
+                                userId: terminado.userId,
+                                configuracionEntrenamientoId: terminado.entrenamientoId
+                            }
+                        },
+                        data: {
+                            nivel: terminado.nivelDestino,
+                        },
+                    });
+                    await tx.colaEntrenamiento.delete({
+                        where: { id: terminado.id }
+                    });
+                }
+            });
+            seHizoUnCambio = true;
+        } catch (error) {
+            console.error("Error al finalizar entrenamientos:", error);
+        }
+    }
+
+    if (seHizoUnCambio) {
+        const userRefrescado = await prisma.user.findUnique({ where: { id: user.id }, include: { colaEntrenamientos: true } });
+        return { ...user, colaEntrenamientos: userRefrescado?.colaEntrenamientos || [] };
+    }
+    
+    return user;
+}
+
 
 export async function verificarYFinalizarMisiones(user: UserWithProgress): Promise<UserWithProgress> {
     if (!user.misiones || user.misiones.length === 0) return user;
@@ -297,7 +340,7 @@ export async function verificarYFinalizarMisiones(user: UserWithProgress): Promi
             include: {
                 propiedades: {
                     include: { 
-                        habitaciones: { include: { configuracion: true } },
+                        habitaciones: { include: { configuracion: { include: { requirements: true } } } },
                         colaConstruccion: { orderBy: { createdAt: 'asc' } }, 
                         colaReclutamiento: { include: { tropaConfig: true } },
                         TropaUsuario: { include: { configuracion: true } }
