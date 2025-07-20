@@ -396,12 +396,14 @@ export async function actualizarPuntuacionUsuario(user: UserWithProgress): Promi
         puntosTropas,
         puntosEntrenamientos,
         puntosTotales,
+        updatedAt: new Date(),
       },
       update: {
         puntosHabitaciones,
         puntosTropas,
         puntosEntrenamientos,
         puntosTotales,
+        updatedAt: new Date(),
       },
     });
 
@@ -413,4 +415,3 @@ export async function actualizarPuntuacionUsuario(user: UserWithProgress): Promi
     return user;
   }
 }
-
