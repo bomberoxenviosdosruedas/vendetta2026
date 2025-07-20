@@ -4,7 +4,7 @@
 
 import { revalidatePath } from "next/cache";
 import prisma from "../prisma/prisma";
-import { ConfiguracionHabitacion, ConfiguracionTropa, ConfiguracionEntrenamiento, TipoTropa } from "@prisma/client";
+import { ConfiguracionHabitacion, ConfiguracionTropa, ConfiguracionEntrenamiento, TipoTropa, TropaBonusContrincante } from "@prisma/client";
 import { verifyAdminSession } from "../auth-admin";
 
 
@@ -254,7 +254,12 @@ export async function deleteTroopConfig(id: string) {
     if (!isAdmin) return { error: "No autorizado" };
 
     try {
-        await prisma.configuracionTropa.delete({ where: { id } });
+        await prisma.$transaction(async (tx) => {
+            await tx.tropaBonusContrincante.deleteMany({
+                where: { OR: [{ tropaAtacanteId: id }, { tropaDefensoraId: id }] }
+            });
+            await tx.configuracionTropa.delete({ where: { id } });
+        });
         revalidatePath('/admin/panel');
         return { success: true };
     } catch (e: any) {
@@ -262,3 +267,24 @@ export async function deleteTroopConfig(id: string) {
     }
 }
 
+// Bonus Config
+export async function saveTroopBonusConfig(bonusData: TropaBonusContrincante[]) {
+    const isAdmin = await verifyAdminSession();
+    if (!isAdmin) return { error: "No autorizado" };
+
+    try {
+        await prisma.$transaction(async (tx) => {
+            await tx.tropaBonusContrincante.deleteMany({});
+            if (bonusData.length > 0) {
+                await tx.tropaBonusContrincante.createMany({
+                    data: bonusData,
+                });
+            }
+        });
+        revalidatePath('/admin/panel');
+        return { success: true };
+    } catch (e: any) {
+        console.error(e);
+        return { error: "Error al guardar la configuración de bonus." };
+    }
+}

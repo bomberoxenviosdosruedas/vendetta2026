@@ -71,6 +71,16 @@ export type UserForRanking = User & {
     }
 }
 
+export const getTroopBonusConfig = cache(async (): Promise<TropaBonusContrincante[]> => {
+    try {
+        const bonusConfig = await prisma.tropaBonusContrincante.findMany();
+        return bonusConfig;
+    } catch (e) {
+        console.error("Error fetching troop bonus config", e);
+        return [];
+    }
+});
+
 export const getMessagesForUser = cache(async (userId: string): Promise<FullMessage[]> => {
     try {
         const messages = await prisma.message.findMany({
