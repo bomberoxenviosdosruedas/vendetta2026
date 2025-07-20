@@ -1,5 +1,5 @@
 
-import { getGlobalStatistics, UserWithProgress } from "@/lib/data";
+import { getGlobalStatistics, getMaximumResourceCapacity, UserWithProgress } from "@/lib/data";
 import { getSessionUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
@@ -15,7 +15,8 @@ function StatisticsLoading() {
                     <Skeleton className="h-4 w-80 shimmer" />
                 </div>
             </div>
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Skeleton className="h-64 w-full shimmer" />
                 <Skeleton className="h-64 w-full shimmer" />
                 <Skeleton className="h-64 w-full shimmer" />
                 <Skeleton className="h-64 w-full shimmer" />
@@ -30,6 +31,14 @@ export default async function StatisticsPage() {
         redirect('/');
     }
 
+    const [
+        globalStats,
+        resourceStats
+    ] = await Promise.all([
+        getGlobalStatistics(),
+        getMaximumResourceCapacity()
+    ]);
+    
     const { 
         allRoomConfigs, 
         allTrainingConfigs, 
@@ -37,7 +46,7 @@ export default async function StatisticsPage() {
         roomStats, 
         trainingStats, 
         troopStats 
-    } = await getGlobalStatistics();
+    } = globalStats;
     
 
     return (
@@ -51,6 +60,7 @@ export default async function StatisticsPage() {
                     roomStats={roomStats}
                     trainingStats={trainingStats}
                     troopStats={troopStats}
+                    resourceStats={resourceStats}
                 />
             </Suspense>
         </div>

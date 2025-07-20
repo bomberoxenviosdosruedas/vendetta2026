@@ -3,12 +3,17 @@
 
 import { ConfiguracionHabitacion, ConfiguracionTropa, ConfiguracionEntrenamiento, HabitacionUsuario, EntrenamientoUsuario } from "@prisma/client";
 import { UserWithProgress } from "@/lib/data";
-import { StatCategoryCard, StatItem } from "./stat-category-card";
+import { StatTableCard } from "./stat-table-card";
 
 interface TroopStat {
     userId: string;
     total: number;
     configuracionTropaId: string;
+}
+
+interface ResourceStat {
+    name: string;
+    maxValue: number;
 }
 
 interface StatisticsViewProps {
@@ -19,6 +24,7 @@ interface StatisticsViewProps {
     roomStats: HabitacionUsuario[];
     trainingStats: EntrenamientoUsuario[];
     troopStats: TroopStat[];
+    resourceStats: ResourceStat[];
 }
 
 export function StatisticsView({
@@ -28,7 +34,8 @@ export function StatisticsView({
     allTroopConfigs,
     roomStats,
     trainingStats,
-    troopStats
+    troopStats,
+    resourceStats
 }: StatisticsViewProps) {
 
     // Process room stats
@@ -50,12 +57,11 @@ export function StatisticsView({
         });
     });
 
-    const roomStatItems: StatItem[] = allRoomConfigs.map(config => ({
-        id: config.id,
-        name: config.nombre,
-        userValue: currentUserRoomLevels.get(config.id) || 0,
-        maxValue: maxRoomLevels.get(config.id) || 0,
-    }));
+    const roomStatData = allRoomConfigs.map(config => ([
+        config.nombre,
+        currentUserRoomLevels.get(config.id) || 0,
+        maxRoomLevels.get(config.id) || 0,
+    ]));
 
     // Process training stats
     const maxTrainingLevels = new Map<string, number>();
@@ -66,12 +72,12 @@ export function StatisticsView({
         }
     });
     const currentUserTrainingLevels = new Map(currentUser.entrenamientos.map(t => [t.configuracionEntrenamientoId, t.nivel]));
-    const trainingStatItems: StatItem[] = allTrainingConfigs.map(config => ({
-        id: config.id,
-        name: config.nombre,
-        userValue: currentUserTrainingLevels.get(config.id) || 0,
-        maxValue: maxTrainingLevels.get(config.id) || 0,
-    }));
+    
+    const trainingStatData = allTrainingConfigs.map(config => ([
+        config.nombre,
+        currentUserTrainingLevels.get(config.id) || 0,
+        maxTrainingLevels.get(config.id) || 0,
+    ]));
 
     // Process troop stats
     const maxTroopCounts = new Map<string, number>();
@@ -87,13 +93,16 @@ export function StatisticsView({
         currentUserTroopCounts.set(t.configuracionTropaId, t.total);
     });
 
-    const troopStatItems: StatItem[] = allTroopConfigs.map(config => ({
-        id: config.id,
-        name: config.nombre,
-        userValue: currentUserTroopCounts.get(config.id) || 0,
-        maxValue: maxTroopCounts.get(config.id) || 0,
-    }));
+    const troopStatData = allTroopConfigs.map(config => ([
+        config.nombre,
+        currentUserTroopCounts.get(config.id) || 0,
+        maxTroopCounts.get(config.id) || 0,
+    ]));
 
+    const resourceStatData = resourceStats.map(stat => ([
+        stat.name,
+        stat.maxValue
+    ]));
 
     return (
         <div className="space-y-6">
@@ -106,10 +115,11 @@ export function StatisticsView({
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                <StatCategoryCard title="Niveles de Habitaciones" items={roomStatItems} />
-                <StatCategoryCard title="Niveles de Entrenamiento" items={trainingStatItems} />
-                <StatCategoryCard title="Cantidad de Tropas" items={troopStatItems} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <StatTableCard title="ESTADÍSTICAS DE RECURSOS" headers={['Recurso', 'Máximo por edificio']} data={resourceStatData} />
+                <StatTableCard title="ESTADÍSTICAS DE HABITACIONES" headers={['Habitación', 'Mi Nivel', 'Nivel Máximo']} data={roomStatData} />
+                <StatTableCard title="ESTADÍSTICAS DE ENTRENAMIENTOS" headers={['Entrenamiento', 'Mi Nivel', 'Nivel Máximo']} data={trainingStatData} />
+                <StatTableCard title="ESTADÍSTICAS DE TROPAS" headers={['Tropa', 'Mis Unidades', 'Unidades Máximas']} data={troopStatData} />
             </div>
         </div>
     );

@@ -5,6 +5,7 @@
 import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember, TrainingRequirement, RoomRequirement, TropaBonusContrincante } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 import { cache } from 'react';
+import { calculateStorageCapacity } from './formulas/room-formulas';
 
 const prisma = new PrismaClient().$extends(withAccelerate())
 
@@ -346,6 +347,46 @@ export const getGlobalStatistics = cache(async () => {
     }
 });
 
+export const getMaximumResourceCapacity = cache(async () => {
+    try {
+        const allProperties = await prisma.propiedad.findMany({
+            include: {
+                habitaciones: {
+                    include: {
+                        configuracion: true
+                    }
+                }
+            }
+        });
+        
+        const maxCapacity = {
+            armas: 0,
+            municion: 0,
+            alcohol: 0,
+            dolares: 0
+        };
+
+        allProperties.forEach(prop => {
+            const capacity = calculateStorageCapacity(prop as FullPropiedad);
+            if (capacity.armas > maxCapacity.armas) maxCapacity.armas = capacity.armas;
+            if (capacity.municion > maxCapacity.municion) maxCapacity.municion = capacity.municion;
+            if (capacity.alcohol > maxCapacity.alcohol) maxCapacity.alcohol = capacity.alcohol;
+            if (capacity.dolares > maxCapacity.dolares) maxCapacity.dolares = capacity.dolares;
+        });
+
+        return [
+            { name: 'Armas', maxValue: maxCapacity.armas },
+            { name: 'Munición', maxValue: maxCapacity.municion },
+            { name: 'Alcohol', maxValue: maxCapacity.alcohol },
+            { name: 'Dólares', maxValue: maxCapacity.dolares },
+        ];
+
+    } catch (error) {
+        console.error("Error fetching resource statistics:", error);
+        return [];
+    }
+})
+
 
 export async function getUserByUsername(username: string): Promise<UserWithProgress | null> {
     try {
@@ -381,4 +422,3 @@ export async function getUserWithProgressByUsername(username: string): Promise<U
         return null;
     }
 }
-
