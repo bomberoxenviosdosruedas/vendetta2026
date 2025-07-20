@@ -13,11 +13,12 @@ import { ScrollArea } from "../ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 interface BonusConfigMatrixProps {
-    troops: ConfiguracionTropa[];
+    attackTroops: ConfiguracionTropa[];
+    defenseTroops: ConfiguracionTropa[];
     initialBonusConfig: TropaBonusContrincante[];
 }
 
-export function BonusConfigMatrix({ troops, initialBonusConfig }: BonusConfigMatrixProps) {
+export function BonusConfigMatrix({ attackTroops, defenseTroops, initialBonusConfig }: BonusConfigMatrixProps) {
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
 
@@ -74,6 +75,8 @@ export function BonusConfigMatrix({ troops, initialBonusConfig }: BonusConfigMat
         });
     };
     
+    const allDefenders = [...attackTroops, ...defenseTroops];
+
     return (
         <Card>
             <CardHeader>
@@ -88,9 +91,16 @@ export function BonusConfigMatrix({ troops, initialBonusConfig }: BonusConfigMat
                         <thead>
                             <tr className="bg-muted/50">
                                 <th className="sticky left-0 z-10 bg-muted/80 p-2 border-b border-r text-xs font-semibold w-[150px] backdrop-blur-sm">Atacante / Defensor</th>
-                                {troops.map(defender => (
-                                     <th key={defender.id} className="p-2 border-b border-r text-xs font-semibold w-28 h-28 relative">
-                                        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 origin-bottom-left -rotate-45 w-36 text-left">
+                                {attackTroops.map(defender => (
+                                     <th key={defender.id} className="p-2 border-b border-r text-xs font-semibold w-24 h-24 relative bg-blue-950/40">
+                                        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 origin-bottom-left -rotate-45 w-32 text-left">
+                                            <span className="truncate block">{defender.nombre}</span>
+                                        </div>
+                                    </th>
+                                ))}
+                                {defenseTroops.map(defender => (
+                                     <th key={defender.id} className="p-2 border-b border-r text-xs font-semibold w-24 h-24 relative bg-red-950/40">
+                                        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 origin-bottom-left -rotate-45 w-32 text-left">
                                             <span className="truncate block">{defender.nombre}</span>
                                         </div>
                                     </th>
@@ -98,17 +108,16 @@ export function BonusConfigMatrix({ troops, initialBonusConfig }: BonusConfigMat
                             </tr>
                         </thead>
                         <tbody>
-                            {troops.map(attacker => (
+                            {attackTroops.map(attacker => (
                                 <tr key={attacker.id} className="even:bg-muted/20">
                                     <td className="sticky left-0 z-10 bg-card p-2 border-b border-r font-semibold w-[150px]">{attacker.nombre}</td>
-                                    {troops.map(defender => (
-                                        <td key={defender.id} className={cn("p-1 border-b border-r", attacker.id === defender.id && "bg-muted/30")}>
+                                    {allDefenders.map(defender => (
+                                        <td key={defender.id} className={cn("p-1 border-b border-r text-center", attacker.id === defender.id && "bg-muted/30")}>
                                             <Input
                                                 type="number"
                                                 step="0.1"
-                                                className="w-20 h-8 text-center tabular-nums"
+                                                className="w-20 h-8 mx-auto text-center tabular-nums"
                                                 placeholder="1"
-                                                disabled={attacker.id === defender.id}
                                                 value={matrix.get(attacker.id)?.get(defender.id) ?? ''}
                                                 onChange={(e) => handleInputChange(attacker.id, defender.id, e.target.value)}
                                             />

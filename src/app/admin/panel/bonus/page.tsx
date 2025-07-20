@@ -1,10 +1,15 @@
 
+
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getAdminSession } from "@/lib/auth-admin";
 import { getTroopBonusConfig, getTroopConfigurations } from "@/lib/data";
 import { redirect } from "next/navigation";
 import { BonusConfigMatrix } from "@/components/admin/bonus-config-matrix";
+import { TipoTropa } from "@prisma/client";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 function BonusLoading() {
     return (
@@ -21,15 +26,35 @@ export default async function BonusConfigPage() {
         redirect('/admin');
     }
 
-    const troops = await getTroopConfigurations();
+    const allTroops = await getTroopConfigurations();
     const bonusConfig = await getTroopBonusConfig();
 
+    const defenseOrder = ["trabajador_ilegal", "centinela", "policia", "guardaespaldas", "guardia_de_honor"];
+    const attackOrder = ["maton", "portero", "acuchillador", "pistolero", "ocupacion", "espia", "porteador", "cia", "fbi", "transportista", "francotirador", "asesino", "ninja", "mercenario"];
+    
+    const attackTroops = allTroops
+        .filter(t => t.tipo === TipoTropa.ATAQUE || t.tipo === 'OCUPAR' || t.tipo === 'ESPIONAJE' || t.tipo === 'TRANSPORTE')
+        .sort((a, b) => attackOrder.indexOf(a.id) - attackOrder.indexOf(b.id));
+
+    const defenseTroops = allTroops
+        .filter(t => t.tipo === TipoTropa.DEFENSA)
+        .sort((a, b) => defenseOrder.indexOf(a.id) - defenseOrder.indexOf(b.id));
+
     return (
-        <Suspense fallback={<BonusLoading />}>
-            <BonusConfigMatrix 
-                troops={troops} 
-                initialBonusConfig={bonusConfig}
-            />
-        </Suspense>
+        <div className="space-y-4">
+            <Button asChild variant="outline" size="sm">
+                <Link href="/admin/panel">
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Volver al Panel Principal
+                </Link>
+            </Button>
+            <Suspense fallback={<BonusLoading />}>
+                <BonusConfigMatrix 
+                    attackTroops={attackTroops}
+                    defenseTroops={defenseTroops}
+                    initialBonusConfig={bonusConfig}
+                />
+            </Suspense>
+        </div>
     );
 }

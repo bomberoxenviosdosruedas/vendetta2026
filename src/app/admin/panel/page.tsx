@@ -7,13 +7,11 @@ import { redirect } from "next/navigation";
 import { RoomConfigTable } from "@/components/admin/room-config-table";
 import { TrainingConfigTable } from "@/components/admin/training-config-table";
 import { TroopConfigTable } from "@/components/admin/troop-config-table";
-import { getRoomConfigurations, getTrainingConfigurations, getTroopConfigurations, getTroopBonusConfig } from "@/lib/data";
+import { getRoomConfigurations, getTrainingConfigurations, getTroopConfigurations } from "@/lib/data";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import prisma from "@/lib/prisma/prisma";
 import { TipoTropa } from "@prisma/client";
 import Link from "next/link";
-import { BonusConfigMatrix } from "@/components/admin/bonus-config-matrix";
 
 async function LogoutButton() {
     'use server';
@@ -56,7 +54,6 @@ export default async function AdminPanelPage({
     const rooms = await getRoomConfigurations();
     const trainings = await getTrainingConfigurations();
     const troops = await getTroopConfigurations();
-    const bonusConfig = await getTroopBonusConfig();
     const tiposTropa = Object.values(TipoTropa);
 
 
@@ -65,7 +62,9 @@ export default async function AdminPanelPage({
             <div className="flex justify-between items-center">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight">Panel de Administración de Vendetta</h1>
-                    <p className="text-muted-foreground">Gestión de la configuración del juego.</p>
+                    <p className="text-muted-foreground">
+                        Gestión de la configuración del juego. Puedes gestionar los <Link href="/admin/panel/bonus" className="text-primary underline">bonus de ataque aquí</Link>.
+                    </p>
                 </div>
                 <LogoutButton />
             </div>
@@ -75,7 +74,6 @@ export default async function AdminPanelPage({
                     <TabsTrigger value="habitaciones" asChild><Link href="?tab=habitaciones">Habitaciones</Link></TabsTrigger>
                     <TabsTrigger value="entrenamientos" asChild><Link href="?tab=entrenamientos">Entrenamientos</Link></TabsTrigger>
                     <TabsTrigger value="tropas" asChild><Link href="?tab=tropas">Tropas</Link></TabsTrigger>
-                    <TabsTrigger value="bonus" asChild><Link href="?tab=bonus">Bonus Ataque</Link></TabsTrigger>
                 </TabsList>
                 <TabsContent value="habitaciones">
                     <Suspense fallback={<TableSkeleton />}>
@@ -96,16 +94,7 @@ export default async function AdminPanelPage({
                         />
                     </Suspense>
                 </TabsContent>
-                <TabsContent value="bonus">
-                    <Suspense fallback={<TableSkeleton />}>
-                        <BonusConfigMatrix 
-                            troops={troops}
-                            initialBonusConfig={bonusConfig}
-                        />
-                    </Suspense>
-                </TabsContent>
             </Tabs>
         </div>
     )
 }
-
