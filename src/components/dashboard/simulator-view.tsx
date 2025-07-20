@@ -36,6 +36,7 @@ interface SimulatorColumnState {
     trainings: Record<string, number>;
     defenses: Record<string, number>;
     buildingsLevel: number;
+    propertyCount: number;
 }
 
 const initialColumnState: SimulatorColumnState = {
@@ -43,6 +44,7 @@ const initialColumnState: SimulatorColumnState = {
     trainings: {},
     defenses: {},
     buildingsLevel: 1,
+    propertyCount: 1,
 };
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
@@ -100,7 +102,7 @@ function SimulatorColumn({
 }) {
 
     const handleStateChange = (
-        section: keyof Omit<SimulatorColumnState, 'buildingsLevel'>,
+        section: keyof Omit<SimulatorColumnState, 'buildingsLevel' | 'propertyCount'>,
         id: string,
         value: number
     ) => {
@@ -113,8 +115,8 @@ function SimulatorColumn({
         }));
     };
 
-     const handleBuildingsLevelChange = (value: number) => {
-         setState(prev => ({ ...prev, buildingsLevel: value }));
+     const handleGeneralValueChange = (field: 'buildingsLevel' | 'propertyCount', value: number) => {
+         setState(prev => ({ ...prev, [field]: value }));
     }
 
     const handleClear = () => {
@@ -174,18 +176,22 @@ function SimulatorColumn({
                                 />
                             ))}
                         </Section>
-                        {isDefender && (
-                             <>
-                                <Separator />
-                                <Section title="General">
-                                    <InputRow
-                                        label="Nivel Edificios"
-                                        value={state.buildingsLevel}
-                                        onChange={handleBuildingsLevelChange}
-                                    />
-                                </Section>
-                             </>
-                        )}
+                        
+                        <Separator />
+                        <Section title="General">
+                             <InputRow
+                                label="Nº Propiedades"
+                                value={state.propertyCount}
+                                onChange={(val) => handleGeneralValueChange('propertyCount', val)}
+                            />
+                            {isDefender && (
+                                <InputRow
+                                    label="Nivel Edificios (Defensa)"
+                                    value={state.buildingsLevel}
+                                    onChange={(val) => handleGeneralValueChange('buildingsLevel', val)}
+                                />
+                            )}
+                        </Section>
                     </div>
                 </ScrollArea>
             </CardContent>
@@ -205,7 +211,8 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
             troops: Object.entries(state.troops).filter(([,qty]) => qty > 0).map(([id, quantity]) => ({ id, quantity })),
             trainings: Object.entries(state.trainings).filter(([,lvl]) => lvl > 0).map(([id, level]) => ({ id, level })),
             defenses: Object.entries(state.defenses).filter(([,lvl]) => lvl > 0).map(([id, level]) => ({ id, level })),
-            buildingsLevel: state.buildingsLevel
+            buildingsLevel: state.buildingsLevel,
+            propertyCount: state.propertyCount
         };
     };
 
@@ -230,6 +237,7 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
             trainings,
             defenses: column === 'defender' ? defenses : {},
             buildingsLevel: 1, // You might want to calculate an average level or set a default
+            propertyCount: user.propiedades.length || 1,
         };
 
         if (column === 'attacker') {
