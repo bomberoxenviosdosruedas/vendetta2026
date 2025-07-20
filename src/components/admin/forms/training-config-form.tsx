@@ -21,7 +21,26 @@ export function TrainingConfigForm({ training, allTrainings, onFinished }: Train
     const [isPending, startTransition] = useTransition();
     const { toast } = useToast();
 
-    // Initialize state for requirements from the training prop
+    const [formData, setFormData] = useState({
+        id: training?.id || '',
+        nombre: training?.nombre || '',
+        urlImagen: training?.urlImagen || '',
+        costoArmas: training?.costoArmas || 0,
+        costoMunicion: training?.costoMunicion || 0,
+        costoDolares: training?.costoDolares || 0,
+        duracion: training?.duracion || 0,
+        puntos: training?.puntos || 0,
+    });
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value, type } = e.target;
+        const isNumber = type === 'number';
+        setFormData(prev => ({
+            ...prev,
+            [name]: isNumber ? (parseFloat(value) || 0) : value
+        }));
+    };
+
     const initialRequirements = new Map(
         training?.requirements.map(req => [req.requiredTrainingId, req.requiredLevel])
     );
@@ -30,7 +49,7 @@ export function TrainingConfigForm({ training, allTrainings, onFinished }: Train
     const handleRequirementChange = (trainingId: string, checked: boolean) => {
         const newRequirements = new Map(requirements);
         if (checked) {
-            newRequirements.set(trainingId, 1); // Default level to 1
+            newRequirements.set(trainingId, 1);
         } else {
             newRequirements.delete(trainingId);
         }
@@ -42,20 +61,22 @@ export function TrainingConfigForm({ training, allTrainings, onFinished }: Train
         if (level > 0) {
             newRequirements.set(trainingId, level);
         } else {
-            newRequirements.delete(trainingId); // Remove if level is 0 or less
+            newRequirements.delete(trainingId);
         }
         setRequirements(newRequirements);
     };
 
-    const handleSubmit = (formData: FormData) => {
-        // Append requirements to formData before submitting
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const form = new FormData(e.currentTarget);
+        
         requirements.forEach((level, id) => {
-            formData.append('requirement_ids', id);
-            formData.append(`requirement_level_${id}`, level.toString());
+            form.append('requirement_ids', id);
+            form.append(`requirement_level_${id}`, level.toString());
         });
 
         startTransition(async () => {
-            const result = await saveTrainingConfig(formData);
+            const result = await saveTrainingConfig(form);
             if (result.error) {
                 toast({ variant: 'destructive', title: 'Error', description: result.error });
             } else {
@@ -65,48 +86,47 @@ export function TrainingConfigForm({ training, allTrainings, onFinished }: Train
         });
     }
 
-    // Filter out the current training from the list of possible requirements
     const availableRequirements = allTrainings.filter(t => t.id !== training?.id);
 
     return (
-        <form action={handleSubmit} className="space-y-4 max-h-[80vh] overflow-y-auto p-1 pr-4">
+        <form onSubmit={handleSubmit} className="space-y-4 max-h-[80vh] overflow-y-auto p-1 pr-4">
             <input type="hidden" name="originalId" value={training?.id || ''} />
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                     <Label htmlFor="id">ID</Label>
-                    <Input id="id" name="id" defaultValue={training?.id} required />
+                    <Input id="id" name="id" value={formData.id} onChange={handleInputChange} required disabled={!!training} />
                 </div>
                 <div className="space-y-2">
                     <Label htmlFor="nombre">Nombre</Label>
-                    <Input id="nombre" name="nombre" defaultValue={training?.nombre} required />
+                    <Input id="nombre" name="nombre" value={formData.nombre} onChange={handleInputChange} required />
                 </div>
             </div>
              <div className="space-y-2">
                 <Label htmlFor="urlImagen">URL de Imagen</Label>
-                <Input id="urlImagen" name="urlImagen" defaultValue={training?.urlImagen || ''} />
+                <Input id="urlImagen" name="urlImagen" value={formData.urlImagen} onChange={handleInputChange} />
             </div>
             <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
                     <Label htmlFor="costoArmas">Armas</Label>
-                    <Input id="costoArmas" name="costoArmas" type="number" defaultValue={training?.costoArmas} />
+                    <Input id="costoArmas" name="costoArmas" type="number" value={formData.costoArmas || ''} onChange={handleInputChange} placeholder="0" />
                 </div>
                 <div className="space-y-2">
                     <Label htmlFor="costoMunicion">Munición</Label>
-                    <Input id="costoMunicion" name="costoMunicion" type="number" defaultValue={training?.costoMunicion} />
+                    <Input id="costoMunicion" name="costoMunicion" type="number" value={formData.costoMunicion || ''} onChange={handleInputChange} placeholder="0" />
                 </div>
                 <div className="space-y-2">
                     <Label htmlFor="costoDolares">Dólares</Label>
-                    <Input id="costoDolares" name="costoDolares" type="number" defaultValue={training?.costoDolares} />
+                    <Input id="costoDolares" name="costoDolares" type="number" value={formData.costoDolares || ''} onChange={handleInputChange} placeholder="0" />
                 </div>
             </div>
              <div className="grid grid-cols-2 gap-4">
                  <div className="space-y-2">
                     <Label htmlFor="puntos">Puntos</Label>
-                    <Input id="puntos" name="puntos" type="number" step="0.01" defaultValue={training?.puntos} />
+                    <Input id="puntos" name="puntos" type="number" step="0.01" value={formData.puntos || ''} onChange={handleInputChange} placeholder="0" />
                 </div>
                 <div className="space-y-2">
                     <Label htmlFor="duracion">Duración (s)</Label>
-                    <Input id="duracion" name="duracion" type="number" defaultValue={training?.duracion} />
+                    <Input id="duracion" name="duracion" type="number" value={formData.duracion || ''} onChange={handleInputChange} placeholder="0" />
                 </div>
             </div>
              <div className="space-y-2">
@@ -132,10 +152,11 @@ export function TrainingConfigForm({ training, allTrainings, onFinished }: Train
                                         <Input
                                             id={`level-${reqTraining.id}`}
                                             type="number"
-                                            value={requirements.get(reqTraining.id) || 1}
+                                            value={requirements.get(reqTraining.id) || ''}
                                             onChange={(e) => handleLevelChange(reqTraining.id, parseInt(e.target.value, 10))}
                                             className="h-8 w-20"
                                             min="1"
+                                            placeholder="1"
                                         />
                                     </div>
                                 )}

@@ -22,6 +22,30 @@ export function RoomConfigForm({ room, allRooms, onFinished }: RoomConfigFormPro
     const [isPending, startTransition] = useTransition();
     const { toast } = useToast();
 
+    // Use state to manage form fields for controlled components
+    const [formData, setFormData] = useState({
+        id: room?.id || '',
+        nombre: room?.nombre || '',
+        descripcion: room?.descripcion || '',
+        urlImagen: room?.urlImagen || '',
+        costoArmas: room?.costoArmas || 0,
+        costoMunicion: room?.costoMunicion || 0,
+        costoDolares: room?.costoDolares || 0,
+        duracion: room?.duracion || 0,
+        puntos: room?.puntos || 0,
+        produccionBase: room?.produccionBase || 0,
+        produccionRecurso: room?.produccionRecurso || '',
+    });
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value, type } = e.target;
+        const isNumber = type === 'number';
+        setFormData(prev => ({
+            ...prev,
+            [name]: isNumber ? (parseInt(value, 10) || 0) : value
+        }));
+    };
+    
     const initialRequirements = new Map(
         (room?.requirements || []).map(req => [req.requiredRoomId, req.requiredLevel])
     );
@@ -47,14 +71,17 @@ export function RoomConfigForm({ room, allRooms, onFinished }: RoomConfigFormPro
         setRequirements(newRequirements);
     };
 
-    const handleSubmit = (formData: FormData) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const form = new FormData(e.currentTarget);
+        
         requirements.forEach((level, id) => {
-            formData.append('requirement_ids', id);
-            formData.append(`requirement_level_${id}`, level.toString());
+            form.append('requirement_ids', id);
+            form.append(`requirement_level_${id}`, level.toString());
         });
         
         startTransition(async () => {
-            const result = await saveRoomConfig(formData);
+            const result = await saveRoomConfig(form);
             if (result.error) {
                 toast({ variant: 'destructive', title: 'Error', description: result.error });
             } else {
@@ -67,56 +94,56 @@ export function RoomConfigForm({ room, allRooms, onFinished }: RoomConfigFormPro
     const availableRequirements = allRooms.filter(r => r.id !== room?.id);
 
     return (
-        <form action={handleSubmit} className="space-y-4 max-h-[80vh] overflow-y-auto p-1 pr-4">
+        <form onSubmit={handleSubmit} className="space-y-4 max-h-[80vh] overflow-y-auto p-1 pr-4">
             <input type="hidden" name="originalId" value={room?.id || ''} />
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                     <Label htmlFor="id">ID</Label>
-                    <Input id="id" name="id" defaultValue={room?.id} required disabled={!!room} />
+                    <Input id="id" name="id" value={formData.id} onChange={handleInputChange} required disabled={!!room} />
                 </div>
                 <div className="space-y-2">
                     <Label htmlFor="nombre">Nombre</Label>
-                    <Input id="nombre" name="nombre" defaultValue={room?.nombre} required />
+                    <Input id="nombre" name="nombre" value={formData.nombre} onChange={handleInputChange} required />
                 </div>
             </div>
             <div className="space-y-2">
                 <Label htmlFor="descripcion">Descripción</Label>
-                <Textarea id="descripcion" name="descripcion" defaultValue={room?.descripcion || ''} />
+                <Textarea id="descripcion" name="descripcion" value={formData.descripcion} onChange={handleInputChange} />
             </div>
              <div className="space-y-2">
                 <Label htmlFor="urlImagen">URL de Imagen</Label>
-                <Input id="urlImagen" name="urlImagen" defaultValue={room?.urlImagen || ''} />
+                <Input id="urlImagen" name="urlImagen" value={formData.urlImagen} onChange={handleInputChange} />
             </div>
             <div className="grid grid-cols-4 gap-4">
                 <div className="space-y-2">
                     <Label htmlFor="costoArmas">Armas</Label>
-                    <Input id="costoArmas" name="costoArmas" type="number" defaultValue={room?.costoArmas} />
+                    <Input id="costoArmas" name="costoArmas" type="number" value={formData.costoArmas || ''} onChange={handleInputChange} placeholder="0" />
                 </div>
                 <div className="space-y-2">
                     <Label htmlFor="costoMunicion">Munición</Label>
-                    <Input id="costoMunicion" name="costoMunicion" type="number" defaultValue={room?.costoMunicion} />
+                    <Input id="costoMunicion" name="costoMunicion" type="number" value={formData.costoMunicion || ''} onChange={handleInputChange} placeholder="0" />
                 </div>
                 <div className="space-y-2">
                     <Label htmlFor="costoDolares">Dólares</Label>
-                    <Input id="costoDolares" name="costoDolares" type="number" defaultValue={room?.costoDolares} />
+                    <Input id="costoDolares" name="costoDolares" type="number" value={formData.costoDolares || ''} onChange={handleInputChange} placeholder="0" />
                 </div>
                  <div className="space-y-2">
                     <Label htmlFor="duracion">Duración (s)</Label>
-                    <Input id="duracion" name="duracion" type="number" defaultValue={room?.duracion} />
+                    <Input id="duracion" name="duracion" type="number" value={formData.duracion || ''} onChange={handleInputChange} placeholder="0" />
                 </div>
             </div>
              <div className="grid grid-cols-3 gap-4">
                  <div className="space-y-2">
                     <Label htmlFor="puntos">Puntos</Label>
-                    <Input id="puntos" name="puntos" type="number" step="0.01" defaultValue={room?.puntos} />
+                    <Input id="puntos" name="puntos" type="number" step="0.01" value={formData.puntos || ''} onChange={handleInputChange} placeholder="0" />
                 </div>
                 <div className="space-y-2">
                     <Label htmlFor="produccionBase">Producción Base</Label>
-                    <Input id="produccionBase" name="produccionBase" type="number" defaultValue={room?.produccionBase} />
+                    <Input id="produccionBase" name="produccionBase" type="number" value={formData.produccionBase || ''} onChange={handleInputChange} placeholder="0" />
                 </div>
                 <div className="space-y-2">
                     <Label htmlFor="produccionRecurso">Recurso Producido</Label>
-                    <Input id="produccionRecurso" name="produccionRecurso" defaultValue={room?.produccionRecurso || ''} placeholder="armas, municion..." />
+                    <Input id="produccionRecurso" name="produccionRecurso" value={formData.produccionRecurso || ''} onChange={handleInputChange} placeholder="armas, municion..." />
                 </div>
             </div>
              <div className="space-y-2">
@@ -142,10 +169,11 @@ export function RoomConfigForm({ room, allRooms, onFinished }: RoomConfigFormPro
                                         <Input
                                             id={`level-${reqRoom.id}`}
                                             type="number"
-                                            value={requirements.get(reqRoom.id) || 1}
+                                            value={requirements.get(reqRoom.id) || ''}
                                             onChange={(e) => handleLevelChange(reqRoom.id, parseInt(e.target.value, 10))}
                                             className="h-8 w-20"
                                             min="1"
+                                            placeholder="1"
                                         />
                                     </div>
                                 )}
