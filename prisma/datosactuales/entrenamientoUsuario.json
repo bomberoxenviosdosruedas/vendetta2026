@@ -6,12 +6,6 @@
     "nivel": 1
   },
   {
-    "id": "cmd6re1ej0015zi0wwxivf8v0",
-    "userId": "cmd6rdx740003zi0w5d7c67xp",
-    "configuracionEntrenamientoId": "rutas",
-    "nivel": 1
-  },
-  {
     "id": "cmd6re1mg0017zi0wwmbntwew",
     "userId": "cmd6rdx740003zi0w5d7c67xp",
     "configuracionEntrenamientoId": "extorsion",
@@ -94,5 +88,11 @@
     "userId": "cmd6rdx740003zi0w5d7c67xp",
     "configuracionEntrenamientoId": "guerrilla",
     "nivel": 11
+  },
+  {
+    "id": "cmd6re1ej0015zi0wwxivf8v0",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
+    "configuracionEntrenamientoId": "rutas",
+    "nivel": 3
   }
 ]

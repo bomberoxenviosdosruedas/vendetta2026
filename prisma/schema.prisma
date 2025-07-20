@@ -7,29 +7,29 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id               String          @id @default(cuid())
-  name             String
-  username         String          @unique
-  password         String
-  title            String?
-  avatarUrl        String?
-  puntuacion       PuntuacionUsuario?
-  propiedades      Propiedad[]
-  entrenamientos   EntrenamientoUsuario[]
-  misiones         ColaMisiones[]
-  familyMember     FamilyMember?
-  sentMessages     Message[]       @relation("SentMessages")
-  receivedMessages Message[]       @relation("ReceivedMessages")
+  id                 String                 @id @default(cuid())
+  name               String
+  username           String                 @unique
+  password           String
+  title              String?
+  avatarUrl          String?
+  puntuacion         PuntuacionUsuario?
+  propiedades        Propiedad[]
+  entrenamientos     EntrenamientoUsuario[]
+  misiones           ColaMisiones[]
+  familyMember       FamilyMember?
+  sentMessages       Message[]              @relation("SentMessages")
+  receivedMessages   Message[]              @relation("ReceivedMessages")
   colaEntrenamientos ColaEntrenamiento[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  FamilyInvitation FamilyInvitation[]
 }
 
 model PuntuacionUsuario {
@@ -43,57 +43,57 @@ model PuntuacionUsuario {
 }
 
 model Propiedad {
-  id                String       @id @default(cuid())
-  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId            String
-  nombre            String
-  ciudad            Int
-  barrio            Int
-  edificio          Int
-  armas             Float        @default(10000)
-  municion          Float        @default(10000)
-  alcohol           Float        @default(10000)
-  dolares           Float        @default(10000)
-  ultimaActualizacion DateTime   @default(now())
-  habitaciones      HabitacionUsuario[]
-  TropaUsuario      TropaUsuario[]
-  colaConstruccion  ColaConstruccion[]
-  colaReclutamiento ColaReclutamiento?
-  misionesOrigen    ColaMisiones[]     @relation("MisionesOrigen")
-  colaEntrenamientos ColaEntrenamiento[]
+  id                  String              @id @default(cuid())
+  user                User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId              String
+  nombre              String
+  ciudad              Int
+  barrio              Int
+  edificio            Int
+  armas               Float               @default(10000)
+  municion            Float               @default(10000)
+  alcohol             Float               @default(10000)
+  dolares             Float               @default(10000)
+  ultimaActualizacion DateTime            @default(now())
+  habitaciones        HabitacionUsuario[]
+  TropaUsuario        TropaUsuario[]
+  colaConstruccion    ColaConstruccion[]
+  colaReclutamiento   ColaReclutamiento?
+  misionesOrigen      ColaMisiones[]      @relation("MisionesOrigen")
+  colaEntrenamientos  ColaEntrenamiento[]
 
   @@unique([ciudad, barrio, edificio])
 }
 
 model HabitacionUsuario {
-  id                          String                  @id @default(cuid())
-  propiedad                   Propiedad               @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
-  propiedadId                 String
-  configuracion               ConfiguracionHabitacion @relation(fields: [configuracionHabitacionId], references: [id], onDelete: Cascade)
-  configuracionHabitacionId   String
-  nivel                       Int                     @default(1)
+  id                        String                  @id @default(cuid())
+  propiedad                 Propiedad               @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
+  propiedadId               String
+  configuracion             ConfiguracionHabitacion @relation(fields: [configuracionHabitacionId], references: [id], onDelete: Cascade)
+  configuracionHabitacionId String
+  nivel                     Int                     @default(1)
 
   @@unique([propiedadId, configuracionHabitacionId])
 }
 
 model EntrenamientoUsuario {
-  id                               String                     @id @default(cuid())
-  user                             User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                           String
-  configuracion                    ConfiguracionEntrenamiento @relation(fields: [configuracionEntrenamientoId], references: [id], onDelete: Cascade)
-  configuracionEntrenamientoId     String
-  nivel                            Int                        @default(0)
+  id                           String                     @id @default(cuid())
+  user                         User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                       String
+  configuracion                ConfiguracionEntrenamiento @relation(fields: [configuracionEntrenamientoId], references: [id], onDelete: Cascade)
+  configuracionEntrenamientoId String
+  nivel                        Int                        @default(0)
 
   @@unique([userId, configuracionEntrenamientoId])
 }
 
 model TropaUsuario {
-  id                       String             @id @default(cuid())
-  propiedad                Propiedad          @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
-  propiedadId              String
-  configuracion            ConfiguracionTropa @relation(fields: [configuracionTropaId], references: [id], onDelete: Cascade)
-  configuracionTropaId     String
-  cantidad                 Int                @default(0)
+  id                   String             @id @default(cuid())
+  propiedad            Propiedad          @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
+  propiedadId          String
+  configuracion        ConfiguracionTropa @relation(fields: [configuracionTropaId], references: [id], onDelete: Cascade)
+  configuracionTropaId String
+  cantidad             Int                @default(0)
 
   @@unique([propiedadId, configuracionTropaId])
 }
@@ -101,7 +101,7 @@ model TropaUsuario {
 // --- COLAS ---
 
 model ColaConstruccion {
-  id                String   @id @default(cuid())
+  id                String    @id @default(cuid())
   propiedad         Propiedad @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
   propiedadId       String
   habitacionId      String
@@ -109,7 +109,7 @@ model ColaConstruccion {
   duracion          Int
   fechaInicio       DateTime?
   fechaFinalizacion DateTime?
-  createdAt         DateTime @default(now())
+  createdAt         DateTime  @default(now())
 }
 
 model ColaReclutamiento {
@@ -160,22 +160,22 @@ model ColaMisiones {
 // --- CONFIGURACIONES ---
 
 model ConfiguracionHabitacion {
-  id                 String              @id
-  nombre             String
-  descripcion        String
-  urlImagen          String
-  costoArmas         Int
-  costoMunicion      Int
-  costoDolares       Int
-  duracion           Int
-  produccionBase     Float
-  produccionRecurso  String?
-  puntos             Float
-  HabitacionUsuario  HabitacionUsuario[]
-  requirements       RoomRequirement[]   @relation("requiredFor")
-  requiredBy         RoomRequirement[]   @relation("requirements")
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
+  id                String              @id
+  nombre            String
+  descripcion       String
+  urlImagen         String
+  costoArmas        Int
+  costoMunicion     Int
+  costoDolares      Int
+  duracion          Int
+  produccionBase    Float
+  produccionRecurso String?
+  puntos            Float
+  HabitacionUsuario HabitacionUsuario[]
+  requirements      RoomRequirement[]   @relation("requiredFor")
+  requiredBy        RoomRequirement[]   @relation("requirements")
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
 }
 
 model RoomRequirement {
@@ -189,20 +189,20 @@ model RoomRequirement {
 }
 
 model ConfiguracionEntrenamiento {
-  id                       String                     @id
-  nombre                   String
-  urlImagen                String
-  costoArmas               Int
-  costoMunicion            Int
-  costoDolares             Int
-  duracion                 Int
-  puntos                   Float
-  EntrenamientoUsuario     EntrenamientoUsuario[]
-  colaEntrenamientos       ColaEntrenamiento[]
-  requirements             TrainingRequirement[]      @relation("requiredFor")
-  requiredBy               TrainingRequirement[]      @relation("requirements")
-  createdAt                DateTime                   @default(now())
-  updatedAt                DateTime                   @updatedAt
+  id                   String                 @id
+  nombre               String
+  urlImagen            String
+  costoArmas           Int
+  costoMunicion        Int
+  costoDolares         Int
+  duracion             Int
+  puntos               Float
+  EntrenamientoUsuario EntrenamientoUsuario[]
+  colaEntrenamientos   ColaEntrenamiento[]
+  requirements         TrainingRequirement[]  @relation("requiredFor")
+  requiredBy           TrainingRequirement[]  @relation("requirements")
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
 }
 
 model TrainingRequirement {
@@ -216,30 +216,30 @@ model TrainingRequirement {
 }
 
 model ConfiguracionTropa {
-  id                       String                     @id
-  nombre                   String
-  urlImagen                String
-  descripcion              String
-  costoArmas               Int
-  costoMunicion            Int
-  costoDolares             Int
-  duracion                 Int
-  puntos                   Float
-  ataque                   Int
-  defensa                  Int
-  capacidad                Int
-  velocidad                Int
-  salario                  Int
-  tipo                     TipoTropa                  @default(ATAQUE)
-  requisitos               String[] // IDs de otras tropas
-  bonusAtaque              String[] // IDs de entrenamientos
-  bonusDefensa             String[] // IDs de entrenamientos
-  TropaUsuario             TropaUsuario[]
-  ColaReclutamiento        ColaReclutamiento[]
-  bonusContrincante        TropaBonusContrincante[]   @relation("atacante")
-  esContrincanteDe         TropaBonusContrincante[]   @relation("defensora")
-  createdAt                DateTime                   @default(now())
-  updatedAt                DateTime                   @updatedAt
+  id                String                   @id
+  nombre            String
+  urlImagen         String
+  descripcion       String
+  costoArmas        Int
+  costoMunicion     Int
+  costoDolares      Int
+  duracion          Int
+  puntos            Float
+  ataque            Int
+  defensa           Int
+  capacidad         Int
+  velocidad         Int
+  salario           Int
+  tipo              TipoTropa                @default(ATAQUE)
+  requisitos        String[] // IDs de otras tropas
+  bonusAtaque       String[] // IDs de entrenamientos
+  bonusDefensa      String[] // IDs de entrenamientos
+  TropaUsuario      TropaUsuario[]
+  ColaReclutamiento ColaReclutamiento[]
+  bonusContrincante TropaBonusContrincante[] @relation("atacante")
+  esContrincanteDe  TropaBonusContrincante[] @relation("defensora")
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
 }
 
 model TropaBonusContrincante {
@@ -254,24 +254,24 @@ model TropaBonusContrincante {
 
 // --- SOCIAL ---
 model Family {
-  id           String             @id @default(cuid())
-  name         String             @unique
-  tag          String             @unique
-  description  String?
-  avatarUrl    String?
-  members      FamilyMember[]
-  invitations  FamilyInvitation[]
-  createdAt    DateTime           @default(now())
-  updatedAt    DateTime           @updatedAt
+  id          String             @id @default(cuid())
+  name        String             @unique
+  tag         String             @unique
+  description String?
+  avatarUrl   String?
+  members     FamilyMember[]
+  invitations FamilyInvitation[]
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
 }
 
 model FamilyMember {
-  family    Family     @relation(fields: [familyId], references: [id], onDelete: Cascade)
-  familyId  String
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String     @unique
-  role      FamilyRole @default(MEMBER)
-  joinedAt  DateTime   @default(now())
+  family   Family     @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  familyId String
+  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String     @unique
+  role     FamilyRole @default(MEMBER)
+  joinedAt DateTime   @default(now())
 }
 
 model FamilyInvitation {
@@ -288,16 +288,16 @@ model FamilyInvitation {
 }
 
 model Message {
-  id           String          @id @default(cuid())
-  sender       User?           @relation("SentMessages", fields: [senderId], references: [id], onDelete: SetNull)
-  senderId     String?
-  recipient    User            @relation("ReceivedMessages", fields: [recipientId], references: [id], onDelete: Cascade)
-  recipientId  String
-  subject      String
-  content      String
-  isRead       Boolean         @default(false)
-  category     MessageCategory
-  createdAt    DateTime        @default(now())
+  id          String          @id @default(cuid())
+  sender      User?           @relation("SentMessages", fields: [senderId], references: [id], onDelete: SetNull)
+  senderId    String?
+  recipient   User            @relation("ReceivedMessages", fields: [recipientId], references: [id], onDelete: Cascade)
+  recipientId String
+  subject     String
+  content     String
+  isRead      Boolean         @default(false)
+  category    MessageCategory
+  createdAt   DateTime        @default(now())
 
   @@index([recipientId, createdAt])
 }

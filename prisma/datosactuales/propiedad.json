@@ -6,11 +6,11 @@
     "ciudad": 1,
     "barrio": 1,
     "edificio": 1,
-    "armas": 15010000,
-    "municion": 14852136.61500003,
+    "armas": 14924497.99777784,
+    "municion": 14705542.63111122,
     "alcohol": 15010000,
     "dolares": 15010000,
-    "ultimaActualizacion": "2025-07-20T02:47:12.236Z"
+    "ultimaActualizacion": "2025-07-20T03:45:58.640Z"
   },
   {
     "id": "cmd6s83yl003nzi0wqwz31ijx",
@@ -23,6 +23,6 @@
     "municion": 160000,
     "alcohol": 160000,
     "dolares": 160000,
-    "ultimaActualizacion": "2025-07-20T02:47:12.236Z"
+    "ultimaActualizacion": "2025-07-20T03:45:58.640Z"
   }
 ]
