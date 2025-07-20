@@ -336,23 +336,35 @@ export const getGlobalStatistics = cache(async () => {
             allTroopConfigs,
             roomStats,
             trainingStats,
-            troopStats,
+            rawTroopStats,
         ] = await Promise.all([
             getRoomConfigurations(),
             getTrainingConfigurations(),
             getTroopConfigurations(),
             prisma.habitacionUsuario.findMany(),
             prisma.entrenamientoUsuario.findMany(),
-            prisma.tropaUsuario.groupBy({
-                by: ['userId', 'configuracionTropaId'],
-                _sum: { cantidad: true },
+            prisma.tropaUsuario.findMany({
+                include: {
+                    propiedad: {
+                        select: {
+                            userId: true
+                        }
+                    }
+                }
             }),
         ]);
-        const troopStatsFormatted = troopStats.map(stat => ({
-            userId: stat.userId,
-            total: stat._sum.cantidad || 0,
-            configuracionTropaId: stat.configuracionTropaId,
-        }))
+
+        const troopStatsMap = new Map<string, number>();
+        rawTroopStats.forEach(stat => {
+            const key = `${stat.propiedad.userId}-${stat.configuracionTropaId}`;
+            const currentTotal = troopStatsMap.get(key) || 0;
+            troopStatsMap.set(key, currentTotal + stat.cantidad);
+        });
+        
+        const troopStats = Array.from(troopStatsMap.entries()).map(([key, total]) => {
+            const [userId, configuracionTropaId] = key.split('-');
+            return { userId, configuracionTropaId, total };
+        });
 
         return {
             allRoomConfigs,
@@ -360,7 +372,7 @@ export const getGlobalStatistics = cache(async () => {
             allTroopConfigs,
             roomStats,
             trainingStats,
-            troopStats: troopStatsFormatted,
+            troopStats,
         };
 
     } catch (e) {
