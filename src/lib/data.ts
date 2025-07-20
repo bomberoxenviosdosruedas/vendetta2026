@@ -316,121 +316,12 @@ const userInclude = {
     }
 };
 
-export const getGlobalStatistics = cache(async () => {
-    try {
-        const [
-            allRoomConfigs, 
-            allTrainingConfigs, 
-            allTroopConfigs, 
-            roomStats, 
-            trainingStats,
-            troopStatsRaw,
-            properties
-        ] = await Promise.all([
-            getRoomConfigurations(),
-            getTrainingConfigurations(),
-            getTroopConfigurations(),
-            prisma.habitacionUsuario.findMany(),
-            prisma.entrenamientoUsuario.findMany(),
-            prisma.tropaUsuario.groupBy({
-                by: ['propiedadId', 'configuracionTropaId'],
-                _sum: {
-                    cantidad: true
-                }
-            }),
-            prisma.propiedad.findMany({ select: { id: true, userId: true } })
-        ]);
-
-        const propertyIdToUserIdMap = new Map(properties.map(p => [p.id, p.userId]));
-        
-        const userTroopTotals = new Map<string, Map<string, number>>();
-
-        troopStatsRaw.forEach(stat => {
-            const userId = propertyIdToUserIdMap.get(stat.propiedadId);
-            if (!userId) return;
-
-            if (!userTroopTotals.has(userId)) {
-                userTroopTotals.set(userId, new Map());
-            }
-
-            const userTroops = userTroopTotals.get(userId)!;
-            const currentTotal = userTroops.get(stat.configuracionTropaId) || 0;
-            userTroops.set(stat.configuracionTropaId, currentTotal + (stat._sum.cantidad || 0));
-        });
-
-        const finalTroopStats = Array.from(userTroopTotals.entries()).flatMap(([userId, troopMap]) => 
-            Array.from(troopMap.entries()).map(([configuracionTropaId, total]) => ({
-                userId,
-                configuracionTropaId,
-                total
-            }))
-        );
-
-        return { allRoomConfigs, allTrainingConfigs, allTroopConfigs, roomStats, trainingStats, troopStats: finalTroopStats };
-    } catch (error) {
-        console.error("Error fetching global statistics:", error);
-        return { 
-            allRoomConfigs: [], 
-            allTrainingConfigs: [], 
-            allTroopConfigs: [], 
-            roomStats: [], 
-            trainingStats: [], 
-            troopStats: [] 
-        };
-    }
-});
-
-export const getMaximumResourceCapacity = cache(async () => {
-    try {
-        const allProperties = await prisma.propiedad.findMany({
-            include: {
-                habitaciones: {
-                    include: {
-                        configuracion: true
-                    }
-                }
-            }
-        });
-        
-        const maxCapacity = {
-            armas: 0,
-            municion: 0,
-            alcohol: 0,
-            dolares: 0
-        };
-
-        allProperties.forEach(prop => {
-            const capacity = calculateStorageCapacity(prop as FullPropiedad);
-            if (capacity.armas > maxCapacity.armas) maxCapacity.armas = capacity.armas;
-            if (capacity.municion > maxCapacity.municion) maxCapacity.municion = capacity.municion;
-            if (capacity.alcohol > maxCapacity.alcohol) maxCapacity.alcohol = capacity.alcohol;
-            if (capacity.dolares > maxCapacity.dolares) maxCapacity.dolares = capacity.dolares;
-        });
-
-        return [
-            { name: 'Armas', maxValue: maxCapacity.armas },
-            { name: 'Munición', maxValue: maxCapacity.municion },
-            { name: 'Alcohol', maxValue: maxCapacity.alcohol },
-            { name: 'Dólares', maxValue: maxCapacity.dolares },
-        ];
-
-    } catch (error) {
-        console.error("Error fetching resource statistics:", error);
-        return [];
-    }
-})
-
-
 export async function getUserByUsername(username: string): Promise<UserWithProgress | null> {
     try {
         const user = await prisma.user.findUnique({
             where: { username },
             include: userInclude
         });
-        // This is a temporary type assertion to match the frontend expectations
-        if (user) {
-            (user as any).propiedades = user.propiedades.map(p => ({ ...p, tropas: p.TropaUsuario }));
-        }
         return user as UserWithProgress | null;
     } catch (error) {
         console.error(`Error fetching user ${username}:`, error);
@@ -445,10 +336,6 @@ export async function getUserWithProgressByUsername(username: string): Promise<U
             where: { username },
             include: userInclude
         });
-        // This is a temporary type assertion to match the frontend expectations
-        if (user) {
-            (user as any).propiedades = user.propiedades.map(p => ({ ...p, tropas: p.TropaUsuario as any }));
-        }
         return user as UserWithProgress | null;
     } catch (error) {
         console.error(`Error fetching user ${username} with progress:`, error);

@@ -3,5 +3,15 @@
     "trainingId": "honor",
     "requiredTrainingId": "tiro",
     "requiredLevel": 11
+  },
+  {
+    "trainingId": "guerrilla",
+    "requiredTrainingId": "seguridad",
+    "requiredLevel": 9
+  },
+  {
+    "trainingId": "guerrilla",
+    "requiredTrainingId": "tiro",
+    "requiredLevel": 9
   }
 ]

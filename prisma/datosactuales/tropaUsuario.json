@@ -54,12 +54,6 @@
     "cantidad": 0
   },
   {
-    "id": "cmd6re7jf002pzi0ww3qjgx0p",
-    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
-    "configuracionTropaId": "transportista",
-    "cantidad": 0
-  },
-  {
     "id": "cmd6re7bf002nzi0w4a2k6c9q",
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionTropaId": "portero",
@@ -72,15 +66,21 @@
     "cantidad": 1
   },
   {
-    "id": "cmd6re68n002dzi0wd56b3ml8",
-    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
-    "configuracionTropaId": "mercenario",
-    "cantidad": 1
-  },
-  {
     "id": "cmd6re4qh001zzi0wil07h24e",
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionTropaId": "acuchillador",
     "cantidad": 1
+  },
+  {
+    "id": "cmd6re7jf002pzi0ww3qjgx0p",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "transportista",
+    "cantidad": 1
+  },
+  {
+    "id": "cmd6re68n002dzi0wd56b3ml8",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "mercenario",
+    "cantidad": 2
   }
 ]

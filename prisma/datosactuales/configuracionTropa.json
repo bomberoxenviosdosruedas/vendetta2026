@@ -1,5 +1,77 @@
 [
   {
+    "id": "mercenario",
+    "nombre": "Mercenario",
+    "urlImagen": "/img/U14K.gif",
+    "descripcion": "Un soldado de fortuna que lucha por el mejor postor. Equipado con lo mejor, es una fuerza a tener en cuenta en el campo de batalla.",
+    "costoArmas": 80000,
+    "costoMunicion": 120000,
+    "costoDolares": 50000,
+    "duracion": 72000,
+    "puntos": 1176,
+    "ataque": 1000,
+    "defensa": 1200,
+    "capacidad": 12000,
+    "velocidad": 4500,
+    "salario": 300,
+    "tipo": "ATAQUE",
+    "requisitos": [],
+    "bonusAtaque": [
+      "proteccion",
+      "combate",
+      "armas",
+      "guerrilla",
+      "seguridad",
+      "tiro",
+      "psicologico",
+      "espionaje"
+    ],
+    "bonusDefensa": [
+      "espionaje",
+      "seguridad",
+      "proteccion",
+      "combate",
+      "armas",
+      "tiro",
+      "guerrilla",
+      "psicologico"
+    ],
+    "createdAt": "2025-07-19T07:20:55.692Z",
+    "updatedAt": "2025-07-19T08:44:15.328Z"
+  },
+  {
+    "id": "ninja",
+    "nombre": "Ninja",
+    "urlImagen": "/img/U13K.gif",
+    "descripcion": "Un guerrero legendario del lejano oriente, el ninja combina artes marciales mortales con un sigilo sobrenatural.",
+    "costoArmas": 2000,
+    "costoMunicion": 1000,
+    "costoDolares": 30000,
+    "duracion": 20000,
+    "puntos": 236,
+    "ataque": 400,
+    "defensa": 1200,
+    "capacidad": 5000,
+    "velocidad": 8000,
+    "salario": 60,
+    "tipo": "ATAQUE",
+    "requisitos": [],
+    "bonusAtaque": [
+      "combate",
+      "armas",
+      "guerrilla",
+      "psicologico"
+    ],
+    "bonusDefensa": [
+      "combate",
+      "armas",
+      "guerrilla",
+      "psicologico"
+    ],
+    "createdAt": "2025-07-19T07:20:55.973Z",
+    "updatedAt": "2025-07-19T07:32:57.344Z"
+  },
+  {
     "id": "acuchillador",
     "nombre": "Acuchillador",
     "urlImagen": "/img/U3K.gif",
@@ -24,35 +96,8 @@
       "extorsion",
       "cuerpo"
     ],
-    "createdAt": "2025-07-19T06:53:36.802Z",
-    "updatedAt": "2025-07-19T06:53:36.802Z"
-  },
-  {
-    "id": "pistolero",
-    "nombre": "Pistolero",
-    "urlImagen": "/img/U4K.gif",
-    "descripcion": "Para ser más efectivos en llegar tan rápido como sea posible al objetivo, tus chicos deberían hacer este entrenamiento. Aquí aprenderán a planear rutas, viajar silenciosamente, y aproximarse al objetivo sin ser detectados, para llevar a cabo su trabajo tan efectivamente como sea posible.",
-    "costoArmas": 2000,
-    "costoMunicion": 3000,
-    "costoDolares": 0,
-    "duracion": 600,
-    "puntos": 21,
-    "ataque": 30,
-    "defensa": 20,
-    "capacidad": 500,
-    "velocidad": 2400,
-    "salario": 2,
-    "tipo": "ATAQUE",
-    "requisitos": [],
-    "bonusAtaque": [
-      "tiro"
-    ],
-    "bonusDefensa": [
-      "seguridad",
-      "proteccion"
-    ],
-    "createdAt": "2025-07-19T06:53:37.095Z",
-    "updatedAt": "2025-07-19T06:53:37.095Z"
+    "createdAt": "2025-07-19T07:20:53.469Z",
+    "updatedAt": "2025-07-19T07:32:54.873Z"
   },
   {
     "id": "portero",
@@ -78,8 +123,8 @@
       "extorsion",
       "seguridad"
     ],
-    "createdAt": "2025-07-19T06:53:37.389Z",
-    "updatedAt": "2025-07-19T06:53:37.389Z"
+    "createdAt": "2025-07-19T07:20:54.025Z",
+    "updatedAt": "2025-07-19T07:32:55.422Z"
   },
   {
     "id": "asesino",
@@ -112,8 +157,8 @@
       "guerrilla",
       "psicologico"
     ],
-    "createdAt": "2025-07-19T06:53:37.672Z",
-    "updatedAt": "2025-07-19T06:53:37.672Z"
+    "createdAt": "2025-07-19T07:20:54.298Z",
+    "updatedAt": "2025-07-19T07:32:55.695Z"
   },
   {
     "id": "maton",
@@ -134,8 +179,8 @@
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": [],
-    "createdAt": "2025-07-19T06:53:37.975Z",
-    "updatedAt": "2025-07-19T06:53:37.975Z"
+    "createdAt": "2025-07-19T07:20:54.585Z",
+    "updatedAt": "2025-07-19T07:32:55.964Z"
   },
   {
     "id": "ocupacion",
@@ -156,8 +201,8 @@
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": [],
-    "createdAt": "2025-07-19T06:53:38.253Z",
-    "updatedAt": "2025-07-19T06:53:38.253Z"
+    "createdAt": "2025-07-19T07:20:54.855Z",
+    "updatedAt": "2025-07-19T07:32:56.238Z"
   },
   {
     "id": "porteador",
@@ -182,8 +227,8 @@
     "bonusDefensa": [
       "combate"
     ],
-    "createdAt": "2025-07-19T06:53:38.544Z",
-    "updatedAt": "2025-07-19T06:53:38.544Z"
+    "createdAt": "2025-07-19T07:20:55.142Z",
+    "updatedAt": "2025-07-19T07:32:56.508Z"
   },
   {
     "id": "transportista",
@@ -209,80 +254,8 @@
       "proteccion",
       "psicologico"
     ],
-    "createdAt": "2025-07-19T06:53:38.825Z",
-    "updatedAt": "2025-07-19T06:53:38.825Z"
-  },
-  {
-    "id": "mercenario",
-    "nombre": "Mercenario",
-    "urlImagen": "/img/U14K.gif",
-    "descripcion": "Un soldado de fortuna que lucha por el mejor postor. Equipado con lo mejor, es una fuerza a tener en cuenta en el campo de batalla.",
-    "costoArmas": 80000,
-    "costoMunicion": 120000,
-    "costoDolares": 50000,
-    "duracion": 72000,
-    "puntos": 1176,
-    "ataque": 1000,
-    "defensa": 1200,
-    "capacidad": 12000,
-    "velocidad": 4500,
-    "salario": 300,
-    "tipo": "ATAQUE",
-    "requisitos": [],
-    "bonusAtaque": [
-      "espionaje",
-      "seguridad",
-      "proteccion",
-      "combate",
-      "armas",
-      "tiro",
-      "guerrilla",
-      "psicologico"
-    ],
-    "bonusDefensa": [
-      "espionaje",
-      "seguridad",
-      "proteccion",
-      "combate",
-      "armas",
-      "tiro",
-      "guerrilla",
-      "psicologico"
-    ],
-    "createdAt": "2025-07-19T06:53:39.097Z",
-    "updatedAt": "2025-07-19T06:53:39.097Z"
-  },
-  {
-    "id": "ninja",
-    "nombre": "Ninja",
-    "urlImagen": "/img/U13K.gif",
-    "descripcion": "Un guerrero legendario del lejano oriente, el ninja combina artes marciales mortales con un sigilo sobrenatural.",
-    "costoArmas": 2000,
-    "costoMunicion": 1000,
-    "costoDolares": 30000,
-    "duracion": 20000,
-    "puntos": 236,
-    "ataque": 400,
-    "defensa": 1200,
-    "capacidad": 5000,
-    "velocidad": 8000,
-    "salario": 60,
-    "tipo": "ATAQUE",
-    "requisitos": [],
-    "bonusAtaque": [
-      "combate",
-      "armas",
-      "guerrilla",
-      "psicologico"
-    ],
-    "bonusDefensa": [
-      "combate",
-      "armas",
-      "guerrilla",
-      "psicologico"
-    ],
-    "createdAt": "2025-07-19T06:53:39.380Z",
-    "updatedAt": "2025-07-19T06:53:39.380Z"
+    "createdAt": "2025-07-19T07:20:55.420Z",
+    "updatedAt": "2025-07-19T07:32:56.788Z"
   },
   {
     "id": "cia",
@@ -310,8 +283,8 @@
       "proteccion",
       "guerrilla"
     ],
-    "createdAt": "2025-07-19T06:53:39.670Z",
-    "updatedAt": "2025-07-19T06:53:39.670Z"
+    "createdAt": "2025-07-19T07:20:56.254Z",
+    "updatedAt": "2025-07-19T07:32:57.609Z"
   },
   {
     "id": "fbi",
@@ -338,8 +311,8 @@
       "proteccion",
       "tiro"
     ],
-    "createdAt": "2025-07-19T06:53:39.957Z",
-    "updatedAt": "2025-07-19T06:53:39.957Z"
+    "createdAt": "2025-07-19T07:20:56.526Z",
+    "updatedAt": "2025-07-19T07:32:57.896Z"
   },
   {
     "id": "espia",
@@ -364,8 +337,8 @@
     "bonusDefensa": [
       "espionaje"
     ],
-    "createdAt": "2025-07-19T06:53:40.236Z",
-    "updatedAt": "2025-07-19T06:53:40.236Z"
+    "createdAt": "2025-07-19T07:20:56.806Z",
+    "updatedAt": "2025-07-19T07:32:58.173Z"
   },
   {
     "id": "francotirador",
@@ -395,7 +368,34 @@
       "guerrilla",
       "psicologico"
     ],
-    "createdAt": "2025-07-19T06:53:40.522Z",
-    "updatedAt": "2025-07-19T06:53:40.522Z"
+    "createdAt": "2025-07-19T07:20:57.084Z",
+    "updatedAt": "2025-07-19T07:32:58.434Z"
+  },
+  {
+    "id": "pistolero",
+    "nombre": "Pistolero",
+    "urlImagen": "/img/U4K.gif",
+    "descripcion": "Para ser más efectivos en llegar tan rápido como sea posible al objetivo, tus chicos deberían hacer este entrenamiento. Aquí aprenderán a planear rutas, viajar silenciosamente, y aproximarse al objetivo sin ser detectados, para llevar a cabo su trabajo tan efectivamente como sea posible.",
+    "costoArmas": 2000,
+    "costoMunicion": 3000,
+    "costoDolares": 0,
+    "duracion": 600,
+    "puntos": 21,
+    "ataque": 30,
+    "defensa": 20,
+    "capacidad": 500,
+    "velocidad": 2400,
+    "salario": 2,
+    "tipo": "ATAQUE",
+    "requisitos": [],
+    "bonusAtaque": [
+      "tiro"
+    ],
+    "bonusDefensa": [
+      "seguridad",
+      "proteccion"
+    ],
+    "createdAt": "2025-07-19T07:20:53.749Z",
+    "updatedAt": "2025-07-19T07:47:01.240Z"
   }
 ]
