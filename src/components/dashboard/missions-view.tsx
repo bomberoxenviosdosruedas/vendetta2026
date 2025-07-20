@@ -1,3 +1,4 @@
+
 'use client'
 
 import { useState, useTransition, useCallback, useEffect } from 'react';
@@ -167,10 +168,12 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
     };
 
     const setAllMaxTroops = () => {
-        const newTroopInputs = selectedProperty?.TropaUsuario.map(tropa => ({
-            id: tropa.configuracionTropaId,
-            cantidad: tropa.cantidad,
-        })) || [];
+        const newTroopInputs = selectedProperty?.TropaUsuario
+            .filter(tropa => tropa.configuracion.tipo === 'ATAQUE')
+            .map(tropa => ({
+                id: tropa.configuracionTropaId,
+                cantidad: tropa.cantidad,
+            })) || [];
         setTropas(newTroopInputs);
     };
     
@@ -204,6 +207,8 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
     if (!selectedProperty) {
         return <p>Selecciona una propiedad para enviar misiones.</p>
     }
+
+    const availableAttackTroops = selectedProperty.TropaUsuario.filter(t => t.cantidad > 0 && t.configuracion.tipo === 'ATAQUE');
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
@@ -271,7 +276,7 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
                 </CardHeader>
                 <CardContent>
                     <div className='space-y-2'>
-                        {selectedProperty.TropaUsuario.filter(t => t.cantidad > 0).map(tropa => (
+                        {availableAttackTroops.length > 0 ? availableAttackTroops.map(tropa => (
                             <div key={tropa.configuracionTropaId} className='p-3 border rounded-lg flex flex-col sm:flex-row sm:items-center gap-4'>
                                 <div className='flex items-center gap-3 flex-1'>
                                     <div className="w-12 h-10 relative rounded-md overflow-hidden border flex-shrink-0">
@@ -296,10 +301,14 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
                                     </Button>
                                 </div>
                             </div>
-                        ))}
+                        )) : (
+                            <p className="text-sm text-center text-muted-foreground py-4">No tienes tropas de ataque en esta propiedad.</p>
+                        )}
                     </div>
 
-                    <Button variant="secondary" className='w-full mt-4' onClick={setAllMaxTroops}>Seleccionar Todas las Tropas</Button>
+                    {availableAttackTroops.length > 0 && (
+                        <Button variant="secondary" className='w-full mt-4' onClick={setAllMaxTroops}>Seleccionar Todas las Tropas</Button>
+                    )}
                     
                     <div className="mt-4 p-2 text-center bg-muted rounded-md text-sm font-semibold flex items-center justify-center gap-2">
                         <Clock className="h-4 w-4 text-primary"/>
@@ -307,7 +316,7 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
                         <span className="font-bold">{formatDuration(travelTime)}</span>
                     </div>
 
-                    <Button onClick={handleSubmit} disabled={isPending} className='w-full mt-4'>
+                    <Button onClick={handleSubmit} disabled={isPending || tropas.length === 0} className='w-full mt-4'>
                         {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Enviar Misión
                     </Button>
