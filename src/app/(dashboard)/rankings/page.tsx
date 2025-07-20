@@ -41,3 +41,7 @@ export default async function RankingsPage({
             <Suspense fallback={<RankingsLoading />}>
                 {rankingType === '0' && <PlayerRankingsView users={users} />}
                 {rankingType === '1' && <FamilyRankingsView families={families} />}
+            </Suspense>
+        </div>
+    );
+}
