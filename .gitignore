@@ -47,4 +47,6 @@ firebase-debug.log
 firestore-debug.log
 /src/generated/prisma
 .idx/dev.nix
+
+#custom
 /vendetta/
