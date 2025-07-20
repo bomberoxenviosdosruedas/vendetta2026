@@ -1,13 +1,15 @@
 
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getUsersForRanking } from "@/lib/data";
-import { RankingsView } from "@/components/dashboard/rankings-view";
+import { getFamiliesForRanking, getUsersForRanking } from "@/lib/data";
+import { PlayerRankingsView } from "@/components/dashboard/rankings/player-rankings-view";
+import { RankingTypeSelector } from "@/components/dashboard/rankings/ranking-type-selector";
+import { FamilyRankingsView } from "@/components/dashboard/rankings/family-rankings-view";
 
 function RankingsLoading() {
     return (
         <div className="space-y-4">
-            <Skeleton className="h-8 w-48 mb-4 shimmer" />
+            <Skeleton className="h-10 w-full max-w-sm" />
             <div className="rounded-lg border">
                 <div className="w-full h-12 bg-muted/80 rounded-t-lg" />
                 <div className="p-4 space-y-2">
@@ -20,15 +22,22 @@ function RankingsLoading() {
     )
 }
 
-export default async function RankingsPage() {
-    const users = await getUsersForRanking();
+export default async function RankingsPage({
+    searchParams
+}: {
+    searchParams?: { type?: string }
+}) {
+    const rankingType = searchParams?.type || '0'; // Default to '0' (Jugadores)
+
+    const users = rankingType === '0' ? await getUsersForRanking() : [];
+    const families = rankingType === '1' ? await getFamiliesForRanking() : [];
 
     return (
         <div className="main-view">
-            <h2 className="text-3xl font-bold tracking-tight">Clasificaciones</h2>
+            <div className="flex flex-col sm:flex-row gap-4 justify-between sm:items-center">
+              <h2 className="text-3xl font-bold tracking-tight">Clasificaciones</h2>
+              <RankingTypeSelector />
+            </div>
             <Suspense fallback={<RankingsLoading />}>
-                <RankingsView users={users} />
-            </Suspense>
-        </div>
-    );
-}
+                {rankingType === '0' && <PlayerRankingsView users={users} />}
+                {rankingType === '1' && <FamilyRankingsView families={families} />}

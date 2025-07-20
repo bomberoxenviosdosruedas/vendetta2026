@@ -87,10 +87,4 @@ export function RankingsView({ users }: RankingsViewProps) {
                                     </div>
                                 </div>
                             </Card>
-                        ))}
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
-    )
-}
+                        ))
