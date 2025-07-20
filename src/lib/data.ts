@@ -62,6 +62,9 @@ export type UserWithProgress = User & {
     misiones: ColaMisiones[];
     colaEntrenamientos: FullColaEntrenamiento[];
     familyMember: (FamilyMember & { family: Family }) | null;
+    _count?: {
+        receivedMessages?: number;
+    }
 };
 
 export type UserForRanking = User & {
@@ -358,6 +361,13 @@ const userInclude = {
     familyMember: {
         include: {
             family: true
+        }
+    },
+    _count: {
+        select: {
+            receivedMessages: {
+                where: { isRead: false }
+            }
         }
     }
 };

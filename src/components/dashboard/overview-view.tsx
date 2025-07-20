@@ -1,3 +1,4 @@
+
 import { getSessionUser } from "@/lib/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
@@ -5,19 +6,19 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { Bell, Briefcase, MessageSquare, UserPlus } from "lucide-react";
+import { Bell, Briefcase, MessageSquare, UserPlus, Users2 } from "lucide-react";
 import { QueueStatusCard } from "./queue-status-card";
 import { getRoomConfigurations } from "@/lib/data";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import Link from "next/link";
+import { FamilyRole } from "@prisma/client";
 
 
-function ActionIcons() {
-    // Estas son acciones placeholder, puedes darles funcionalidad en el futuro
+function ActionIcons({ unreadMessages, inFamily }: { unreadMessages: number, inFamily: boolean }) {
     const actions = [
-        { icon: <Bell className="h-5 w-5" />, notification: 0, label: "Notificaciones" },
-        { icon: <MessageSquare className="h-5 w-5" />, notification: 3, label: "Mensajes" },
-        { icon: <Briefcase className="h-5 w-5" />, notification: 0, label: "Operaciones" },
-        { icon: <UserPlus className="h-5 w-5" />, notification: 1, label: "Invitaciones" },
+        { href: "/messages?categoria=SISTEMA", icon: <Bell className="h-5 w-5" />, notification: 0, label: "Notificaciones del Sistema" },
+        { href: "/messages", icon: <MessageSquare className="h-5 w-5" />, notification: unreadMessages, label: "Mensajes" },
+        { href: "/family", icon: <Users2 className="h-5 w-5" />, notification: 0, label: "Familia" },
     ]
     return (
         <div className="absolute top-4 right-4 flex flex-col items-center gap-3">
@@ -25,12 +26,14 @@ function ActionIcons() {
                  <TooltipProvider key={index} delayDuration={0}>
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <Button variant="outline" size="icon" className="h-9 w-9 bg-background/50 border-white/20 hover:bg-white/10 text-white relative">
-                                {action.icon}
-                                <span className="sr-only">{action.label}</span>
-                                {action.notification > 0 && 
-                                    <Badge variant="destructive" className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center p-0">{action.notification}</Badge>
-                                }
+                             <Button asChild variant="outline" size="icon" className="h-9 w-9 bg-background/50 border-white/20 hover:bg-white/10 text-white relative">
+                                <Link href={action.href}>
+                                    {action.icon}
+                                    <span className="sr-only">{action.label}</span>
+                                    {action.notification > 0 && 
+                                        <Badge variant="destructive" className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center p-0">{action.notification}</Badge>
+                                    }
+                                </Link>
                             </Button>
                         </TooltipTrigger>
                         <TooltipContent side="left">
@@ -55,10 +58,10 @@ export async function OverviewView() {
         return <div>Usuario no encontrado.</div>
     }
 
-    const { puntuacion } = user;
+    const { puntuacion, familyMember } = user;
     const allRoomConfigs = await getRoomConfigurations();
     const simpleRoomConfigs = allRoomConfigs.map(r => ({ id: r.id, nombre: r.nombre }));
-
+    const unreadMessages = user._count?.receivedMessages || 0;
 
     return (
         <div className="flex-grow space-y-4">
@@ -81,7 +84,7 @@ export async function OverviewView() {
                 {/* Main Property Card */}
                 <Card className="md:col-span-1 md:row-span-2 relative overflow-hidden min-h-[250px]">
                     <Image 
-                        src="https://placehold.co/600x400.png"
+                        src="/img/general/propiedad_principal_overview.jpg"
                         alt="Vista de la propiedad principal"
                         fill
                         className="object-cover"
@@ -90,20 +93,34 @@ export async function OverviewView() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                     <CardContent className="absolute bottom-0 left-0 p-4 text-white">
                         <p className="font-bold text-lg">Visión General - Propiedad Principal</p>
-                        <p className="text-muted-foreground text-white/80">[1:1:1]</p>
+                        <p className="text-muted-foreground text-white/80">[{user.propiedades[0]?.ciudad}:{user.propiedades[0]?.barrio}:{user.propiedades[0]?.edificio}]</p>
                     </CardContent>
                 </Card>
 
                 {/* Family Card */}
                 <Card className="md:col-span-1 md:row-span-2 relative min-h-[250px]">
                     <CardContent className="p-4 flex flex-col items-center justify-center gap-2 h-full">
-                        <Avatar className="h-24 w-24 border-2 border-primary">
-                            <AvatarFallback>B</AvatarFallback>
-                        </Avatar>
-                        <p className="text-sm text-muted-foreground">Familia</p>
-                        <p className="text-xl font-bold tracking-widest">BADBOYS</p>
+                        {familyMember ? (
+                            <>
+                                <Avatar className="h-24 w-24 border-2 border-primary">
+                                    <AvatarImage src={familyMember.family.avatarUrl || ''} alt={familyMember.family.name} data-ai-hint="family crest" />
+                                    <AvatarFallback>{familyMember.family.tag}</AvatarFallback>
+                                </Avatar>
+                                <p className="text-sm text-muted-foreground">Familia</p>
+                                <p className="text-xl font-bold tracking-widest">{familyMember.family.name}</p>
+                                <Badge variant="secondary">[{familyMember.family.tag}]</Badge>
+                            </>
+                        ) : (
+                            <>
+                                <Users2 className="h-24 w-24 text-muted-foreground" />
+                                <p className="text-sm text-muted-foreground">Sin Familia</p>
+                                <Button asChild variant="outline" size="sm">
+                                    <Link href="/family">Unirse o Crear</Link>
+                                </Button>
+                            </>
+                        )}
                     </CardContent>
-                    <ActionIcons />
+                    <ActionIcons unreadMessages={unreadMessages} inFamily={!!familyMember} />
                 </Card>
                 
                  {/* Queue Status Card */}
