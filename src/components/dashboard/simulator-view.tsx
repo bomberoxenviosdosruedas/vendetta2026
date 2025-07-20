@@ -53,20 +53,12 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
 );
 
 const InputRow = ({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) => {
-    const handleIncrement = () => onChange(value + 1);
-    const handleDecrement = () => onChange(Math.max(0, value - 1));
+    const handleIncrement = () => onChange((value || 0) + 1);
+    const handleDecrement = () => onChange(Math.max(0, (value || 0) - 1));
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const val = e.target.value;
-        // Permite un campo vacío para que el usuario pueda borrar antes de escribir.
-        if (val === '') {
-            onChange(0);
-        } else {
-            const num = parseInt(val, 10);
-            if (!isNaN(num)) {
-                onChange(num);
-            }
-        }
+        onChange(parseInt(val, 10) || 0);
     };
     
     return (
@@ -425,3 +417,4 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
         </div>
     );
 }
+
