@@ -89,8 +89,8 @@ export function BonusConfigMatrix({ troops, initialBonusConfig }: BonusConfigMat
                             <tr className="bg-muted/50">
                                 <th className="sticky left-0 z-10 bg-muted/80 p-2 border-b border-r text-xs font-semibold w-[150px] backdrop-blur-sm">Atacante / Defensor</th>
                                 {troops.map(defender => (
-                                     <th key={defender.id} className="p-2 border-b border-r text-xs font-semibold w-24 h-24 relative">
-                                        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 origin-bottom-left -rotate-45 w-32 text-left">
+                                     <th key={defender.id} className="p-2 border-b border-r text-xs font-semibold w-28 h-28 relative">
+                                        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 origin-bottom-left -rotate-45 w-36 text-left">
                                             <span className="truncate block">{defender.nombre}</span>
                                         </div>
                                     </th>
