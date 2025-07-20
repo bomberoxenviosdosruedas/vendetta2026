@@ -38,8 +38,9 @@ export function calcularPuntosEntrenamientos(user: UserWithProgress): number {
 }
 
 export async function calcularPoderAtaque(totalEdificios: number, honor: number): Promise<number> {
-    if (totalEdificios < 5) return 100;
-    if (honor > 8) honor = 8;
+    if (totalEdificios < 1) totalEdificios = 1; // Ensure at least 1 property
+    if (honor > 10) honor = 10; // Cap at max honor level defined
+    if (honor < 0) honor = 0;
 
     const poder = await prisma.poderAtaque.findUnique({
         where: { propiedades_honor: { propiedades: totalEdificios, honor: honor } }
@@ -49,19 +50,21 @@ export async function calcularPoderAtaque(totalEdificios: number, honor: number)
         return poder.modificador;
     }
 
-    // Si no se encuentra un valor exacto (p.ej. para más de 100 propiedades), se interpola.
+    // If no exact match, interpolate
     if (totalEdificios > 100) {
         const poderBase = await prisma.poderAtaque.findUnique({
             where: { propiedades_honor: { propiedades: 100, honor: honor } }
         });
-        if (poderBase) {
-            return Math.round(100 * poderBase.modificador / totalEdificios);
-        }
-        return 29; // Fallback
+        return poderBase ? Math.round(100 * poderBase.modificador / totalEdificios) : 29; // Fallback
     }
 
     const base = Math.floor(totalEdificios / 5) * 5;
     const next = base + 5;
+
+    if (base === 0) { // Handle case for properties between 1 and 4
+      const poderBase = await prisma.poderAtaque.findUnique({ where: { propiedades_honor: { propiedades: 1, honor: honor } } });
+      return poderBase?.modificador || 100;
+    }
 
     const [poderBase, poderNext] = await Promise.all([
         prisma.poderAtaque.findUnique({ where: { propiedades_honor: { propiedades: base, honor: honor } } }),
@@ -73,5 +76,5 @@ export async function calcularPoderAtaque(totalEdificios: number, honor: number)
         return Math.round(poderBase.modificador - (rango * (totalEdificios - base)));
     }
 
-    return 100; // Fallback final
+    return 100; // Final fallback
 }
