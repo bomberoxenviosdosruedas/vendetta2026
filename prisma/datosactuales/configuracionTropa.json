@@ -1,5 +1,70 @@
-
 [
+  {
+    "id": "policia",
+    "nombre": "Policía",
+    "urlImagen": "/img/defensa/T3.gif",
+    "descripcion": "Agente de la ley corrupto que trabaja para tu familia.",
+    "costoArmas": 5000,
+    "costoMunicion": 7500,
+    "costoDolares": 500,
+    "duracion": 3000,
+    "puntos": 25,
+    "ataque": 10,
+    "defensa": 40,
+    "capacidad": 0,
+    "velocidad": 0,
+    "salario": 10,
+    "tipo": "DEFENSA",
+    "requisitos": [],
+    "bonusAtaque": [],
+    "bonusDefensa": [],
+    "createdAt": "2025-07-20T06:48:43.948Z",
+    "updatedAt": "2025-07-20T09:32:28.511Z"
+  },
+  {
+    "id": "guardia_de_honor",
+    "nombre": "Guardia de honor",
+    "urlImagen": "/img/defensa/T5.gif",
+    "descripcion": "La élite de tu fuerza de seguridad, leales hasta la muerte.",
+    "costoArmas": 15000,
+    "costoMunicion": 40000,
+    "costoDolares": 20000,
+    "duracion": 10000,
+    "puntos": 100,
+    "ataque": 50,
+    "defensa": 200,
+    "capacidad": 0,
+    "velocidad": 0,
+    "salario": 50,
+    "tipo": "DEFENSA",
+    "requisitos": [],
+    "bonusAtaque": [],
+    "bonusDefensa": [],
+    "createdAt": "2025-07-20T06:48:44.513Z",
+    "updatedAt": "2025-07-20T09:32:29.083Z"
+  },
+  {
+    "id": "guardaespaldas",
+    "nombre": "Guardaespaldas",
+    "urlImagen": "/img/defensa/T4.gif",
+    "descripcion": "Profesional altamente entrenado para la protección personal.",
+    "costoArmas": 3000,
+    "costoMunicion": 1000,
+    "costoDolares": 4000,
+    "duracion": 7800,
+    "puntos": 20,
+    "ataque": 15,
+    "defensa": 60,
+    "capacidad": 0,
+    "velocidad": 0,
+    "salario": 20,
+    "tipo": "DEFENSA",
+    "requisitos": [],
+    "bonusAtaque": [],
+    "bonusDefensa": [],
+    "createdAt": "2025-07-20T06:48:44.240Z",
+    "updatedAt": "2025-07-20T09:32:28.799Z"
+  },
   {
     "id": "maton",
     "nombre": "Maton",
@@ -19,8 +84,8 @@
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": [],
-    "createdAt": "2025-07-20T04:38:16.234Z",
-    "updatedAt": "2025-07-20T04:38:16.234Z"
+    "createdAt": "2025-07-20T06:48:39.471Z",
+    "updatedAt": "2025-07-20T09:32:23.926Z"
   },
   {
     "id": "portero",
@@ -46,8 +111,8 @@
       "extorsion",
       "seguridad"
     ],
-    "createdAt": "2025-07-20T04:38:15.651Z",
-    "updatedAt": "2025-07-20T04:38:15.651Z"
+    "createdAt": "2025-07-20T06:48:39.769Z",
+    "updatedAt": "2025-07-20T09:32:24.217Z"
   },
   {
     "id": "acuchillador",
@@ -74,8 +139,8 @@
       "extorsion",
       "combate"
     ],
-    "createdAt": "2025-07-20T04:38:15.384Z",
-    "updatedAt": "2025-07-20T04:38:15.384Z"
+    "createdAt": "2025-07-20T06:48:40.045Z",
+    "updatedAt": "2025-07-20T09:32:24.495Z"
   },
   {
     "id": "pistolero",
@@ -101,8 +166,8 @@
       "seguridad",
       "proteccion"
     ],
-    "createdAt": "2025-07-20T04:38:18.525Z",
-    "updatedAt": "2025-07-20T04:38:18.525Z"
+    "createdAt": "2025-07-20T06:48:40.328Z",
+    "updatedAt": "2025-07-20T09:32:24.790Z"
   },
   {
     "id": "ocupacion",
@@ -123,8 +188,8 @@
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": [],
-    "createdAt": "2025-07-20T04:38:16.515Z",
-    "updatedAt": "2025-07-20T04:38:16.515Z"
+    "createdAt": "2025-07-20T06:48:40.610Z",
+    "updatedAt": "2025-07-20T09:32:25.087Z"
   },
   {
     "id": "espia",
@@ -149,8 +214,8 @@
     "bonusDefensa": [
       "espionaje"
     ],
-    "createdAt": "2025-07-20T04:38:17.961Z",
-    "updatedAt": "2025-07-20T04:38:17.961Z"
+    "createdAt": "2025-07-20T06:48:40.886Z",
+    "updatedAt": "2025-07-20T09:32:25.369Z"
   },
   {
     "id": "porteador",
@@ -175,8 +240,8 @@
     "bonusDefensa": [
       "combate"
     ],
-    "createdAt": "2025-07-20T04:38:16.807Z",
-    "updatedAt": "2025-07-20T04:38:16.807Z"
+    "createdAt": "2025-07-20T06:48:41.164Z",
+    "updatedAt": "2025-07-20T09:32:25.653Z"
   },
   {
     "id": "cia",
@@ -204,8 +269,8 @@
       "proteccion",
       "guerrilla"
     ],
-    "createdAt": "2025-07-20T04:38:17.385Z",
-    "updatedAt": "2025-07-20T04:38:17.385Z"
+    "createdAt": "2025-07-20T06:48:41.440Z",
+    "updatedAt": "2025-07-20T09:32:25.940Z"
   },
   {
     "id": "fbi",
@@ -232,8 +297,8 @@
       "proteccion",
       "tiro"
     ],
-    "createdAt": "2025-07-20T04:38:17.667Z",
-    "updatedAt": "2025-07-20T04:38:17.667Z"
+    "createdAt": "2025-07-20T06:48:41.722Z",
+    "updatedAt": "2025-07-20T09:32:26.227Z"
   },
   {
     "id": "transportista",
@@ -259,8 +324,8 @@
       "proteccion",
       "psicologico"
     ],
-    "createdAt": "2025-07-20T04:38:17.098Z",
-    "updatedAt": "2025-07-20T04:38:17.098Z"
+    "createdAt": "2025-07-20T06:48:41.997Z",
+    "updatedAt": "2025-07-20T09:32:26.510Z"
   },
   {
     "id": "francotirador",
@@ -290,8 +355,8 @@
       "guerrilla",
       "psicologico"
     ],
-    "createdAt": "2025-07-20T04:38:18.243Z",
-    "updatedAt": "2025-07-20T04:38:18.243Z"
+    "createdAt": "2025-07-20T06:48:42.279Z",
+    "updatedAt": "2025-07-20T09:32:26.794Z"
   },
   {
     "id": "asesino",
@@ -324,8 +389,8 @@
       "guerrilla",
       "psicologico"
     ],
-    "createdAt": "2025-07-20T04:38:15.961Z",
-    "updatedAt": "2025-07-20T04:38:15.961Z"
+    "createdAt": "2025-07-20T06:48:42.556Z",
+    "updatedAt": "2025-07-20T09:32:27.082Z"
   },
   {
     "id": "ninja",
@@ -356,8 +421,8 @@
       "guerrilla",
       "psicologico"
     ],
-    "createdAt": "2025-07-20T04:38:15.100Z",
-    "updatedAt": "2025-07-20T04:38:15.100Z"
+    "createdAt": "2025-07-20T06:48:42.824Z",
+    "updatedAt": "2025-07-20T09:32:27.360Z"
   },
   {
     "id": "mercenario",
@@ -396,8 +461,8 @@
       "guerrilla",
       "psicologico"
     ],
-    "createdAt": "2025-07-20T04:38:14.794Z",
-    "updatedAt": "2025-07-20T04:38:14.794Z"
+    "createdAt": "2025-07-20T06:48:43.099Z",
+    "updatedAt": "2025-07-20T09:32:27.641Z"
   },
   {
     "id": "trabajador_ilegal",
@@ -413,7 +478,13 @@
     "defensa": 1,
     "capacidad": 0,
     "velocidad": 0,
-    "salario": 1
+    "salario": 1,
+    "tipo": "DEFENSA",
+    "requisitos": [],
+    "bonusAtaque": [],
+    "bonusDefensa": [],
+    "createdAt": "2025-07-20T06:48:43.394Z",
+    "updatedAt": "2025-07-20T09:32:27.926Z"
   },
   {
     "id": "centinela",
@@ -429,54 +500,12 @@
     "defensa": 15,
     "capacidad": 0,
     "velocidad": 0,
-    "salario": 5
-  },
-  {
-    "id": "policia",
-    "nombre": "Policía",
-    "urlImagen": "/img/defensa/T3.gif",
-    "descripcion": "Agente de la ley corrupto que trabaja para tu familia.",
-    "costoArmas": 5000,
-    "costoMunicion": 7500,
-    "costoDolares": 500,
-    "duracion": 3000,
-    "puntos": 25,
-    "ataque": 10,
-    "defensa": 40,
-    "capacidad": 0,
-    "velocidad": 0,
-    "salario": 10
-  },
-  {
-    "id": "guardaespaldas",
-    "nombre": "Guardaespaldas",
-    "urlImagen": "/img/defensa/T4.gif",
-    "descripcion": "Profesional altamente entrenado para la protección personal.",
-    "costoArmas": 3000,
-    "costoMunicion": 1000,
-    "costoDolares": 4000,
-    "duracion": 7800,
-    "puntos": 20,
-    "ataque": 15,
-    "defensa": 60,
-    "capacidad": 0,
-    "velocidad": 0,
-    "salario": 20
-  },
-  {
-    "id": "guardia_de_honor",
-    "nombre": "Guardia de honor",
-    "urlImagen": "/img/defensa/T5.gif",
-    "descripcion": "La élite de tu fuerza de seguridad, leales hasta la muerte.",
-    "costoArmas": 15000,
-    "costoMunicion": 40000,
-    "costoDolares": 20000,
-    "duracion": 10000,
-    "puntos": 100,
-    "ataque": 50,
-    "defensa": 200,
-    "capacidad": 0,
-    "velocidad": 0,
-    "salario": 50
+    "salario": 5,
+    "tipo": "DEFENSA",
+    "requisitos": [],
+    "bonusAtaque": [],
+    "bonusDefensa": [],
+    "createdAt": "2025-07-20T06:48:43.674Z",
+    "updatedAt": "2025-07-20T09:32:28.218Z"
   }
 ]

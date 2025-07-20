@@ -36,7 +36,8 @@ async function main() {
     'message',
     'roomRequirement',
     'trainingRequirement',
-    'tropaBonusContrincante'
+    'tropaBonusContrincante',
+    'poderAtaque'
   ];
 
   for (const modelName of modelsToExport) {
