@@ -4,9 +4,10 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { getPropertiesByLocation, UserWithProgress } from '@/lib/data';
-import type { Propiedad, User as PrismaUser } from '@prisma/client';
+import type { Propiedad, User as PrismaUser, Family } from '@prisma/client';
 import { ChevronLeft, ChevronRight, Loader2, Send } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -20,9 +21,9 @@ import {
     DialogClose,
 } from "@/components/ui/dialog"
 import Image from 'next/image';
-import { Card } from '../ui/card';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
-type PropertyWithOwner = Propiedad & { user: PrismaUser | null };
+type PropertyWithOwner = Propiedad & { user: (PrismaUser & { familyMember: { family: Family } | null }) | null };
 
 const BuildingGrid = ({ properties, currentUser, currentCiudad, currentBarrio }: { properties: PropertyWithOwner[], currentUser: UserWithProgress, currentCiudad: number, currentBarrio: number }) => {
     const router = useRouter();
@@ -55,44 +56,55 @@ const BuildingGrid = ({ properties, currentUser, currentCiudad, currentBarrio }:
                     const hasOwner = !!property;
                     
                     return (
-                        <Dialog key={edificio}>
-                            <DialogTrigger asChild>
-                                <div className={cn(
-                                    "aspect-square flex items-center justify-center rounded-sm text-xs font-bold transition-colors cursor-pointer",
-                                    isOwnedByCurrentUser ? "bg-primary/90 text-primary-foreground hover:bg-primary" : 
-                                    hasOwner ? "bg-destructive/90 text-destructive-foreground hover:bg-destructive" : 
-                                    "bg-black/40 hover:bg-black/60"
-                                )}>
-                                    {hasOwner && <span>{edificio}</span>}
-                                </div>
-                            </DialogTrigger>
-                             <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>Propiedad en [{currentCiudad}:{currentBarrio}:{edificio}]</DialogTitle>
-                                     <DialogDescription>
-                                        {property ? (
-                                            `Esta propiedad pertenece a ${property.user?.name || 'Desconocido'}.`
-                                        ) : (
-                                            "Este solar está actualmente desocupado."
-                                        )}
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <div className="py-4">
-                                     <h4 className="mb-2 font-semibold">Información del Objetivo</h4>
-                                     <p><strong>Jugador:</strong> {property?.user?.name || 'N/A'}</p>
-                                     <p><strong>Coordenadas:</strong> {`${currentCiudad}:${currentBarrio}:${edificio}`}</p>
-                                </div>
-                                <DialogFooter>
-                                     <DialogClose asChild>
-                                        <Button variant="outline">Cerrar</Button>
-                                    </DialogClose>
-                                    <Button onClick={() => handleSendMission(currentCiudad, currentBarrio, edificio)}>
-                                        <Send className="mr-2 h-4 w-4" />
-                                        Enviar Misión
-                                    </Button>
-                                </DialogFooter>
-                            </DialogContent>
-                        </Dialog>
+                        <TooltipProvider key={edificio} delayDuration={0}>
+                            <Tooltip>
+                                <Dialog>
+                                    <TooltipTrigger asChild>
+                                        <DialogTrigger asChild>
+                                            <div className={cn(
+                                                "aspect-square flex items-center justify-center rounded-sm text-xs font-bold transition-colors cursor-pointer",
+                                                isOwnedByCurrentUser ? "bg-primary/90 text-primary-foreground hover:bg-primary" : 
+                                                hasOwner ? "bg-destructive/90 text-destructive-foreground hover:bg-destructive" : 
+                                                "bg-black/40 hover:bg-black/60"
+                                            )}>
+                                                {hasOwner && <span>{edificio}</span>}
+                                            </div>
+                                        </DialogTrigger>
+                                    </TooltipTrigger>
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            <DialogTitle>Propiedad en [{currentCiudad}:{currentBarrio}:{edificio}]</DialogTitle>
+                                             <DialogDescription>
+                                                {property ? (
+                                                    `Esta propiedad pertenece a ${property.user?.name || 'Desconocido'}.`
+                                                ) : (
+                                                    "Este solar está actualmente desocupado."
+                                                )}
+                                            </DialogDescription>
+                                        </DialogHeader>
+                                        <div className="py-4 space-y-2">
+                                             <h4 className="mb-2 font-semibold">Información del Objetivo</h4>
+                                             <p><strong>Jugador:</strong> {property?.user?.name || 'N/A'}</p>
+                                             <p><strong>Familia:</strong> {property?.user?.familyMember?.family.name || 'Sin familia'}</p>
+                                             <p><strong>Coordenadas:</strong> {`${currentCiudad}:${currentBarrio}:${edificio}`}</p>
+                                        </div>
+                                        <DialogFooter>
+                                             <DialogClose asChild>
+                                                <Button variant="outline">Cerrar</Button>
+                                            </DialogClose>
+                                            <Button onClick={() => handleSendMission(currentCiudad, currentBarrio, edificio)}>
+                                                <Send className="mr-2 h-4 w-4" />
+                                                Enviar Misión
+                                            </Button>
+                                        </DialogFooter>
+                                    </DialogContent>
+                                </Dialog>
+                                <TooltipContent>
+                                    <p className='font-bold'>[{currentCiudad}:{currentBarrio}:{edificio}]</p>
+                                    <p className='text-sm'>{property?.user?.name || "Desocupado"}</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
                     );
                 })}
             </div>
@@ -112,7 +124,7 @@ const CoordinateInput = ({ label, value, onChange }: { label: string, value: num
         <div className="flex flex-col items-center gap-1">
             <span className="text-xs font-medium">{label}</span>
             <div className="flex items-center gap-1">
-                <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => handleChange(-1)}>
+                <Button variant="outline" size="icon" className="h-8 w-8 transition-colors" onClick={() => handleChange(-1)}>
                     <ChevronLeft className="h-4 w-4" />
                 </Button>
                 <Input 
@@ -121,7 +133,7 @@ const CoordinateInput = ({ label, value, onChange }: { label: string, value: num
                     value={value}
                     onChange={(e) => onChange(parseInt(e.target.value, 10) || 1)}
                 />
-                <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => handleChange(1)}>
+                <Button variant="outline" size="icon" className="h-8 w-8 transition-colors" onClick={() => handleChange(1)}>
                     <ChevronRight className="h-4 w-4" />
                 </Button>
             </div>
@@ -160,7 +172,7 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
 
             setIsLoading(true);
             getPropertiesByLocation(newCiudad, newBarrio).then(data => {
-                setProperties(data);
+                setProperties(data as any);
                 setIsLoading(false);
             });
         }
