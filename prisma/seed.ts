@@ -10,6 +10,7 @@ const scriptsToRun = [
   'impoconfiguracionEntrenamiento.ts',
   'impoconfiguracionTropa.ts',
   'impopoderataque.ts',
+  'imposuperusuario.ts',
   'impousuarioprueba.ts',
   'imporelaciones.ts', // Nuevo script para relaciones
 ];

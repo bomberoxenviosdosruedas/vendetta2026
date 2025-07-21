@@ -6,9 +6,9 @@
     "nivel": 1
   },
   {
-    "id": "cmd6s83yl003vzi0wha1jhb6c",
+    "id": "cmd6s83yl003zzi0whdqevngu",
     "propiedadId": "cmd6s83yl003nzi0wqwz31ijx",
-    "configuracionHabitacionId": "contrabando",
+    "configuracionHabitacionId": "caja_fuerte",
     "nivel": 1
   },
   {
@@ -18,10 +18,10 @@
     "nivel": 1
   },
   {
-    "id": "cmd6s83yl003xzi0whfhwhnkr",
-    "propiedadId": "cmd6s83yl003nzi0wqwz31ijx",
-    "configuracionHabitacionId": "deposito_de_municion",
-    "nivel": 1
+    "id": "cmd6re028000tzi0wiinahwf7",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionHabitacionId": "caja_fuerte",
+    "nivel": 100
   },
   {
     "id": "cmd6s83yl003yzi0wsovaqbxk",
@@ -30,8 +30,14 @@
     "nivel": 1
   },
   {
-    "id": "cmd6s83yl003zzi0whdqevngu",
+    "id": "cmd6s83yl0041zi0wnamgcmqh",
     "propiedadId": "cmd6s83yl003nzi0wqwz31ijx",
+    "configuracionHabitacionId": "seguridad",
+    "nivel": 1
+  },
+  {
+    "id": "cmdbpx0yh000b0u0wfupswnp0",
+    "propiedadId": "cmdbpx0yh00010u0wfrt37soa",
     "configuracionHabitacionId": "caja_fuerte",
     "nivel": 1
   },
@@ -42,10 +48,22 @@
     "nivel": 1
   },
   {
-    "id": "cmd6s83yl0041zi0wnamgcmqh",
-    "propiedadId": "cmd6s83yl003nzi0wqwz31ijx",
-    "configuracionHabitacionId": "seguridad",
+    "id": "cmd6re0ag000vzi0wg7c59lm6",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionHabitacionId": "campo_de_entrenamiento",
+    "nivel": 2
+  },
+  {
+    "id": "cmdbpx0yh00080u0wvzyatc48",
+    "propiedadId": "cmdbpx0yh00010u0wfrt37soa",
+    "configuracionHabitacionId": "campo_de_entrenamiento",
     "nivel": 1
+  },
+  {
+    "id": "cmd6rdyiu000fzi0w4p5f7k1m",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionHabitacionId": "almacen_de_municion",
+    "nivel": 106
   },
   {
     "id": "cmd6s83yl0042zi0wa4h5fg68",
@@ -102,12 +120,6 @@
     "nivel": 100
   },
   {
-    "id": "cmd6rdz6c000lzi0w2zz7hvl4",
-    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
-    "configuracionHabitacionId": "contrabando",
-    "nivel": 100
-  },
-  {
     "id": "cmd6s83yl003pzi0w2ybk1muc",
     "propiedadId": "cmd6s83yl003nzi0wqwz31ijx",
     "configuracionHabitacionId": "oficina_del_jefe",
@@ -138,12 +150,6 @@
     "nivel": 2
   },
   {
-    "id": "cmd6re0ag000vzi0wg7c59lm6",
-    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
-    "configuracionHabitacionId": "campo_de_entrenamiento",
-    "nivel": 2
-  },
-  {
     "id": "cmd6rdzej000nzi0w5r8bcx97",
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionHabitacionId": "almacen_de_armas",
@@ -156,27 +162,111 @@
     "nivel": 100
   },
   {
-    "id": "cmd6rdzmp000pzi0wplh083bm",
-    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
-    "configuracionHabitacionId": "deposito_de_municion",
-    "nivel": 100
-  },
-  {
     "id": "cmd6rdyqi000hzi0wsw3glet6",
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionHabitacionId": "cerveceria",
     "nivel": 100
   },
   {
-    "id": "cmd6re028000tzi0wiinahwf7",
+    "id": "cmdbpx0yh00030u0wguko95lg",
+    "propiedadId": "cmdbpx0yh00010u0wfrt37soa",
+    "configuracionHabitacionId": "oficina_del_jefe",
+    "nivel": 1
+  },
+  {
+    "id": "cmdbpx0yh00040u0wsynlahk8",
+    "propiedadId": "cmdbpx0yh00010u0wfrt37soa",
+    "configuracionHabitacionId": "armeria",
+    "nivel": 1
+  },
+  {
+    "id": "cmdbpx0yh00050u0ww5xljmc2",
+    "propiedadId": "cmdbpx0yh00010u0wfrt37soa",
+    "configuracionHabitacionId": "almacen_de_municion",
+    "nivel": 1
+  },
+  {
+    "id": "cmdbpx0yh00060u0wmudd2sf7",
+    "propiedadId": "cmdbpx0yh00010u0wfrt37soa",
+    "configuracionHabitacionId": "cerveceria",
+    "nivel": 1
+  },
+  {
+    "id": "cmdbpx0yh00070u0wxy07glih",
+    "propiedadId": "cmdbpx0yh00010u0wfrt37soa",
+    "configuracionHabitacionId": "taberna",
+    "nivel": 1
+  },
+  {
+    "id": "cmdbpx0yh00090u0wwl8f4666",
+    "propiedadId": "cmdbpx0yh00010u0wfrt37soa",
+    "configuracionHabitacionId": "escuela_especializacion",
+    "nivel": 1
+  },
+  {
+    "id": "cmdbpx0yi000c0u0wx32mvuez",
+    "propiedadId": "cmdbpx0yh00010u0wfrt37soa",
+    "configuracionHabitacionId": "almacen_de_alcohol",
+    "nivel": 1
+  },
+  {
+    "id": "cmdbpx0yi000d0u0w6yd2m2sq",
+    "propiedadId": "cmdbpx0yh00010u0wfrt37soa",
+    "configuracionHabitacionId": "almacen_de_armas",
+    "nivel": 1
+  },
+  {
+    "id": "cmdbpx0yi000f0u0wjmdj8zvb",
+    "propiedadId": "cmdbpx0yh00010u0wfrt37soa",
+    "configuracionHabitacionId": "torreta_de_fuego_automatico",
+    "nivel": 1
+  },
+  {
+    "id": "cmdbpx0yi000g0u0wi30peep3",
+    "propiedadId": "cmdbpx0yh00010u0wfrt37soa",
+    "configuracionHabitacionId": "minas_ocultas",
+    "nivel": 1
+  },
+  {
+    "id": "cmdbpx0yi000h0u0w92nwpg4b",
+    "propiedadId": "cmdbpx0yh00010u0wfrt37soa",
+    "configuracionHabitacionId": "seguridad",
+    "nivel": 1
+  },
+  {
+    "id": "cmd6s83yl003vzi0wha1jhb6c",
+    "propiedadId": "cmd6s83yl003nzi0wqwz31ijx",
+    "configuracionHabitacionId": "contrabando",
+    "nivel": 1
+  },
+  {
+    "id": "cmd6rdz6c000lzi0w2zz7hvl4",
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
-    "configuracionHabitacionId": "caja_fuerte",
+    "configuracionHabitacionId": "contrabando",
     "nivel": 100
   },
   {
-    "id": "cmd6rdyiu000fzi0w4p5f7k1m",
+    "id": "cmdbpx0yh000a0u0wtxfwgbp6",
+    "propiedadId": "cmdbpx0yh00010u0wfrt37soa",
+    "configuracionHabitacionId": "contrabando",
+    "nivel": 1
+  },
+  {
+    "id": "cmd6s83yl003xzi0whfhwhnkr",
+    "propiedadId": "cmd6s83yl003nzi0wqwz31ijx",
+    "configuracionHabitacionId": "deposito_de_municion",
+    "nivel": 1
+  },
+  {
+    "id": "cmd6rdzmp000pzi0wplh083bm",
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
-    "configuracionHabitacionId": "almacen_de_municion",
-    "nivel": 104
+    "configuracionHabitacionId": "deposito_de_municion",
+    "nivel": 100
+  },
+  {
+    "id": "cmdbpx0yi000e0u0wv4b33mlv",
+    "propiedadId": "cmdbpx0yh00010u0wfrt37soa",
+    "configuracionHabitacionId": "deposito_de_municion",
+    "nivel": 1
   }
 ]

@@ -1,86 +1,92 @@
 [
   {
-    "id": "cmd5gre2p001yzt0w5ckvsq0c",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
-    "configuracionTropaId": "acuchillador",
-    "cantidad": 1
-  },
-  {
-    "id": "cmd5greba0020zt0wt4yvvefj",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
-    "configuracionTropaId": "asesino",
-    "cantidad": 1
-  },
-  {
-    "id": "cmd5grejh0022zt0wf3kmmx1h",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
-    "configuracionTropaId": "cia",
-    "cantidad": 1
-  },
-  {
-    "id": "cmd5grerb0024zt0wwgu6acc8",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
-    "configuracionTropaId": "espia",
-    "cantidad": 1
-  },
-  {
-    "id": "cmd5grezo0026zt0wmfec8n8s",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
-    "configuracionTropaId": "fbi",
-    "cantidad": 1
-  },
-  {
-    "id": "cmd5grf7o0028zt0w7thg1kw8",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
-    "configuracionTropaId": "francotirador",
-    "cantidad": 1
-  },
-  {
-    "id": "cmd5grffi002azt0w3flsb35m",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
-    "configuracionTropaId": "maton",
-    "cantidad": 1
-  },
-  {
-    "id": "cmd5grfnd002czt0wyouhafym",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
-    "configuracionTropaId": "mercenario",
-    "cantidad": 1
-  },
-  {
-    "id": "cmd5grfvb002ezt0wu3o892mq",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
-    "configuracionTropaId": "ninja",
-    "cantidad": 1
-  },
-  {
-    "id": "cmd5grg3w002gzt0wxxx28wfn",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "id": "cmd6re6o0002hzi0wm9xp290j",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionTropaId": "ocupacion",
-    "cantidad": 1
+    "cantidad": 0
   },
   {
-    "id": "cmd5grgbi002izt0wkng6t75k",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "id": "cmd6re68n002dzi0wd56b3ml8",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "mercenario",
+    "cantidad": 2
+  },
+  {
+    "id": "cmd6re4qh001zzi0wil07h24e",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "acuchillador",
+    "cantidad": 0
+  },
+  {
+    "id": "cmd6re4ym0021zi0wc0534w2p",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "asesino",
+    "cantidad": 0
+  },
+  {
+    "id": "cmd6re5e30025zi0wpkakwer4",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "espia",
+    "cantidad": 0
+  },
+  {
+    "id": "cmd6re614002bzi0w4o0j4qbm",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "maton",
+    "cantidad": 0
+  },
+  {
+    "id": "cmd6re56m0023zi0w76g10ojr",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "cia",
+    "cantidad": 0
+  },
+  {
+    "id": "cmd6re5tn0029zi0wba1rgvw3",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "francotirador",
+    "cantidad": 0
+  },
+  {
+    "id": "cmd6re6vh002jzi0wvjxtmrte",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionTropaId": "pistolero",
-    "cantidad": 1
+    "cantidad": 0
   },
   {
-    "id": "cmd5grgjs002kzt0w7ahl8fwy",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "id": "cmd6re5ls0027zi0wr6k7ae1t",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "fbi",
+    "cantidad": 0
+  },
+  {
+    "id": "cmd6re6gb002fzi0wz9aukssk",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "ninja",
+    "cantidad": 0
+  },
+  {
+    "id": "cmd6re73h002lzi0wkxmjur1m",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionTropaId": "porteador",
-    "cantidad": 1
+    "cantidad": 0
   },
   {
-    "id": "cmd5grgrg002mzt0wazjizs24",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
-    "configuracionTropaId": "portero",
-    "cantidad": 1
-  },
-  {
-    "id": "cmd5grgzf002ozt0wfibxsydj",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "id": "cmd6re7jf002pzi0ww3qjgx0p",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionTropaId": "transportista",
-    "cantidad": 1
+    "cantidad": 0
+  },
+  {
+    "id": "cmd6re7bf002nzi0w4a2k6c9q",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "portero",
+    "cantidad": 0
+  },
+  {
+    "id": "cmdbs78d600053s0wleg35gu9",
+    "propiedadId": "cmdbpx0yh00010u0wfrt37soa",
+    "configuracionTropaId": "porteador",
+    "cantidad": 0
   }
 ]

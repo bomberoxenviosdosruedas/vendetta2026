@@ -1,1 +1,97 @@
-[]
+[
+  {
+    "tropaAtacanteId": "policia",
+    "tropaDefensoraId": "porteador",
+    "factorPrioridad": 1.9
+  },
+  {
+    "tropaAtacanteId": "policia",
+    "tropaDefensoraId": "cia",
+    "factorPrioridad": 2
+  },
+  {
+    "tropaAtacanteId": "guardia_de_honor",
+    "tropaDefensoraId": "asesino",
+    "factorPrioridad": 2.1
+  },
+  {
+    "tropaAtacanteId": "guardaespaldas",
+    "tropaDefensoraId": "francotirador",
+    "factorPrioridad": 1.5
+  },
+  {
+    "tropaAtacanteId": "guardaespaldas",
+    "tropaDefensoraId": "asesino",
+    "factorPrioridad": 1.8
+  },
+  {
+    "tropaAtacanteId": "guardaespaldas",
+    "tropaDefensoraId": "espia",
+    "factorPrioridad": 0.5
+  },
+  {
+    "tropaAtacanteId": "trabajador_ilegal",
+    "tropaDefensoraId": "espia",
+    "factorPrioridad": 2
+  },
+  {
+    "tropaAtacanteId": "trabajador_ilegal",
+    "tropaDefensoraId": "fbi",
+    "factorPrioridad": 1.5
+  },
+  {
+    "tropaAtacanteId": "centinela",
+    "tropaDefensoraId": "guardaespaldas",
+    "factorPrioridad": 1.8
+  },
+  {
+    "tropaAtacanteId": "cia",
+    "tropaDefensoraId": "francotirador",
+    "factorPrioridad": 1.3
+  },
+  {
+    "tropaAtacanteId": "fbi",
+    "tropaDefensoraId": "asesino",
+    "factorPrioridad": 1.8
+  },
+  {
+    "tropaAtacanteId": "fbi",
+    "tropaDefensoraId": "fbi",
+    "factorPrioridad": 0.6
+  },
+  {
+    "tropaAtacanteId": "francotirador",
+    "tropaDefensoraId": "guardia_de_honor",
+    "factorPrioridad": 2
+  },
+  {
+    "tropaAtacanteId": "asesino",
+    "tropaDefensoraId": "mercenario",
+    "factorPrioridad": 2
+  },
+  {
+    "tropaAtacanteId": "asesino",
+    "tropaDefensoraId": "centinela",
+    "factorPrioridad": 1.4
+  },
+  {
+    "tropaAtacanteId": "ninja",
+    "tropaDefensoraId": "transportista",
+    "factorPrioridad": 1.8
+  },
+  {
+    "tropaAtacanteId": "ninja",
+    "tropaDefensoraId": "porteador",
+    "factorPrioridad": 1.5
+  },
+  {
+    "tropaAtacanteId": "mercenario",
+    "tropaDefensoraId": "maton",
+    "factorPrioridad": 0.5
+  },
+  {
+    "tropaAtacanteId": "maton",
+    "tropaDefensoraId": "trabajador_ilegal",
+    "factorPrioridad": 3
+  }
+]

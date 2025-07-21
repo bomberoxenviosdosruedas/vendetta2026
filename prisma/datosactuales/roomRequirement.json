@@ -5,21 +5,6 @@
     "requiredLevel": 1
   },
   {
-    "roomId": "contrabando",
-    "requiredRoomId": "oficina_del_jefe",
-    "requiredLevel": 5
-  },
-  {
-    "roomId": "contrabando",
-    "requiredRoomId": "taberna",
-    "requiredLevel": 8
-  },
-  {
-    "roomId": "caja_fuerte",
-    "requiredRoomId": "taberna",
-    "requiredLevel": 5
-  },
-  {
     "roomId": "almacen_de_alcohol",
     "requiredRoomId": "cerveceria",
     "requiredLevel": 5
@@ -30,11 +15,6 @@
     "requiredLevel": 5
   },
   {
-    "roomId": "deposito_de_municion",
-    "requiredRoomId": "almacen_de_municion",
-    "requiredLevel": 5
-  },
-  {
     "roomId": "torreta_de_fuego_automatico",
     "requiredRoomId": "oficina_del_jefe",
     "requiredLevel": 5
@@ -42,6 +22,26 @@
   {
     "roomId": "minas_ocultas",
     "requiredRoomId": "oficina_del_jefe",
+    "requiredLevel": 5
+  },
+  {
+    "roomId": "contrabando",
+    "requiredRoomId": "oficina_del_jefe",
+    "requiredLevel": 5
+  },
+  {
+    "roomId": "contrabando",
+    "requiredRoomId": "taberna",
+    "requiredLevel": 8
+  },
+  {
+    "roomId": "deposito_de_municion",
+    "requiredRoomId": "almacen_de_municion",
+    "requiredLevel": 5
+  },
+  {
+    "roomId": "caja_fuerte",
+    "requiredRoomId": "taberna",
     "requiredLevel": 5
   },
   {

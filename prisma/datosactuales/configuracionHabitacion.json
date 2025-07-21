@@ -75,21 +75,6 @@
     "updatedAt": "2025-07-20T09:32:13.529Z"
   },
   {
-    "id": "campo_de_entrenamiento",
-    "nombre": "Campo de entrenamiento",
-    "descripcion": "Tal y como dice el nombre, en el campo de entrenamiento, tus \"chicos\" entrenarán. El mismo, dependerá según el tipo de unidades que puedas producir, por ejemplo, simples delincuentes, asesinos, profesionales, a los que tus enemigos tendrán un respeto extremo. Dependiendo del nivel, las unidades serán creadas en menor tiempo.",
-    "urlImagen": "/img/habitaciones/B12K.png",
-    "costoArmas": 1000,
-    "costoMunicion": 2500,
-    "costoDolares": 0,
-    "duracion": 7200,
-    "produccionBase": 0,
-    "produccionRecurso": null,
-    "puntos": 61,
-    "createdAt": "2025-07-20T06:48:29.651Z",
-    "updatedAt": "2025-07-20T09:32:13.823Z"
-  },
-  {
     "id": "escuela_especializacion",
     "nombre": "Escuela de especialización",
     "descripcion": "Como ya dice el nombre, esta habitación permite el entrenamiento de \"los chicos\" en nuevas ténicas, permitiéndoles tener más experiencia en combate. Al igual que para la oficina de El Jefe, cuánto más rápido se haga el entrenamiento, más rápido se desarrollan las habilidades.",
@@ -103,36 +88,6 @@
     "puntos": 31.75,
     "createdAt": "2025-07-20T06:48:29.915Z",
     "updatedAt": "2025-07-20T09:32:14.105Z"
-  },
-  {
-    "id": "contrabando",
-    "nombre": "Contrabando",
-    "descripcion": "Mejor que la taberna funciona el contrabando, podrás vender alcohol con un impacto mucho mayor, lo que naturalmente, beneficia a la caja de los gángsters. Desgraciadamente, esta táctica es arriesgada, y mucho más costosa.",
-    "urlImagen": "/img/habitaciones/B7K.png",
-    "costoArmas": 2000,
-    "costoMunicion": 5000,
-    "costoDolares": 500,
-    "duracion": 1500,
-    "produccionBase": 21,
-    "produccionRecurso": "dolares",
-    "puntos": 136,
-    "createdAt": "2025-07-20T06:48:30.695Z",
-    "updatedAt": "2025-07-20T09:32:14.902Z"
-  },
-  {
-    "id": "caja_fuerte",
-    "nombre": "Caja fuerte",
-    "descripcion": "Después de realizar un contrabando con éxito, conseguirás una buena cantidad de dólares. Pero, ¡presta atención!. Si no quieres tirar el dinero, debes usar esta caja, para prevenir que desaparezca, y para asegurarte liquidez.",
-    "urlImagen": "/img/habitaciones/B11K.png",
-    "costoArmas": 1000,
-    "costoMunicion": 1000,
-    "costoDolares": 500,
-    "duracion": 800,
-    "produccionBase": 0,
-    "produccionRecurso": null,
-    "puntos": 91,
-    "createdAt": "2025-07-20T06:48:30.974Z",
-    "updatedAt": "2025-07-20T09:32:15.193Z"
   },
   {
     "id": "almacen_de_alcohol",
@@ -163,21 +118,6 @@
     "puntos": 12,
     "createdAt": "2025-07-20T06:48:31.538Z",
     "updatedAt": "2025-07-20T09:32:15.756Z"
-  },
-  {
-    "id": "deposito_de_municion",
-    "nombre": "Depósito de munición",
-    "descripcion": "El depósito de munición funciona de forma similar al almacén de armas. Se guardan cajas de munición y granadas que no se vayan a usar de inmediato. Además, aquí están más seguras, a salvo del enemigo.",
-    "urlImagen": "/img/habitaciones/B9K.png",
-    "costoArmas": 50,
-    "costoMunicion": 60,
-    "costoDolares": 0,
-    "duracion": 1350,
-    "produccionBase": 0,
-    "produccionRecurso": null,
-    "puntos": 18,
-    "createdAt": "2025-07-20T06:48:31.817Z",
-    "updatedAt": "2025-07-20T09:32:16.543Z"
   },
   {
     "id": "torreta_de_fuego_automatico",
@@ -223,5 +163,65 @@
     "puntos": 45,
     "createdAt": "2025-07-20T06:48:33.127Z",
     "updatedAt": "2025-07-20T09:32:17.899Z"
+  },
+  {
+    "id": "contrabando",
+    "nombre": "Contrabando",
+    "descripcion": "Mejor que la taberna funciona el contrabando, podrás vender alcohol con un impacto mucho mayor, lo que naturalmente, beneficia a la caja de los gángsters. Desgraciadamente, esta táctica es arriesgada, y mucho más costosa.",
+    "urlImagen": "/img/habitaciones/B7K.png",
+    "costoArmas": 2000,
+    "costoMunicion": 5000,
+    "costoDolares": 500,
+    "duracion": 2000,
+    "produccionBase": 21,
+    "produccionRecurso": "dolares",
+    "puntos": 136,
+    "createdAt": "2025-07-20T06:48:30.695Z",
+    "updatedAt": "2025-07-20T21:15:13.577Z"
+  },
+  {
+    "id": "deposito_de_municion",
+    "nombre": "Depósito de munición",
+    "descripcion": "El depósito de munición funciona de forma similar al almacén de armas. Se guardan cajas de munición y granadas que no se vayan a usar de inmediato. Además, aquí están más seguras, a salvo del enemigo.",
+    "urlImagen": "/img/habitaciones/B9K.png",
+    "costoArmas": 500,
+    "costoMunicion": 600,
+    "costoDolares": 0,
+    "duracion": 1350,
+    "produccionBase": 0,
+    "produccionRecurso": null,
+    "puntos": 18,
+    "createdAt": "2025-07-20T06:48:31.817Z",
+    "updatedAt": "2025-07-20T21:16:07.390Z"
+  },
+  {
+    "id": "caja_fuerte",
+    "nombre": "Caja fuerte",
+    "descripcion": "Después de realizar un contrabando con éxito, conseguirás una buena cantidad de dólares. Pero, ¡presta atención!. Si no quieres tirar el dinero, debes usar esta caja, para prevenir que desaparezca, y para asegurarte liquidez.",
+    "urlImagen": "/img/habitaciones/B11K.png",
+    "costoArmas": 1000,
+    "costoMunicion": 1000,
+    "costoDolares": 500,
+    "duracion": 8000,
+    "produccionBase": 0,
+    "produccionRecurso": null,
+    "puntos": 91,
+    "createdAt": "2025-07-20T06:48:30.974Z",
+    "updatedAt": "2025-07-20T21:16:53.215Z"
+  },
+  {
+    "id": "campo_de_entrenamiento",
+    "nombre": "Campo de entrenamiento",
+    "descripcion": "Tal y como dice el nombre, en el campo de entrenamiento, tus \"chicos\" entrenarán. El mismo, dependerá según el tipo de unidades que puedas producir, por ejemplo, simples delincuentes, asesinos, profesionales, a los que tus enemigos tendrán un respeto extremo. Dependiendo del nivel, las unidades serán creadas en menor tiempo.",
+    "urlImagen": "/img/habitaciones/B12K.png",
+    "costoArmas": 1000,
+    "costoMunicion": 2500,
+    "costoDolares": 0,
+    "duracion": 5600,
+    "produccionBase": 0,
+    "produccionRecurso": null,
+    "puntos": 61,
+    "createdAt": "2025-07-20T06:48:29.651Z",
+    "updatedAt": "2025-07-20T21:17:19.706Z"
   }
 ]

@@ -1,12 +1,12 @@
 [
   {
-    "id": "cmdb3gx7h000v1j0w3m5qvdtt",
+    "id": "cmdcap7yg000f3u0wg3myip73",
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "habitacionId": "almacen_de_municion",
-    "nivelDestino": 105,
-    "duracion": 33075,
-    "fechaInicio": "2025-07-20T03:05:36.614Z",
-    "fechaFinalizacion": "2025-07-20T12:16:51.614Z",
-    "createdAt": "2025-07-20T03:05:36.795Z"
+    "nivelDestino": 107,
+    "duracion": 34347,
+    "fechaInicio": "2025-07-20T23:15:47.233Z",
+    "fechaFinalizacion": "2025-07-21T08:48:14.233Z",
+    "createdAt": "2025-07-20T23:15:47.462Z"
   }
 ]

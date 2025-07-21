@@ -1,98 +1,98 @@
 [
   {
-    "id": "cmd5gradz0012zt0wi08c97s8",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
-    "configuracionEntrenamientoId": "honor",
-    "nivel": 1
-  },
-  {
-    "id": "cmd5gram00014zt0wmfh6fbjo",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "id": "cmd6re1ej0015zi0wwxivf8v0",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
     "configuracionEntrenamientoId": "rutas",
-    "nivel": 1
+    "nivel": 31
   },
   {
-    "id": "cmd5grau70016zt0w71wf5dus",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "id": "cmd6re1mg0017zi0wwmbntwew",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
     "configuracionEntrenamientoId": "extorsion",
-    "nivel": 1
+    "nivel": 30
   },
   {
-    "id": "cmd5grb290018zt0w0ydssn0j",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
-    "configuracionEntrenamientoId": "encargos",
-    "nivel": 1
-  },
-  {
-    "id": "cmd5grbbw001azt0w5zaozhgo",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
-    "configuracionEntrenamientoId": "explosivos",
-    "nivel": 1
-  },
-  {
-    "id": "cmd5grbjv001czt0w9m1eshr0",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "id": "cmd6re2aa001dzi0w1ztflurn",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
     "configuracionEntrenamientoId": "seguridad",
-    "nivel": 1
+    "nivel": 30
   },
   {
-    "id": "cmd5grbs2001ezt0wxjdh9jej",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
-    "configuracionEntrenamientoId": "espionaje",
-    "nivel": 1
+    "id": "cmd6re1uj0019zi0wntqzib38",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
+    "configuracionEntrenamientoId": "encargos",
+    "nivel": 30
   },
   {
-    "id": "cmd5grbzx001gzt0w4ple15ff",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "id": "cmd6re2q4001hzi0wf8kz0kw1",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
     "configuracionEntrenamientoId": "quimico",
-    "nivel": 1
+    "nivel": 30
   },
   {
-    "id": "cmd5grc81001izt0wr3csm4vq",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
-    "configuracionEntrenamientoId": "guerrilla",
-    "nivel": 1
+    "id": "cmd6re225001bzi0wz0bmakbo",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
+    "configuracionEntrenamientoId": "explosivos",
+    "nivel": 30
   },
   {
-    "id": "cmd5grcga001kzt0wojzf7mey",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "id": "cmd6re36u001lzi0w3ywdyyz8",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
     "configuracionEntrenamientoId": "psicologico",
-    "nivel": 1
+    "nivel": 30
   },
   {
-    "id": "cmd5grcob001mzt0wb4hksoym",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
-    "configuracionEntrenamientoId": "proteccion",
-    "nivel": 1
+    "id": "cmd6re2i5001fzi0wd3m7tos0",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
+    "configuracionEntrenamientoId": "espionaje",
+    "nivel": 30
   },
   {
-    "id": "cmd5grcwa001ozt0wd46rqamp",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
-    "configuracionEntrenamientoId": "armas",
-    "nivel": 1
+    "id": "cmd6re2yy001jzi0wnqlgqr4k",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
+    "configuracionEntrenamientoId": "guerrilla",
+    "nivel": 30
   },
   {
-    "id": "cmd5grd4k001qzt0whectqtvq",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "id": "cmd6re16f0013zi0w84ohgxur",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
+    "configuracionEntrenamientoId": "honor",
+    "nivel": 8
+  },
+  {
+    "id": "cmd6re3ur001rzi0wkde052nz",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
     "configuracionEntrenamientoId": "combate",
-    "nivel": 1
+    "nivel": 30
   },
   {
-    "id": "cmd5grdcs001szt0w54zgtv78",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
-    "configuracionEntrenamientoId": "administracion",
-    "nivel": 1
+    "id": "cmd6re3mz001pzi0wmka30l3u",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
+    "configuracionEntrenamientoId": "armas",
+    "nivel": 30
   },
   {
-    "id": "cmd5grdla001uzt0wg6thxu1f",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "id": "cmd6re4a2001vzi0w1cn07rzq",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
     "configuracionEntrenamientoId": "contrabando",
-    "nivel": 1
+    "nivel": 30
   },
   {
-    "id": "cmd5grdu3001wzt0w0pqub1hw",
-    "userId": "cmd5gr5ye0000zt0wrmu0ec81",
+    "id": "cmd6re42m001tzi0wnflwfjn5",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
+    "configuracionEntrenamientoId": "administracion",
+    "nivel": 30
+  },
+  {
+    "id": "cmd6re4hy001xzi0w0vxnr60t",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
     "configuracionEntrenamientoId": "tiro",
-    "nivel": 1
+    "nivel": 30
+  },
+  {
+    "id": "cmd6re3f4001nzi0we0a0k3g1",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
+    "configuracionEntrenamientoId": "proteccion",
+    "nivel": 30
   }
 ]

@@ -44,6 +44,33 @@
     "updatedAt": "2025-07-20T09:32:29.083Z"
   },
   {
+    "id": "portero",
+    "nombre": "Portero",
+    "urlImagen": "/img/U2K.gif",
+    "descripcion": "Para ser más efectivos en llegar tan rápido como sea posible al objetivo, tus chicos deberían hacer este entrenamiento. Aquí aprenderán a planear rutas, viajar silenciosamente, y aproximarse al objetivo sin ser detectados, para llevar a cabo su trabajo tan efectivamente como sea posible.",
+    "costoArmas": 500,
+    "costoMunicion": 800,
+    "costoDolares": 0,
+    "duracion": 1600,
+    "puntos": 6,
+    "ataque": 8,
+    "defensa": 12,
+    "capacidad": 400,
+    "velocidad": 2400,
+    "salario": 1,
+    "tipo": "ATAQUE",
+    "requisitos": [],
+    "bonusAtaque": [
+      "extorsion"
+    ],
+    "bonusDefensa": [
+      "extorsion",
+      "seguridad"
+    ],
+    "createdAt": "2025-07-20T06:48:39.769Z",
+    "updatedAt": "2025-07-20T21:23:36.321Z"
+  },
+  {
     "id": "guardaespaldas",
     "nombre": "Guardaespaldas",
     "urlImagen": "/img/defensa/T4.gif",
@@ -76,43 +103,16 @@
     "duracion": 1400,
     "puntos": 6,
     "ataque": 5,
-    "defensa": 5,
+    "defensa": 10,
     "capacidad": 200,
-    "velocidad": 1600,
+    "velocidad": 1920,
     "salario": 1,
     "tipo": "ATAQUE",
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": [],
     "createdAt": "2025-07-20T06:48:39.471Z",
-    "updatedAt": "2025-07-20T09:32:23.926Z"
-  },
-  {
-    "id": "portero",
-    "nombre": "Portero",
-    "urlImagen": "/img/U2K.gif",
-    "descripcion": "Para ser más efectivos en llegar tan rápido como sea posible al objetivo, tus chicos deberían hacer este entrenamiento. Aquí aprenderán a planear rutas, viajar silenciosamente, y aproximarse al objetivo sin ser detectados, para llevar a cabo su trabajo tan efectivamente como sea posible.",
-    "costoArmas": 500,
-    "costoMunicion": 8000,
-    "costoDolares": 0,
-    "duracion": 1600,
-    "puntos": 6,
-    "ataque": 8,
-    "defensa": 6,
-    "capacidad": 400,
-    "velocidad": 2000,
-    "salario": 1,
-    "tipo": "ATAQUE",
-    "requisitos": [],
-    "bonusAtaque": [
-      "extorsion"
-    ],
-    "bonusDefensa": [
-      "extorsion",
-      "seguridad"
-    ],
-    "createdAt": "2025-07-20T06:48:39.769Z",
-    "updatedAt": "2025-07-20T09:32:24.217Z"
+    "updatedAt": "2025-07-20T21:22:53.290Z"
   },
   {
     "id": "acuchillador",
@@ -125,9 +125,9 @@
     "duracion": 2000,
     "puntos": 4,
     "ataque": 10,
-    "defensa": 4,
+    "defensa": 8,
     "capacidad": 300,
-    "velocidad": 2500,
+    "velocidad": 3000,
     "salario": 1,
     "tipo": "ATAQUE",
     "requisitos": [],
@@ -140,7 +140,7 @@
       "combate"
     ],
     "createdAt": "2025-07-20T06:48:40.045Z",
-    "updatedAt": "2025-07-20T09:32:24.495Z"
+    "updatedAt": "2025-07-20T21:24:07.967Z"
   },
   {
     "id": "pistolero",
@@ -153,10 +153,10 @@
     "duracion": 1200,
     "puntos": 21,
     "ataque": 30,
-    "defensa": 10,
+    "defensa": 20,
     "capacidad": 500,
-    "velocidad": 2400,
-    "salario": 2,
+    "velocidad": 2800,
+    "salario": 1,
     "tipo": "ATAQUE",
     "requisitos": [],
     "bonusAtaque": [
@@ -167,7 +167,47 @@
       "proteccion"
     ],
     "createdAt": "2025-07-20T06:48:40.328Z",
-    "updatedAt": "2025-07-20T09:32:24.790Z"
+    "updatedAt": "2025-07-20T21:24:35.751Z"
+  },
+  {
+    "id": "mercenario",
+    "nombre": "Mercenario",
+    "urlImagen": "/img/U14K.gif",
+    "descripcion": "Un soldado de fortuna que lucha por el mejor postor. Equipado con lo mejor, es una fuerza a tener en cuenta en el campo de batalla.",
+    "costoArmas": 80000,
+    "costoMunicion": 120000,
+    "costoDolares": 50000,
+    "duracion": 144000,
+    "puntos": 1176,
+    "ataque": 1000,
+    "defensa": 2400,
+    "capacidad": 12000,
+    "velocidad": 4500,
+    "salario": 300,
+    "tipo": "ATAQUE",
+    "requisitos": [],
+    "bonusAtaque": [
+      "espionaje",
+      "seguridad",
+      "proteccion",
+      "combate",
+      "armas",
+      "tiro",
+      "guerrilla",
+      "psicologico"
+    ],
+    "bonusDefensa": [
+      "espionaje",
+      "seguridad",
+      "proteccion",
+      "combate",
+      "armas",
+      "tiro",
+      "guerrilla",
+      "psicologico"
+    ],
+    "createdAt": "2025-07-20T06:48:43.099Z",
+    "updatedAt": "2025-07-20T22:51:38.503Z"
   },
   {
     "id": "ocupacion",
@@ -423,46 +463,6 @@
     ],
     "createdAt": "2025-07-20T06:48:42.824Z",
     "updatedAt": "2025-07-20T09:32:27.360Z"
-  },
-  {
-    "id": "mercenario",
-    "nombre": "Mercenario",
-    "urlImagen": "/img/U14K.gif",
-    "descripcion": "Un soldado de fortuna que lucha por el mejor postor. Equipado con lo mejor, es una fuerza a tener en cuenta en el campo de batalla.",
-    "costoArmas": 80000,
-    "costoMunicion": 120000,
-    "costoDolares": 50000,
-    "duracion": 144000,
-    "puntos": 1176,
-    "ataque": 1000,
-    "defensa": 1200,
-    "capacidad": 12000,
-    "velocidad": 4500,
-    "salario": 300,
-    "tipo": "ATAQUE",
-    "requisitos": [],
-    "bonusAtaque": [
-      "espionaje",
-      "seguridad",
-      "proteccion",
-      "combate",
-      "armas",
-      "tiro",
-      "guerrilla",
-      "psicologico"
-    ],
-    "bonusDefensa": [
-      "espionaje",
-      "seguridad",
-      "proteccion",
-      "combate",
-      "armas",
-      "tiro",
-      "guerrilla",
-      "psicologico"
-    ],
-    "createdAt": "2025-07-20T06:48:43.099Z",
-    "updatedAt": "2025-07-20T09:32:27.641Z"
   },
   {
     "id": "trabajador_ilegal",
