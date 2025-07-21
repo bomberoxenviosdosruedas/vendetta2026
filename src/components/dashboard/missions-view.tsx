@@ -91,7 +91,7 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
 
     }, [searchParams, selectedProperty]);
 
-    const calculateAndSetTravelTime = useCallback(async () => {
+    const calculateTravelTime = useCallback(async () => {
         if (!selectedProperty || tropas.length === 0 || !coordinates.ciudad || !coordinates.barrio || !coordinates.edificio) {
             setTravelTime(0);
             return;
@@ -114,8 +114,8 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
     }, [tropas, coordinates, selectedProperty, troopConfigsMap]);
     
     useEffect(() => {
-        calculateAndSetTravelTime();
-    }, [calculateAndSetTravelTime]);
+        calculateTravelTime();
+    }, [calculateTravelTime]);
     
 
     const debouncedFetchOwner = useCallback(
@@ -324,5 +324,4 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
             </Card>
         </div>
     );
-
-    
+}

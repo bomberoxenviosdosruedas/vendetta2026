@@ -40,7 +40,7 @@ export async function enviarMision(input: MissionInput) {
         return { error: "Debes seleccionar al menos una tropa." };
     }
 
-    const tropasPropiedadMap = new Map(origenPropiedad.tropas.map(t => [t.configuracionTropaId, t.cantidad]));
+    const tropasPropiedadMap = new Map(origenPropiedad.TropaUsuario.map(t => [t.configuracionTropaId, t.cantidad]));
 
     for (const tropa of tropas) {
         if ((tropasPropiedadMap.get(tropa.id) || 0) < tropa.cantidad) {
@@ -48,13 +48,13 @@ export async function enviarMision(input: MissionInput) {
         }
     }
     
-    // Calcular distancia y duración
+    // Calcular distancia y duración con las nuevas fórmulas
     const troopConfigs = await getTroopConfigurations();
     const troopConfigsMap = new Map(troopConfigs.map(t => [t.id, t]));
     
     const velocidadFlota = await calcularVelocidadFlota(tropas, troopConfigsMap);
-    const distancia = await calcularDistancia(origenPropiedad, coordinates);
-    const duracionViaje = await calcularDuracionViaje(distancia, velocidadFlota);
+    const distancia = calcularDistancia(origenPropiedad, coordinates);
+    const duracionViaje = calcularDuracionViaje(distancia, velocidadFlota);
     
     const fechaInicio = new Date();
     const fechaLlegada = new Date(fechaInicio.getTime() + duracionViaje * 1000);
@@ -117,6 +117,7 @@ export async function enviarMision(input: MissionInput) {
             await tx.colaMisiones.create({
                 data: {
                     userId: user.id,
+                    propiedadOrigenId: origenPropiedadId,
                     tipoMision: tipo,
                     tropas: JSON.stringify(tropas),
                     origenCiudad: origenPropiedad.ciudad,
@@ -125,6 +126,7 @@ export async function enviarMision(input: MissionInput) {
                     destinoCiudad: coordinates.ciudad,
                     destinoBarrio: coordinates.barrio,
                     destinoEdificio: coordinates.edificio,
+                    fechaInicio: fechaInicio,
                     fechaLlegada: fechaLlegada,
                     fechaRegreso: fechaRegreso,
                     velocidadFlota,

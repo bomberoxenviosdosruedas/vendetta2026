@@ -1,6 +1,4 @@
 
-'use server'
-
 import type { ConfiguracionTropa } from "@prisma/client";
 
 interface Coordenadas {
@@ -10,13 +8,12 @@ interface Coordenadas {
 }
 
 /**
- * Calcula la distancia del juego entre dos puntos.
- * La distancia se basa en una jerarquía: ciudad > barrio > edificio.
+ * Calcula la distancia del juego entre dos puntos basado en una jerarquía.
  * @param origen Las coordenadas de origen.
  * @param destino Las coordenadas de destino.
  * @returns La distancia calculada como un valor numérico.
  */
-export async function calcularDistancia(origen: Coordenadas, destino: Coordenadas): Promise<number> {
+export function calcularDistancia(origen: Coordenadas, destino: Coordenadas): number {
     if (origen.ciudad !== destino.ciudad) {
         return Math.abs(origen.ciudad - destino.ciudad) * 20000;
     }
@@ -43,33 +40,31 @@ export async function calcularVelocidadFlota(
     let velocidadMasLenta = Infinity;
     
     for (const tropa of tropasEnviadas) {
-        const config = configs.get(tropa.id);
-        if (config && config.velocidad < velocidadMasLenta) {
-            velocidadMasLenta = config.velocidad;
+        if (tropa.cantidad > 0) {
+            const config = configs.get(tropa.id);
+            if (config && config.velocidad < velocidadMasLenta) {
+                velocidadMasLenta = config.velocidad;
+            }
         }
     }
-
-    // Si por alguna razón no se encuentra ninguna tropa (no debería pasar),
-    // devuelve una velocidad base para evitar división por cero.
     return velocidadMasLenta === Infinity ? 1000 : velocidadMasLenta;
 }
 
 
 /**
- * Calcula la duración del viaje en segundos.
+ * Calcula la duración del viaje en segundos usando la nueva fórmula.
  * @param distancia La distancia calculada con calcularDistancia.
  * @param velocidadFlota La velocidad de la tropa más lenta en la misión.
  * @returns La duración del viaje en segundos.
  */
-export async function calcularDuracionViaje(distancia: number, velocidadFlota: number): Promise<number> {
+export function calcularDuracionViaje(distancia: number, velocidadFlota: number): number {
     if (velocidadFlota <= 0) {
-        // Prevenir división por cero. Devuelve un tiempo máximo o un error.
-        return 86400 * 30; // 30 días
+        return 86400 * 30; // 30 días como fallback para evitar división por cero.
     }
+    
+    // Duración en Segundos = redondear( ( (Distancia * 3.3479) / Velocidad de la Flota ) ^ 0.2 * 3600 )
+    const baseCalculo = (distancia * 3.3479) / velocidadFlota;
+    const duracionEnSegundos = Math.round(Math.pow(baseCalculo, 0.2) * 3600);
 
-    const duracion = Math.round(
-        Math.pow((distancia * 3.3479) / velocidadFlota, 0.2) * 3600
-    );
-
-    return Math.max(10, duracion); // Asegura una duración mínima de 10 segundos.
+    return Math.max(10, duracionEnSegundos); // Mínimo de 10 segundos.
 }
