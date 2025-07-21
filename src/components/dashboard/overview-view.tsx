@@ -84,7 +84,7 @@ export async function OverviewView() {
                 {/* Main Property Card */}
                 <Card className="md:col-span-1 md:row-span-2 relative overflow-hidden min-h-[250px]">
                     <Image 
-                        src="/img/general/propiedad_principal_overview.jpg"
+                        src="/nuevas/edificionuevo.jpg"
                         alt="Vista de la propiedad principal"
                         fill
                         className="object-cover"
