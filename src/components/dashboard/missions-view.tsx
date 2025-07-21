@@ -15,7 +15,7 @@ import { enviarMision } from '@/lib/actions/mission.actions';
 import { useToast } from '@/hooks/use-toast';
 import { useProperty } from '@/contexts/property-context';
 import type { ConfiguracionTropa } from '@prisma/client';
-import { calculateDistance, calculateTravelTime, calcularVelocidadFlota } from '@/lib/formulas/mission-formulas';
+import { calcularDistancia, calcularDuracionViaje, calcularVelocidadFlota } from '@/lib/formulas/mission-formulas';
 import { useSearchParams } from 'next/navigation';
 
 type TroopInput = {
@@ -91,7 +91,7 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
 
     }, [searchParams, selectedProperty]);
 
-    const debouncedCalculateTravelTime = useCallback(debounce(async () => {
+    const calculateTravelTime = useCallback(async () => {
         if (!selectedProperty || tropas.length === 0 || !coordinates.ciudad || !coordinates.barrio || !coordinates.edificio) {
             setTravelTime(0);
             return;
@@ -104,18 +104,18 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
         }
 
         const velocidad = await calcularVelocidadFlota(activeTroops, troopConfigsMap);
-        const distancia = calculateDistance(selectedProperty, {
+        const distancia = calcularDistancia(selectedProperty, {
             ciudad: parseInt(coordinates.ciudad, 10),
             barrio: parseInt(coordinates.barrio, 10),
             edificio: parseInt(coordinates.edificio, 10),
         });
-        const duracion = calculateTravelTime(distancia, velocidad);
+        const duracion = calcularDuracionViaje(distancia, velocidad);
         setTravelTime(duracion);
-    }, 300), [tropas, coordinates, selectedProperty, troopConfigsMap]);
+    }, [tropas, coordinates, selectedProperty, troopConfigsMap]);
     
     useEffect(() => {
-        debouncedCalculateTravelTime();
-    }, [tropas, coordinates, selectedProperty, debouncedCalculateTravelTime]);
+        calculateTravelTime();
+    }, [calculateTravelTime]);
     
 
     const debouncedFetchOwner = useCallback(
@@ -325,5 +325,3 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
         </div>
     );
 }
-
-    
