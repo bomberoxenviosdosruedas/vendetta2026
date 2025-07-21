@@ -150,7 +150,7 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
     const [isLoading, setIsLoading] = useState(false);
 
     const updateMap = () => {
-        const params = new URLSearchParams();
+        const params = new URLSearchParams(searchParams);
         params.set('ciudad', ciudad.toString());
         params.set('barrio', barrio.toString());
         router.push(`${pathname}?${params.toString()}`);
@@ -180,7 +180,7 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
     }, [searchParams, ciudad, barrio]);
 
     return (
-        <Card>
+        <Card className="bg-card/80">
             <div className="space-y-4 p-4">
                 <div className="flex flex-row flex-wrap justify-center items-end gap-2 p-2 rounded-lg bg-muted border">
                     <CoordinateInput label="Ciudad" value={ciudad} onChange={setCiudad} />

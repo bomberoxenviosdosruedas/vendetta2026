@@ -202,7 +202,15 @@ export const getPropertiesByLocation = cache(async (ciudad: number, barrio: numb
                 barrio,
             },
             include: {
-                user: true
+                user: {
+                    include: {
+                        familyMember: {
+                            include: {
+                                family: true
+                            }
+                        }
+                    }
+                }
             }
         });
         return properties;
