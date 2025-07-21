@@ -18,8 +18,8 @@
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": [],
-    "createdAt": "2025-07-20T06:48:43.948Z",
-    "updatedAt": "2025-07-20T09:32:28.511Z"
+    "createdAt": "2025-07-21T01:40:50.890Z",
+    "updatedAt": "2025-07-21T01:40:50.890Z"
   },
   {
     "id": "guardia_de_honor",
@@ -40,8 +40,8 @@
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": [],
-    "createdAt": "2025-07-20T06:48:44.513Z",
-    "updatedAt": "2025-07-20T09:32:29.083Z"
+    "createdAt": "2025-07-21T01:40:51.198Z",
+    "updatedAt": "2025-07-21T01:40:51.198Z"
   },
   {
     "id": "portero",
@@ -67,8 +67,8 @@
       "extorsion",
       "seguridad"
     ],
-    "createdAt": "2025-07-20T06:48:39.769Z",
-    "updatedAt": "2025-07-20T21:23:36.321Z"
+    "createdAt": "2025-07-21T01:40:51.510Z",
+    "updatedAt": "2025-07-21T01:40:51.510Z"
   },
   {
     "id": "guardaespaldas",
@@ -89,8 +89,8 @@
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": [],
-    "createdAt": "2025-07-20T06:48:44.240Z",
-    "updatedAt": "2025-07-20T09:32:28.799Z"
+    "createdAt": "2025-07-21T01:40:51.811Z",
+    "updatedAt": "2025-07-21T01:40:51.811Z"
   },
   {
     "id": "maton",
@@ -111,8 +111,8 @@
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": [],
-    "createdAt": "2025-07-20T06:48:39.471Z",
-    "updatedAt": "2025-07-20T21:22:53.290Z"
+    "createdAt": "2025-07-21T01:40:52.123Z",
+    "updatedAt": "2025-07-21T01:40:52.123Z"
   },
   {
     "id": "acuchillador",
@@ -139,8 +139,8 @@
       "extorsion",
       "combate"
     ],
-    "createdAt": "2025-07-20T06:48:40.045Z",
-    "updatedAt": "2025-07-20T21:24:07.967Z"
+    "createdAt": "2025-07-21T01:40:52.427Z",
+    "updatedAt": "2025-07-21T01:40:52.427Z"
   },
   {
     "id": "pistolero",
@@ -166,8 +166,8 @@
       "seguridad",
       "proteccion"
     ],
-    "createdAt": "2025-07-20T06:48:40.328Z",
-    "updatedAt": "2025-07-20T21:24:35.751Z"
+    "createdAt": "2025-07-21T01:40:52.710Z",
+    "updatedAt": "2025-07-21T01:40:52.710Z"
   },
   {
     "id": "mercenario",
@@ -206,8 +206,8 @@
       "guerrilla",
       "psicologico"
     ],
-    "createdAt": "2025-07-20T06:48:43.099Z",
-    "updatedAt": "2025-07-20T22:51:38.503Z"
+    "createdAt": "2025-07-21T01:40:53.014Z",
+    "updatedAt": "2025-07-21T01:40:53.014Z"
   },
   {
     "id": "ocupacion",
@@ -228,8 +228,8 @@
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": [],
-    "createdAt": "2025-07-20T06:48:40.610Z",
-    "updatedAt": "2025-07-20T09:32:25.087Z"
+    "createdAt": "2025-07-21T01:40:53.307Z",
+    "updatedAt": "2025-07-21T01:40:53.307Z"
   },
   {
     "id": "espia",
@@ -254,8 +254,8 @@
     "bonusDefensa": [
       "espionaje"
     ],
-    "createdAt": "2025-07-20T06:48:40.886Z",
-    "updatedAt": "2025-07-20T09:32:25.369Z"
+    "createdAt": "2025-07-21T01:40:53.599Z",
+    "updatedAt": "2025-07-21T01:40:53.599Z"
   },
   {
     "id": "porteador",
@@ -280,8 +280,8 @@
     "bonusDefensa": [
       "combate"
     ],
-    "createdAt": "2025-07-20T06:48:41.164Z",
-    "updatedAt": "2025-07-20T09:32:25.653Z"
+    "createdAt": "2025-07-21T01:40:53.889Z",
+    "updatedAt": "2025-07-21T01:40:53.889Z"
   },
   {
     "id": "cia",
@@ -309,8 +309,8 @@
       "proteccion",
       "guerrilla"
     ],
-    "createdAt": "2025-07-20T06:48:41.440Z",
-    "updatedAt": "2025-07-20T09:32:25.940Z"
+    "createdAt": "2025-07-21T01:40:54.179Z",
+    "updatedAt": "2025-07-21T01:40:54.179Z"
   },
   {
     "id": "fbi",
@@ -337,8 +337,8 @@
       "proteccion",
       "tiro"
     ],
-    "createdAt": "2025-07-20T06:48:41.722Z",
-    "updatedAt": "2025-07-20T09:32:26.227Z"
+    "createdAt": "2025-07-21T01:40:54.456Z",
+    "updatedAt": "2025-07-21T01:40:54.456Z"
   },
   {
     "id": "transportista",
@@ -364,8 +364,8 @@
       "proteccion",
       "psicologico"
     ],
-    "createdAt": "2025-07-20T06:48:41.997Z",
-    "updatedAt": "2025-07-20T09:32:26.510Z"
+    "createdAt": "2025-07-21T01:40:54.747Z",
+    "updatedAt": "2025-07-21T01:40:54.747Z"
   },
   {
     "id": "francotirador",
@@ -395,8 +395,8 @@
       "guerrilla",
       "psicologico"
     ],
-    "createdAt": "2025-07-20T06:48:42.279Z",
-    "updatedAt": "2025-07-20T09:32:26.794Z"
+    "createdAt": "2025-07-21T01:40:55.040Z",
+    "updatedAt": "2025-07-21T01:40:55.040Z"
   },
   {
     "id": "asesino",
@@ -429,8 +429,8 @@
       "guerrilla",
       "psicologico"
     ],
-    "createdAt": "2025-07-20T06:48:42.556Z",
-    "updatedAt": "2025-07-20T09:32:27.082Z"
+    "createdAt": "2025-07-21T01:40:55.325Z",
+    "updatedAt": "2025-07-21T01:40:55.325Z"
   },
   {
     "id": "ninja",
@@ -461,8 +461,8 @@
       "guerrilla",
       "psicologico"
     ],
-    "createdAt": "2025-07-20T06:48:42.824Z",
-    "updatedAt": "2025-07-20T09:32:27.360Z"
+    "createdAt": "2025-07-21T01:40:55.620Z",
+    "updatedAt": "2025-07-21T01:40:55.620Z"
   },
   {
     "id": "trabajador_ilegal",
@@ -483,8 +483,8 @@
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": [],
-    "createdAt": "2025-07-20T06:48:43.394Z",
-    "updatedAt": "2025-07-20T09:32:27.926Z"
+    "createdAt": "2025-07-21T01:40:55.922Z",
+    "updatedAt": "2025-07-21T01:40:55.922Z"
   },
   {
     "id": "centinela",
@@ -505,7 +505,7 @@
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": [],
-    "createdAt": "2025-07-20T06:48:43.674Z",
-    "updatedAt": "2025-07-20T09:32:28.218Z"
+    "createdAt": "2025-07-21T01:40:56.221Z",
+    "updatedAt": "2025-07-21T01:40:56.221Z"
   }
 ]
