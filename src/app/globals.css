@@ -14,19 +14,16 @@
     --popover: 240 10% 3.9%;
     --popover-foreground: 210 40% 98%;
  
-    /* Primary: Brighter, more vibrant red */
-    --primary: 0 75% 50%; /* #BF2020 */
+    --primary: 0 75% 50%;
     --primary-foreground: 0 0% 100%;
  
-    /* Secondary: Darker Gray / Night */
-    --secondary: 240 3.7% 15.9%;
+    --secondary: 240 4% 10%;
     --secondary-foreground: 210 40% 98%;
  
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 215 20.2% 65.1%;
  
-    /* Accent: More vibrant gold */
-    --accent: 45 90% 50%; /* #FFC700 */
+    --accent: 45 90% 50%;
     --accent-foreground: 240 5.9% 10%;
  
     --destructive: 0 62.8% 30.6%;
