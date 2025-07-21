@@ -8,11 +8,20 @@ import * as datosRoomRequirements from './datosactuales/roomRequirement.json';
 import * as datosTrainingRequirements from './datosactuales/trainingRequirement.json';
 import * as datosTropaBonus from './datosactuales/tropaBonusContrincante.json';
 import * as datosMessages from './datosactuales/message.json';
+import * as datosHabitaciones from './datosactuales/habitacionUsuario.json';
+import * as datosEntrenamientos from './datosactuales/entrenamientoUsuario.json';
+import * as datosTropas from './datosactuales/tropaUsuario.json';
+import * as datosPuntuacion from './datosactuales/puntuacionUsuario.json';
+import * as datosColaConstruccion from './datosactuales/colaConstruccion.json';
+import * as datosColaReclutamiento from './datosactuales/colaReclutamiento.json';
+import * as datosColaMisiones from './datosactuales/colaMisiones.json';
+import * as datosColaEntrenamiento from './datosactuales/colaEntrenamiento.json';
+
 
 const prisma = new PrismaClient();
 
 async function main() {
-    console.log('🤝 Iniciando la importación de datos relacionales (familias, requisitos, mensajes, etc.)...');
+    console.log('🤝 Iniciando la importación de datos relacionales y de progreso...');
     
     const families = (datosFamilies as any).default || datosFamilies;
     const familyMembers = (datosFamilyMembers as any).default || datosFamilyMembers;
@@ -21,6 +30,100 @@ async function main() {
     const trainingRequirements = (datosTrainingRequirements as any).default || datosTrainingRequirements;
     const tropaBonus = (datosTropaBonus as any).default || datosTropaBonus;
     const messages = (datosMessages as any).default || datosMessages;
+    const habitaciones = (datosHabitaciones as any).default || datosHabitaciones;
+    const entrenamientos = (datosEntrenamientos as any).default || datosEntrenamientos;
+    const tropas = (datosTropas as any).default || datosTropas;
+    const puntuaciones = (datosPuntuacion as any).default || datosPuntuacion;
+    const colasConstruccion = (datosColaConstruccion as any).default || datosColaConstruccion;
+    const colasReclutamiento = (datosColaReclutamiento as any).default || datosColaReclutamiento;
+    const colasMisiones = (datosColaMisiones as any).default || datosColaMisiones;
+    const colasEntrenamiento = (datosColaEntrenamiento as any).default || datosColaEntrenamiento;
+
+    for (const habData of habitaciones) {
+        try {
+            await prisma.habitacionUsuario.upsert({
+                where: { id: habData.id },
+                update: habData,
+                create: habData,
+            });
+        } catch(e) {
+             console.error(`Error con habitacion ${habData.id}`, e);
+        }
+    }
+
+    for (const entData of entrenamientos) {
+        try {
+           await prisma.entrenamientoUsuario.upsert({
+               where: { id: entData.id },
+               update: entData,
+               create: entData,
+           });
+        } catch (e) {
+           console.error(`Error con entrenamiento ${entData.id}`, e);
+        }
+    }
+   
+    for (const tropaData of tropas) {
+       try {
+           await prisma.tropaUsuario.upsert({
+               where: { id: tropaData.id },
+               update: tropaData,
+               create: tropaData,
+           });
+       } catch (e) {
+           console.error(`Error con tropa ${tropaData.id}`, e);
+       }
+    }
+     
+    for (const puntData of puntuaciones) {
+        try {
+         const { ...restOfPuntData } = puntData;
+         await prisma.puntuacionUsuario.upsert({
+             where: { id: restOfPuntData.id },
+             update: { ...restOfPuntData, updatedAt: new Date(restOfPuntData.updatedAt) },
+             create: { ...restOfPuntData, updatedAt: new Date(restOfPuntData.updatedAt) },
+         });
+        } catch (e) {
+           console.error(`Error con puntuacion ${puntData.id}`, e);
+        }
+    }
+     
+    // Limpiar colas existentes para evitar duplicados en cada seed
+    await prisma.colaMisiones.deleteMany({});
+    await prisma.colaReclutamiento.deleteMany({});
+    await prisma.colaConstruccion.deleteMany({});
+    await prisma.colaEntrenamiento.deleteMany({});
+   
+   
+    for (const cola of colasConstruccion) {
+        try {
+          await prisma.colaConstruccion.create({ data: {...cola, fechaInicio: cola.fechaInicio ? new Date(cola.fechaInicio) : null, fechaFinalizacion: cola.fechaFinalizacion ? new Date(cola.fechaFinalizacion) : null, createdAt: new Date(cola.createdAt)} });
+        } catch (e) {
+            console.error(`Error creando cola construccion ${cola.id}`, e);
+        }
+    }
+    for (const cola of colasReclutamiento) {
+        try {
+          await prisma.colaReclutamiento.create({ data: {...cola, fechaInicio: new Date(cola.fechaInicio), fechaFinalizacion: new Date(cola.fechaFinalizacion)} });
+        } catch (e) {
+           console.error(`Error creando cola reclutamiento ${cola.id}`, e);
+        }
+    }
+    for (const cola of colasMisiones) {
+       try {
+        await prisma.colaMisiones.create({ data: {...cola, fechaLlegada: new Date(cola.fechaLlegada), fechaRegreso: cola.fechaRegreso ? new Date(cola.fechaRegreso) : null, fechaInicio: new Date(cola.fechaInicio)} });
+       } catch(e) {
+           console.error(`Error creando cola mision ${cola.id}`, e);
+       }
+    }
+  
+    for (const cola of colasEntrenamiento) {
+      try {
+        await prisma.colaEntrenamiento.create({ data: {...cola, fechaInicio: new Date(cola.fechaInicio), fechaFinalizacion: new Date(cola.fechaFinalizacion)} });
+      } catch(e) {
+          console.error(`Error creando cola entrenamiento ${cola.id}`, e);
+      }
+    }
 
 
     for (const familyData of families) {

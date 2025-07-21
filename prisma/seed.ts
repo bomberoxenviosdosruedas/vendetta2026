@@ -11,8 +11,8 @@ const scriptsToRun = [
   'impoconfiguracionTropa.ts',
   'impopoderataque.ts',
   'imposuperusuario.ts',
-  'impousuarioprueba.ts',
-  'imporelaciones.ts', // Nuevo script para relaciones
+  'impousuarioprueba.ts', // Ahora solo carga User y Propiedad
+  'imporelaciones.ts',    // Carga todas las demás relaciones y datos dependientes
 ];
 // ---------------------
 
