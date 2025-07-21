@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { ArrowLeftRight, Check, Shield, Swords, Undo2, X } from "lucide-react";
 import { Button } from "../ui/button";
-import { cancelarMision } from "@/lib/actions/mission.actions";
+import { cancelarMision } from "@/lib/actions/cancel-mission.action";
 import { useToast } from "@/hooks/use-toast";
 import {
     AlertDialog,

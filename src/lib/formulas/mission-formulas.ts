@@ -1,4 +1,6 @@
 
+'use server'
+
 import type { ConfiguracionTropa } from "@prisma/client";
 
 interface Coordenadas {
@@ -7,48 +9,25 @@ interface Coordenadas {
     edificio: number;
 }
 
-interface VirtualCoordinates {
-    h: number; // altura
-    w: number; // anchura
-}
-
-const LARGO_BARRIO = 15;
-const ANCHO_BARRIO = 17;
-
 /**
- * Convierte las coordenadas del juego a un sistema de coordenadas virtual (cartesiano).
- * @param coords - Las coordenadas de origen.
- * @returns Las coordenadas virtuales {h, w}.
- */
-function getVirtualCoordinates(coords: Coordenadas): VirtualCoordinates {
-    const { ciudad, barrio, edificio } = coords;
-
-    // Altura: (barrio-1) * 15 + CEIL(edificio / 17)
-    const altura = (barrio - 1) * LARGO_BARRIO + Math.ceil(edificio / ANCHO_BARRIO);
-
-    // Anchura: (ciudad-1) * 17 + edificio - (FLOOR((edificio-1)/17) * 17)
-    const anchura = (ciudad - 1) * ANCHO_BARRIO + (edificio - (Math.floor((edificio - 1) / ANCHO_BARRIO) * ANCHO_BARRIO));
-
-    return { h: altura, w: anchura };
-}
-
-
-/**
- * Calcula la distancia euclidiana entre dos puntos usando coordenadas virtuales.
+ * Calcula la distancia del juego entre dos puntos.
+ * La distancia se basa en una jerarquía: ciudad > barrio > edificio.
  * @param origen Las coordenadas de origen.
  * @param destino Las coordenadas de destino.
- * @returns La distancia calculada como un valor numérico flotante.
+ * @returns La distancia calculada como un valor numérico.
  */
-export function calcularDistancia(origen: Coordenadas, destino: Coordenadas): number {
-    const vOrigen = getVirtualCoordinates(origen);
-    const vDestino = getVirtualCoordinates(destino);
-
-    const deltaH = vOrigen.h - vDestino.h;
-    const deltaW = vOrigen.w - vDestino.w;
-
-    const distancia = Math.sqrt(Math.pow(deltaH, 2) + Math.pow(deltaW, 2));
-
-    return distancia;
+export async function calcularDistancia(origen: Coordenadas, destino: Coordenadas): Promise<number> {
+    if (origen.ciudad !== destino.ciudad) {
+        return Math.abs(origen.ciudad - destino.ciudad) * 20000;
+    }
+    if (origen.barrio !== destino.barrio) {
+        return Math.abs(origen.barrio - destino.barrio) * 5000;
+    }
+    if (origen.edificio !== destino.edificio) {
+        return Math.abs(origen.edificio - destino.edificio) * 1000;
+    }
+    // Si las coordenadas son idénticas, la distancia es una base mínima.
+    return 1000;
 }
 
 /**
@@ -64,33 +43,33 @@ export async function calcularVelocidadFlota(
     let velocidadMasLenta = Infinity;
     
     for (const tropa of tropasEnviadas) {
-        if (tropa.cantidad > 0) {
-            const config = configs.get(tropa.id);
-            if (config && config.velocidad < velocidadMasLenta) {
-                velocidadMasLenta = config.velocidad;
-            }
+        const config = configs.get(tropa.id);
+        if (config && config.velocidad < velocidadMasLenta) {
+            velocidadMasLenta = config.velocidad;
         }
     }
+
+    // Si por alguna razón no se encuentra ninguna tropa (no debería pasar),
+    // devuelve una velocidad base para evitar división por cero.
     return velocidadMasLenta === Infinity ? 1000 : velocidadMasLenta;
 }
 
 
 /**
  * Calcula la duración del viaje en segundos.
- * @param distancia La distancia calculada con calcularDistancia (valor no redondeado).
+ * @param distancia La distancia calculada con calcularDistancia.
  * @param velocidadFlota La velocidad de la tropa más lenta en la misión.
  * @returns La duración del viaje en segundos.
  */
-export function calcularDuracionViaje(distancia: number, velocidadFlota: number): number {
+export async function calcularDuracionViaje(distancia: number, velocidadFlota: number): Promise<number> {
     if (velocidadFlota <= 0) {
-        return 86400 * 30; // 30 días como fallback para evitar división por cero.
+        // Prevenir división por cero. Devuelve un tiempo máximo o un error.
+        return 86400 * 30; // 30 días
     }
-    
-    // Formula: (0.21989 * velocidad^-0.2) * distancia^0.2
-    const factorBase = 0.21989;
-    const duracionEnHoras = factorBase * Math.pow(velocidadFlota, -0.2) * Math.pow(distancia, 0.2);
 
-    const duracionEnSegundos = duracionEnHoras * 3600;
+    const duracion = Math.round(
+        Math.pow((distancia * 3.3479) / velocidadFlota, 0.2) * 3600
+    );
 
-    return Math.max(10, Math.floor(duracionEnSegundos)); // Mínimo de 10 segundos.
+    return Math.max(10, duracion); // Asegura una duración mínima de 10 segundos.
 }
