@@ -39,7 +39,7 @@ export default async function MapPage({
 
     return (
         <div className="main-view">
-            <h2 className="text-3xl font-bold tracking-tight">Mapa de la Ciudad</h2>
+            <h2 className="text-3xl font-bold tracking-tight mb-4">Mapa de la Ciudad</h2>
             <Suspense fallback={<MapLoading />}>
                 <MapView 
                     initialCiudad={initialCiudad} 

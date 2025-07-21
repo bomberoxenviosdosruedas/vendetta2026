@@ -1,7 +1,7 @@
 
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -144,40 +144,36 @@ const CoordinateInput = ({ label, value, onChange }: { label: string, value: num
 export function MapView({ initialCiudad, initialBarrio, initialProperties, currentUser }: { initialCiudad: number, initialBarrio: number, initialProperties: PropertyWithOwner[], currentUser: UserWithProgress }) {
     const router = useRouter();
     const pathname = usePathname();
+    const searchParams = useSearchParams();
     const [ciudad, setCiudad] = useState(initialCiudad);
     const [barrio, setBarrio] = useState(initialBarrio);
     const [properties, setProperties] = useState(initialProperties);
     const [isLoading, setIsLoading] = useState(false);
 
-    const updateMap = () => {
+    const updateMap = useCallback(() => {
         const params = new URLSearchParams(searchParams);
         params.set('ciudad', ciudad.toString());
         params.set('barrio', barrio.toString());
         router.push(`${pathname}?${params.toString()}`);
-    }
+    }, [ciudad, barrio, pathname, router, searchParams]);
 
-    const searchParams = useSearchParams();
     useEffect(() => {
         const ciudadParam = searchParams.get('ciudad');
         const barrioParam = searchParams.get('barrio');
         
-        if (ciudadParam && barrioParam) {
-            const newCiudad = parseInt(ciudadParam, 10);
-            const newBarrio = parseInt(barrioParam, 10);
+        const newCiudad = ciudadParam ? parseInt(ciudadParam, 10) : initialCiudad;
+        const newBarrio = barrioParam ? parseInt(barrioParam, 10) : initialBarrio;
 
-            if (newCiudad !== ciudad || newBarrio !== barrio) {
-                 setCiudad(newCiudad);
-                 setBarrio(newBarrio);
-            }
-
+        if (newCiudad !== ciudad || newBarrio !== barrio || !properties.length) {
+            setCiudad(newCiudad);
+            setBarrio(newBarrio);
             setIsLoading(true);
             getPropertiesByLocation(newCiudad, newBarrio).then(data => {
                 setProperties(data as any);
                 setIsLoading(false);
             });
         }
-
-    }, [searchParams, ciudad, barrio]);
+    }, [searchParams, ciudad, barrio, initialCiudad, initialBarrio, properties.length]);
 
     return (
         <Card className="bg-card/80">
