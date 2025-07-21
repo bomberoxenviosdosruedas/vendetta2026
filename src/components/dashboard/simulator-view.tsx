@@ -310,7 +310,7 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
                  <Dialog open={!!battleReport} onOpenChange={(isOpen) => !isOpen && setBattleReport(null)}>
                     <DialogContent className="max-w-4xl bg-black/80 border-primary text-white">
                         <DialogHeader>
-                            <DialogTitle className="text-2xl text-center text-primary tracking-widest">
+                            <DialogTitle className="text-2xl text-center text-primary tracking-widest font-heading">
                                 INFORME DE BATALLA
                             </DialogTitle>
                         </DialogHeader>
@@ -318,13 +318,13 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
                             <div className="space-y-4 pr-4">
                                 {battleReport.rounds.map(round => (
                                     <div key={round.round} className="space-y-2">
-                                        <div className="bg-primary/80 text-primary-foreground text-center font-bold py-1">
+                                        <div className="bg-primary/80 text-primary-foreground text-center font-bold font-heading py-1">
                                             RONDA DE BATALLA {round.round}
                                         </div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             {/* Columna Atacante */}
                                             <div>
-                                                <h4 className='font-bold text-center mb-1'>Atacante</h4>
+                                                <h4 className='font-bold text-center mb-1 font-heading'>Atacante</h4>
                                                 <Table>
                                                     <TableHeader>
                                                         <TableRow className="border-b-primary/50">
@@ -346,7 +346,7 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
                                             </div>
                                              {/* Columna Defensor */}
                                             <div>
-                                                 <h4 className='font-bold text-center mb-1'>Defensor</h4>
+                                                 <h4 className='font-bold text-center mb-1 font-heading'>Defensor</h4>
                                                 <Table>
                                                     <TableHeader>
                                                         <TableRow className="border-b-primary/50">
@@ -368,7 +368,7 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
                                             </div>
                                         </div>
                                         
-                                        <div className="bg-primary/80 text-primary-foreground text-center font-bold py-1 mt-2">
+                                        <div className="bg-primary/80 text-primary-foreground text-center font-bold font-heading py-1 mt-2">
                                             ESTADO RONDA {round.round}
                                         </div>
                                         <div className="grid grid-cols-2 gap-x-4 p-2 text-sm font-mono">
@@ -382,7 +382,7 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
 
                                 {battleReport.finalMessage && <p className="text-center font-bold text-lg pt-4">{battleReport.finalMessage}</p>}
 
-                                <div className="bg-primary/80 text-primary-foreground text-center font-bold py-1 mt-4">
+                                <div className="bg-primary/80 text-primary-foreground text-center font-bold font-heading py-1 mt-4">
                                     ESTADÍSTICAS FINALES
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-3 text-center text-sm p-2">

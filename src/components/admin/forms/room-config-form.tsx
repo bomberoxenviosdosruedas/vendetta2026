@@ -11,6 +11,7 @@ import { saveRoomConfig } from "@/lib/actions/admin.actions";
 import { Loader2 } from "lucide-react";
 import type { ConfiguracionHabitacion } from "@prisma/client";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface RoomConfigFormProps {
     room: (ConfiguracionHabitacion & { requirements: { requiredRoomId: string; requiredLevel: number }[] }) | null;
@@ -94,95 +95,99 @@ export function RoomConfigForm({ room, allRooms, onFinished }: RoomConfigFormPro
     const availableRequirements = allRooms.filter(r => r.id !== room?.id);
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4 max-h-[80vh] overflow-y-auto p-1 pr-4">
-            <input type="hidden" name="originalId" value={room?.id || ''} />
-            <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                    <Label htmlFor="id">ID</Label>
-                    <Input id="id" name="id" value={formData.id} onChange={handleInputChange} required disabled={!!room} />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="nombre">Nombre</Label>
-                    <Input id="nombre" name="nombre" value={formData.nombre} onChange={handleInputChange} required />
-                </div>
-            </div>
-            <div className="space-y-2">
-                <Label htmlFor="descripcion">Descripción</Label>
-                <Textarea id="descripcion" name="descripcion" value={formData.descripcion} onChange={handleInputChange} />
-            </div>
-             <div className="space-y-2">
-                <Label htmlFor="urlImagen">URL de Imagen</Label>
-                <Input id="urlImagen" name="urlImagen" value={formData.urlImagen} onChange={handleInputChange} />
-            </div>
-            <div className="grid grid-cols-4 gap-4">
-                <div className="space-y-2">
-                    <Label htmlFor="costoArmas">Armas</Label>
-                    <Input id="costoArmas" name="costoArmas" type="number" value={formData.costoArmas || ''} onChange={handleInputChange} placeholder="0" />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="costoMunicion">Munición</Label>
-                    <Input id="costoMunicion" name="costoMunicion" type="number" value={formData.costoMunicion || ''} onChange={handleInputChange} placeholder="0" />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="costoDolares">Dólares</Label>
-                    <Input id="costoDolares" name="costoDolares" type="number" value={formData.costoDolares || ''} onChange={handleInputChange} placeholder="0" />
-                </div>
-                 <div className="space-y-2">
-                    <Label htmlFor="duracion">Duración (s)</Label>
-                    <Input id="duracion" name="duracion" type="number" value={formData.duracion || ''} onChange={handleInputChange} placeholder="0" />
-                </div>
-            </div>
-             <div className="grid grid-cols-3 gap-4">
-                 <div className="space-y-2">
-                    <Label htmlFor="puntos">Puntos</Label>
-                    <Input id="puntos" name="puntos" type="number" step="0.01" value={formData.puntos || ''} onChange={handleInputChange} placeholder="0" />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="produccionBase">Producción Base</Label>
-                    <Input id="produccionBase" name="produccionBase" type="number" value={formData.produccionBase || ''} onChange={handleInputChange} placeholder="0" />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="produccionRecurso">Recurso Producido</Label>
-                    <Input id="produccionRecurso" name="produccionRecurso" value={formData.produccionRecurso || ''} onChange={handleInputChange} placeholder="armas, municion..." />
-                </div>
-            </div>
-             <div className="space-y-2">
-                <Label>Requisitos</Label>
-                <div className="border rounded-md p-4 space-y-2 max-h-48 overflow-y-auto">
-                    {availableRequirements.map(reqRoom => {
-                        const isChecked = requirements.has(reqRoom.id);
-                        return (
-                            <div key={reqRoom.id} className="flex items-center gap-4">
-                                <div className="flex items-center gap-2 flex-1">
-                                    <Checkbox
-                                        id={`req-${reqRoom.id}`}
-                                        checked={isChecked}
-                                        onCheckedChange={(checked) => handleRequirementChange(reqRoom.id, !!checked)}
-                                    />
-                                    <Label htmlFor={`req-${reqRoom.id}`} className="font-normal">
-                                        {reqRoom.nombre}
-                                    </Label>
-                                </div>
-                                {isChecked && (
-                                    <div className="flex items-center gap-2">
-                                        <Label htmlFor={`level-${reqRoom.id}`} className="text-xs">Nivel:</Label>
-                                        <Input
-                                            id={`level-${reqRoom.id}`}
-                                            type="number"
-                                            value={requirements.get(reqRoom.id) || ''}
-                                            onChange={(e) => handleLevelChange(reqRoom.id, parseInt(e.target.value, 10))}
-                                            className="h-8 w-20"
-                                            min="1"
-                                            placeholder="1"
-                                        />
+        <form onSubmit={handleSubmit}>
+            <ScrollArea className="max-h-[70vh] p-1 pr-6">
+                <div className="space-y-4">
+                    <input type="hidden" name="originalId" value={room?.id || ''} />
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="id">ID</Label>
+                            <Input id="id" name="id" value={formData.id} onChange={handleInputChange} required disabled={!!room} />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="nombre">Nombre</Label>
+                            <Input id="nombre" name="nombre" value={formData.nombre} onChange={handleInputChange} required />
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="descripcion">Descripción</Label>
+                        <Textarea id="descripcion" name="descripcion" value={formData.descripcion} onChange={handleInputChange} />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="urlImagen">URL de Imagen</Label>
+                        <Input id="urlImagen" name="urlImagen" value={formData.urlImagen} onChange={handleInputChange} />
+                    </div>
+                    <div className="grid grid-cols-4 gap-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="costoArmas">Armas</Label>
+                            <Input id="costoArmas" name="costoArmas" type="number" value={formData.costoArmas || ''} onChange={handleInputChange} placeholder="0" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="costoMunicion">Munición</Label>
+                            <Input id="costoMunicion" name="costoMunicion" type="number" value={formData.costoMunicion || ''} onChange={handleInputChange} placeholder="0" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="costoDolares">Dólares</Label>
+                            <Input id="costoDolares" name="costoDolares" type="number" value={formData.costoDolares || ''} onChange={handleInputChange} placeholder="0" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="duracion">Duración (s)</Label>
+                            <Input id="duracion" name="duracion" type="number" value={formData.duracion || ''} onChange={handleInputChange} placeholder="0" />
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="puntos">Puntos</Label>
+                            <Input id="puntos" name="puntos" type="number" step="0.01" value={formData.puntos || ''} onChange={handleInputChange} placeholder="0" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="produccionBase">Producción Base</Label>
+                            <Input id="produccionBase" name="produccionBase" type="number" value={formData.produccionBase || ''} onChange={handleInputChange} placeholder="0" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="produccionRecurso">Recurso Producido</Label>
+                            <Input id="produccionRecurso" name="produccionRecurso" value={formData.produccionRecurso || ''} onChange={handleInputChange} placeholder="armas, municion..." />
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <Label>Requisitos</Label>
+                        <div className="border rounded-md p-4 space-y-2 max-h-48 overflow-y-auto">
+                            {availableRequirements.map(reqRoom => {
+                                const isChecked = requirements.has(reqRoom.id);
+                                return (
+                                    <div key={reqRoom.id} className="flex items-center gap-4">
+                                        <div className="flex items-center gap-2 flex-1">
+                                            <Checkbox
+                                                id={`req-${reqRoom.id}`}
+                                                checked={isChecked}
+                                                onCheckedChange={(checked) => handleRequirementChange(reqRoom.id, !!checked)}
+                                            />
+                                            <Label htmlFor={`req-${reqRoom.id}`} className="font-normal">
+                                                {reqRoom.nombre}
+                                            </Label>
+                                        </div>
+                                        {isChecked && (
+                                            <div className="flex items-center gap-2">
+                                                <Label htmlFor={`level-${reqRoom.id}`} className="text-xs">Nivel:</Label>
+                                                <Input
+                                                    id={`level-${reqRoom.id}`}
+                                                    type="number"
+                                                    value={requirements.get(reqRoom.id) || ''}
+                                                    onChange={(e) => handleLevelChange(reqRoom.id, parseInt(e.target.value, 10))}
+                                                    className="h-8 w-20"
+                                                    min="1"
+                                                    placeholder="1"
+                                                />
+                                            </div>
+                                        )}
                                     </div>
-                                )}
-                            </div>
-                        )
-                    })}
+                                )
+                            })}
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div className="flex justify-end gap-2">
+            </ScrollArea>
+            <div className="flex justify-end gap-2 pt-4 border-t mt-4">
                 <Button type="button" variant="ghost" onClick={onFinished}>Cancelar</Button>
                 <Button type="submit" disabled={isPending}>
                     {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

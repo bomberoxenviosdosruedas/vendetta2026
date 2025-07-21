@@ -14,6 +14,7 @@ import type { ConfiguracionTropa, TipoTropa } from "@prisma/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FullConfiguracionEntrenamiento, FullConfiguracionTropa } from "@/lib/data";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface TroopConfigFormProps {
     troop: FullConfiguracionTropa | null;
@@ -141,146 +142,148 @@ export function TroopConfigForm({ troop, allTroops, allTrainings, tiposTropa, on
     }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4 max-h-[80vh] overflow-y-auto p-1 pr-4">
-            <input type="hidden" name="id" value={troop?.id || ''} />
-            <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                    <Label htmlFor="idForm">ID (Editable solo al crear)</Label>
-                    <Input id="idForm" name="idForm" value={formData.id} onChange={handleInputChange} required disabled={!!troop} />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="nombre">Nombre</Label>
-                    <Input id="nombre" name="nombre" value={formData.nombre} onChange={handleInputChange} required />
-                </div>
-            </div>
-            <div className="space-y-2">
-                <Label htmlFor="descripcion">Descripción</Label>
-                <Textarea id="descripcion" name="descripcion" value={formData.descripcion} onChange={handleInputChange} />
-            </div>
-             <div className="space-y-2">
-                <Label htmlFor="urlImagen">URL de Imagen</Label>
-                <Input id="urlImagen" name="urlImagen" value={formData.urlImagen} onChange={handleInputChange} />
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-                <div className="space-y-2">
-                    <Label htmlFor="costoArmas">Armas</Label>
-                    <Input id="costoArmas" name="costoArmas" type="number" value={formData.costoArmas || ''} onChange={handleInputChange} placeholder="0"/>
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="costoMunicion">Munición</Label>
-                    <Input id="costoMunicion" name="costoMunicion" type="number" value={formData.costoMunicion || ''} onChange={handleInputChange} placeholder="0"/>
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="costoDolares">Dólares</Label>
-                    <Input id="costoDolares" name="costoDolares" type="number" value={formData.costoDolares || ''} onChange={handleInputChange} placeholder="0"/>
-                </div>
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-                <div className="space-y-2">
-                    <Label htmlFor="ataque">Ataque</Label>
-                    <Input id="ataque" name="ataque" type="number" value={formData.ataque || ''} onChange={handleInputChange} placeholder="0"/>
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="defensa">Defensa</Label>
-                    <Input id="defensa" name="defensa" type="number" value={formData.defensa || ''} onChange={handleInputChange} placeholder="0"/>
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="puntos">Puntos</Label>
-                    <Input id="puntos" name="puntos" type="number" step="0.01" value={formData.puntos || ''} onChange={handleInputChange} placeholder="0"/>
-                </div>
-            </div>
-            <div className="grid grid-cols-4 gap-4">
-                <div className="space-y-2">
-                    <Label htmlFor="capacidad">Capacidad</Label>
-                    <Input id="capacidad" name="capacidad" type="number" value={formData.capacidad || ''} onChange={handleInputChange} placeholder="0"/>
-                </div>
-                 <div className="space-y-2">
-                    <Label htmlFor="velocidad">Velocidad</Label>
-                    <Input id="velocidad" name="velocidad" type="number" value={formData.velocidad || ''} onChange={handleInputChange} placeholder="0"/>
-                </div>
-                 <div className="space-y-2">
-                    <Label htmlFor="salario">Salario</Label>
-                    <Input id="salario" name="salario" type="number" value={formData.salario || ''} onChange={handleInputChange} placeholder="0"/>
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="duracion">Duración (s)</Label>
-                    <Input id="duracion" name="duracion" type="number" value={formData.duracion || ''} onChange={handleInputChange} placeholder="0"/>
-                </div>
-            </div>
-            <div className="space-y-2">
-                <Label htmlFor="tipo">Tipo de Tropa</Label>
-                <Select name="tipo" value={formData.tipo} onValueChange={(value) => handleSelectChange('tipo', value)}>
-                    <SelectTrigger>
-                        <SelectValue placeholder="Selecciona un tipo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {tiposTropa.map(tipo => (
-                            <SelectItem key={tipo} value={tipo}>{tipo}</SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            </div>
-            
-            <CheckboxList 
-                title="Bonus Ataque"
-                items={allTrainings}
-                selectedItems={bonusAtaque}
-                onSelectionChange={(id, checked) => handleSelectionChange(setBonusAtaque, id, checked)}
-            />
-
-            <CheckboxList 
-                title="Bonus Defensa"
-                items={allTrainings}
-                selectedItems={bonusDefensa}
-                onSelectionChange={(id, checked) => handleSelectionChange(setBonusDefensa, id, checked)}
-            />
-
-            <CheckboxList 
-                title="Requisitos de Tropa"
-                items={allTroops.filter(t => t.id !== troop?.id)}
-                selectedItems={requisitos}
-                onSelectionChange={(id, checked) => handleSelectionChange(setRequisitos, id, checked)}
-            />
-
-             <div className="space-y-4 rounded-md border p-4">
-                <div className="flex justify-between items-center">
-                    <Label>Bonus de Prioridad vs Contrincante</Label>
-                    <Button type="button" size="sm" onClick={handleAddBonus}>Añadir Bonus</Button>
-                </div>
-                 <div className="space-y-2">
-                    {bonusContrincantes.map((bonus, index) => (
-                        <div key={index} className="flex items-center gap-2">
-                            <Select
-                                value={bonus.contrincanteId}
-                                onValueChange={(value) => handleBonusChange(index, 'contrincanteId', value)}
-                            >
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Selecciona tropa..." />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {allTroops.map(t => (
-                                        <SelectItem key={t.id} value={t.id}>{t.nombre}</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                             <Input
-                                type="number"
-                                step="0.1"
-                                placeholder="Factor (ej: 1.5)"
-                                value={bonus.factorPrioridad || ''}
-                                onChange={(e) => handleBonusChange(index, 'factorPrioridad', e.target.value)}
-                                className="w-40"
-                            />
-                            <Button type="button" variant="ghost" size="icon" onClick={() => handleRemoveBonus(index)}>
-                                <Trash2 className="h-4 w-4 text-destructive" />
-                            </Button>
+        <form onSubmit={handleSubmit}>
+            <ScrollArea className="max-h-[70vh] p-1 pr-6">
+                <div className="space-y-4">
+                    <input type="hidden" name="id" value={troop?.id || ''} />
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="idForm">ID (Editable solo al crear)</Label>
+                            <Input id="idForm" name="idForm" value={formData.id} onChange={handleInputChange} required disabled={!!troop} />
                         </div>
-                    ))}
-                 </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="nombre">Nombre</Label>
+                            <Input id="nombre" name="nombre" value={formData.nombre} onChange={handleInputChange} required />
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="descripcion">Descripción</Label>
+                        <Textarea id="descripcion" name="descripcion" value={formData.descripcion} onChange={handleInputChange} />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="urlImagen">URL de Imagen</Label>
+                        <Input id="urlImagen" name="urlImagen" value={formData.urlImagen} onChange={handleInputChange} />
+                    </div>
+                    <div className="grid grid-cols-3 gap-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="costoArmas">Armas</Label>
+                            <Input id="costoArmas" name="costoArmas" type="number" value={formData.costoArmas || ''} onChange={handleInputChange} placeholder="0"/>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="costoMunicion">Munición</Label>
+                            <Input id="costoMunicion" name="costoMunicion" type="number" value={formData.costoMunicion || ''} onChange={handleInputChange} placeholder="0"/>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="costoDolares">Dólares</Label>
+                            <Input id="costoDolares" name="costoDolares" type="number" value={formData.costoDolares || ''} onChange={handleInputChange} placeholder="0"/>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="ataque">Ataque</Label>
+                            <Input id="ataque" name="ataque" type="number" value={formData.ataque || ''} onChange={handleInputChange} placeholder="0"/>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="defensa">Defensa</Label>
+                            <Input id="defensa" name="defensa" type="number" value={formData.defensa || ''} onChange={handleInputChange} placeholder="0"/>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="puntos">Puntos</Label>
+                            <Input id="puntos" name="puntos" type="number" step="0.01" value={formData.puntos || ''} onChange={handleInputChange} placeholder="0"/>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-4 gap-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="capacidad">Capacidad</Label>
+                            <Input id="capacidad" name="capacidad" type="number" value={formData.capacidad || ''} onChange={handleInputChange} placeholder="0"/>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="velocidad">Velocidad</Label>
+                            <Input id="velocidad" name="velocidad" type="number" value={formData.velocidad || ''} onChange={handleInputChange} placeholder="0"/>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="salario">Salario</Label>
+                            <Input id="salario" name="salario" type="number" value={formData.salario || ''} onChange={handleInputChange} placeholder="0"/>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="duracion">Duración (s)</Label>
+                            <Input id="duracion" name="duracion" type="number" value={formData.duracion || ''} onChange={handleInputChange} placeholder="0"/>
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="tipo">Tipo de Tropa</Label>
+                        <Select name="tipo" value={formData.tipo} onValueChange={(value) => handleSelectChange('tipo', value)}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Selecciona un tipo" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {tiposTropa.map(tipo => (
+                                    <SelectItem key={tipo} value={tipo}>{tipo}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    
+                    <CheckboxList 
+                        title="Bonus Ataque"
+                        items={allTrainings}
+                        selectedItems={bonusAtaque}
+                        onSelectionChange={(id, checked) => handleSelectionChange(setBonusAtaque, id, checked)}
+                    />
 
-            </div>
+                    <CheckboxList 
+                        title="Bonus Defensa"
+                        items={allTrainings}
+                        selectedItems={bonusDefensa}
+                        onSelectionChange={(id, checked) => handleSelectionChange(setBonusDefensa, id, checked)}
+                    />
 
-            <div className="flex justify-end gap-2 pt-4">
+                    <CheckboxList 
+                        title="Requisitos de Tropa"
+                        items={allTroops.filter(t => t.id !== troop?.id)}
+                        selectedItems={requisitos}
+                        onSelectionChange={(id, checked) => handleSelectionChange(setRequisitos, id, checked)}
+                    />
+
+                    <div className="space-y-4 rounded-md border p-4">
+                        <div className="flex justify-between items-center">
+                            <Label>Bonus de Prioridad vs Contrincante</Label>
+                            <Button type="button" size="sm" onClick={handleAddBonus}>Añadir Bonus</Button>
+                        </div>
+                        <div className="space-y-2">
+                            {bonusContrincantes.map((bonus, index) => (
+                                <div key={index} className="flex items-center gap-2">
+                                    <Select
+                                        value={bonus.contrincanteId}
+                                        onValueChange={(value) => handleBonusChange(index, 'contrincanteId', value)}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Selecciona tropa..." />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {allTroops.map(t => (
+                                                <SelectItem key={t.id} value={t.id}>{t.nombre}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <Input
+                                        type="number"
+                                        step="0.1"
+                                        placeholder="Factor (ej: 1.5)"
+                                        value={bonus.factorPrioridad || ''}
+                                        onChange={(e) => handleBonusChange(index, 'factorPrioridad', e.target.value)}
+                                        className="w-40"
+                                    />
+                                    <Button type="button" variant="ghost" size="icon" onClick={() => handleRemoveBonus(index)}>
+                                        <Trash2 className="h-4 w-4 text-destructive" />
+                                    </Button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </ScrollArea>
+            <div className="flex justify-end gap-2 pt-4 border-t mt-4">
                 <Button type="button" variant="ghost" onClick={onFinished}>Cancelar</Button>
                 <Button type="submit" disabled={isPending}>
                     {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
