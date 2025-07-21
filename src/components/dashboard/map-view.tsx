@@ -26,7 +26,7 @@ type PropertyWithOwner = Propiedad & { user: PrismaUser | null };
 
 const BuildingGrid = ({ properties, currentUser, currentCiudad, currentBarrio }: { properties: PropertyWithOwner[], currentUser: UserWithProgress, currentCiudad: number, currentBarrio: number }) => {
     const router = useRouter();
-    const buildings = Array.from({ length: 225 }, (_, i) => {
+    const buildings = Array.from({ length: 255 }, (_, i) => {
         const edificio = i + 1;
         const property = properties.find(p => p.edificio === edificio);
         return { edificio, property };
@@ -41,7 +41,7 @@ const BuildingGrid = ({ properties, currentUser, currentCiudad, currentBarrio }:
     }
 
     return (
-        <div className="relative w-full aspect-square rounded-lg border overflow-hidden">
+        <div className="relative w-full aspect-video rounded-lg border overflow-hidden">
              <Image
                 src="/img/map.png"
                 alt="Mapa de la ciudad"
@@ -49,7 +49,7 @@ const BuildingGrid = ({ properties, currentUser, currentCiudad, currentBarrio }:
                 className="object-cover z-0"
                 data-ai-hint="city map background"
             />
-            <div className="absolute inset-0 grid grid-cols-15 gap-0.5 p-1 md:p-2 z-10">
+            <div className="absolute inset-0 grid grid-cols-17 gap-0.5 p-1 md:p-2 z-10">
                 {buildings.map(({ edificio, property }) => {
                     const isOwnedByCurrentUser = property?.userId === currentUser.id;
                     const hasOwner = !!property;

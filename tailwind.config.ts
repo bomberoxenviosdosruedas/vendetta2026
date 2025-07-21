@@ -18,6 +18,7 @@ const config: Config = {
     extend: {
       gridTemplateColumns: {
         '15': 'repeat(15, minmax(0, 1fr))',
+        '17': 'repeat(17, minmax(0, 1fr))',
       },
       fontFamily: {
         sans: ['var(--font-roboto)', 'sans-serif'],
