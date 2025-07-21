@@ -133,11 +133,6 @@ export async function runBattleSimulation(attacker: SimulationInput, defender: S
     const initialAttackerArmy = JSON.parse(JSON.stringify(attackerArmy));
     const initialDefenderArmy = JSON.parse(JSON.stringify(defenderArmy));
 
-    const defenseBonus = defender.defenses.reduce((sum, d) => sum + (d.level * 0.05), 1) * (1 + (defender.buildingsLevel * 0.1));
-    defenderArmy.forEach(unit => {
-        unit.defense = Math.floor(unit.defense * defenseBonus);
-    });
-
     const honorAtacante = attacker.trainings.find(t => t.id === 'honor')?.level || 0;
     const honorDefensor = defender.trainings.find(t => t.id === 'honor')?.level || 0;
     
