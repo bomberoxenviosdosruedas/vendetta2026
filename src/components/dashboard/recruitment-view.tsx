@@ -1,3 +1,4 @@
+
 'use client'
 
 import Image from "next/image"
@@ -6,9 +7,9 @@ import {
   CardContent,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Clock, PlusCircle, Ban, Info } from "lucide-react"
+import { Clock, PlusCircle, Ban, Info, Loader2 } from "lucide-react"
 import { iniciarReclutamiento } from "@/lib/actions/troop.actions"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useTransition } from "react"
 import type { ConfiguracionTropa } from "@prisma/client"
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
 import { Terminal } from "lucide-react"
@@ -103,7 +104,7 @@ function TroopForm({ troopId }: { troopId: string }) {
     const { selectedProperty } = useProperty();
     const [cantidad, setCantidad] = useState(1);
     const [error, setError] = useState('');
-    const [isPending, setIsPending] = useState(false);
+    const [isPending, startTransition] = useTransition();
     
     const colaReclutamientoActiva = !!selectedProperty?.colaReclutamiento;
 
@@ -112,15 +113,12 @@ function TroopForm({ troopId }: { troopId: string }) {
         if (!selectedProperty) return;
 
         setError('');
-        setIsPending(true);
-
-        const result = await iniciarReclutamiento(selectedProperty.id, troopId, cantidad);
-        
-        if (result?.error) {
-            setError(result.error);
-        }
-
-        setIsPending(false);
+        startTransition(async () => {
+            const result = await iniciarReclutamiento(selectedProperty.id, troopId, cantidad);
+            if (result?.error) {
+                setError(result.error);
+            }
+        });
     }
     
     return (
@@ -134,7 +132,7 @@ function TroopForm({ troopId }: { troopId: string }) {
                 disabled={colaReclutamientoActiva || isPending}
             />
             <Button type="submit" variant="outline" size="sm" disabled={colaReclutamientoActiva || isPending}>
-                {colaReclutamientoActiva ? <Ban className="mr-2 h-4 w-4" /> : <PlusCircle className="mr-2 h-4 w-4" />}
+                {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : (colaReclutamientoActiva ? <Ban className="mr-2 h-4 w-4" /> : <PlusCircle className="mr-2 h-4 w-4" />)}
                 {isPending ? 'Enviando...' : (colaReclutamientoActiva ? 'En cola' : 'Reclutar')}
             </Button>
             {error && <p className="text-xs text-destructive">{error}</p>}

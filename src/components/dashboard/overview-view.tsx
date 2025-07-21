@@ -148,7 +148,7 @@ export async function OverviewView() {
                     </div>
                     <Separator orientation="vertical" className="h-8 hidden md:block" />
                     <div className="text-center">
-                        <p className="text-xs text-muted-foreground">Edificios</p>
+                        <p className="text-xs text-muted-foreground">Propiedades</p>
                         <p className="font-bold text-lg">{user.propiedades.length}</p>
                     </div>
                     <Separator orientation="vertical" className="h-8 hidden md:block" />

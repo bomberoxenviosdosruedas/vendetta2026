@@ -8,7 +8,7 @@ import {
   CardContent,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Clock, PlusCircle, Ban, Info, Hourglass } from "lucide-react"
+import { Clock, PlusCircle, Ban, Info, Hourglass, Loader2 } from "lucide-react"
 import { iniciarAmpliacion } from "@/lib/actions/room.actions"
 import { ConstructionQueue } from "./construction-queue"
 import { FullConfiguracionHabitacion, UserWithProgress } from "@/lib/data"
@@ -192,7 +192,7 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
                         {roomsData.map((room) => {
                             const button = (
                                 <Button type="submit" variant="outline" size="sm" disabled={isQueueFull || isSubmitting === room.id || !room.meetsRequirements}>
-                                    {isQueueFull ? <Ban className="mr-2 h-4 w-4" /> : <PlusCircle className="mr-2 h-4 w-4" />}
+                                    {isSubmitting === room.id ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : (isQueueFull ? <Ban className="mr-2 h-4 w-4" /> : <PlusCircle className="mr-2 h-4 w-4" />)}
                                     {isSubmitting === room.id ? 'Enviando...' : (isQueueFull ? 'Cola llena' : 'Ampliar')}
                                 </Button>
                             );

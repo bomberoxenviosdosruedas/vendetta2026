@@ -7,11 +7,11 @@ import {
   CardContent,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Clock, BrainCircuit, Info, Hourglass, Ban } from "lucide-react"
+import { Clock, BrainCircuit, Info, Hourglass, Ban, Loader2 } from "lucide-react"
 import { iniciarEntrenamiento } from "@/lib/actions/training.actions"
 import type { FullConfiguracionEntrenamiento, UserWithProgress } from "@/lib/data"
 import { useProperty } from "@/contexts/property-context"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useTransition } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip"
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
@@ -94,18 +94,18 @@ function TrainingForm({
     isTrainingInQueue: boolean,
     isPropertyBusy: boolean
 }) {
-    const [isPending, setIsPending] = useState(false);
+    const [isPending, startTransition] = useTransition();
     const { toast } = useToast();
 
     const handleAction = async () => {
-        setIsPending(true);
-        const result = await iniciarEntrenamiento(training.id, propertyId);
-        if (result.error) {
-            toast({ variant: 'destructive', title: 'Error', description: result.error });
-        } else if (result.success) {
-            toast({ title: 'Éxito', description: result.success });
-        }
-        setIsPending(false);
+        startTransition(async () => {
+            const result = await iniciarEntrenamiento(training.id, propertyId);
+            if (result.error) {
+                toast({ variant: 'destructive', title: 'Error', description: result.error });
+            } else if (result.success) {
+                toast({ title: 'Éxito', description: result.success });
+            }
+        });
     }
     
     const isDisabled = isPending || !meetsRequirements || isTrainingInQueue || isPropertyBusy;
@@ -117,7 +117,8 @@ function TrainingForm({
             size="sm" 
             disabled={isDisabled}
         >
-            {isTrainingInQueue ? <Hourglass className="mr-2 h-4 w-4 text-amber-500" /> : isPropertyBusy ? <Ban className="mr-2 h-4 w-4"/> : <BrainCircuit className="mr-2 h-4 w-4" />}
+            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
+            {!isPending && (isTrainingInQueue ? <Hourglass className="mr-2 h-4 w-4 text-amber-500" /> : isPropertyBusy ? <Ban className="mr-2 h-4 w-4"/> : <BrainCircuit className="mr-2 h-4 w-4" />)}
             {isPending ? 'Enviando...' : isTrainingInQueue ? 'En cola' : isPropertyBusy ? 'Ocupado' : 'Entrenar'}
         </Button>
     )
