@@ -438,6 +438,9 @@ export const getGlobalStatistics = cache(async () => {
             prisma.habitacionUsuario.findMany(),
             prisma.entrenamientoUsuario.findMany(),
             prisma.tropaUsuario.findMany({
+                where: {
+                    propiedad: { isNot: null }
+                },
                 include: {
                     propiedad: {
                         select: {
@@ -450,9 +453,11 @@ export const getGlobalStatistics = cache(async () => {
 
         const troopStatsMap = new Map<string, number>();
         rawTroopStats.forEach(stat => {
-            const key = `${stat.propiedad.userId}-${stat.configuracionTropaId}`;
-            const currentTotal = troopStatsMap.get(key) || 0;
-            troopStatsMap.set(key, currentTotal + stat.cantidad);
+            if (stat.propiedad) { // Check if propiedad is not null
+                const key = `${stat.propiedad.userId}-${stat.configuracionTropaId}`;
+                const currentTotal = troopStatsMap.get(key) || 0;
+                troopStatsMap.set(key, currentTotal + stat.cantidad);
+            }
         });
         
         const troopStats = Array.from(troopStatsMap.entries()).map(([key, total]) => {
