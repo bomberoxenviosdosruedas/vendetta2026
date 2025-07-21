@@ -4,6 +4,7 @@
 import prisma from "../prisma/prisma";
 import { login } from "../auth";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 
 interface RegisterUserInput {
     username: string;
@@ -90,7 +91,7 @@ export async function registerUser(input: RegisterUserInput) {
             }
         });
 
-        await login(newUser.username);
+        await login(newUser.id, newUser.username);
 
         revalidatePath('/');
         return { success: true, user: newUser };

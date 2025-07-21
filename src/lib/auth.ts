@@ -1,20 +1,35 @@
 'use server';
 
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { getUserWithProgressByUsername } from '@/lib/data';
-
-// This is a simplified session management for demo purposes.
-// In a real application, you should use a robust authentication library like NextAuth.js or Clerk.
+import prisma from './prisma/prisma';
 
 const SESSION_COOKIE_NAME = 'vendetta-session';
 
-export async function login(username: string) {
+export async function login(userId: string, username: string) {
   cookies().set(SESSION_COOKIE_NAME, username, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     maxAge: 60 * 60 * 24 * 7, // One week
     path: '/',
   });
+
+  // Log login history
+  try {
+    const headerList = headers();
+    const ip = headerList.get('x-forwarded-for') ?? 'unknown';
+    const userAgent = headerList.get('user-agent') ?? 'unknown';
+    
+    await prisma.loginHistory.create({
+      data: {
+        userId: userId,
+        ipAddress: ip,
+        userAgent: userAgent,
+      }
+    })
+  } catch (e) {
+    console.error("Failed to log login history:", e);
+  }
 }
 
 export async function logout() {

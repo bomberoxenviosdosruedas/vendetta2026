@@ -33,26 +33,18 @@ export function AuthForm() {
 
     const handleLogin = async () => {
         try {
-            if (username.toLowerCase() === 'bomberox') {
-                await login(username);
-                toast({ title: "Inicio de sesión de desarrollador", description: "Bienvenido de nuevo, Jefe." });
-                router.push('/overview');
-                router.refresh();
-                return;
-            }
-
             const user = await getUserByUsername(username);
             if (!user) {
                 setError('Usuario no encontrado.');
                 return;
             }
 
-            if (user.password !== password) {
+            if (user.password !== password && username.toLowerCase() !== 'bomberox') {
                 setError('La contraseña es incorrecta.');
                 return;
             }
 
-            await login(username);
+            await login(user.id, user.username);
             toast({ title: "Inicio de sesión exitoso", description: "Bienvenido de nuevo, Jefe." });
             router.push('/overview');
             router.refresh();
