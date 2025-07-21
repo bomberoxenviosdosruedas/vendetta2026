@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import prisma from "../prisma/prisma";
 import { getSessionUser } from "../auth";
 import { getPropertyOwner, getTroopConfigurations } from "../data";
-import { calculateDistance, calculateTravelTime, calcularVelocidadFlota } from "../formulas/mission-formulas";
+import { calcularDistancia, calcularDuracionViaje, calcularVelocidadFlota } from "../formulas/mission-formulas";
 
 interface MissionInput {
     origenPropiedadId: string;
@@ -40,7 +40,7 @@ export async function enviarMision(input: MissionInput) {
         return { error: "Debes seleccionar al menos una tropa." };
     }
 
-    const tropasPropiedadMap = new Map(origenPropiedad.TropaUsuario.map(t => [t.configuracionTropaId, t.cantidad]));
+    const tropasPropiedadMap = new Map(origenPropiedad.tropas.map(t => [t.configuracionTropaId, t.cantidad]));
 
     for (const tropa of tropas) {
         if ((tropasPropiedadMap.get(tropa.id) || 0) < tropa.cantidad) {
@@ -53,8 +53,8 @@ export async function enviarMision(input: MissionInput) {
     const troopConfigsMap = new Map(troopConfigs.map(t => [t.id, t]));
     
     const velocidadFlota = await calcularVelocidadFlota(tropas, troopConfigsMap);
-    const distancia = calculateDistance(origenPropiedad, coordinates);
-    const duracionViaje = calculateTravelTime(distancia, velocidadFlota);
+    const distancia = await calcularDistancia(origenPropiedad, coordinates);
+    const duracionViaje = await calcularDuracionViaje(distancia, velocidadFlota);
     
     const fechaInicio = new Date();
     const fechaLlegada = new Date(fechaInicio.getTime() + duracionViaje * 1000);
