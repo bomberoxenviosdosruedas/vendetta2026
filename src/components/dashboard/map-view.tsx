@@ -4,7 +4,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { getPropertiesByLocation, UserWithProgress } from '@/lib/data';
 import type { Propiedad, User as PrismaUser } from '@prisma/client';
@@ -21,6 +20,7 @@ import {
     DialogClose,
 } from "@/components/ui/dialog"
 import Image from 'next/image';
+import { Card } from '../ui/card';
 
 type PropertyWithOwner = Propiedad & { user: PrismaUser | null };
 
@@ -169,7 +169,7 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
 
     return (
         <Card>
-            <CardContent className="p-4 space-y-4">
+            <div className="space-y-4 p-4">
                 <div className="flex flex-row flex-wrap justify-center items-end gap-2 p-2 rounded-lg bg-muted border">
                     <CoordinateInput label="Ciudad" value={ciudad} onChange={setCiudad} />
                     <CoordinateInput label="Barrio" value={barrio} onChange={setBarrio} />
@@ -187,7 +187,7 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
                     )}
                     <BuildingGrid properties={properties} currentUser={currentUser} currentCiudad={ciudad} currentBarrio={barrio} />
                 </div>
-            </CardContent>
+            </div>
         </Card>
     )
 }
