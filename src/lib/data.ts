@@ -67,6 +67,17 @@ export type UserWithProgress = User & {
     }
 };
 
+export type UserProfileData = User & {
+    puntuacion: PuntuacionUsuario | null;
+    propiedades: {
+        id: string;
+        nombre: string;
+        ciudad: number;
+        barrio: number;
+        edificio: number;
+    }[];
+}
+
 export type UserForRanking = User & {
     puntuacion: PuntuacionUsuario | null;
     _count: {
@@ -371,6 +382,33 @@ const userInclude = {
         }
     }
 };
+
+export const getUserProfileById = cache(async (userId: string): Promise<UserProfileData | null> => {
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            include: {
+                puntuacion: true,
+                propiedades: {
+                    select: {
+                        id: true,
+                        nombre: true,
+                        ciudad: true,
+                        barrio: true,
+                        edificio: true,
+                    },
+                    orderBy: {
+                        nombre: 'asc'
+                    }
+                }
+            }
+        });
+        return user as UserProfileData | null;
+    } catch(e) {
+        console.error(`Error fetching profile for user ${userId}`, e);
+        return null;
+    }
+})
 
 export const getMaximumResourceCapacity = cache(async () => {
     const properties = await prisma.propiedad.findMany({

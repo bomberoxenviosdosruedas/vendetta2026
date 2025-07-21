@@ -10,6 +10,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card"
 import type { UserForRanking } from "@/lib/data";
 import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 
 interface PlayerRankingsViewProps {
     users: UserForRanking[];
@@ -41,7 +42,11 @@ export function PlayerRankingsView({ users }: PlayerRankingsViewProps) {
                         {users.map((user, index) => (
                             <TableRow key={user.id}>
                                 <TableCell className="font-medium">{index + 1}</TableCell>
-                                <TableCell className="font-bold">{user.name}</TableCell>
+                                <TableCell className="font-bold">
+                                    <Link href={`/profile/${user.id}`} className="hover:underline">
+                                        {user.name}
+                                    </Link>
+                                </TableCell>
                                 <TableCell className="text-right">{formatPoints(user.puntuacion?.puntosEntrenamientos)}</TableCell>
                                 <TableCell className="text-right">{formatPoints(user.puntuacion?.puntosHabitaciones)}</TableCell>
                                 <TableCell className="text-right">{formatPoints(user.puntuacion?.puntosTropas)}</TableCell>
@@ -61,7 +66,9 @@ export function PlayerRankingsView({ users }: PlayerRankingsViewProps) {
                                 <div className="flex justify-between items-center">
                                     <div className="flex items-center gap-4">
                                         <span className="text-lg font-bold text-muted-foreground w-6">#{index + 1}</span>
-                                        <span className="font-bold text-lg">{user.name}</span>
+                                        <Link href={`/profile/${user.id}`} className="hover:underline">
+                                            <span className="font-bold text-lg">{user.name}</span>
+                                        </Link>
                                     </div>
                                     <div className="text-right">
                                         <div className="font-bold text-primary text-lg">{formatPoints(user.puntuacion?.puntosTotales)}</div>

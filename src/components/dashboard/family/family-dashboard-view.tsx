@@ -24,6 +24,7 @@ import { useTransition } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { leaveFamily } from "@/lib/actions/family.actions";
 import Image from "next/image";
+import Link from "next/link";
 
 
 interface FamilyDashboardViewProps {
@@ -92,7 +93,9 @@ export function FamilyDashboardView({ family, currentUser }: FamilyDashboardView
                                             <AvatarFallback>{member.user.name.charAt(0)}</AvatarFallback>
                                         </Avatar>
                                         <div className="flex-grow">
-                                            <p className="font-semibold">{member.user.name}</p>
+                                            <Link href={`/profile/${member.userId}`} className="hover:underline">
+                                                <p className="font-semibold">{member.user.name}</p>
+                                            </Link>
                                             <p className="text-xs text-muted-foreground">{member.user.title}</p>
                                         </div>
                                         <Badge variant="outline" className="flex items-center gap-2">
