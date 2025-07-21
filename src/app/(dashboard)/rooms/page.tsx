@@ -11,7 +11,7 @@ function RoomsLoading() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <Skeleton className="h-8 w-64 mb-2 shimmer" />
+            <h2 className="text-3xl font-bold tracking-tight font-heading"><Skeleton className="h-8 w-64 mb-2 shimmer" /></h2>
             <Skeleton className="h-4 w-80 shimmer" />
           </div>
         </div>

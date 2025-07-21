@@ -76,7 +76,7 @@ export async function OverviewView() {
                         </Avatar>
                         <div>
                             <p className="text-sm text-muted-foreground">Jugador</p>
-                            <p className="text-xl font-bold">{user.name}</p>
+                            <p className="text-xl font-bold font-heading tracking-wider">{user.name}</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -84,7 +84,7 @@ export async function OverviewView() {
                 {/* Main Property Card */}
                 <Card className="md:col-span-1 md:row-span-2 relative overflow-hidden min-h-[250px]">
                     <Image 
-                        src="/nuevas/edificionuevo.jpg"
+                        src="/img/general/propiedad_principal_overview.jpg"
                         alt="Vista de la propiedad principal"
                         fill
                         className="object-cover"
@@ -92,7 +92,7 @@ export async function OverviewView() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                     <CardContent className="absolute bottom-0 left-0 p-4 text-white">
-                        <p className="font-bold text-lg">Visión General - Propiedad Principal</p>
+                        <p className="font-bold text-lg font-heading tracking-wide">Visión General - Propiedad Principal</p>
                         <p className="text-muted-foreground text-white/80">[{user.propiedades[0]?.ciudad}:{user.propiedades[0]?.barrio}:{user.propiedades[0]?.edificio}]</p>
                     </CardContent>
                 </Card>
@@ -107,7 +107,7 @@ export async function OverviewView() {
                                     <AvatarFallback>{familyMember.family.tag}</AvatarFallback>
                                 </Avatar>
                                 <p className="text-sm text-muted-foreground">Familia</p>
-                                <p className="text-xl font-bold tracking-widest">{familyMember.family.name}</p>
+                                <p className="text-xl font-bold font-heading tracking-widest">{familyMember.family.name}</p>
                                 <Badge variant="secondary">[{familyMember.family.tag}]</Badge>
                             </>
                         ) : (

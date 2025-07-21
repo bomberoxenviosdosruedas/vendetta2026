@@ -211,7 +211,7 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
                                                 />
                                             </div>
                                             <div>
-                                                <div className="font-bold">{room.nombre}</div>
+                                                <div className="font-bold font-heading tracking-wide">{room.nombre}</div>
                                                 <div className="text-sm text-primary">
                                                     Nivel {room.nivelProyectado}
                                                 </div>
@@ -234,7 +234,7 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
                                             <p className="text-sm text-muted-foreground">{room.descripcion}</p>
                                         </div>
                                         <div className="md:col-span-5">
-                                            <div className="font-semibold text-sm mb-2">Ampliación a Nivel: {room.nivelSiguiente}</div>
+                                            <div className="font-semibold text-sm mb-2 font-heading">Ampliación a Nivel: {room.nivelSiguiente}</div>
                                             <div className="flex flex-wrap gap-x-4 gap-y-2 items-center">
                                                 <div className="flex flex-col gap-1 text-sm flex-grow">
                                                     <div className="grid grid-cols-3 gap-x-3">
