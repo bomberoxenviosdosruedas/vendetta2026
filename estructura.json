@@ -35,11 +35,31 @@
               ]
             },
             {
+              "name": "family",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "page.tsx",
+                  "type": "file"
+                }
+              ]
+            },
+            {
               "name": "layout.tsx",
               "type": "file"
             },
             {
               "name": "map",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "page.tsx",
+                  "type": "file"
+                }
+              ]
+            },
+            {
+              "name": "messages",
               "type": "directory",
               "children": [
                 {
@@ -65,6 +85,22 @@
                 {
                   "name": "page.tsx",
                   "type": "file"
+                }
+              ]
+            },
+            {
+              "name": "profile",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "[userId]",
+                  "type": "directory",
+                  "children": [
+                    {
+                      "name": "page.tsx",
+                      "type": "file"
+                    }
+                  ]
                 }
               ]
             },
@@ -102,6 +138,16 @@
               "name": "rooms",
               "type": "directory",
               "children": [
+                {
+                  "name": "[propertyCoords]",
+                  "type": "directory",
+                  "children": [
+                    {
+                      "name": "page.tsx",
+                      "type": "file"
+                    }
+                  ]
+                },
                 {
                   "name": "page.tsx",
                   "type": "file"
@@ -149,9 +195,63 @@
               ]
             },
             {
+              "name": "statistics",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "page.tsx",
+                  "type": "file"
+                }
+              ]
+            },
+            {
+              "name": "technologies",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "page.tsx",
+                  "type": "file"
+                }
+              ]
+            },
+            {
               "name": "training",
               "type": "directory",
               "children": [
+                {
+                  "name": "page.tsx",
+                  "type": "file"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "admin",
+          "type": "directory",
+          "children": [
+            {
+              "name": "layout.tsx",
+              "type": "file"
+            },
+            {
+              "name": "page.tsx",
+              "type": "file"
+            },
+            {
+              "name": "panel",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "bonus",
+                  "type": "directory",
+                  "children": [
+                    {
+                      "name": "page.tsx",
+                      "type": "file"
+                    }
+                  ]
+                },
                 {
                   "name": "page.tsx",
                   "type": "file"
@@ -173,7 +273,21 @@
           "type": "file"
         },
         {
+          "name": "login",
+          "type": "directory",
+          "children": [
+            {
+              "name": "page.tsx",
+              "type": "file"
+            }
+          ]
+        },
+        {
           "name": "page.tsx",
+          "type": "file"
+        },
+        {
+          "name": "sitemap.ts",
           "type": "file"
         }
       ]
@@ -182,6 +296,54 @@
       "name": "components",
       "type": "directory",
       "children": [
+        {
+          "name": "admin",
+          "type": "directory",
+          "children": [
+            {
+              "name": "admin-login-form.tsx",
+              "type": "file"
+            },
+            {
+              "name": "bonus-config-matrix.tsx",
+              "type": "file"
+            },
+            {
+              "name": "delete-config-button.tsx",
+              "type": "file"
+            },
+            {
+              "name": "forms",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "room-config-form.tsx",
+                  "type": "file"
+                },
+                {
+                  "name": "training-config-form.tsx",
+                  "type": "file"
+                },
+                {
+                  "name": "troop-config-form.tsx",
+                  "type": "file"
+                }
+              ]
+            },
+            {
+              "name": "room-config-table.tsx",
+              "type": "file"
+            },
+            {
+              "name": "training-config-table.tsx",
+              "type": "file"
+            },
+            {
+              "name": "troop-config-table.tsx",
+              "type": "file"
+            }
+          ]
+        },
         {
           "name": "auth-form.tsx",
           "type": "file"
@@ -203,12 +365,52 @@
               "type": "file"
             },
             {
+              "name": "family",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "create-or-join-family-view.tsx",
+                  "type": "file"
+                },
+                {
+                  "name": "family-dashboard-view.tsx",
+                  "type": "file"
+                }
+              ]
+            },
+            {
               "name": "live-clock.tsx",
               "type": "file"
             },
             {
               "name": "map-view.tsx",
               "type": "file"
+            },
+            {
+              "name": "messages",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "compose-message.tsx",
+                  "type": "file"
+                },
+                {
+                  "name": "message-detail.tsx",
+                  "type": "file"
+                },
+                {
+                  "name": "message-folder-list.tsx",
+                  "type": "file"
+                },
+                {
+                  "name": "message-list.tsx",
+                  "type": "file"
+                },
+                {
+                  "name": "messages-view.tsx",
+                  "type": "file"
+                }
+              ]
             },
             {
               "name": "mission-status.tsx",
@@ -227,6 +429,16 @@
               "type": "file"
             },
             {
+              "name": "profile",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "profile-view.tsx",
+                  "type": "file"
+                }
+              ]
+            },
+            {
               "name": "property-selector.tsx",
               "type": "file"
             },
@@ -235,8 +447,22 @@
               "type": "file"
             },
             {
-              "name": "rankings-view.tsx",
-              "type": "file"
+              "name": "rankings",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "family-rankings-view.tsx",
+                  "type": "file"
+                },
+                {
+                  "name": "player-rankings-view.tsx",
+                  "type": "file"
+                },
+                {
+                  "name": "ranking-type-selector.tsx",
+                  "type": "file"
+                }
+              ]
             },
             {
               "name": "recruitment-status.tsx",
@@ -263,6 +489,10 @@
               "type": "file"
             },
             {
+              "name": "security-view.tsx",
+              "type": "file"
+            },
+            {
               "name": "settings-view.tsx",
               "type": "file"
             },
@@ -272,6 +502,42 @@
             },
             {
               "name": "simulator-view.tsx",
+              "type": "file"
+            },
+            {
+              "name": "statistics",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "stat-category-card.tsx",
+                  "type": "file"
+                },
+                {
+                  "name": "stat-table-card.tsx",
+                  "type": "file"
+                },
+                {
+                  "name": "statistics-view.tsx",
+                  "type": "file"
+                }
+              ]
+            },
+            {
+              "name": "technologies",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "tech-item-card.tsx",
+                  "type": "file"
+                },
+                {
+                  "name": "technology-tree-view.tsx",
+                  "type": "file"
+                }
+              ]
+            },
+            {
+              "name": "training-status.tsx",
               "type": "file"
             },
             {
@@ -290,6 +556,10 @@
         },
         {
           "name": "register-form.tsx",
+          "type": "file"
+        },
+        {
+          "name": "super-auth-form.tsx",
           "type": "file"
         },
         {
@@ -491,7 +761,19 @@
           "type": "directory",
           "children": [
             {
+              "name": "admin.actions.ts",
+              "type": "file"
+            },
+            {
               "name": "auth.actions.ts",
+              "type": "file"
+            },
+            {
+              "name": "family.actions.ts",
+              "type": "file"
+            },
+            {
+              "name": "message.actions.ts",
               "type": "file"
             },
             {
@@ -503,7 +785,15 @@
               "type": "file"
             },
             {
+              "name": "score-formulas.ts",
+              "type": "file"
+            },
+            {
               "name": "simulation.actions.ts",
+              "type": "file"
+            },
+            {
+              "name": "super-auth.actions.ts",
               "type": "file"
             },
             {
@@ -519,6 +809,14 @@
               "type": "file"
             }
           ]
+        },
+        {
+          "name": "auth-admin.ts",
+          "type": "file"
+        },
+        {
+          "name": "auth-super.ts",
+          "type": "file"
         },
         {
           "name": "auth.ts",
@@ -566,6 +864,16 @@
         },
         {
           "name": "utils.ts",
+          "type": "file"
+        }
+      ]
+    },
+    {
+      "name": "prisma",
+      "type": "directory",
+      "children": [
+        {
+          "name": "schema.prisma",
           "type": "file"
         }
       ]

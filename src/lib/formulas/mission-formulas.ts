@@ -1,6 +1,4 @@
 
-'use server'
-
 import type { ConfiguracionTropa } from "@prisma/client";
 
 interface Coordenadas {
@@ -22,7 +20,7 @@ const ANCHO_BARRIO = 17;
  * @param coords - Las coordenadas de origen.
  * @returns Las coordenadas virtuales {h, w}.
  */
-function getVirtualCoordinates(coords: Coordenadas): VirtualCoordinates {
+export function getVirtualCoordinates(coords: Coordenadas): VirtualCoordinates {
     const { ciudad, barrio, edificio } = coords;
 
     const altura = (barrio - 1) * LARGO_BARRIO + Math.ceil(edificio / ANCHO_BARRIO);
@@ -37,7 +35,7 @@ function getVirtualCoordinates(coords: Coordenadas): VirtualCoordinates {
  * @param destino Las coordenadas de destino.
  * @returns La distancia calculada como un valor numérico flotante.
  */
-export async function calcularDistancia(origen: Coordenadas, destino: Coordenadas): Promise<number> {
+export function calculateDistance(origen: Coordenadas, destino: Coordenadas): number {
     const vOrigen = getVirtualCoordinates(origen);
     const vDestino = getVirtualCoordinates(destino);
 
@@ -48,6 +46,28 @@ export async function calcularDistancia(origen: Coordenadas, destino: Coordenada
 
     return distancia;
 }
+
+
+/**
+ * Calcula la duración del viaje en segundos.
+ * Formula: (0.21989 * velocidad^-0.2) * distancia^0.2
+ * @param distancia La distancia calculada (valor no redondeado).
+ * @param slowestSpeed La velocidad de la tropa más lenta en la misión.
+ * @returns La duración del viaje en segundos.
+ */
+export function calculateTravelTime(distancia: number, slowestSpeed: number): number {
+    if (slowestSpeed <= 0) {
+        return 86400 * 30; // 30 días como fallback para evitar división por cero.
+    }
+    
+    const factorBase = 0.21989;
+    const duracionEnHoras = factorBase * Math.pow(slowestSpeed, -0.2) * Math.pow(distancia, 0.2);
+    
+    const duracionEnSegundos = duracionEnHoras * 3600;
+
+    return Math.max(10, Math.floor(duracionEnSegundos)); // Mínimo de 10 segundos.
+}
+
 
 /**
  * Determina la velocidad de la flota encontrando la velocidad de la tropa más lenta.
@@ -80,16 +100,5 @@ export async function calcularVelocidadFlota(
  * @returns La duración del viaje en segundos.
  */
 export async function calcularDuracionViaje(distancia: number, velocidadFlota: number): Promise<number> {
-    if (velocidadFlota <= 0) {
-        return 86400 * 30; // 30 días como fallback
-    }
-    
-    // Formula: (0.21989 * velocidad^-0.2) * distancia^0.2
-    // Esto es equivalente a (0.21989 * (distancia / velocidad)^0.2)
-    const factorBase = 0.21989;
-    const duracionEnHoras = factorBase * Math.pow(velocidadFlota, -0.2) * Math.pow(distancia, 0.2);
-
-    const duracionEnSegundos = duracionEnHoras * 3600;
-
-    return Math.max(10, Math.floor(duracionEnSegundos)); // Mínimo 10 segundos
+   return calculateTravelTime(distancia, velocidadFlota);
 }
