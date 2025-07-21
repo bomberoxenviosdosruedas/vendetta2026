@@ -35,7 +35,7 @@ export function PlayerRankingsView({ users }: PlayerRankingsViewProps) {
                             <TableHead className="text-right text-primary-foreground font-bold">PUNTOS (EDIFICIOS)</TableHead>
                             <TableHead className="text-right text-primary-foreground font-bold">PUNTOS (TROPAS)</TableHead>
                             <TableHead className="text-right text-primary-foreground font-bold">SUMA</TableHead>
-                            <TableHead className="text-right text-primary-foreground font-bold">EDIFICIOS</TableHead>
+                            <TableHead className="text-right text-primary-foreground font-bold">PROPIEDADES</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
