@@ -1,13 +1,13 @@
 
 'use client'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { FullFamily, FullFamilyInvitation } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { applyToFamily, cancelInvitation, rejectInvitation } from "@/lib/actions/family.actions";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useTransition } from "react";
-import { Check, Hourglass, Loader2, Send, X } from "lucide-react";
+import { Check, Hourglass, Loader2, Send, X, ArrowLeft } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -15,7 +15,7 @@ import { InvitationStatus, InvitationType } from "@prisma/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { acceptFamilyInvitation } from "@/lib/actions/family.actions";
 
 interface FindFamilyViewProps {
     families: FullFamily[];
@@ -75,7 +75,7 @@ export function FindFamilyView({ families, userInvitations, currentUserId }: Fin
     const handleInvitationAction = (action: 'accept' | 'reject', invitationId: string) => {
         startTransition(async () => {
             const result = action === 'accept'
-                ? await acceptRequest(invitationId) // Placeholder, needs to be created
+                ? await acceptFamilyInvitation(invitationId)
                 : await rejectInvitation(invitationId);
             
             if (result.error) {

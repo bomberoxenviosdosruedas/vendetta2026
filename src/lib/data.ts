@@ -1,9 +1,9 @@
 
 
+
 "use server"
 
-import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember, TrainingRequirement, RoomRequirement, TropaBonusContrincante, Message, MessageCategory, ColaEntrenamiento, FamilyInvitation } from '@prisma/client/edge'
-import { InvitationStatus, InvitationType } from '@prisma/client';
+import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember, TrainingRequirement, RoomRequirement, TropaBonusContrincante, Message, MessageCategory, ColaEntrenamiento, FamilyInvitation, InvitationStatus, InvitationType } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 import { cache } from 'react';
 import { calculateStorageCapacity } from './formulas/room-formulas';
