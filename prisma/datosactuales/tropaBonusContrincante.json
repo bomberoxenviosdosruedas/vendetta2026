@@ -1,15 +1,5 @@
 [
   {
-    "tropaAtacanteId": "policia",
-    "tropaDefensoraId": "porteador",
-    "factorPrioridad": 1.9
-  },
-  {
-    "tropaAtacanteId": "policia",
-    "tropaDefensoraId": "cia",
-    "factorPrioridad": 2
-  },
-  {
     "tropaAtacanteId": "guardia_de_honor",
     "tropaDefensoraId": "asesino",
     "factorPrioridad": 2.1
@@ -93,5 +83,15 @@
     "tropaAtacanteId": "maton",
     "tropaDefensoraId": "trabajador_ilegal",
     "factorPrioridad": 3
+  },
+  {
+    "tropaAtacanteId": "policia",
+    "tropaDefensoraId": "maton",
+    "factorPrioridad": 1.9
+  },
+  {
+    "tropaAtacanteId": "policia",
+    "tropaDefensoraId": "espia",
+    "factorPrioridad": 2
   }
 ]

@@ -42,12 +42,6 @@
     "nivel": 1
   },
   {
-    "id": "cmd6re0ag000vzi0wg7c59lm6",
-    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
-    "configuracionHabitacionId": "campo_de_entrenamiento",
-    "nivel": 2
-  },
-  {
     "id": "cmd6s83yl0042zi0wa4h5fg68",
     "propiedadId": "cmd6s83yl003nzi0wqwz31ijx",
     "configuracionHabitacionId": "torreta_de_fuego_automatico",
@@ -178,5 +172,11 @@
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionHabitacionId": "almacen_de_municion",
     "nivel": 107
+  },
+  {
+    "id": "cmd6re0ag000vzi0wg7c59lm6",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionHabitacionId": "campo_de_entrenamiento",
+    "nivel": 211
   }
 ]

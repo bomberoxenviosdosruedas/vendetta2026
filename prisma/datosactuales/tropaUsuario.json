@@ -18,12 +18,6 @@
     "cantidad": 0
   },
   {
-    "id": "cmd6re5e30025zi0wpkakwer4",
-    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
-    "configuracionTropaId": "espia",
-    "cantidad": 0
-  },
-  {
     "id": "cmd6re614002bzi0w4o0j4qbm",
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionTropaId": "maton",
@@ -82,5 +76,23 @@
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionTropaId": "mercenario",
     "cantidad": 56701
+  },
+  {
+    "id": "cmd6re4qh001zzi0wil07h222",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "demoliciones",
+    "cantidad": 0
+  },
+  {
+    "id": "cmd6re4qh001zzi0wil07222",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "tactico",
+    "cantidad": 0
+  },
+  {
+    "id": "cmd6re5e30025zi0wpkakwer4",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "espia",
+    "cantidad": 1
   }
 ]
