@@ -51,9 +51,7 @@ export default async function RecruitmentPage() {
   })
   
   const desiredOrder = [
-    "maton", "portero", "acuchillador", "pistolero", "ocupacion",
-    "espia", "porteador", "cia", "fbi", "transportista",
-    "tactico", "francotirador", "asesino", "ninja", "demoliciones", "mercenario"
+    "maton", "portero", "acuchillador", "pistolero", "ocupacion", "espia", "porteador", "cia", "fbi", "transportista", "tactico", "francotirador", "asesino", "ninja", "demoliciones", "mercenario"
   ];
 
   const sortedTroops = [...troopsWithStats]
