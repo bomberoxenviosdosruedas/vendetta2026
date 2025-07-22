@@ -39,6 +39,12 @@ async function main() {
     const colasMisiones = (datosColaMisiones as any).default || datosColaMisiones;
     const colasEntrenamiento = (datosColaEntrenamiento as any).default || datosColaEntrenamiento;
 
+    // Limpiar relaciones antes de importar
+    await prisma.roomRequirement.deleteMany({});
+    await prisma.trainingRequirement.deleteMany({});
+    await prisma.tropaBonusContrincante.deleteMany({});
+
+
     for (const habData of habitaciones) {
         try {
             await prisma.habitacionUsuario.upsert({
@@ -164,47 +170,23 @@ async function main() {
   
     for (const req of roomRequirements) {
       try {
-          await prisma.roomRequirement.upsert({
-              where: { roomId_requiredRoomId: { roomId: req.roomId, requiredRoomId: req.requiredRoomId } },
-              update: req,
-              create: req,
-          });
+          await prisma.roomRequirement.create({ data: req });
       } catch(e) {
           console.error(`Error con requisito de habitacion ${req.roomId}`, e);
       }
     }
     
-    // Group requirements by trainingId
-    const trainingRequirementsByTrainingId: Record<string, typeof trainingRequirements> = {};
     for (const req of trainingRequirements) {
-      if (!trainingRequirementsByTrainingId[req.trainingId]) {
-        trainingRequirementsByTrainingId[req.trainingId] = [];
+      try {
+        await prisma.trainingRequirement.create({ data: req });
+      } catch (e) {
+        console.error(`Error con requisito de entrenamiento ${req.trainingId}`, e);
       }
-      trainingRequirementsByTrainingId[req.trainingId].push(req);
-    }
-
-    for (const trainingId in trainingRequirementsByTrainingId) {
-        try {
-            // Delete old requirements for this training
-            await prisma.trainingRequirement.deleteMany({
-                where: { trainingId: trainingId }
-            });
-            // Create new ones
-            await prisma.trainingRequirement.createMany({
-                data: trainingRequirementsByTrainingId[trainingId]
-            });
-        } catch(e) {
-            console.error(`Error con requisito de entrenamiento ${trainingId}`, e);
-        }
     }
 
     for (const bonus of tropaBonus) {
         try {
-            await prisma.tropaBonusContrincante.upsert({
-                where: { tropaAtacanteId_tropaDefensoraId: { tropaAtacanteId: bonus.tropaAtacanteId, tropaDefensoraId: bonus.tropaDefensoraId } },
-                update: bonus,
-                create: bonus,
-            });
+            await prisma.tropaBonusContrincante.create({ data: bonus });
         } catch (e) {
             console.error(`Error con bonus de tropa ${bonus.tropaAtacanteId}`, e);
         }

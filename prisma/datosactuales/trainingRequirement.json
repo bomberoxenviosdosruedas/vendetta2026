@@ -1,75 +1,90 @@
 [
   {
+    "id": "cmde6m7ot002s130v6ohfrz6t",
     "trainingId": "administracion",
     "requiredTrainingId": "seguridad",
     "requiredLevel": 5
   },
   {
+    "id": "cmde6m85u002t130vgy9cgo90",
     "trainingId": "encargos",
     "requiredTrainingId": "rutas",
     "requiredLevel": 4
   },
   {
+    "id": "cmde6m8ky002u130vivmix08d",
     "trainingId": "armas",
     "requiredTrainingId": "extorsion",
     "requiredLevel": 5
   },
   {
+    "id": "cmde6m90g002v130vbw0r13yx",
     "trainingId": "combate",
     "requiredTrainingId": "extorsion",
     "requiredLevel": 3
   },
   {
+    "id": "cmde6m9fx002w130vmq42yczp",
     "trainingId": "contrabando",
     "requiredTrainingId": "encargos",
     "requiredLevel": 1
   },
   {
+    "id": "cmde6m9vm002x130vjcio5hyj",
     "trainingId": "explosivos",
     "requiredTrainingId": "combate",
     "requiredLevel": 4
   },
   {
+    "id": "cmde6m9vm002y130vvenvjiem",
     "trainingId": "explosivos",
     "requiredTrainingId": "encargos",
     "requiredLevel": 4
   },
   {
+    "id": "cmde6maao002z130vo579e3rw",
     "trainingId": "honor",
     "requiredTrainingId": "espionaje",
     "requiredLevel": 9
   },
   {
-    "trainingId": "proteccion",
-    "requiredTrainingId": "seguridad",
-    "requiredLevel": 4
-  },
-  {
-    "trainingId": "psicologico",
-    "requiredTrainingId": "guerrilla",
-    "requiredLevel": 4
-  },
-  {
-    "trainingId": "quimico",
-    "requiredTrainingId": "psicologico",
-    "requiredLevel": 4
-  },
-  {
-    "trainingId": "quimico",
-    "requiredTrainingId": "explosivos",
-    "requiredLevel": 4
-  },
-  {
+    "id": "cmde6maao0030130vaabnbiyq",
     "trainingId": "honor",
     "requiredTrainingId": "tiro",
     "requiredLevel": 11
   },
   {
+    "id": "cmde6maq80031130v53et10v4",
+    "trainingId": "proteccion",
+    "requiredTrainingId": "seguridad",
+    "requiredLevel": 4
+  },
+  {
+    "id": "cmde6mb5j0032130v63wg8map",
+    "trainingId": "psicologico",
+    "requiredTrainingId": "guerrilla",
+    "requiredLevel": 4
+  },
+  {
+    "id": "cmde6mbkh0033130vzq2bskua",
+    "trainingId": "quimico",
+    "requiredTrainingId": "psicologico",
+    "requiredLevel": 4
+  },
+  {
+    "id": "cmde6mbkh0034130vby7wcjwl",
+    "trainingId": "quimico",
+    "requiredTrainingId": "explosivos",
+    "requiredLevel": 4
+  },
+  {
+    "id": "cmde6mbz80035130vzvn6d0b1",
     "trainingId": "guerrilla",
     "requiredTrainingId": "seguridad",
     "requiredLevel": 9
   },
   {
+    "id": "cmde6mbz80036130vjxob2cdm",
     "trainingId": "guerrilla",
     "requiredTrainingId": "tiro",
     "requiredLevel": 9
