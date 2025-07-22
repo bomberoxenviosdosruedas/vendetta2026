@@ -2,7 +2,6 @@
 'use client'
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,7 +11,6 @@ import { useToast } from "@/hooks/use-toast";
 import { useTransition } from "react";
 import { Loader2, Search, Users } from "lucide-react";
 import Link from "next/link";
-import { Separator } from "@/components/ui/separator";
 
 export function CreateOrJoinFamilyView() {
     const { toast } = useToast();

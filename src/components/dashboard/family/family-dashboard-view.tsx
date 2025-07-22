@@ -64,22 +64,22 @@ export function FamilyDashboardView({ family, currentUser, allUsers, pendingRequ
     return (
         <div className="main-view space-y-6">
             <Card className="overflow-hidden">
-                <div className="relative h-32 bg-muted">
+                <div className="relative h-40 bg-muted">
                     <Image src="/img/login_bg.jpg" alt="Family Banner" fill className="object-cover" data-ai-hint="mafia pattern" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                     <div className="absolute bottom-4 left-4 flex items-end gap-4">
-                         <Avatar className="h-24 w-24 border-4 border-background">
+                         <Avatar className="h-20 w-20 sm:h-24 sm:w-24 border-4 border-background">
                             <AvatarImage src={family.avatarUrl || ''} alt={family.name} data-ai-hint="family crest" />
                             <AvatarFallback>{family.tag}</AvatarFallback>
                         </Avatar>
                         <div>
-                            <h2 className="text-3xl font-bold tracking-tight text-white shadow-lg">[{family.tag}] {family.name}</h2>
-                             <p className="text-muted-foreground text-white/80 max-w-2xl truncate">{family.description}</p>
+                            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white shadow-lg">[{family.tag}] {family.name}</h2>
+                             <p className="text-muted-foreground text-white/80 max-w-2xl truncate text-sm sm:text-base">{family.description}</p>
                         </div>
                     </div>
                 </div>
                  <div className="p-4 border-t bg-muted/30 flex flex-wrap items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                         {canManage && <InviteMemberDialog familyId={family.id} allUsers={usersNotInFamily} />}
                         {canManage && (
                              <Button asChild size="sm" variant="outline">
