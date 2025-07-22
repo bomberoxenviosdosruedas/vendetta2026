@@ -169,7 +169,7 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
 
     const setAllMaxTroops = () => {
         const newTroopInputs = selectedProperty?.TropaUsuario
-            .filter(tropa => tropa.configuracion.tipo === 'ATAQUE')
+            .filter(tropa => tropa.configuracion.tipo !== 'DEFENSA')
             .map(tropa => ({
                 id: tropa.configuracionTropaId,
                 cantidad: tropa.cantidad,
@@ -213,8 +213,8 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
         "transportista", "tactico", "francotirador", "asesino", "ninja", "demoliciones", "mercenario"
     ];
 
-    const availableAttackTroops = selectedProperty.TropaUsuario
-        .filter(t => t.cantidad > 0 && t.configuracion.tipo === 'ATAQUE')
+    const availableTroops = selectedProperty.TropaUsuario
+        .filter(t => t.cantidad > 0 && t.configuracion.tipo !== 'DEFENSA')
         .sort((a,b) => {
             const indexA = desiredOrder.indexOf(a.configuracionTropaId);
             const indexB = desiredOrder.indexOf(b.configuracionTropaId);
@@ -289,7 +289,7 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
                 </CardHeader>
                 <CardContent>
                     <div className='space-y-2'>
-                        {availableAttackTroops.length > 0 ? availableAttackTroops.map(tropa => (
+                        {availableTroops.length > 0 ? availableTroops.map(tropa => (
                             <div key={tropa.configuracionTropaId} className='p-3 border rounded-lg flex flex-col sm:flex-row sm:items-center gap-4'>
                                 <div className='flex items-center gap-3 flex-1'>
                                     <div className="w-12 h-10 relative rounded-md overflow-hidden border flex-shrink-0">
@@ -319,7 +319,7 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
                         )}
                     </div>
 
-                    {availableAttackTroops.length > 0 && (
+                    {availableTroops.length > 0 && (
                         <Button variant="secondary" className='w-full mt-4' onClick={setAllMaxTroops}>Seleccionar Todas las Tropas</Button>
                     )}
                     

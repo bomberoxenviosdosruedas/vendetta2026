@@ -48,29 +48,22 @@ export async function enviarMision(input: MissionInput) {
         }
     }
     
-    // Calcular distancia y duración con las nuevas fórmulas
-    const troopConfigs = await getTroopConfigurations();
-    const troopConfigsMap = new Map(troopConfigs.map(t => [t.id, t]));
+    // Validaciones específicas del tipo de misión
+    if (tipo === 'ESPIONAJE') {
+        const tropaEspia = tropas.find(t => t.id === 'espia' && t.cantidad > 0);
+        if (!tropaEspia) {
+            return { error: "Necesitas enviar al menos una tropa de Espionaje para esta misión." };
+        }
+    }
     
-    const velocidadFlota = await calcularVelocidadFlota(tropas, troopConfigsMap);
-    const distancia = calcularDistancia(origenPropiedad, coordinates);
-    const duracionViaje = calcularDuracionViaje(distancia, velocidadFlota);
-    
-    const fechaInicio = new Date();
-    const fechaLlegada = new Date(fechaInicio.getTime() + duracionViaje * 1000);
-    const requiereRetorno = !MISIONES_SIN_RETORNO.includes(tipo);
-    const fechaRegreso = requiereRetorno ? new Date(fechaLlegada.getTime() + duracionViaje * 1000) : null;
-
-
     if (tipo === 'OCUPAR') {
+        const tropaOcupacion = tropas.find(t => t.id === 'ocupacion' && t.cantidad > 0);
+        if (!tropaOcupacion) {
+            return { error: "Necesitas enviar al menos una Tropa de Ocupación para esta misión." };
+        }
         const targetOwner = await getPropertyOwner(coordinates);
         if (targetOwner) {
             return { error: "No puedes ocupar una propiedad que ya tiene dueño." };
-        }
-
-        const tropaOcupacion = tropas.find(t => t.id === 'ocupacion');
-        if (!tropaOcupacion || tropaOcupacion.cantidad === 0) {
-            return { error: "Necesitas enviar al menos una Tropa de Ocupación para esta misión." };
         }
         
         try {
@@ -111,6 +104,20 @@ export async function enviarMision(input: MissionInput) {
             return { error: "Error al crear la nueva propiedad." };
         }
     }
+
+
+    // Calcular distancia y duración con las nuevas fórmulas
+    const troopConfigs = await getTroopConfigurations();
+    const troopConfigsMap = new Map(troopConfigs.map(t => [t.id, t]));
+    
+    const velocidadFlota = await calcularVelocidadFlota(tropas, troopConfigsMap);
+    const distancia = calcularDistancia(origenPropiedad, coordinates);
+    const duracionViaje = calcularDuracionViaje(distancia, velocidadFlota);
+    
+    const fechaInicio = new Date();
+    const fechaLlegada = new Date(fechaInicio.getTime() + duracionViaje * 1000);
+    const requiereRetorno = !MISIONES_SIN_RETORNO.includes(tipo);
+    const fechaRegreso = requiereRetorno ? new Date(fechaLlegada.getTime() + duracionViaje * 1000) : null;
 
     try {
         await prisma.$transaction(async (tx) => {
