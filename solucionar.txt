@@ -1,0 +1,1 @@
+Optimiza el contenido del archivo src/lib/data.ts y mejora las practicas de programacion. Divide el codigo en archivos mas especificos dentro de los directorios src/lib/formulas y src/lib/actions. Es muy importante que nunca utilices un directorio como app/src/lib. La ruta correcta siempre es src/lib.
