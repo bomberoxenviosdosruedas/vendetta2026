@@ -17,7 +17,7 @@ import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import { RoomDetailsModal } from "./room-details-modal"
 import { useProperty } from "@/contexts/property-context"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip"
+import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "../ui/tooltip"
 import { calcularCostosNivel, calcularTiempoConstruccion } from "@/lib/formulas/room-formulas"
 
 function formatNumber(num: number): string {

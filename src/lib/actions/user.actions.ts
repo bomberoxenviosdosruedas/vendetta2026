@@ -429,5 +429,3 @@ export async function actualizarPuntuacionUsuario(user: UserWithProgress): Promi
     return user;
   }
 }
-
-    

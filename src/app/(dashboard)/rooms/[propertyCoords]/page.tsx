@@ -5,7 +5,6 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { getSessionUser } from "@/lib/auth"
 import { FullConfiguracionHabitacion, getRoomConfigurations } from "@/lib/data"
 import { redirect } from "next/navigation"
-import { calcularCostosNivel, calcularTiempoConstruccion } from "@/lib/formulas/room-formulas"
 
 function RoomsLoading() {
     return (
@@ -37,7 +36,7 @@ function RoomsLoading() {
 export default async function RoomsPage() {
   const user = await getSessionUser();
   if (!user) {
-    redirect('/');
+    redirect('/login');
   }
 
   const allRoomConfigs = await getRoomConfigurations();
