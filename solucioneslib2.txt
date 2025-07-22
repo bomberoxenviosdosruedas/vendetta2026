@@ -1,0 +1,11 @@
+Hola. Necesito solucionar un error en mi aplicacion.
+
+El error es 'TypeError: Do not know how to serialize a BigInt' y ocurre en el archivo 'src/lib/actions/simulation.actions.ts' cuando se utiliza JSON.stringify. Esto se debe a que la propiedad de velocidad de las tropas se esta manejando como BigInt y no como Number.
+
+Para solucionarlo, por favor realiza los siguientes cambios:
+
+1. Modifica el archivo 'src/lib/formulas/troop-formulas.ts'. En la funcion 'calcularStatsTropaConBonus', asegurate de que la propiedad 'velocidadActual' siempre se calcule y devuelva como un tipo 'Number'. Puedes usar el constructor Number() para convertir explicitamente el valor.
+
+2. En el archivo 'src/lib/actions/simulation.actions.ts', revisa la funcion 'runBattleSimulation' y asegurate de que todos los calculos y el manejo de la velocidad de la flota se realicen utilizando el tipo 'Number'.
+
+Es muy importante que todos los cambios se realicen unicamente en archivos dentro del directorio 'src' y que todas las rutas sean correctas.
