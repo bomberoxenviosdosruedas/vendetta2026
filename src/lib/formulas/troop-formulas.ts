@@ -39,7 +39,7 @@ export function calcularStatsTropaConBonus(
     let ataqueActual = tropaConfig.ataque;
     let defensaActual = tropaConfig.defensa;
     let capacidadActual = tropaConfig.capacidad;
-    let velocidadActual = tropaConfig.velocidad;
+    let velocidadActualNum = Number(tropaConfig.velocidad);
   
     const bonusAtaqueIds = tropaConfig.bonusAtaque || [];
     const bonusDefensaIds = tropaConfig.bonusDefensa || [];
@@ -74,12 +74,12 @@ export function calcularStatsTropaConBonus(
     if (tropasRutas.includes(tropaConfig.id)) {
         const nivelRutas = entrenamientosMap.get('rutas') || 0;
         if (nivelRutas > 0) {
-            velocidadActual *= (1 + Math.sqrt(nivelRutas) / 10);
+            velocidadActualNum *= (1 + Math.sqrt(nivelRutas) / 10);
         }
     } else if (tropasEncargos.includes(tropaConfig.id)) {
         const nivelEncargos = entrenamientosMap.get('encargos') || 0;
         if (nivelEncargos > 0) {
-            velocidadActual *= (1 + Math.sqrt(nivelEncargos) / 10);
+            velocidadActualNum *= (1 + Math.sqrt(nivelEncargos) / 10);
         }
     }
   
@@ -87,7 +87,7 @@ export function calcularStatsTropaConBonus(
       ataqueActual: Math.floor(ataqueActual),
       defensaActual: Math.floor(defensaActual),
       capacidadActual: Math.floor(capacidadActual),
-      velocidadActual: Math.floor(velocidadActual),
+      velocidadActual: Math.floor(velocidadActualNum),
     };
   }
   
