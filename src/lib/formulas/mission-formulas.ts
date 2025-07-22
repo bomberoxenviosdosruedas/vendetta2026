@@ -8,29 +8,37 @@ interface Coordenadas {
 }
 
 /**
- * Calcula la distancia del juego entre dos puntos basado en una jerarquía.
- * @param origen Las coordenadas de origen.
- * @param destino Las coordenadas de destino.
- * @returns La distancia calculada como un valor numérico.
+ * Convierte coordenadas del juego a un sistema de coordenadas virtual 2D.
+ * @param coords Las coordenadas del juego (ciudad, barrio, edificio).
+ * @returns Un objeto con las coordenadas virtuales de altura y anchura.
+ */
+function convertirACoordenadasVirtuales(coords: Coordenadas): { altura: number; anchura: number } {
+    const altura = (coords.barrio - 1) * 15 + Math.ceil(coords.edificio / 17);
+    const anchura = (coords.ciudad - 1) * 17 + (coords.edificio - (Math.floor((coords.edificio - 1) / 17) * 17));
+    return { altura, anchura };
+}
+
+/**
+ * Calcula la distancia euclidiana entre dos puntos en el mapa virtual.
+ * @param origen Las coordenadas de origen del juego.
+ * @param destino Las coordenadas de destino del juego.
+ * @returns La distancia calculada como un valor numérico, sin redondear.
  */
 export function calcularDistancia(origen: Coordenadas, destino: Coordenadas): number {
-    if (origen.ciudad !== destino.ciudad) {
-        return Math.abs(origen.ciudad - destino.ciudad) * 20000;
-    }
-    if (origen.barrio !== destino.barrio) {
-        return Math.abs(origen.barrio - destino.barrio) * 5000;
-    }
-    if (origen.edificio !== destino.edificio) {
-        return Math.abs(origen.edificio - destino.edificio) * 1000;
-    }
-    // Si las coordenadas son idénticas, la distancia es una base mínima.
-    return 1000;
+    const origenVirtual = convertirACoordenadasVirtuales(origen);
+    const destinoVirtual = convertirACoordenadasVirtuales(destino);
+
+    const diffAltura = origenVirtual.altura - destinoVirtual.altura;
+    const diffAnchura = origenVirtual.anchura - destinoVirtual.anchura;
+
+    const distancia = Math.sqrt(Math.pow(diffAltura, 2) + Math.pow(diffAnchura, 2));
+    return distancia;
 }
 
 /**
  * Determina la velocidad de la flota encontrando la velocidad de la tropa más lenta.
  * @param tropasEnviadas Un array de las tropas en la misión.
- * @param configs Un mapa o array de todas las configuraciones de tropas.
+ * @param configs Un mapa de todas las configuraciones de tropas para una búsqueda eficiente.
  * @returns La velocidad de la tropa más lenta.
  */
 export async function calcularVelocidadFlota(
@@ -59,12 +67,11 @@ export async function calcularVelocidadFlota(
  */
 export function calcularDuracionViaje(distancia: number, velocidadFlota: number): number {
     if (velocidadFlota <= 0) {
-        return 86400 * 30; // 30 días como fallback para evitar división por cero.
+        return 86400 * 30; // 30 días como fallback.
     }
     
-    // Duración en Segundos = redondear( ( (Distancia * 3.3479) / Velocidad de la Flota ) ^ 0.2 * 3600 )
-    const baseCalculo = (distancia * 3.3479) / velocidadFlota;
-    const duracionEnSegundos = Math.round(Math.pow(baseCalculo, 0.2) * 3600);
+    const tiempoEnDias = (0.21989 * Math.pow(velocidadFlota, -0.2)) * Math.pow(distancia, 0.2);
+    const duracionEnSegundos = Math.round(tiempoEnDias * 86400);
 
     return Math.max(10, duracionEnSegundos); // Mínimo de 10 segundos.
 }
