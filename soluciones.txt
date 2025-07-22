@@ -1,0 +1,1 @@
+Soluciona el error de tipo en el archivo src/lib/data.ts. El objeto InvitationStatus es 'undefined' al momento de usarse. Asegurate de que se importe correctamente desde @prisma/client para que la consulta a la base de datos que busca invitaciones pendientes funcione sin problemas.
