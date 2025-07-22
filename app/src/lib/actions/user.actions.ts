@@ -1,5 +1,6 @@
 
 
+
 'use server';
 
 import prisma from "../prisma/prisma";
@@ -429,7 +430,5 @@ export async function actualizarPuntuacionUsuario(user: UserWithProgress): Promi
     return user;
   }
 }
-
-    
 
     
