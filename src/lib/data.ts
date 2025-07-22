@@ -2,7 +2,7 @@
 
 "use server"
 
-import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember, TrainingRequirement, RoomRequirement, TropaBonusContrincante, Message, MessageCategory, ColaEntrenamiento } from '@prisma/client/edge'
+import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember, TrainingRequirement, RoomRequirement, TropaBonusContrincante, Message, MessageCategory, ColaEntrenamiento, FamilyInvitation, InvitationStatus } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 import { cache } from 'react';
 import { calculateStorageCapacity } from './formulas/room-formulas';
@@ -311,6 +311,11 @@ export const getUsers = cache(async () => {
             select: {
                 id: true,
                 name: true,
+                familyMember: {
+                    select: {
+                        familyId: true
+                    }
+                }
             }
         });
         return users;
@@ -488,6 +493,64 @@ export const getGlobalStatistics = cache(async () => {
     }
 });
 
+export const getFamilyRequests = cache(async (familyId: string) => {
+    try {
+        const requests = await prisma.familyInvitation.findMany({
+            where: {
+                familyId: familyId,
+                type: 'REQUEST',
+                status: InvitationStatus.PENDING,
+            },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        puntuacion: true,
+                    }
+                }
+            },
+            orderBy: {
+                createdAt: 'asc'
+            }
+        });
+        return requests;
+    } catch(e) {
+        console.error(`Error fetching requests for family ${familyId}`, e);
+        return [];
+    }
+});
+
+
+export const getInvitationsForUser = cache(async (userId: string) => {
+    try {
+        const invitations = await prisma.familyInvitation.findMany({
+            where: {
+                userId: userId,
+                status: InvitationStatus.PENDING,
+            },
+            include: {
+                family: {
+                    select: {
+                        id: true,
+                        name: true,
+                        tag: true,
+                        avatarUrl: true
+                    }
+                }
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        });
+        return invitations;
+    } catch(e) {
+        console.error(`Error fetching invitations for user ${userId}`, e);
+        return [];
+    }
+});
+
+
 export async function getUserByUsername(username: string): Promise<UserWithProgress | null> {
     try {
         const user = await prisma.user.findUnique({
@@ -514,5 +577,3 @@ export async function getUserWithProgressByUsername(username: string): Promise<U
         return null;
     }
 }
-
-    
