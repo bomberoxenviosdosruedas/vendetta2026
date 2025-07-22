@@ -78,7 +78,7 @@ const InputRow = ({ label, value, onChange }: { label: string; value: number; on
 
 function formatNumber(num: number): string {
     if(num === undefined || num === null) return "0";
-    return num.toLocaleString('de-DE');
+    return Math.floor(num).toLocaleString('de-DE');
 }
 
 function SimulatorColumn({
