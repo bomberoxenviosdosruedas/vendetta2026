@@ -1,50 +1,60 @@
 [
   {
+    "id": "cmdeaqy1o002t4v0uoy3texwq",
     "roomId": "escuela_especializacion",
     "requiredRoomId": "oficina_del_jefe",
     "requiredLevel": 1
   },
   {
+    "id": "cmdeaqy9j002v4v0u7sckqndm",
     "roomId": "almacen_de_alcohol",
     "requiredRoomId": "cerveceria",
     "requiredLevel": 5
   },
   {
+    "id": "cmdeaqyh4002x4v0uzlu8l0ds",
     "roomId": "almacen_de_armas",
     "requiredRoomId": "armeria",
     "requiredLevel": 5
   },
   {
+    "id": "cmdeaqyog002z4v0u8v0ewuo8",
     "roomId": "torreta_de_fuego_automatico",
     "requiredRoomId": "oficina_del_jefe",
     "requiredLevel": 5
   },
   {
+    "id": "cmdeaqyw600314v0ua5suau49",
     "roomId": "minas_ocultas",
     "requiredRoomId": "oficina_del_jefe",
     "requiredLevel": 5
   },
   {
+    "id": "cmdeaqz3l00334v0un9fw4ml0",
     "roomId": "contrabando",
     "requiredRoomId": "oficina_del_jefe",
     "requiredLevel": 5
   },
   {
+    "id": "cmdeaqzb100354v0u3peai18q",
     "roomId": "contrabando",
     "requiredRoomId": "taberna",
     "requiredLevel": 8
   },
   {
+    "id": "cmdeaqzid00374v0u433k1t2c",
     "roomId": "deposito_de_municion",
     "requiredRoomId": "almacen_de_municion",
     "requiredLevel": 5
   },
   {
+    "id": "cmdeaqzq400394v0ui7qbbg4e",
     "roomId": "caja_fuerte",
     "requiredRoomId": "taberna",
     "requiredLevel": 5
   },
   {
+    "id": "cmdeaqzxw003b4v0u5e4nir0t",
     "roomId": "seguridad",
     "requiredRoomId": "campo_de_entrenamiento",
     "requiredLevel": 2

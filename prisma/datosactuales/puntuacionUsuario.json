@@ -1,11 +1,20 @@
 [
   {
+    "id": "cmdeazg3g00424v0u6e9suhmz",
+    "userId": "cmdeazg3g003k4v0umu3gzd87",
+    "puntosHabitaciones": 537.66,
+    "puntosTropas": 0,
+    "puntosEntrenamientos": 0,
+    "puntosTotales": 537.66,
+    "updatedAt": "2025-07-22T08:59:18.201Z"
+  },
+  {
     "id": "cmdb6e5zl00012m0wiiu5ux44",
     "userId": "cmd6rdx740003zi0w5d7c67xp",
     "puntosHabitaciones": 41362.35,
     "puntosTropas": 66680379,
     "puntosEntrenamientos": 117265.5,
     "puntosTotales": 66839006.85,
-    "updatedAt": "2025-07-22T08:36:28.792Z"
+    "updatedAt": "2025-07-22T09:24:01.512Z"
   }
 ]
