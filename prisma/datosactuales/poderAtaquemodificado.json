@@ -1,0 +1,602 @@
+[
+  {
+    "id": "cmdcrdkov0008110vkq65tl12",
+    "propiedades": 1,
+    "honor": 8,
+    "modificador": 100
+  },
+  {
+    "id": "cmdcrdmz1000j110vepaqau6l",
+    "propiedades": 2,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcrdp9t000u110vp6wj9g4k",
+    "propiedades": 3,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcrdrk70015110vws7qfpa4",
+    "propiedades": 4,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcrdtun001g110vqqbhfvvc",
+    "propiedades": 5,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcrdw5i001r110v3aydgkqy",
+    "propiedades": 6,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcrdyf20022110vjree33d3",
+    "propiedades": 7,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcre0qi002d110v0buge62n",
+    "propiedades": 8,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcre30d002o110vi7lgtamd",
+    "propiedades": 9,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcre5ak002z110v1s50mmeb",
+    "propiedades": 10,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcre7km003a110vu6dx76a1",
+    "propiedades": 11,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcre9u5003l110v4a8ymssa",
+    "propiedades": 12,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcreeq60047110vjws321s0",
+    "propiedades": 14,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcreh0e004i110vcy1xdhvn",
+    "propiedades": 15,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcrejas004t110vb3n8e583",
+    "propiedades": 16,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcrelkh0054110vt9rywm1k",
+    "propiedades": 17,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcrenun005f110v0ih8kdjj",
+    "propiedades": 18,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcreq6d005q110v307hiy59",
+    "propiedades": 19,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcresfw0061110vjd33062j",
+    "propiedades": 20,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcreuqn006c110vbnabq6gb",
+    "propiedades": 21,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcrex1d006n110vlnn0tmkm",
+    "propiedades": 22,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcrezaq006y110vyoky09zq",
+    "propiedades": 23,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcrf1kt0079110ve8uzyb3y",
+    "propiedades": 24,
+    "honor": 8,
+    "modificador": 98
+  },
+  {
+    "id": "cmdcrf3v4007k110vgz010t5r",
+    "propiedades": 25,
+    "honor": 8,
+    "modificador": 98
+  },
+  {
+    "id": "cmdcrf65j007v110vyw98qw1d",
+    "propiedades": 26,
+    "honor": 8,
+    "modificador": 98
+  },
+  {
+    "id": "cmdcrfap8008h110v1lb34e6q",
+    "propiedades": 28,
+    "honor": 8,
+    "modificador": 97
+  },
+  {
+    "id": "cmdcrfcyz008s110vzyu6lhg5",
+    "propiedades": 29,
+    "honor": 8,
+    "modificador": 97
+  },
+  {
+    "id": "cmdcrff9t0093110va65idquk",
+    "propiedades": 30,
+    "honor": 8,
+    "modificador": 97
+  },
+  {
+    "id": "cmdcrfhk6009e110vmyd6xstl",
+    "propiedades": 31,
+    "honor": 8,
+    "modificador": 97
+  },
+  {
+    "id": "cmdcrfju3009p110v9mprceue",
+    "propiedades": 32,
+    "honor": 8,
+    "modificador": 97
+  },
+  {
+    "id": "cmdcrfoed00ab110v2zrccsqg",
+    "propiedades": 34,
+    "honor": 8,
+    "modificador": 96
+  },
+  {
+    "id": "cmdcrfqop00am110vniz3as7l",
+    "propiedades": 35,
+    "honor": 8,
+    "modificador": 95
+  },
+  {
+    "id": "cmdcrfsxs00ax110v9yetb0n1",
+    "propiedades": 36,
+    "honor": 8,
+    "modificador": 94
+  },
+  {
+    "id": "cmdcrfv8600b8110vivcehhza",
+    "propiedades": 37,
+    "honor": 8,
+    "modificador": 94
+  },
+  {
+    "id": "cmdcrfxi000bj110v900sr2mh",
+    "propiedades": 38,
+    "honor": 8,
+    "modificador": 93
+  },
+  {
+    "id": "cmdcrfzsc00bu110vfcqx267m",
+    "propiedades": 39,
+    "honor": 8,
+    "modificador": 93
+  },
+  {
+    "id": "cmdcrg22e00c5110v2gltf0b7",
+    "propiedades": 40,
+    "honor": 8,
+    "modificador": 92
+  },
+  {
+    "id": "cmdcrg6ls00cr110vwah02dv4",
+    "propiedades": 42,
+    "honor": 8,
+    "modificador": 91
+  },
+  {
+    "id": "cmdcrg8vl00d2110vuknbb9dr",
+    "propiedades": 43,
+    "honor": 8,
+    "modificador": 90
+  },
+  {
+    "id": "cmdcrgb6700dd110v39frlnqv",
+    "propiedades": 44,
+    "honor": 8,
+    "modificador": 90
+  },
+  {
+    "id": "cmdcrgdgd00do110v9b0fszmk",
+    "propiedades": 45,
+    "honor": 8,
+    "modificador": 89
+  },
+  {
+    "id": "cmdcrgfrw00dz110vfw1u8ts3",
+    "propiedades": 46,
+    "honor": 8,
+    "modificador": 88
+  },
+  {
+    "id": "cmdcrgi2a00ea110v5tmoypcz",
+    "propiedades": 47,
+    "honor": 8,
+    "modificador": 87
+  },
+  {
+    "id": "cmdcrgkbj00el110vwkeq1pxv",
+    "propiedades": 48,
+    "honor": 8,
+    "modificador": 86
+  },
+  {
+    "id": "cmdcrgmlv00ew110vbsdtcq4o",
+    "propiedades": 49,
+    "honor": 8,
+    "modificador": 85
+  },
+  {
+    "id": "cmdcrgovw00f7110vs7zjmtjb",
+    "propiedades": 50,
+    "honor": 8,
+    "modificador": 84
+  },
+  {
+    "id": "cmdcrgr5l00fi110vvre59fgq",
+    "propiedades": 51,
+    "honor": 8,
+    "modificador": 83
+  },
+  {
+    "id": "cmdcrgtfe00ft110vr9n64a1g",
+    "propiedades": 52,
+    "honor": 8,
+    "modificador": 82
+  },
+  {
+    "id": "cmdcrgvrd00g4110v9xlxooz8",
+    "propiedades": 53,
+    "honor": 8,
+    "modificador": 81
+  },
+  {
+    "id": "cmdcrgy1c00gf110vgojukwpl",
+    "propiedades": 54,
+    "honor": 8,
+    "modificador": 80
+  },
+  {
+    "id": "cmdcrh0ay00gq110vyyigbhja",
+    "propiedades": 55,
+    "honor": 8,
+    "modificador": 79
+  },
+  {
+    "id": "cmdcrh2kg00h1110vqp1k1cic",
+    "propiedades": 56,
+    "honor": 8,
+    "modificador": 78
+  },
+  {
+    "id": "cmdcrh4uq00hc110vc3j4fkz2",
+    "propiedades": 57,
+    "honor": 8,
+    "modificador": 77
+  },
+  {
+    "id": "cmdcrh74v00hn110vxtty2x7z",
+    "propiedades": 58,
+    "honor": 8,
+    "modificador": 75
+  },
+  {
+    "id": "cmdcrh9eu00hy110v3fcmvlwd",
+    "propiedades": 59,
+    "honor": 8,
+    "modificador": 74
+  },
+  {
+    "id": "cmdcrhbpe00i9110vamly7hh7",
+    "propiedades": 60,
+    "honor": 8,
+    "modificador": 73
+  },
+  {
+    "id": "cmdcrhe0k00ik110vw5g3n7t8",
+    "propiedades": 61,
+    "honor": 8,
+    "modificador": 72
+  },
+  {
+    "id": "cmdcrhgag00iv110vms1nxoke",
+    "propiedades": 62,
+    "honor": 8,
+    "modificador": 71
+  },
+  {
+    "id": "cmdcrhikq00j6110vuyev37qy",
+    "propiedades": 63,
+    "honor": 8,
+    "modificador": 69
+  },
+  {
+    "id": "cmdcrhkuv00jh110vjopxnfbb",
+    "propiedades": 64,
+    "honor": 8,
+    "modificador": 68
+  },
+  {
+    "id": "cmdcrhn4z00js110ve7llk5i2",
+    "propiedades": 65,
+    "honor": 8,
+    "modificador": 67
+  },
+  {
+    "id": "cmdcrhro500ke110v5ge3uv4y",
+    "propiedades": 67,
+    "honor": 8,
+    "modificador": 65
+  },
+  {
+    "id": "cmdcrhtye00kp110vfgr72pn5",
+    "propiedades": 68,
+    "honor": 8,
+    "modificador": 63
+  },
+  {
+    "id": "cmdcrhw7u00l0110vdnouyhg3",
+    "propiedades": 69,
+    "honor": 8,
+    "modificador": 62
+  },
+  {
+    "id": "cmdcrhyj300lb110vxavfnbi7",
+    "propiedades": 70,
+    "honor": 8,
+    "modificador": 61
+  },
+  {
+    "id": "cmdcri0th00lm110vr1uipo45",
+    "propiedades": 71,
+    "honor": 8,
+    "modificador": 60
+  },
+  {
+    "id": "cmdcri33b00lx110v643omxbu",
+    "propiedades": 72,
+    "honor": 8,
+    "modificador": 58
+  },
+  {
+    "id": "cmdcri5dp00m8110v5ol83sj0",
+    "propiedades": 73,
+    "honor": 8,
+    "modificador": 57
+  },
+  {
+    "id": "cmdcri7no00mj110vl8si2oln",
+    "propiedades": 74,
+    "honor": 8,
+    "modificador": 55
+  },
+  {
+    "id": "cmdcri9x900mu110vamy72c05",
+    "propiedades": 75,
+    "honor": 8,
+    "modificador": 54
+  },
+  {
+    "id": "cmdcric7u00n5110viz2qerau",
+    "propiedades": 76,
+    "honor": 8,
+    "modificador": 53
+  },
+  {
+    "id": "cmdcrieiq00ng110vblusibry",
+    "propiedades": 77,
+    "honor": 8,
+    "modificador": 51
+  },
+  {
+    "id": "cmdcrigvg00nr110vq7pnc9e0",
+    "propiedades": 78,
+    "honor": 8,
+    "modificador": 50
+  },
+  {
+    "id": "cmdcrij4u00o2110v1bsxz5s5",
+    "propiedades": 79,
+    "honor": 8,
+    "modificador": 49
+  },
+  {
+    "id": "cmdcrinoh00oo110vfeaao6gr",
+    "propiedades": 81,
+    "honor": 8,
+    "modificador": 47
+  },
+  {
+    "id": "cmdcriq0800oz110v3ueiima4",
+    "propiedades": 82,
+    "honor": 8,
+    "modificador": 46
+  },
+  {
+    "id": "cmdcrisax00pa110vmvi9g75x",
+    "propiedades": 83,
+    "honor": 8,
+    "modificador": 45
+  },
+  {
+    "id": "cmdcriuk200pl110v1lk5mtkb",
+    "propiedades": 84,
+    "honor": 8,
+    "modificador": 44
+  },
+  {
+    "id": "cmdcriwu900pw110vjl3ltdc4",
+    "propiedades": 85,
+    "honor": 8,
+    "modificador": 43
+  },
+  {
+    "id": "cmdcriz4n00q7110vtdhsr6p4",
+    "propiedades": 86,
+    "honor": 8,
+    "modificador": 42
+  },
+  {
+    "id": "cmdcrj1ex00qi110vf7zksg1i",
+    "propiedades": 87,
+    "honor": 8,
+    "modificador": 41
+  },
+  {
+    "id": "cmdcrj3px00qt110v57kl6jsx",
+    "propiedades": 88,
+    "honor": 8,
+    "modificador": 39
+  },
+  {
+    "id": "cmdcrj5zs00r4110vizc3z2ku",
+    "propiedades": 89,
+    "honor": 8,
+    "modificador": 38
+  },
+  {
+    "id": "cmdcrj8ab00rf110v34zlwoj2",
+    "propiedades": 90,
+    "honor": 8,
+    "modificador": 37
+  },
+  {
+    "id": "cmdcrjak300rq110vqjj0sst5",
+    "propiedades": 91,
+    "honor": 8,
+    "modificador": 36
+  },
+  {
+    "id": "cmdcrjcvv00s1110vkdi2c4fd",
+    "propiedades": 92,
+    "honor": 8,
+    "modificador": 35
+  },
+  {
+    "id": "cmdcrjf6100sc110v73ogzyhv",
+    "propiedades": 93,
+    "honor": 8,
+    "modificador": 34
+  },
+  {
+    "id": "cmdcrjjq300sy110vcymqpt7o",
+    "propiedades": 95,
+    "honor": 8,
+    "modificador": 33
+  },
+  {
+    "id": "cmdcrjm2600t9110v64wle2hc",
+    "propiedades": 96,
+    "honor": 8,
+    "modificador": 32
+  },
+  {
+    "id": "cmdcrjoca00tk110vmy39bzk4",
+    "propiedades": 97,
+    "honor": 8,
+    "modificador": 31
+  },
+  {
+    "id": "cmdcrjqm800tv110vrp6ywa9g",
+    "propiedades": 98,
+    "honor": 8,
+    "modificador": 31
+  },
+  {
+    "id": "cmdcrec4l003w110vxwobo77y",
+    "propiedades": 13,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcrf8fi0086110vz4xouzhm",
+    "propiedades": 27,
+    "honor": 8,
+    "modificador": 98
+  },
+  {
+    "id": "cmdcrfm4c00a0110vccm6phka",
+    "propiedades": 33,
+    "honor": 8,
+    "modificador": 96
+  },
+  {
+    "id": "cmdcrg4c900cg110vz2wy6r10",
+    "propiedades": 41,
+    "honor": 8,
+    "modificador": 91
+  },
+  {
+    "id": "cmdcrhpej00k3110v95kv5hay",
+    "propiedades": 66,
+    "honor": 8,
+    "modificador": 66
+  },
+  {
+    "id": "cmdcrilez00od110vrx7oog03",
+    "propiedades": 80,
+    "honor": 8,
+    "modificador": 48
+  },
+  {
+    "id": "cmdcrjhfw00sn110vhpui01kk",
+    "propiedades": 94,
+    "honor": 8,
+    "modificador": 34
+  },
+  {
+    "id": "cmdcrjswd00u6110v938ipt52",
+    "propiedades": 99,
+    "honor": 8,
+    "modificador": 30
+  },
+  {
+    "id": "cmdcrjv6800uh110vlr812brh",
+    "propiedades": 100,
+    "honor": 8,
+    "modificador": 29
+  }
+]

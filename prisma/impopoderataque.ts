@@ -1,7 +1,7 @@
 
 
 import { PrismaClient } from '@prisma/client/edge';
-import * as datosPoderAtaque from './datosactuales/poderAtaque.json';
+import * as datosPoderAtaque from './datosactuales/poderAtaquemodificado.json';
 
 const prisma = new PrismaClient();
 
