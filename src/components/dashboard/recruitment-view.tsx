@@ -7,7 +7,7 @@ import {
   CardContent,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Clock, PlusCircle, Ban, Info, Loader2 } from "lucide-react"
+import { Clock, PlusCircle, Ban, Info, Loader2, Dumbbell, ShieldCheck, Warehouse, Wind } from "lucide-react"
 import { iniciarReclutamiento } from "@/lib/actions/troop.actions"
 import { useEffect, useState, useTransition } from "react"
 import type { ConfiguracionTropa } from "@prisma/client"
@@ -62,6 +62,8 @@ function formatDuration(seconds: number): string {
 type TroopWithStats = ConfiguracionTropa & {
     ataqueActual: number;
     defensaActual: number;
+    capacidadActual: number;
+    velocidadActual: number;
 }
 
 type RecruitmentViewProps = {
@@ -156,25 +158,9 @@ export function RecruitmentView({ user, troopConfigsWithStats }: RecruitmentView
     )
   }
 
-  const desiredOrder = [
-    'maton', 'portero', 'acuchillador', 'pistolero', 'ocupacion',
-    'espia', 'porteador', 'cia', 'fbi', 'transportista',
-    'francotirador', 'asesino', 'ninja', 'mercenario'
-  ];
-
-  const sortedTroops = [...troopConfigsWithStats]
-    .filter(t => t.tipo !== 'DEFENSA')
-    .sort((a, b) => {
-        const indexA = desiredOrder.indexOf(a.id);
-        const indexB = desiredOrder.indexOf(b.id);
-        if (indexA === -1) return 1;
-        if (indexB === -1) return -1;
-        return indexA - indexB;
-    });
-
   const userTroopsMap = new Map(selectedProperty.TropaUsuario.map(t => [t.configuracionTropaId, t]));
 
-  const troopsWithCounts = sortedTroops.map(config => {
+  const troopsWithCounts = troopConfigsWithStats.map(config => {
     const userTropa = userTroopsMap.get(config.id);
     return {
       ...config,
@@ -225,14 +211,10 @@ export function RecruitmentView({ user, troopConfigsWithStats }: RecruitmentView
                         <div className="flex flex-wrap gap-x-4 gap-y-2 items-center">
                             <div className="flex flex-col gap-2 text-sm flex-grow">
                                 <div className="grid grid-cols-2 gap-1 text-xs">
-                                    <div className="flex items-center gap-2" title="Ataque">
-                                        <Image src="/img/recursos/armas.svg" alt="Ataque" width={16} height={16} />
-                                        <span>{formatNumber(troop.ataqueActual)}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2" title="Defensa">
-                                        <Image src="/img/recursos/municion.svg" alt="Defensa" width={16} height={16} />
-                                        <span>{formatNumber(troop.defensaActual)}</span>
-                                    </div>
+                                    <div className="flex items-center gap-2" title="Ataque"><Dumbbell className="h-3 w-3 text-red-500"/><span>{formatNumber(troop.ataqueActual)}</span></div>
+                                    <div className="flex items-center gap-2" title="Defensa"><ShieldCheck className="h-3 w-3 text-blue-500"/><span>{formatNumber(troop.defensaActual)}</span></div>
+                                    <div className="flex items-center gap-2" title="Capacidad de Carga"><Warehouse className="h-3 w-3 text-yellow-500"/><span>{formatNumber(troop.capacidadActual)}</span></div>
+                                    <div className="flex items-center gap-2" title="Velocidad"><Wind className="h-3 w-3 text-green-500"/><span>{formatNumber(troop.velocidadActual)}</span></div>
                                 </div>
                                 <div className="grid grid-cols-3 gap-x-3">
                                     {troop.costoArmas > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoArmas.toLocaleString('de-DE')} Armas`}><Image src="/img/recursos/armas.svg" alt="Armas" width={16} height={16} /><span>{formatNumber(troop.costoArmas)}</span></div>}
@@ -261,6 +243,8 @@ export function RecruitmentView({ user, troopConfigsWithStats }: RecruitmentView
                         user={user}
                         ataqueActual={troop.ataqueActual}
                         defensaActual={troop.defensaActual}
+                        capacidadActual={troop.capacidadActual}
+                        velocidadActual={troop.velocidadActual}
                      />
                 </Dialog>
               ))}

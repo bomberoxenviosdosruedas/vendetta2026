@@ -16,6 +16,8 @@ interface TroopDetailsModalProps {
   user: UserWithProgress;
   ataqueActual: number;
   defensaActual: number;
+  capacidadActual: number;
+  velocidadActual: number;
 }
 
 function formatNumber(num: number): string {
@@ -23,12 +25,12 @@ function formatNumber(num: number): string {
     return num.toLocaleString('de-DE');
 }
 
-export function TroopDetailsModal({ troop, user, ataqueActual, defensaActual }: TroopDetailsModalProps) {
+export function TroopDetailsModal({ troop, user, ataqueActual, defensaActual, capacidadActual, velocidadActual }: TroopDetailsModalProps) {
     const stats = [
         { label: 'Ataque', base: troop.ataque, actual: ataqueActual },
         { label: 'Defensa', base: troop.defensa, actual: defensaActual },
-        { label: 'Capacidad', base: troop.capacidad, actual: troop.capacidad },
-        { label: 'Velocidad', base: troop.velocidad, actual: troop.velocidad },
+        { label: 'Capacidad', base: troop.capacidad, actual: capacidadActual },
+        { label: 'Velocidad', base: troop.velocidad, actual: velocidadActual },
         { label: 'Salario', base: troop.salario, actual: troop.salario },
         { label: 'Puntos', base: troop.puntos, actual: troop.puntos },
     ];
@@ -80,8 +82,8 @@ export function TroopDetailsModal({ troop, user, ataqueActual, defensaActual }: 
                         <TableCell className="font-medium text-primary">Actual</TableCell>
                         <TableCell className="text-right font-mono text-primary font-bold">{formatNumber(ataqueActual)}</TableCell>
                         <TableCell className="text-right font-mono text-primary font-bold">{formatNumber(defensaActual)}</TableCell>
-                        <TableCell className="text-right font-mono text-primary font-bold">{formatNumber(troop.capacidad)}</TableCell>
-                        <TableCell className="text-right font-mono text-primary font-bold">{formatNumber(troop.velocidad)}</TableCell>
+                        <TableCell className="text-right font-mono text-primary font-bold">{formatNumber(capacidadActual)}</TableCell>
+                        <TableCell className="text-right font-mono text-primary font-bold">{formatNumber(velocidadActual)}</TableCell>
                         <TableCell className="text-right font-mono text-primary font-bold">{formatNumber(troop.salario)}</TableCell>
                         <TableCell className="text-right font-mono text-primary font-bold">{formatNumber(troop.puntos)}</TableCell>
                     </TableRow>
