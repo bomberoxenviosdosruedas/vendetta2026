@@ -39,23 +39,26 @@ export function calcularDistancia(origen: Coordenadas, destino: Coordenadas): nu
  * Determina la velocidad de la flota encontrando la velocidad de la tropa más lenta.
  * @param tropasEnviadas Un array de las tropas en la misión.
  * @param configs Un mapa de todas las configuraciones de tropas para una búsqueda eficiente.
- * @returns La velocidad de la tropa más lenta.
+ * @returns La velocidad de la tropa más lenta como BigInt.
  */
 export async function calcularVelocidadFlota(
     tropasEnviadas: { id: string; cantidad: number }[],
     configs: Map<string, ConfiguracionTropa>
-): Promise<number> {
-    let velocidadMasLenta = Infinity;
+): Promise<bigint> {
+    let velocidadMasLenta = BigInt(Infinity);
     
     for (const tropa of tropasEnviadas) {
         if (tropa.cantidad > 0) {
             const config = configs.get(tropa.id);
-            if (config && config.velocidad < velocidadMasLenta) {
-                velocidadMasLenta = config.velocidad;
+            if (config) {
+                 const velocidadTropa = BigInt(config.velocidad);
+                 if (velocidadMasLenta === BigInt(Infinity) || velocidadTropa < velocidadMasLenta) {
+                    velocidadMasLenta = velocidadTropa;
+                }
             }
         }
     }
-    return velocidadMasLenta === Infinity ? 1000 : velocidadMasLenta;
+    return velocidadMasLenta === BigInt(Infinity) ? BigInt(1000) : velocidadMasLenta;
 }
 
 
@@ -65,12 +68,13 @@ export async function calcularVelocidadFlota(
  * @param velocidadFlota La velocidad de la tropa más lenta en la misión.
  * @returns La duración del viaje en segundos.
  */
-export function calcularDuracionViaje(distancia: number, velocidadFlota: number): number {
-    if (velocidadFlota <= 0) {
+export function calcularDuracionViaje(distancia: number, velocidadFlota: bigint): number {
+    const velocidadFlotaNum = Number(velocidadFlota);
+    if (velocidadFlotaNum <= 0) {
         return 86400 * 30; // 30 días como fallback.
     }
     
-    const tiempoEnDias = (0.21989 * Math.pow(velocidadFlota, -0.2)) * Math.pow(distancia, 0.2);
+    const tiempoEnDias = (0.21989 * Math.pow(velocidadFlotaNum, -0.2)) * Math.pow(distancia, 0.2);
     const duracionEnSegundos = Math.round(tiempoEnDias * 86400);
 
     return Math.max(10, duracionEnSegundos); // Mínimo de 10 segundos.
