@@ -42,6 +42,17 @@ export async function updateUserSettings(settings: UserSettings) {
     }
 }
 
+async function updateUserLastSeen(userId: string): Promise<void> {
+    try {
+        await prisma.user.update({
+            where: { id: userId },
+            data: { lastSeen: new Date() },
+        });
+    } catch (error) {
+        console.error(`Error updating lastSeen for user ${userId}:`, error);
+    }
+}
+
 
 async function actualizarRecursosPropiedad(propiedad: FullPropiedad): Promise<FullPropiedad> {
     const ahora = new Date();
@@ -92,6 +103,8 @@ async function actualizarRecursosPropiedad(propiedad: FullPropiedad): Promise<Fu
 
 
 export async function obtenerEstadoJuegoActualizado(user: UserWithProgress): Promise<UserWithProgress> {
+    await updateUserLastSeen(user.id);
+
     const propiedadesActualizadas = await Promise.all(
         user.propiedades.map(propiedad => actualizarRecursosPropiedad(propiedad))
     );
@@ -99,6 +112,7 @@ export async function obtenerEstadoJuegoActualizado(user: UserWithProgress): Pro
     return {
         ...user,
         propiedades: propiedadesActualizadas,
+        lastSeen: new Date(), // also update in the object to avoid re-fetching
     };
 }
 

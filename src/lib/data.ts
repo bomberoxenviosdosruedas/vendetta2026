@@ -45,7 +45,14 @@ export type FullPropiedad = Propiedad & {
     TropaUsuario: FullTropaUsuario[];
 }
 
-export type FullFamilyMember = FamilyMember & { user: User };
+export type FullFamilyMember = FamilyMember & { 
+    user: { 
+        id: string;
+        name: string;
+        puntuacion: PuntuacionUsuario | null;
+        lastSeen: Date;
+    } 
+};
 
 export type FullFamily = Family & {
     members: FullFamilyMember[]
@@ -126,10 +133,21 @@ export const getFamilyById = cache(async(id: string) => {
             include: {
                 members: {
                     include: {
-                        user: true
+                        user: {
+                            select: {
+                                id: true,
+                                name: true,
+                                puntuacion: true,
+                                lastSeen: true,
+                            }
+                        }
                     },
                     orderBy: {
-                        role: 'asc'
+                        user: {
+                           puntuacion: {
+                             puntosTotales: 'desc'
+                           }
+                        }
                     }
                 }
             }
@@ -145,24 +163,6 @@ export const getUserFamily = cache(async(userId: string) => {
     try {
         const familyMember = await prisma.familyMember.findUnique({
             where: { userId },
-            include: {
-                family: {
-                    include: {
-                        members: {
-                            include: {
-                                user: {
-                                    select: {
-                                        id: true,
-                                        name: true,
-                                        title: true,
-                                        avatarUrl: true
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         });
         if (!familyMember) return null;
         return getFamilyById(familyMember.familyId);

@@ -72,39 +72,47 @@ export function FamilyDashboardView({ family, currentUser }: FamilyDashboardView
                         </div>
                     </div>
                 </div>
+                 <div className="p-4 border-t flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        {canInvite && <Button size="sm">Invitar Miembro</Button>}
+                        <Button asChild size="sm" variant="outline">
+                            <Link href={`/family/members?id=${family.id}`}>
+                                <Users className="mr-2 h-4 w-4" />
+                                Ver Lista de Miembros
+                            </Link>
+                        </Button>
+                    </div>
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button variant="destructive" size="sm">Abandonar Familia</Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                            <AlertDialogTitle>¿Estás seguro de que quieres abandonar la familia?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                Esta acción no se puede deshacer. Perderás todos los beneficios y la protección de la familia.
+                            </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                            <AlertDialogAction onClick={handleLeaveFamily} disabled={isPending}>
+                                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                Sí, abandonar familia
+                            </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                </div>
             </Card>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2">
                     <Card>
-                        <CardHeader className="flex flex-row items-center justify-between">
-                            <div>
-                                <CardTitle>Miembros de la Familia</CardTitle>
-                                <CardDescription>Los soldados que forman tu imperio.</CardDescription>
-                            </div>
-                            {canInvite && <Button size="sm">Invitar Miembro</Button>}
+                        <CardHeader>
+                            <CardTitle>Anuncios y Novedades</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="space-y-4">
-                                {family.members.map(member => (
-                                    <div key={member.userId} className="flex items-center gap-4 p-2 rounded-lg hover:bg-muted/50">
-                                        <Avatar>
-                                             <AvatarImage src={member.user.avatarUrl || ''} alt={member.user.name} />
-                                            <AvatarFallback>{member.user.name.charAt(0)}</AvatarFallback>
-                                        </Avatar>
-                                        <div className="flex-grow">
-                                            <Link href={`/profile/${member.userId}`} className="hover:underline">
-                                                <p className="font-semibold">{member.user.name}</p>
-                                            </Link>
-                                            <p className="text-xs text-muted-foreground">{member.user.title}</p>
-                                        </div>
-                                        <Badge variant="outline" className="flex items-center gap-2">
-                                            {roleIcons[member.role]}
-                                            <span>{member.role}</span>
-                                        </Badge>
-                                    </div>
-                                ))}
-                            </div>
+                           <p className="text-sm text-center text-muted-foreground py-8">No hay anuncios de la familia.</p>
                         </CardContent>
                     </Card>
                 </div>
@@ -130,26 +138,6 @@ export function FamilyDashboardView({ family, currentUser }: FamilyDashboardView
                             </div>
                         </CardContent>
                     </Card>
-                    <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                            <Button variant="destructive" className="w-full mt-4">Abandonar Familia</Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                            <AlertDialogTitle>¿Estás seguro de que quieres abandonar la familia?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                                Esta acción no se puede deshacer. Perderás todos los beneficios y la protección de la familia.
-                            </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                            <AlertDialogAction onClick={handleLeaveFamily} disabled={isPending}>
-                                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                Sí, abandonar familia
-                            </AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
                 </div>
             </div>
         </div>
