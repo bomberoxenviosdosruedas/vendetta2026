@@ -1,6 +1,5 @@
 
 
-
 "use server"
 
 import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember, TrainingRequirement, RoomRequirement, TropaBonusContrincante, Message, MessageCategory, ColaEntrenamiento, FamilyInvitation, InvitationStatus, InvitationType } from '@prisma/client/edge'
@@ -607,3 +606,5 @@ export async function getUserWithProgressByUsername(username: string): Promise<U
         return null;
     }
 }
+
+    
