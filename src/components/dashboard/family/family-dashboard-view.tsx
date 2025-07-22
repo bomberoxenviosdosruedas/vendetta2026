@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator";
 import type { FullFamily, UserWithProgress } from "@/lib/data";
 import { FamilyRole } from "@prisma/client";
-import { Crown, Shield, User, Users, Loader2 } from "lucide-react";
+import { Crown, Shield, User, Users, Loader2, UserPlus, MailPlus, HandMetal } from "lucide-react";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -25,11 +25,14 @@ import { useToast } from "@/hooks/use-toast";
 import { leaveFamily } from "@/lib/actions/family.actions";
 import Image from "next/image";
 import Link from "next/link";
+import { InviteMemberDialog } from "./invite-member-dialog";
 
 
 interface FamilyDashboardViewProps {
     family: FullFamily;
     currentUser: UserWithProgress;
+    allUsers: { id: string; name: string; }[];
+    pendingRequests: number;
 }
 
 const roleIcons: Record<FamilyRole, React.ReactNode> = {
@@ -38,7 +41,7 @@ const roleIcons: Record<FamilyRole, React.ReactNode> = {
     [FamilyRole.MEMBER]: <User className="h-4 w-4 text-muted-foreground" />,
 }
 
-export function FamilyDashboardView({ family, currentUser }: FamilyDashboardViewProps) {
+export function FamilyDashboardView({ family, currentUser, allUsers, pendingRequests }: FamilyDashboardViewProps) {
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
 
@@ -53,7 +56,8 @@ export function FamilyDashboardView({ family, currentUser }: FamilyDashboardView
         });
     }
     
-    const canInvite = currentUser.familyMember?.role === FamilyRole.LEADER || currentUser.familyMember?.role === FamilyRole.CO_LEADER;
+    const userRole = currentUser.familyMember?.role;
+    const canManage = userRole === FamilyRole.LEADER || userRole === FamilyRole.CO_LEADER;
 
     return (
         <div className="main-view space-y-6">
@@ -73,8 +77,17 @@ export function FamilyDashboardView({ family, currentUser }: FamilyDashboardView
                     </div>
                 </div>
                  <div className="p-4 border-t flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                        {canInvite && <Button size="sm">Invitar Miembro</Button>}
+                    <div className="flex items-center gap-2">
+                        {canManage && <InviteMemberDialog familyId={family.id} allUsers={allUsers} currentUser={currentUser} />}
+                        {canManage && (
+                             <Button asChild size="sm" variant="outline">
+                                <Link href={`/family/requests`}>
+                                    <HandMetal className="mr-2 h-4 w-4" />
+                                    Solicitudes
+                                    {pendingRequests > 0 && <Badge variant="destructive" className="ml-2">{pendingRequests}</Badge>}
+                                </Link>
+                            </Button>
+                        )}
                         <Button asChild size="sm" variant="outline">
                             <Link href={`/family/members?id=${family.id}`}>
                                 <Users className="mr-2 h-4 w-4" />

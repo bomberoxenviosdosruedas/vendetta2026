@@ -4,7 +4,7 @@
 import prisma from "../prisma/prisma";
 import { getSessionUser } from "../auth";
 import { revalidatePath } from "next/cache";
-import { FamilyRole } from "@prisma/client";
+import { FamilyRole, InvitationStatus, InvitationType } from "@prisma/client";
 
 export async function createFamily(formData: FormData) {
     const user = await getSessionUser();
@@ -54,21 +54,25 @@ export async function inviteUserToFamily(userIdToInvite: string, familyId: strin
     }
 
     try {
-        const invitation = await prisma.familyInvitation.create({
+        await prisma.familyInvitation.create({
             data: {
                 familyId: familyId,
                 userId: userIdToInvite,
+                type: InvitationType.INVITATION, // Family invites user
+                status: InvitationStatus.PENDING,
             }
         });
+        revalidatePath('/family');
         return { success: "Invitación enviada." };
     } catch (error: any) {
          if (error.code === 'P2002') {
-            return { error: "Ya existe una invitación para este usuario." };
+            return { error: "Ya existe una invitación o solicitud para este usuario." };
         }
         console.error(error);
         return { error: "No se pudo enviar la invitación." };
     }
 }
+
 
 export async function acceptFamilyInvitation(invitationId: string) {
     const user = await getSessionUser();
@@ -84,19 +88,23 @@ export async function acceptFamilyInvitation(invitationId: string) {
     }
     
     try {
-        await prisma.$transaction([
-            prisma.familyMember.create({
+        await prisma.$transaction(async (tx) => {
+            await tx.familyMember.create({
                 data: {
                     userId: user.id,
                     familyId: invitation.familyId,
                     role: FamilyRole.MEMBER
                 }
-            }),
-            prisma.familyInvitation.update({
-                where: { id: invitationId },
-                data: { status: 'ACCEPTED' }
+            });
+            
+            // Delete this invitation and any other pending invitations/requests for this user
+            await tx.familyInvitation.deleteMany({
+                where: {
+                    userId: user.id,
+                }
             })
-        ]);
+        });
+
         revalidatePath('/family');
         return { success: "¡Bienvenido a la familia!" };
     } catch(error) {
@@ -118,21 +126,21 @@ export async function leaveFamily() {
         if (members > 1) {
             return { error: "Eres el líder. Debes nombrar a un nuevo líder o ser el último miembro para poder abandonar la familia." }
         }
-        // If leader is the last member, the family will be deleted
     }
 
     try {
         await prisma.$transaction(async (tx) => {
+             const familyId = user.familyMember!.familyId;
              await tx.familyMember.delete({
                 where: { userId: user.id }
             });
             const remainingMembers = await tx.familyMember.count({
-                where: { familyId: user.familyMember!.familyId }
+                where: { familyId: familyId }
             });
             if (remainingMembers === 0) {
-                await tx.family.delete({
-                    where: { id: user.familyMember!.familyId }
-                });
+                // If last member leaves, also delete the family and any pending requests
+                await tx.familyInvitation.deleteMany({ where: { familyId: familyId } });
+                await tx.family.delete({ where: { id: familyId } });
             }
         });
         
@@ -141,5 +149,141 @@ export async function leaveFamily() {
     } catch(error) {
         console.error(error);
         return { error: "No se pudo abandonar la familia." };
+    }
+}
+
+export async function applyToFamily(familyId: string) {
+    const user = await getSessionUser();
+    if (!user) return { error: "Debes iniciar sesión para solicitar unirte." };
+    if (user.familyMember) return { error: "Ya perteneces a una familia." };
+
+    try {
+        await prisma.familyInvitation.create({
+            data: {
+                familyId: familyId,
+                userId: user.id,
+                type: InvitationType.REQUEST, // User requests to join
+                status: InvitationStatus.PENDING,
+            }
+        });
+        revalidatePath('/family/find');
+        return { success: "Solicitud enviada." };
+    } catch (error: any) {
+         if (error.code === 'P2002') {
+            return { error: "Ya has enviado una solicitud a esta familia." };
+        }
+        console.error(error);
+        return { error: "No se pudo enviar la solicitud." };
+    }
+}
+
+
+export async function cancelInvitation(invitationId: string) {
+    const user = await getSessionUser();
+    if (!user) return { error: "No autenticado." };
+    
+    const invitation = await prisma.familyInvitation.findUnique({ where: { id: invitationId }, include: { family: { include: { members: true } } }});
+    if(!invitation) return { error: "Invitación no encontrada." };
+    
+    // User can cancel their own application, or a leader can cancel an invitation
+    const userIsLeader = invitation.family.members.some(m => m.userId === user.id && (m.role === "LEADER" || m.role === "CO_LEADER"));
+    const userIsApplicant = invitation.userId === user.id;
+
+    if (!userIsLeader && !userIsApplicant) {
+        return { error: "No tienes permiso para cancelar esta solicitud/invitación." };
+    }
+
+    try {
+        await prisma.familyInvitation.update({
+            where: { id: invitationId },
+            data: { status: InvitationStatus.CANCELLED }
+        });
+        revalidatePath('/family');
+        revalidatePath('/family/find');
+        return { success: "Solicitud/Invitación cancelada." };
+    } catch(error) {
+        console.error(error);
+        return { error: "Error al cancelar." };
+    }
+}
+
+export async function rejectInvitation(invitationId: string) {
+    const user = await getSessionUser();
+    if (!user) return { error: "No autenticado." };
+
+    const invitation = await prisma.familyInvitation.findUnique({ where: { id: invitationId }, include: { family: { include: { members: true } } }});
+    if(!invitation) return { error: "Invitación/Solicitud no encontrada." };
+
+    const userIsLeader = invitation.family.members.some(m => m.userId === user.id && (m.role === "LEADER" || m.role === "CO_LEADER"));
+    const userIsInvitee = invitation.userId === user.id;
+
+    if (!userIsLeader && !userIsInvitee) {
+        return { error: "No tienes permiso para realizar esta acción." };
+    }
+
+    try {
+        await prisma.familyInvitation.update({
+            where: { id: invitationId },
+            data: { status: InvitationStatus.REJECTED }
+        });
+        revalidatePath('/family');
+        revalidatePath('/family/requests');
+        return { success: "Solicitud/Invitación rechazada." };
+    } catch(error) {
+        console.error(error);
+        return { error: "Error al rechazar." };
+    }
+}
+
+export async function acceptRequest(invitationId: string) {
+    const user = await getSessionUser();
+    if (!user || !user.familyMember) return { error: "No tienes permisos para aceptar." };
+
+    const invitation = await prisma.familyInvitation.findUnique({
+        where: { id: invitationId },
+    });
+
+    if (!invitation || invitation.familyId !== user.familyMember.familyId) {
+        return { error: "Solicitud no válida o no para tu familia." };
+    }
+    
+    const role = user.familyMember.role;
+    if (role !== FamilyRole.LEADER && role !== FamilyRole.CO_LEADER) {
+        return { error: "Solo los líderes y co-líderes pueden aceptar solicitudes." };
+    }
+
+    try {
+        await prisma.$transaction(async (tx) => {
+            // Check if user to be added is already in a family
+            const applicant = await tx.user.findUnique({
+                where: { id: invitation.userId },
+                include: { familyMember: true }
+            });
+            if (applicant?.familyMember) {
+                throw new Error("El usuario ya se ha unido a otra familia.");
+            }
+
+            await tx.familyMember.create({
+                data: {
+                    userId: invitation.userId,
+                    familyId: invitation.familyId,
+                    role: FamilyRole.MEMBER
+                }
+            });
+            
+            // Delete all pending invitations and requests for the user who was just accepted
+            await tx.familyInvitation.deleteMany({
+                where: {
+                    userId: invitation.userId
+                }
+            });
+        });
+
+        revalidatePath('/family');
+        revalidatePath('/family/requests');
+        return { success: "¡Nuevo miembro aceptado en la familia!" };
+    } catch(error: any) {
+        console.error(error);
+        return { error: error.message || "Error al aceptar al miembro." };
     }
 }
