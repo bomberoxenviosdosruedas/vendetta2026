@@ -27,7 +27,7 @@ export default async function DashboardLayout({
   const sessionUser = await getSessionUser();
 
   if (!sessionUser) {
-    redirect('/');
+    redirect('/login');
   }
 
   // Se ejecutan en paralelo para optimizar la carga

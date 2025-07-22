@@ -1,3 +1,4 @@
+
 import { RecruitmentView } from "@/components/dashboard/recruitment-view"
 import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -42,11 +43,13 @@ export default async function RecruitmentPage() {
   const troopConfigs = await getTroopConfigurations();
 
   const troopsWithStats = troopConfigs.map(config => {
-      const { ataqueActual, defensaActual } = calcularStatsTropaConBonus(config, user.entrenamientos);
+      const { ataqueActual, defensaActual, capacidadActual, velocidadActual } = calcularStatsTropaConBonus(config, user.entrenamientos);
       return {
           ...config,
           ataqueActual,
           defensaActual,
+          capacidadActual,
+          velocidadActual,
       }
   })
   

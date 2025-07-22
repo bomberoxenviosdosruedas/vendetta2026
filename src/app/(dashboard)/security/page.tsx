@@ -55,11 +55,13 @@ export default async function SecurityPage() {
   });
 
   const troopsWithStats = sortedDefenseTroops.map(config => {
-      const { ataqueActual, defensaActual } = calcularStatsTropaConBonus(config, user.entrenamientos);
+      const { ataqueActual, defensaActual, capacidadActual, velocidadActual } = calcularStatsTropaConBonus(config, user.entrenamientos);
       return {
           ...config,
           ataqueActual,
           defensaActual,
+          capacidadActual,
+          velocidadActual,
       }
   })
 

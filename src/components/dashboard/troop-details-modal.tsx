@@ -74,7 +74,7 @@ export function TroopDetailsModal({ troop, user, ataqueActual, defensaActual, ca
                         <TableCell className="text-right font-mono">{formatNumber(troop.ataque)}</TableCell>
                         <TableCell className="text-right font-mono">{formatNumber(troop.defensa)}</TableCell>
                         <TableCell className="text-right font-mono">{formatNumber(troop.capacidad)}</TableCell>
-                        <TableCell className="text-right font-mono">{formatNumber(troop.velocidad)}</TableCell>
+                        <TableCell className="text-right font-mono">{formatNumber(Number(troop.velocidad))}</TableCell>
                         <TableCell className="text-right font-mono">{formatNumber(troop.salario)}</TableCell>
                         <TableCell className="text-right font-mono">{formatNumber(troop.puntos)}</TableCell>
                     </TableRow>
@@ -100,7 +100,7 @@ export function TroopDetailsModal({ troop, user, ataqueActual, defensaActual, ca
                         {stats.map(stat => (
                             <div key={`base-${stat.label}`} className='flex justify-between items-baseline'>
                                 <span className='text-muted-foreground'>{stat.label}:</span>
-                                <span className='font-mono font-semibold'>{formatNumber(stat.base)}</span>
+                                <span className='font-mono font-semibold'>{formatNumber(Number(stat.base))}</span>
                             </div>
                         ))}
                     </CardContent>
