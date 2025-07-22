@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { saveTroopConfig } from "@/lib/actions/admin.actions";
-import { Loader2, Trash2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import type { ConfiguracionTropa, TipoTropa } from "@prisma/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FullConfiguracionEntrenamiento, FullConfiguracionTropa } from "@/lib/data";
@@ -118,8 +118,8 @@ export function TroopConfigForm({ troop, allTroops, allTrainings, tiposTropa, on
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <ScrollArea className="max-h-[70vh] p-1 pr-6">
+        <form onSubmit={handleSubmit} className="flex flex-col h-full">
+            <ScrollArea className="flex-grow p-1 pr-6 -mr-6">
                 <div className="space-y-6">
                     <input type="hidden" name="id" value={troop?.id || ''} />
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -224,7 +224,7 @@ export function TroopConfigForm({ troop, allTroops, allTrainings, tiposTropa, on
                     </div>
                 </div>
             </ScrollArea>
-            <div className="flex justify-end gap-2 pt-6 border-t mt-6">
+            <div className="flex justify-end gap-2 pt-6 border-t mt-6 shrink-0">
                 <Button type="button" variant="ghost" onClick={onFinished}>Cancelar</Button>
                 <Button type="submit" disabled={isPending}>
                     {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

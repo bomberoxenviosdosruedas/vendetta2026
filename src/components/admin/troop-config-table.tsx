@@ -75,7 +75,7 @@ export function TroopConfigTable({ initialData, allTrainings, tiposTropa }: Troo
                 </div>
             </CardContent>
              <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                <DialogContent className="max-w-4xl">
+                <DialogContent className="max-w-4xl h-full flex flex-col sm:h-auto sm:max-h-[90svh]">
                     <DialogHeader>
                         <DialogTitle>{selectedItem ? 'Editar' : 'Crear'} Tropa</DialogTitle>
                          <DialogDescription>
