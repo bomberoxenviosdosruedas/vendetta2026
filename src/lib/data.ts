@@ -2,7 +2,8 @@
 
 "use server"
 
-import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember, TrainingRequirement, RoomRequirement, TropaBonusContrincante, Message, MessageCategory, ColaEntrenamiento, FamilyInvitation, InvitationStatus } from '@prisma/client/edge'
+import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember, TrainingRequirement, RoomRequirement, TropaBonusContrincante, Message, MessageCategory, ColaEntrenamiento, FamilyInvitation } from '@prisma/client/edge'
+import { InvitationStatus, InvitationType } from '@prisma/client';
 import { withAccelerate } from '@prisma/extension-accelerate'
 import { cache } from 'react';
 import { calculateStorageCapacity } from './formulas/room-formulas';
@@ -56,6 +57,11 @@ export type FullFamilyMember = FamilyMember & {
 
 export type FullFamily = Family & {
     members: FullFamilyMember[]
+}
+
+export type FullFamilyInvitation = FamilyInvitation & {
+    user: { id: string; name: string; puntuacion: PuntuacionUsuario | null; avatarUrl: string | null };
+    family: { id: string; name: string; tag: string; avatarUrl: string | null; };
 }
 
 export type FullMessage = Message & {
@@ -248,7 +254,14 @@ export const getFamiliesForRanking = cache(async (): Promise<FullFamily[]> => {
             include: {
                 members: {
                     include: {
-                        user: true
+                        user: {
+                           select: {
+                                id: true,
+                                name: true,
+                                puntuacion: true,
+                                lastSeen: true,
+                           }
+                        }
                     }
                 }
             }
@@ -493,7 +506,7 @@ export const getGlobalStatistics = cache(async () => {
     }
 });
 
-export const getFamilyRequests = cache(async (familyId: string) => {
+export const getFamilyRequests = cache(async (familyId: string): Promise<FullFamilyInvitation[]> => {
     try {
         const requests = await prisma.familyInvitation.findMany({
             where: {
@@ -507,6 +520,15 @@ export const getFamilyRequests = cache(async (familyId: string) => {
                         id: true,
                         name: true,
                         puntuacion: true,
+                        avatarUrl: true
+                    }
+                },
+                family: {
+                    select: {
+                        id: true,
+                        name: true,
+                        tag: true,
+                        avatarUrl: true,
                     }
                 }
             },
@@ -514,7 +536,7 @@ export const getFamilyRequests = cache(async (familyId: string) => {
                 createdAt: 'asc'
             }
         });
-        return requests;
+        return requests as FullFamilyInvitation[];
     } catch(e) {
         console.error(`Error fetching requests for family ${familyId}`, e);
         return [];
@@ -522,7 +544,7 @@ export const getFamilyRequests = cache(async (familyId: string) => {
 });
 
 
-export const getInvitationsForUser = cache(async (userId: string) => {
+export const getInvitationsForUser = cache(async (userId: string): Promise<FullFamilyInvitation[]> => {
     try {
         const invitations = await prisma.familyInvitation.findMany({
             where: {
@@ -530,6 +552,14 @@ export const getInvitationsForUser = cache(async (userId: string) => {
                 status: InvitationStatus.PENDING,
             },
             include: {
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        puntuacion: true,
+                        avatarUrl: true
+                    }
+                },
                 family: {
                     select: {
                         id: true,
@@ -543,7 +573,7 @@ export const getInvitationsForUser = cache(async (userId: string) => {
                 createdAt: 'desc'
             }
         });
-        return invitations;
+        return invitations as FullFamilyInvitation[];
     } catch(e) {
         console.error(`Error fetching invitations for user ${userId}`, e);
         return [];
