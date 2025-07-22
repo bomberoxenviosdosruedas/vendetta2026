@@ -1,21 +1,13 @@
 
-
-import { SuperAuthForm } from "@/components/super-auth-form";
-import { getSuperUserSession } from "@/lib/auth-super";
+import { getSessionUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
-export default async function GatePage() {
-    const isSuperUser = await getSuperUserSession();
+export default async function RootPage() {
+    const user = await getSessionUser();
 
-    if (isSuperUser) {
+    if(user) {
+        redirect('/overview');
+    } else {
         redirect('/login');
     }
-
-    return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-background">
-            <SuperAuthForm />
-        </div>
-    );
 }
-
-    
