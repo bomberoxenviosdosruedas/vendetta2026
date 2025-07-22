@@ -49,11 +49,27 @@ export default async function RecruitmentPage() {
           defensaActual,
       }
   })
+  
+  const desiredOrder = [
+    "maton", "portero", "acuchillador", "pistolero", "ocupacion",
+    "espia", "porteador", "cia", "fbi", "transportista",
+    "tactico", "francotirador", "asesino", "ninja", "demoliciones", "mercenario"
+  ];
+
+  const sortedTroops = [...troopsWithStats]
+    .filter(t => t.tipo !== 'DEFENSA')
+    .sort((a, b) => {
+        const indexA = desiredOrder.indexOf(a.id);
+        const indexB = desiredOrder.indexOf(b.id);
+        if (indexA === -1) return 1;
+        if (indexB === -1) return -1;
+        return indexA - indexB;
+    });
 
   return (
     <div className="main-view">
       <Suspense fallback={<RecruitmentLoading />}>
-          <RecruitmentView user={user} troopConfigsWithStats={troopsWithStats} />
+          <RecruitmentView user={user} troopConfigsWithStats={sortedTroops} />
       </Suspense>
     </div>
   )

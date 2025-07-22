@@ -208,7 +208,20 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
         return <p>Selecciona una propiedad para enviar misiones.</p>
     }
 
-    const availableAttackTroops = selectedProperty.TropaUsuario.filter(t => t.cantidad > 0 && t.configuracion.tipo === 'ATAQUE');
+    const desiredOrder = [
+        "maton", "portero", "acuchillador", "pistolero", "ocupacion", "espia", "porteador", "cia", "fbi",
+        "transportista", "tactico", "francotirador", "asesino", "ninja", "demoliciones", "mercenario"
+    ];
+
+    const availableAttackTroops = selectedProperty.TropaUsuario
+        .filter(t => t.cantidad > 0 && t.configuracion.tipo === 'ATAQUE')
+        .sort((a,b) => {
+            const indexA = desiredOrder.indexOf(a.configuracionTropaId);
+            const indexB = desiredOrder.indexOf(b.configuracionTropaId);
+            if (indexA === -1) return 1;
+            if (indexB === -1) return -1;
+            return indexA - indexB;
+        });
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
