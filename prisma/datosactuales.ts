@@ -7,6 +7,30 @@ const prisma = new PrismaClient();
 
 const exportDir = path.join(__dirname, 'datosactuales');
 
+// Helper para convertir BigInt a Number en los objetos
+function convertBigIntsToNumbers(obj: any): any {
+  if (obj === null || typeof obj !== 'object') {
+    return obj;
+  }
+
+  if (obj instanceof Array) {
+    return obj.map(convertBigIntsToNumbers);
+  }
+
+  return Object.fromEntries(
+    Object.entries(obj).map(([key, value]) => {
+      if (typeof value === 'bigint') {
+        return [key, Number(value)];
+      }
+      if (typeof value === 'object') {
+        return [key, convertBigIntsToNumbers(value)];
+      }
+      return [key, value];
+    })
+  );
+}
+
+
 async function main() {
   console.log('⚙️  Iniciando la exportación de datos completos...');
 
@@ -15,7 +39,6 @@ async function main() {
     console.log(`📂 Directorio de exportación creado en: ${exportDir}`);
   }
 
-  // Se añaden todos los modelos de usuario y sus relacionados a la exportación
   const modelsToExport: (keyof PrismaClient)[] = [
     'configuracionHabitacion',
     'configuracionEntrenamiento',
@@ -48,9 +71,10 @@ async function main() {
       }
       
       const data = await (prisma as any)[modelName].findMany();
+      const sanitizedData = convertBigIntsToNumbers(data);
       const filePath = path.join(exportDir, `${modelName}.json`);
       
-      fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
+      fs.writeFileSync(filePath, JSON.stringify(sanitizedData, null, 2), 'utf-8');
       
       console.log(`✅ Datos del modelo '${modelName}' exportados a ${filePath}`);
     } catch (error) {

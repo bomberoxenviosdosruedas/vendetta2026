@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "id": "cmdeeokfo000t400v1ba7ph66",
+    "senderId": "cmd6rdx740003zi0w5d7c67xp",
+    "recipientId": "cmdeazg3g003k4v0umu3gzd87",
+    "subject": "Buenas tardes ",
+    "content": "Hay que probar ",
+    "isRead": false,
+    "category": "JUGADOR",
+    "createdAt": "2025-07-22T10:42:47.796Z"
+  }
+]

@@ -6,24 +6,11 @@
     "ciudad": 1,
     "barrio": 1,
     "edificio": 3,
-    "armas": 10000.00277777778,
-    "municion": 10000.00555555556,
-    "alcohol": 10000.01388888889,
-    "dolares": 10000.00638888889,
-    "ultimaActualizacion": "2025-07-22T08:59:18.056Z"
-  },
-  {
-    "id": "cmd6s83yl003nzi0wqwz31ijx",
-    "userId": "cmd6rdx740003zi0w5d7c67xp",
-    "nombre": "Colonia en 1:1",
-    "ciudad": 1,
-    "barrio": 1,
-    "edificio": 2,
-    "armas": 160000,
-    "municion": 160000,
-    "alcohol": 160000,
-    "dolares": 160000,
-    "ultimaActualizacion": "2025-07-22T09:24:00.541Z"
+    "armas": 9979.916666666633,
+    "municion": 9971.83333333333,
+    "alcohol": 10079.58333333334,
+    "dolares": 10036.60833333334,
+    "ultimaActualizacion": "2025-07-22T10:34:53.238Z"
   },
   {
     "id": "cmd6rdxey0005zi0wo4g1kht1",
@@ -36,6 +23,19 @@
     "municion": 15010000,
     "alcohol": 15010000,
     "dolares": 15010000,
-    "ultimaActualizacion": "2025-07-22T09:24:00.541Z"
+    "ultimaActualizacion": "2025-07-22T10:50:23.812Z"
+  },
+  {
+    "id": "cmd6s83yl003nzi0wqwz31ijx",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
+    "nombre": "Colonia en 1:1",
+    "ciudad": 1,
+    "barrio": 1,
+    "edificio": 2,
+    "armas": 160000,
+    "municion": 160000,
+    "alcohol": 160000,
+    "dolares": 160000,
+    "ultimaActualizacion": "2025-07-22T10:50:23.812Z"
   }
 ]

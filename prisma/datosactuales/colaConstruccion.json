@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "id": "cmdeeede4000j400vrh0ed2zi",
+    "propiedadId": "cmdeazg3g003l4v0u4hpm8ztp",
+    "habitacionId": "almacen_de_municion",
+    "nivelDestino": 2,
+    "duracion": 1200,
+    "fechaInicio": "2025-07-22T10:34:51.931Z",
+    "fechaFinalizacion": "2025-07-22T10:54:51.931Z",
+    "createdAt": "2025-07-22T10:34:52.105Z"
+  }
+]

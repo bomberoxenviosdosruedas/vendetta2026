@@ -1,95 +1,114 @@
 [
   {
+    "id": "cmdeca4jx002t0v0v8syivopn",
     "tropaAtacanteId": "guardia_de_honor",
     "tropaDefensoraId": "asesino",
     "factorPrioridad": 2.1
   },
   {
+    "id": "cmdeca4rh002v0v0vs1q4yv4j",
     "tropaAtacanteId": "guardaespaldas",
     "tropaDefensoraId": "francotirador",
     "factorPrioridad": 1.5
   },
   {
+    "id": "cmdeca4z2002x0v0v9qq546ci",
     "tropaAtacanteId": "guardaespaldas",
     "tropaDefensoraId": "asesino",
     "factorPrioridad": 1.8
   },
   {
+    "id": "cmdeca56i002z0v0v7qgjn9h7",
     "tropaAtacanteId": "guardaespaldas",
     "tropaDefensoraId": "espia",
     "factorPrioridad": 0.5
   },
   {
+    "id": "cmdeca5e100310v0vtn7lgsaj",
     "tropaAtacanteId": "trabajador_ilegal",
     "tropaDefensoraId": "espia",
     "factorPrioridad": 2
   },
   {
+    "id": "cmdeca5l600330v0v23shno51",
     "tropaAtacanteId": "trabajador_ilegal",
     "tropaDefensoraId": "fbi",
     "factorPrioridad": 1.5
   },
   {
+    "id": "cmdeca5t500350v0v2dl1q58e",
     "tropaAtacanteId": "centinela",
     "tropaDefensoraId": "guardaespaldas",
     "factorPrioridad": 1.8
   },
   {
+    "id": "cmdeca60900370v0v9q0w8s5m",
     "tropaAtacanteId": "cia",
     "tropaDefensoraId": "francotirador",
     "factorPrioridad": 1.3
   },
   {
+    "id": "cmdeca67i00390v0v56pt39b4",
     "tropaAtacanteId": "fbi",
     "tropaDefensoraId": "asesino",
     "factorPrioridad": 1.8
   },
   {
+    "id": "cmdeca6ev003b0v0v4xl04i97",
     "tropaAtacanteId": "fbi",
     "tropaDefensoraId": "fbi",
     "factorPrioridad": 0.6
   },
   {
+    "id": "cmdeca6m3003d0v0vfo1db7ll",
     "tropaAtacanteId": "francotirador",
     "tropaDefensoraId": "guardia_de_honor",
     "factorPrioridad": 2
   },
   {
+    "id": "cmdeca6tg003f0v0v8xl59gaj",
     "tropaAtacanteId": "asesino",
     "tropaDefensoraId": "mercenario",
     "factorPrioridad": 2
   },
   {
+    "id": "cmdeca71b003h0v0vlxeplorw",
     "tropaAtacanteId": "asesino",
     "tropaDefensoraId": "centinela",
     "factorPrioridad": 1.4
   },
   {
+    "id": "cmdeca78l003j0v0v49y3poth",
     "tropaAtacanteId": "ninja",
     "tropaDefensoraId": "transportista",
     "factorPrioridad": 1.8
   },
   {
+    "id": "cmdeca7fu003l0v0vgz2ijosc",
     "tropaAtacanteId": "ninja",
     "tropaDefensoraId": "porteador",
     "factorPrioridad": 1.5
   },
   {
+    "id": "cmdeca7na003n0v0v70bds63c",
     "tropaAtacanteId": "mercenario",
     "tropaDefensoraId": "maton",
     "factorPrioridad": 0.5
   },
   {
+    "id": "cmdeca7ur003p0v0vckt1qzx2",
     "tropaAtacanteId": "maton",
     "tropaDefensoraId": "trabajador_ilegal",
     "factorPrioridad": 3
   },
   {
+    "id": "cmdeca826003r0v0vtsgn85uy",
     "tropaAtacanteId": "policia",
     "tropaDefensoraId": "maton",
     "factorPrioridad": 1.9
   },
   {
+    "id": "cmdeca89q003t0v0vu6i8dlzv",
     "tropaAtacanteId": "policia",
     "tropaDefensoraId": "espia",
     "factorPrioridad": 2
