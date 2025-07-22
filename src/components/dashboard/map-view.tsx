@@ -42,7 +42,7 @@ const BuildingGrid = ({ properties, currentUser, currentCiudad, currentBarrio }:
     }
 
     return (
-        <div className="relative w-full aspect-video rounded-lg border overflow-hidden">
+        <div className="relative w-full aspect-[17/15] rounded-lg border overflow-hidden bg-black">
              <Image
                 src="/img/map.png"
                 alt="Mapa de la ciudad"
@@ -50,7 +50,7 @@ const BuildingGrid = ({ properties, currentUser, currentCiudad, currentBarrio }:
                 className="object-cover z-0"
                 data-ai-hint="city map background"
             />
-            <div className="absolute inset-0 grid grid-cols-17 gap-0.5 p-1 md:p-2 z-10">
+            <div className="absolute inset-0 grid grid-cols-17 gap-0.5 p-1 z-10">
                 {buildings.map(({ edificio, property }) => {
                     const isOwnedByCurrentUser = property?.userId === currentUser.id;
                     const hasOwner = !!property;
@@ -62,12 +62,14 @@ const BuildingGrid = ({ properties, currentUser, currentCiudad, currentBarrio }:
                                     <TooltipTrigger asChild>
                                         <DialogTrigger asChild>
                                             <div className={cn(
-                                                "aspect-square flex items-center justify-center rounded-sm text-xs font-bold transition-colors cursor-pointer",
-                                                isOwnedByCurrentUser ? "bg-primary/90 text-primary-foreground hover:bg-primary" : 
-                                                hasOwner ? "bg-destructive/90 text-destructive-foreground hover:bg-destructive" : 
-                                                "bg-black/40 hover:bg-black/60"
+                                                "aspect-square flex items-center justify-center rounded-sm text-xs font-bold transition-colors cursor-pointer border",
+                                                isOwnedByCurrentUser 
+                                                    ? "bg-primary/70 border-primary/90 text-primary-foreground hover:bg-primary" 
+                                                    : hasOwner 
+                                                        ? "bg-destructive/70 border-destructive/90 text-destructive-foreground hover:bg-destructive" 
+                                                        : "bg-black/40 border-black/60 hover:bg-black/60"
                                             )}>
-                                                {hasOwner && <span>{edificio}</span>}
+                                                <span className="opacity-75">{hasOwner && edificio}</span>
                                             </div>
                                         </DialogTrigger>
                                     </TooltipTrigger>
