@@ -37,7 +37,8 @@ export async function logout() {
 }
 
 export async function getSessionUser() {
-  const username = cookies().get(SESSION_COOKIE_NAME)?.value;
+  const cookieStore = cookies();
+  const username = cookieStore.get(SESSION_COOKIE_NAME)?.value;
   if (!username) {
     return null;
   }

@@ -51,7 +51,7 @@ export function BonusConfigMatrix({ attackTroops, defenseTroops, initialBonusCon
     };
 
     const handleSubmit = () => {
-        const bonusData: { tropaAtacanteId: string; tropaDefensoraId: string; factorPrioridad: number }[] = [];
+        const bonusData: Omit<TropaBonusContrincante, 'id'>[] = [];
         matrix.forEach((defenderMap, attackerId) => {
             defenderMap.forEach((factor, defenderId) => {
                 // Solo guardamos si el factor es diferente de 1 para no llenar la DB

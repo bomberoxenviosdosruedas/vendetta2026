@@ -30,11 +30,13 @@ export async function logoutAdmin() {
 }
 
 export async function getAdminSession(): Promise<boolean> {
-    const cookie = cookies().get(ADMIN_COOKIE_NAME);
+    const cookieStore = cookies();
+    const cookie = cookieStore.get(ADMIN_COOKIE_NAME);
     return cookie?.value === 'true';
 }
 
 export async function verifyAdminSession(): Promise<boolean> {
-    const cookie = cookies().get(ADMIN_COOKIE_NAME);
+    const cookieStore = cookies();
+    const cookie = cookieStore.get(ADMIN_COOKIE_NAME);
     return cookie?.value === 'true';
 }

@@ -210,7 +210,7 @@ export async function saveTroopConfig(formData: FormData) {
         ataque: parseNumber(formData.get('ataque')),
         defensa: parseNumber(formData.get('defensa')),
         capacidad: parseNumber(formData.get('capacidad')),
-        velocidad: parseInt(parseString(formData.get('velocidad')), 10),
+        velocidad: Number(formData.get('velocidad')),
         salario: parseNumber(formData.get('salario')),
         tipo: parseString(formData.get('tipo')) as TipoTropa,
         requisitos: parseStringArray(formData.get('requisitos')),
@@ -268,7 +268,7 @@ export async function deleteTroopConfig(id: string) {
 }
 
 // Bonus Config
-export async function saveTroopBonusConfig(bonusData: TropaBonusContrincante[]) {
+export async function saveTroopBonusConfig(bonusData: Omit<TropaBonusContrincante, 'id'>[]) {
     const isAdmin = await verifyAdminSession();
     if (!isAdmin) return { error: "No autorizado" };
 

@@ -17,6 +17,7 @@ export async function loginSuperUserSession() {
 }
 
 export async function getSuperUserSession(): Promise<boolean> {
-    const cookie = cookies().get(SUPER_USER_COOKIE_NAME);
+    const cookieStore = cookies();
+    const cookie = cookieStore.get(SUPER_USER_COOKIE_NAME);
     return cookie?.value === 'true';
 }

@@ -33,6 +33,7 @@ import {
 import { PropertySelector } from "./property-selector"
 import type { UserWithProgress } from "@/lib/data"
 import { useProperty } from "@/contexts/property-context"
+import { ComponentProps } from "react"
 
 interface NavItem {
   href: string
@@ -102,14 +103,15 @@ export function SidebarNav({ user }: SidebarNavProps) {
         return (
           <SidebarMenuItem key={item.href}>
             <SidebarMenuButton
-              as={Link}
-              href={finalHref}
+              asChild
               isActive={pathname.startsWith(item.href)}
               tooltip={item.label}
               onClick={handleClick}
             >
-              {item.icon}
-              <span>{item.label}</span>
+              <Link href={finalHref}>
+                {item.icon}
+                <span>{item.label}</span>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         )

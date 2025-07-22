@@ -322,7 +322,19 @@ export async function verificarYFinalizarEntrenamientos(user: UserWithProgress):
     }
 
     if (seHizoUnCambio) {
-        const userRefrescado = await prisma.user.findUnique({ where: { id: user.id }, include: { colaEntrenamientos: true } });
+        const userRefrescado = await prisma.user.findUnique({ 
+            where: { id: user.id }, 
+            include: { 
+                colaEntrenamientos: {
+                    include: {
+                        entrenamiento: true,
+                        propiedad: {
+                            select: { nombre: true }
+                        }
+                    }
+                }
+            } 
+        });
         return { ...user, colaEntrenamientos: userRefrescado?.colaEntrenamientos || [] };
     }
     

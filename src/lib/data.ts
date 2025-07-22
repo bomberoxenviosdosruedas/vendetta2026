@@ -2,7 +2,7 @@
 
 "use server"
 
-import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember, TrainingRequirement, RoomRequirement, TropaBonusContrincante, Message, MessageCategory, ColaEntrenamiento, FamilyInvitation, InvitationStatus, InvitationType } from '@prisma/client/edge'
+import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember, TrainingRequirement, RoomRequirement, TropaBonusContrincante, Message, MessageCategory, ColaEntrenamiento, FamilyInvitation, InvitationStatus, InvitationType, Prisma } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 import { cache } from 'react';
 import { calculateStorageCapacity } from './formulas/room-formulas';
@@ -349,7 +349,7 @@ const userInclude = {
                     }
                 },
                  orderBy: {
-                    configuracionHabitacionId: 'asc'
+                    configuracionHabitacionId: 'asc' as Prisma.SortOrder
                 }
             },
             TropaUsuario: {
@@ -359,7 +359,7 @@ const userInclude = {
             },
             colaConstruccion: {
                 orderBy: {
-                    createdAt: 'asc'
+                    createdAt: 'asc' as Prisma.SortOrder
                 }
             },
             colaReclutamiento: {
@@ -374,13 +374,13 @@ const userInclude = {
             configuracion: true
         },
         orderBy: {
-            configuracionEntrenamientoId: 'asc'
+            configuracionEntrenamientoId: 'asc' as Prisma.SortOrder
         }
     },
     puntuacion: true,
     misiones: {
         orderBy: {
-            fechaLlegada: 'asc'
+            fechaLlegada: 'asc' as Prisma.SortOrder
         }
     },
     colaEntrenamientos: {
@@ -391,7 +391,7 @@ const userInclude = {
             }
         },
         orderBy: {
-            fechaFinalizacion: 'asc'
+            fechaFinalizacion: 'asc' as Prisma.SortOrder
         }
     },
     familyMember: {
@@ -464,7 +464,7 @@ export const getGlobalStatistics = cache(async () => {
             prisma.entrenamientoUsuario.findMany(),
             prisma.tropaUsuario.findMany({
                 where: {
-                    propiedad: { isNot: null }
+                    propiedadId: { not: null }
                 },
                 include: {
                     propiedad: {
