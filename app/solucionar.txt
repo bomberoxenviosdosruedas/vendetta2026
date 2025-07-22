@@ -1,9 +1,0 @@
-Optimiza la logica del backend para que sea mas modular y escalable. Reestructura el directorio 'src/lib' dividiendo las responsabilidades.
-
-1.  Crea un nuevo directorio 'src/lib/formulas' para toda la logica de negocio pura. Mueve los calculos de costos, tiempos de construccion, produccion de recursos y estadisticas de tropas a archivos especificos dentro de esta carpeta, como 'room-formulas.ts' y 'troop-formulas.ts'. Asegurate de que estas funciones sean exportadas para poder usarlas en otros lugares.
-
-2.  Reorganiza el directorio 'src/lib/actions'. Separa las Server Actions en archivos especificos por dominio, como 'user.actions.ts', 'room.actions.ts' y 'training.actions.ts'. Estas acciones deben importar las formulas del directorio 'formulas' y la logica de datos desde 'data.ts'. Su unica responsabilidad debe ser validar entradas, ejecutar la logica y actualizar la base de datos.
-
-3.  Refina 'src/lib/data.ts' para que se encargue exclusivamente de las consultas de lectura a la base de datos. Optimiza las consultas y manten el uso de 'React.cache' para mejorar el rendimiento.
-
-Asegurate de que todas las rutas de importacion se actualicen correctamente y que no se utilice nunca un directorio como 'app/src/lib'. La ruta correcta siempre es 'src/lib'.
