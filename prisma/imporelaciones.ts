@@ -174,16 +174,28 @@ async function main() {
       }
     }
     
+    // Group requirements by trainingId
+    const trainingRequirementsByTrainingId: Record<string, typeof trainingRequirements> = {};
     for (const req of trainingRequirements) {
-      try {
-          await prisma.trainingRequirement.upsert({
-              where: { trainingId_requiredTrainingId: { trainingId: req.trainingId, requiredTrainingId: req.requiredTrainingId } },
-              update: req,
-              create: req,
-          });
-      } catch(e) {
-          console.error(`Error con requisito de entrenamiento ${req.trainingId}`, e);
+      if (!trainingRequirementsByTrainingId[req.trainingId]) {
+        trainingRequirementsByTrainingId[req.trainingId] = [];
       }
+      trainingRequirementsByTrainingId[req.trainingId].push(req);
+    }
+
+    for (const trainingId in trainingRequirementsByTrainingId) {
+        try {
+            // Delete old requirements for this training
+            await prisma.trainingRequirement.deleteMany({
+                where: { trainingId: trainingId }
+            });
+            // Create new ones
+            await prisma.trainingRequirement.createMany({
+                data: trainingRequirementsByTrainingId[trainingId]
+            });
+        } catch(e) {
+            console.error(`Error con requisito de entrenamiento ${trainingId}`, e);
+        }
     }
 
     for (const bonus of tropaBonus) {
