@@ -60,7 +60,6 @@ export function FamilyDashboardView({ family, currentUser, allUsers, pendingRequ
     const canManage = userRole === FamilyRole.LEADER || userRole === FamilyRole.CO_LEADER;
 
     const usersNotInFamily = allUsers.filter(u => !u.familyMember && u.id !== currentUser.id);
-    const topMembers = family.members.slice(0, 5);
 
     return (
         <div className="main-view space-y-6">
@@ -81,7 +80,7 @@ export function FamilyDashboardView({ family, currentUser, allUsers, pendingRequ
                 </div>
                  <div className="p-4 border-t bg-muted/30 flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                        {canManage && <InviteMemberDialog familyId={family.id} allUsers={usersNotInFamily} currentUser={currentUser} />}
+                        {canManage && <InviteMemberDialog familyId={family.id} allUsers={usersNotInFamily} />}
                         {canManage && (
                              <Button asChild size="sm" variant="outline">
                                 <Link href={`/family/requests`}>
