@@ -24,29 +24,26 @@ interface TroopConfigFormProps {
     onFinished: () => void;
 }
 
-type BonusContrincanteState = {
-    contrincanteId: string;
-    factorPrioridad: number;
-}
-
 function CheckboxList({ title, items, selectedItems, onSelectionChange }: { title: string, items: {id: string, nombre: string}[], selectedItems: Set<string>, onSelectionChange: (id: string, checked: boolean) => void}) {
     return (
         <div className="space-y-2">
             <Label>{title}</Label>
-            <div className="border rounded-md p-4 space-y-2 max-h-40 overflow-y-auto">
-                {items.map(item => (
-                    <div key={item.id} className="flex items-center gap-2">
-                        <Checkbox
-                            id={`${title}-${item.id}`}
-                            checked={selectedItems.has(item.id)}
-                            onCheckedChange={(checked) => onSelectionChange(item.id, !!checked)}
-                        />
-                         <Label htmlFor={`${title}-${item.id}`} className="font-normal">
-                            {item.nombre}
-                        </Label>
-                    </div>
-                ))}
-            </div>
+            <ScrollArea className="h-40 w-full rounded-md border p-4">
+                 <div className="space-y-2">
+                    {items.map(item => (
+                        <div key={item.id} className="flex items-center gap-2">
+                            <Checkbox
+                                id={`${title}-${item.id}`}
+                                checked={selectedItems.has(item.id)}
+                                onCheckedChange={(checked) => onSelectionChange(item.id, !!checked)}
+                            />
+                            <Label htmlFor={`${title}-${item.id}`} className="font-normal">
+                                {item.nombre}
+                            </Label>
+                        </div>
+                    ))}
+                 </div>
+            </ScrollArea>
         </div>
     )
 }
@@ -67,7 +64,7 @@ export function TroopConfigForm({ troop, allTroops, allTrainings, tiposTropa, on
         defensa: troop?.defensa || 0,
         puntos: troop?.puntos || 0,
         capacidad: troop?.capacidad || 0,
-        velocidad: troop?.velocidad || 0,
+        velocidad: troop?.velocidad.toString() || '0',
         salario: troop?.salario || 0,
         duracion: troop?.duracion || 0,
         tipo: troop?.tipo || 'ATAQUE',
@@ -90,8 +87,6 @@ export function TroopConfigForm({ troop, allTroops, allTrainings, tiposTropa, on
     const [bonusDefensa, setBonusDefensa] = useState(new Set(troop?.bonusDefensa || []));
     const [requisitos, setRequisitos] = useState(new Set(troop?.requisitos || []));
 
-    const [bonusContrincantes, setBonusContrincantes] = useState<BonusContrincanteState[]>(troop?.bonusContrincante || []);
-
     const handleSelectionChange = (setter: React.Dispatch<React.SetStateAction<Set<string>>>, id: string, checked: boolean) => {
         setter(prev => {
             const newSet = new Set(prev);
@@ -104,31 +99,12 @@ export function TroopConfigForm({ troop, allTroops, allTrainings, tiposTropa, on
         });
     }
 
-    const handleAddBonus = () => {
-        setBonusContrincantes([...bonusContrincantes, { contrincanteId: '', factorPrioridad: 1.0 }]);
-    }
-
-    const handleRemoveBonus = (index: number) => {
-        setBonusContrincantes(bonusContrincantes.filter((_, i) => i !== index));
-    }
-
-    const handleBonusChange = (index: number, field: keyof BonusContrincanteState, value: string | number) => {
-        const newBonuses = [...bonusContrincantes];
-        if (field === 'factorPrioridad') {
-             newBonuses[index][field] = Number(value);
-        } else {
-             newBonuses[index][field] = String(value);
-        }
-        setBonusContrincantes(newBonuses);
-    }
-
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const form = new FormData(e.currentTarget);
         form.append('bonusAtaque', Array.from(bonusAtaque).join(','));
         form.append('bonusDefensa', Array.from(bonusDefensa).join(','));
         form.append('requisitos', Array.from(requisitos).join(','));
-        form.append('bonusContrincantes', JSON.stringify(bonusContrincantes));
         
         startTransition(async () => {
             const result = await saveTroopConfig(form);
@@ -144,9 +120,9 @@ export function TroopConfigForm({ troop, allTroops, allTrainings, tiposTropa, on
     return (
         <form onSubmit={handleSubmit}>
             <ScrollArea className="max-h-[70vh] p-1 pr-6">
-                <div className="space-y-4">
+                <div className="space-y-6">
                     <input type="hidden" name="id" value={troop?.id || ''} />
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
                             <Label htmlFor="idForm">ID (Editable solo al crear)</Label>
                             <Input id="idForm" name="idForm" value={formData.id} onChange={handleInputChange} required disabled={!!troop} />
@@ -164,7 +140,7 @@ export function TroopConfigForm({ troop, allTroops, allTrainings, tiposTropa, on
                         <Label htmlFor="urlImagen">URL de Imagen</Label>
                         <Input id="urlImagen" name="urlImagen" value={formData.urlImagen} onChange={handleInputChange} />
                     </div>
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                         <div className="space-y-2">
                             <Label htmlFor="costoArmas">Armas</Label>
                             <Input id="costoArmas" name="costoArmas" type="number" value={formData.costoArmas || ''} onChange={handleInputChange} placeholder="0"/>
@@ -178,7 +154,7 @@ export function TroopConfigForm({ troop, allTroops, allTrainings, tiposTropa, on
                             <Input id="costoDolares" name="costoDolares" type="number" value={formData.costoDolares || ''} onChange={handleInputChange} placeholder="0"/>
                         </div>
                     </div>
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                         <div className="space-y-2">
                             <Label htmlFor="ataque">Ataque</Label>
                             <Input id="ataque" name="ataque" type="number" value={formData.ataque || ''} onChange={handleInputChange} placeholder="0"/>
@@ -192,14 +168,14 @@ export function TroopConfigForm({ troop, allTroops, allTrainings, tiposTropa, on
                             <Input id="puntos" name="puntos" type="number" step="0.01" value={formData.puntos || ''} onChange={handleInputChange} placeholder="0"/>
                         </div>
                     </div>
-                    <div className="grid grid-cols-4 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                         <div className="space-y-2">
                             <Label htmlFor="capacidad">Capacidad</Label>
                             <Input id="capacidad" name="capacidad" type="number" value={formData.capacidad || ''} onChange={handleInputChange} placeholder="0"/>
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="velocidad">Velocidad</Label>
-                            <Input id="velocidad" name="velocidad" type="number" value={formData.velocidad || ''} onChange={handleInputChange} placeholder="0"/>
+                            <Input id="velocidad" name="velocidad" type="text" value={formData.velocidad} onChange={handleInputChange} placeholder="0"/>
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="salario">Salario</Label>
@@ -224,66 +200,31 @@ export function TroopConfigForm({ troop, allTroops, allTrainings, tiposTropa, on
                         </Select>
                     </div>
                     
-                    <CheckboxList 
-                        title="Bonus Ataque"
-                        items={allTrainings}
-                        selectedItems={bonusAtaque}
-                        onSelectionChange={(id, checked) => handleSelectionChange(setBonusAtaque, id, checked)}
-                    />
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <CheckboxList 
+                            title="Bonus Ataque"
+                            items={allTrainings}
+                            selectedItems={bonusAtaque}
+                            onSelectionChange={(id, checked) => handleSelectionChange(setBonusAtaque, id, checked)}
+                        />
 
-                    <CheckboxList 
-                        title="Bonus Defensa"
-                        items={allTrainings}
-                        selectedItems={bonusDefensa}
-                        onSelectionChange={(id, checked) => handleSelectionChange(setBonusDefensa, id, checked)}
-                    />
+                        <CheckboxList 
+                            title="Bonus Defensa"
+                            items={allTrainings}
+                            selectedItems={bonusDefensa}
+                            onSelectionChange={(id, checked) => handleSelectionChange(setBonusDefensa, id, checked)}
+                        />
 
-                    <CheckboxList 
-                        title="Requisitos de Tropa"
-                        items={allTroops.filter(t => t.id !== troop?.id)}
-                        selectedItems={requisitos}
-                        onSelectionChange={(id, checked) => handleSelectionChange(setRequisitos, id, checked)}
-                    />
-
-                    <div className="space-y-4 rounded-md border p-4">
-                        <div className="flex justify-between items-center">
-                            <Label>Bonus de Prioridad vs Contrincante</Label>
-                            <Button type="button" size="sm" onClick={handleAddBonus}>Añadir Bonus</Button>
-                        </div>
-                        <div className="space-y-2">
-                            {bonusContrincantes.map((bonus, index) => (
-                                <div key={index} className="flex items-center gap-2">
-                                    <Select
-                                        value={bonus.contrincanteId}
-                                        onValueChange={(value) => handleBonusChange(index, 'contrincanteId', value)}
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Selecciona tropa..." />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {allTroops.map(t => (
-                                                <SelectItem key={t.id} value={t.id}>{t.nombre}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    <Input
-                                        type="number"
-                                        step="0.1"
-                                        placeholder="Factor (ej: 1.5)"
-                                        value={bonus.factorPrioridad || ''}
-                                        onChange={(e) => handleBonusChange(index, 'factorPrioridad', e.target.value)}
-                                        className="w-40"
-                                    />
-                                    <Button type="button" variant="ghost" size="icon" onClick={() => handleRemoveBonus(index)}>
-                                        <Trash2 className="h-4 w-4 text-destructive" />
-                                    </Button>
-                                </div>
-                            ))}
-                        </div>
+                        <CheckboxList 
+                            title="Requisitos de Tropa"
+                            items={allTroops.filter(t => t.id !== troop?.id)}
+                            selectedItems={requisitos}
+                            onSelectionChange={(id, checked) => handleSelectionChange(setRequisitos, id, checked)}
+                        />
                     </div>
                 </div>
             </ScrollArea>
-            <div className="flex justify-end gap-2 pt-4 border-t mt-4">
+            <div className="flex justify-end gap-2 pt-6 border-t mt-6">
                 <Button type="button" variant="ghost" onClick={onFinished}>Cancelar</Button>
                 <Button type="submit" disabled={isPending}>
                     {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

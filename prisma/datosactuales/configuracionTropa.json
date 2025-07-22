@@ -244,7 +244,7 @@
     "ataque": 1,
     "defensa": 1,
     "capacidad": 50,
-    "velocidad": 400000,
+    "velocidad": 160000000,
     "salario": 1,
     "tipo": "ESPIONAJE",
     "requisitos": [],
@@ -255,7 +255,7 @@
       "espionaje"
     ],
     "createdAt": "2025-07-21T07:02:32.559Z",
-    "updatedAt": "2025-07-21T07:11:40.595Z"
+    "updatedAt": "2025-07-22T06:28:50.710Z"
   },
   {
     "id": "porteador",
