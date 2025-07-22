@@ -1,5 +1,5 @@
 
-import type { ConfiguracionTropa } from '@prisma/client';
+import type { ConfiguracionTropa, TipoTropa } from '@prisma/client';
 import type { UserWithProgress } from '../data';
 
 /**
@@ -32,33 +32,62 @@ export function calcularTiempoReclutamiento(
 export function calcularStatsTropaConBonus(
     tropaConfig: ConfiguracionTropa, 
     entrenamientos: UserWithProgress['entrenamientos']
-  ): { ataqueActual: number, defensaActual: number } {
+  ): { ataqueActual: number, defensaActual: number, capacidadActual: number, velocidadActual: number } {
   
     const entrenamientosMap = new Map(entrenamientos.map(e => [e.configuracionEntrenamientoId, e.nivel]));
   
-    let ataqueBase = tropaConfig.ataque;
-    let defensaBase = tropaConfig.defensa;
+    let ataqueActual = tropaConfig.ataque;
+    let defensaActual = tropaConfig.defensa;
+    let capacidadActual = tropaConfig.capacidad;
+    let velocidadActual = tropaConfig.velocidad;
   
     const bonusAtaqueIds = tropaConfig.bonusAtaque || [];
     const bonusDefensaIds = tropaConfig.bonusDefensa || [];
-  
-    // Sumar los niveles de todos los entrenamientos relevantes para el ataque
-    const sumaNivelesAtaque = bonusAtaqueIds.reduce((sum, id) => {
-        return sum + (entrenamientosMap.get(id) || 0);
-    }, 0);
 
-    // Sumar los niveles de todos los entrenamientos relevantes para la defensa
-    const sumaNivelesDefensa = bonusDefensaIds.reduce((sum, id) => {
-        return sum + (entrenamientosMap.get(id) || 0);
-    }, 0);
+    // 1. Cálculo de Valor de Combate (Ataque y Defensa) - Multiplicativo
+    bonusAtaqueIds.forEach(id => {
+      const nivel = entrenamientosMap.get(id) || 0;
+      if (nivel > 0) {
+        ataqueActual *= (1 + Math.sqrt(nivel) / 10);
+      }
+    });
 
-    // Aplicar la fórmula: ENTERO(BASE*RAIZ(SUMA_NIVELES)/10+BASE)
-    const ataqueActual = Math.floor(ataqueBase * (Math.sqrt(sumaNivelesAtaque) / 10) + ataqueBase);
-    const defensaActual = Math.floor(defensaBase * (Math.sqrt(sumaNivelesDefensa) / 10) + defensaBase);
+    bonusDefensaIds.forEach(id => {
+      const nivel = entrenamientosMap.get(id) || 0;
+      if (nivel > 0) {
+        defensaActual *= (1 + Math.sqrt(nivel) / 10);
+      }
+    });
+
+    // 2. Bonificación de Capacidad por Contrabando
+    if (tropaConfig.tipo !== 'DEFENSA' && tropaConfig.capacidad > 0) {
+      const nivelContrabando = entrenamientosMap.get('contrabando') || 0;
+      if (nivelContrabando > 0) {
+        capacidadActual *= (1 + Math.sqrt(nivelContrabando) / 10);
+      }
+    }
+
+    // 3. Bonificaciones de Velocidad
+    const tropasRutas = ['maton', 'portero', 'acuchillador', 'pistolero', 'ocupacion', 'porteador'];
+    const tropasEncargos = ['espia', 'cia', 'fbi', 'transportista', 'tactico', 'francotirador', 'asesino', 'ninja', 'mercenario', 'demoliciones'];
+    
+    if (tropasRutas.includes(tropaConfig.id)) {
+        const nivelRutas = entrenamientosMap.get('rutas') || 0;
+        if (nivelRutas > 0) {
+            velocidadActual *= (1 + Math.sqrt(nivelRutas) / 10);
+        }
+    } else if (tropasEncargos.includes(tropaConfig.id)) {
+        const nivelEncargos = entrenamientosMap.get('encargos') || 0;
+        if (nivelEncargos > 0) {
+            velocidadActual *= (1 + Math.sqrt(nivelEncargos) / 10);
+        }
+    }
   
     return {
-      ataqueActual,
-      defensaActual,
+      ataqueActual: Math.floor(ataqueActual),
+      defensaActual: Math.floor(defensaActual),
+      capacidadActual: Math.floor(capacidadActual),
+      velocidadActual: Math.floor(velocidadActual),
     };
   }
   
