@@ -45,20 +45,20 @@ export async function calcularVelocidadFlota(
     tropasEnviadas: { id: string; cantidad: number }[],
     configs: Map<string, ConfiguracionTropa>
 ): Promise<bigint> {
-    let velocidadMasLenta = BigInt(Infinity);
+    let velocidadMasLenta: bigint | null = null;
     
     for (const tropa of tropasEnviadas) {
         if (tropa.cantidad > 0) {
             const config = configs.get(tropa.id);
             if (config) {
                  const velocidadTropa = BigInt(config.velocidad);
-                 if (velocidadMasLenta === BigInt(Infinity) || velocidadTropa < velocidadMasLenta) {
+                 if (velocidadMasLenta === null || velocidadTropa < velocidadMasLenta) {
                     velocidadMasLenta = velocidadTropa;
                 }
             }
         }
     }
-    return velocidadMasLenta === BigInt(Infinity) ? BigInt(1000) : velocidadMasLenta;
+    return velocidadMasLenta === null ? BigInt(1000) : velocidadMasLenta;
 }
 
 
