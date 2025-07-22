@@ -44,7 +44,17 @@ export default async function SecurityPage() {
   
   const defenseTroops = troopConfigs.filter(t => t.tipo === 'DEFENSA');
 
-  const troopsWithStats = defenseTroops.map(config => {
+  const desiredOrder = ["trabajador_ilegal", "centinela", "policia", "guardaespaldas", "guardia_de_honor"];
+
+  const sortedDefenseTroops = [...defenseTroops].sort((a, b) => {
+    const indexA = desiredOrder.indexOf(a.id);
+    const indexB = desiredOrder.indexOf(b.id);
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    return indexA - indexB;
+  });
+
+  const troopsWithStats = sortedDefenseTroops.map(config => {
       const { ataqueActual, defensaActual } = calcularStatsTropaConBonus(config, user.entrenamientos);
       return {
           ...config,
