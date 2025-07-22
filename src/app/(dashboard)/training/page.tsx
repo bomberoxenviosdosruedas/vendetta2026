@@ -47,9 +47,8 @@ export default async function TrainingPage() {
   const nivelEscuela = user.propiedades.flatMap(p => p.habitaciones).find(h => h.configuracionHabitacionId === 'escuela_especializacion')?.nivel || 0;
   
   const desiredOrder = [
-    'rutas', 'encargos', 'extorsion', 'administracion', 'contrabando', 'espionaje', 
-    'seguridad', 'proteccion', 'combate', 'armas', 'tiro', 'explosivos', 
-    'guerrilla', 'psicologico', 'quimico', 'honor'
+    "rutas", "encargos", "extorsion", "administracion", "contrabando", "espionaje", "seguridad",
+    "proteccion", "combate", "armas", "tiro", "explosivos", "guerrilla", "psicologico", "quimico", "honor"
   ];
 
   const sortedTrainingsData = desiredOrder.map(id => {
