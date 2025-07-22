@@ -9,7 +9,7 @@
     "duracion": 14400,
     "puntos": 76,
     "createdAt": "2025-07-21T07:02:24.660Z",
-    "updatedAt": "2025-07-21T07:02:24.660Z"
+    "updatedAt": "2025-07-21T07:11:33.606Z"
   },
   {
     "id": "encargos",
@@ -21,7 +21,7 @@
     "duracion": 1000,
     "puntos": 46,
     "createdAt": "2025-07-21T07:02:25.418Z",
-    "updatedAt": "2025-07-21T07:02:25.418Z"
+    "updatedAt": "2025-07-21T07:11:33.890Z"
   },
   {
     "id": "rutas",
@@ -33,7 +33,7 @@
     "duracion": 400,
     "puntos": 15.5,
     "createdAt": "2025-07-21T07:02:25.690Z",
-    "updatedAt": "2025-07-21T07:02:25.690Z"
+    "updatedAt": "2025-07-21T07:11:34.163Z"
   },
   {
     "id": "espionaje",
@@ -45,7 +45,7 @@
     "duracion": 800,
     "puntos": 13,
     "createdAt": "2025-07-21T07:02:26.470Z",
-    "updatedAt": "2025-07-21T07:02:26.470Z"
+    "updatedAt": "2025-07-21T07:11:34.446Z"
   },
   {
     "id": "contrabando",
@@ -57,7 +57,7 @@
     "duracion": 1900,
     "puntos": 23.5,
     "createdAt": "2025-07-21T07:02:26.738Z",
-    "updatedAt": "2025-07-21T07:02:26.738Z"
+    "updatedAt": "2025-07-21T07:11:34.713Z"
   },
   {
     "id": "extorsion",
@@ -69,7 +69,7 @@
     "duracion": 600,
     "puntos": 26,
     "createdAt": "2025-07-21T07:02:27.012Z",
-    "updatedAt": "2025-07-21T07:02:27.012Z"
+    "updatedAt": "2025-07-21T07:11:34.992Z"
   },
   {
     "id": "proteccion",
@@ -81,7 +81,7 @@
     "duracion": 1000,
     "puntos": 96,
     "createdAt": "2025-07-21T07:02:27.273Z",
-    "updatedAt": "2025-07-21T07:02:27.273Z"
+    "updatedAt": "2025-07-21T07:11:35.264Z"
   },
   {
     "id": "combate",
@@ -93,7 +93,7 @@
     "duracion": 1240,
     "puntos": 76,
     "createdAt": "2025-07-21T07:02:27.556Z",
-    "updatedAt": "2025-07-21T07:02:27.556Z"
+    "updatedAt": "2025-07-21T07:11:35.536Z"
   },
   {
     "id": "armas",
@@ -105,7 +105,7 @@
     "duracion": 1020,
     "puntos": 53,
     "createdAt": "2025-07-21T07:02:27.822Z",
-    "updatedAt": "2025-07-21T07:02:27.822Z"
+    "updatedAt": "2025-07-21T07:11:35.816Z"
   },
   {
     "id": "seguridad",
@@ -117,7 +117,7 @@
     "duracion": 840,
     "puntos": 61,
     "createdAt": "2025-07-21T07:02:28.090Z",
-    "updatedAt": "2025-07-21T07:02:28.090Z"
+    "updatedAt": "2025-07-21T07:11:36.093Z"
   },
   {
     "id": "explosivos",
@@ -129,7 +129,7 @@
     "duracion": 8400,
     "puntos": 471,
     "createdAt": "2025-07-21T07:02:28.366Z",
-    "updatedAt": "2025-07-21T07:02:28.366Z"
+    "updatedAt": "2025-07-21T07:11:36.362Z"
   },
   {
     "id": "honor",
@@ -141,7 +141,7 @@
     "duracion": 18400,
     "puntos": 4201,
     "createdAt": "2025-07-21T07:02:28.641Z",
-    "updatedAt": "2025-07-21T07:02:28.641Z"
+    "updatedAt": "2025-07-21T07:11:36.639Z"
   },
   {
     "id": "quimico",
@@ -153,7 +153,7 @@
     "duracion": 2880,
     "puntos": 0,
     "createdAt": "2025-07-21T07:02:28.920Z",
-    "updatedAt": "2025-07-21T07:02:28.920Z"
+    "updatedAt": "2025-07-21T07:11:36.904Z"
   },
   {
     "id": "tiro",
@@ -165,7 +165,7 @@
     "duracion": 3840,
     "puntos": 296,
     "createdAt": "2025-07-21T07:02:29.187Z",
-    "updatedAt": "2025-07-21T07:02:29.187Z"
+    "updatedAt": "2025-07-21T07:11:37.171Z"
   },
   {
     "id": "psicologico",
@@ -177,7 +177,7 @@
     "duracion": 5200,
     "puntos": 301,
     "createdAt": "2025-07-21T07:02:29.457Z",
-    "updatedAt": "2025-07-21T07:02:29.457Z"
+    "updatedAt": "2025-07-21T07:11:37.455Z"
   },
   {
     "id": "guerrilla",
@@ -189,6 +189,6 @@
     "duracion": 4000,
     "puntos": 321,
     "createdAt": "2025-07-21T07:02:29.721Z",
-    "updatedAt": "2025-07-21T07:02:29.721Z"
+    "updatedAt": "2025-07-21T07:11:37.725Z"
   }
 ]

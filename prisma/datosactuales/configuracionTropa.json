@@ -19,7 +19,7 @@
     "bonusAtaque": [],
     "bonusDefensa": [],
     "createdAt": "2025-07-21T07:02:30.127Z",
-    "updatedAt": "2025-07-21T07:02:30.127Z"
+    "updatedAt": "2025-07-21T07:11:38.143Z"
   },
   {
     "id": "guardia_de_honor",
@@ -41,7 +41,7 @@
     "bonusAtaque": [],
     "bonusDefensa": [],
     "createdAt": "2025-07-21T07:02:30.395Z",
-    "updatedAt": "2025-07-21T07:02:30.395Z"
+    "updatedAt": "2025-07-21T07:11:38.423Z"
   },
   {
     "id": "portero",
@@ -68,7 +68,7 @@
       "seguridad"
     ],
     "createdAt": "2025-07-21T07:02:30.674Z",
-    "updatedAt": "2025-07-21T07:02:30.674Z"
+    "updatedAt": "2025-07-21T07:11:38.694Z"
   },
   {
     "id": "guardaespaldas",
@@ -90,7 +90,7 @@
     "bonusAtaque": [],
     "bonusDefensa": [],
     "createdAt": "2025-07-21T07:02:30.937Z",
-    "updatedAt": "2025-07-21T07:02:30.937Z"
+    "updatedAt": "2025-07-21T07:11:38.971Z"
   },
   {
     "id": "maton",
@@ -112,7 +112,7 @@
     "bonusAtaque": [],
     "bonusDefensa": [],
     "createdAt": "2025-07-21T07:02:31.207Z",
-    "updatedAt": "2025-07-21T07:02:31.207Z"
+    "updatedAt": "2025-07-21T07:11:39.246Z"
   },
   {
     "id": "acuchillador",
@@ -140,7 +140,7 @@
       "combate"
     ],
     "createdAt": "2025-07-21T07:02:31.486Z",
-    "updatedAt": "2025-07-21T07:02:31.486Z"
+    "updatedAt": "2025-07-21T07:11:39.521Z"
   },
   {
     "id": "pistolero",
@@ -167,7 +167,7 @@
       "proteccion"
     ],
     "createdAt": "2025-07-21T07:02:31.756Z",
-    "updatedAt": "2025-07-21T07:02:31.756Z"
+    "updatedAt": "2025-07-21T07:11:39.786Z"
   },
   {
     "id": "mercenario",
@@ -207,7 +207,7 @@
       "psicologico"
     ],
     "createdAt": "2025-07-21T07:02:32.030Z",
-    "updatedAt": "2025-07-21T07:02:32.030Z"
+    "updatedAt": "2025-07-21T07:11:40.061Z"
   },
   {
     "id": "ocupacion",
@@ -229,7 +229,7 @@
     "bonusAtaque": [],
     "bonusDefensa": [],
     "createdAt": "2025-07-21T07:02:32.294Z",
-    "updatedAt": "2025-07-21T07:02:32.294Z"
+    "updatedAt": "2025-07-21T07:11:40.330Z"
   },
   {
     "id": "espia",
@@ -255,7 +255,7 @@
       "espionaje"
     ],
     "createdAt": "2025-07-21T07:02:32.559Z",
-    "updatedAt": "2025-07-21T07:02:32.559Z"
+    "updatedAt": "2025-07-21T07:11:40.595Z"
   },
   {
     "id": "porteador",
@@ -281,7 +281,7 @@
       "combate"
     ],
     "createdAt": "2025-07-21T07:02:32.827Z",
-    "updatedAt": "2025-07-21T07:02:32.827Z"
+    "updatedAt": "2025-07-21T07:11:40.877Z"
   },
   {
     "id": "cia",
@@ -310,7 +310,7 @@
       "guerrilla"
     ],
     "createdAt": "2025-07-21T07:02:33.113Z",
-    "updatedAt": "2025-07-21T07:02:33.113Z"
+    "updatedAt": "2025-07-21T07:11:41.144Z"
   },
   {
     "id": "fbi",
@@ -338,7 +338,7 @@
       "tiro"
     ],
     "createdAt": "2025-07-21T07:02:33.381Z",
-    "updatedAt": "2025-07-21T07:02:33.381Z"
+    "updatedAt": "2025-07-21T07:11:41.417Z"
   },
   {
     "id": "transportista",
@@ -365,7 +365,7 @@
       "psicologico"
     ],
     "createdAt": "2025-07-21T07:02:33.646Z",
-    "updatedAt": "2025-07-21T07:02:33.646Z"
+    "updatedAt": "2025-07-21T07:11:41.703Z"
   },
   {
     "id": "francotirador",
@@ -396,7 +396,7 @@
       "psicologico"
     ],
     "createdAt": "2025-07-21T07:02:33.933Z",
-    "updatedAt": "2025-07-21T07:02:33.933Z"
+    "updatedAt": "2025-07-21T07:11:41.971Z"
   },
   {
     "id": "asesino",
@@ -430,7 +430,7 @@
       "psicologico"
     ],
     "createdAt": "2025-07-21T07:02:34.198Z",
-    "updatedAt": "2025-07-21T07:02:34.198Z"
+    "updatedAt": "2025-07-21T07:11:42.254Z"
   },
   {
     "id": "ninja",
@@ -462,7 +462,7 @@
       "psicologico"
     ],
     "createdAt": "2025-07-21T07:02:34.480Z",
-    "updatedAt": "2025-07-21T07:02:34.480Z"
+    "updatedAt": "2025-07-21T07:11:42.522Z"
   },
   {
     "id": "trabajador_ilegal",
@@ -484,7 +484,7 @@
     "bonusAtaque": [],
     "bonusDefensa": [],
     "createdAt": "2025-07-21T07:02:34.746Z",
-    "updatedAt": "2025-07-21T07:02:34.746Z"
+    "updatedAt": "2025-07-21T07:11:42.803Z"
   },
   {
     "id": "centinela",
@@ -506,6 +506,50 @@
     "bonusAtaque": [],
     "bonusDefensa": [],
     "createdAt": "2025-07-21T07:02:35.021Z",
-    "updatedAt": "2025-07-21T07:02:35.021Z"
+    "updatedAt": "2025-07-21T07:11:43.070Z"
+  },
+  {
+    "id": "demoliciones",
+    "nombre": "Experto en Demoliciones",
+    "urlImagen": "/img/U15K.gif",
+    "descripcion": "Este tipo es capaz de cargarse a varios enemigos de un tirón, quizá no sea demasiado bueno en el combate físico, pero la ventaja es evidente. Puede hacer maravillas con un buen entrenamiento.",
+    "costoArmas": 1,
+    "costoMunicion": 1,
+    "costoDolares": 1,
+    "duracion": 1,
+    "puntos": 1,
+    "ataque": 1,
+    "defensa": 1,
+    "capacidad": 1,
+    "velocidad": 1,
+    "salario": 1,
+    "tipo": "ATAQUE",
+    "requisitos": [],
+    "bonusAtaque": [],
+    "bonusDefensa": [],
+    "createdAt": "2025-07-22T00:43:05.362Z",
+    "updatedAt": "2025-07-22T00:43:20.779Z"
+  },
+  {
+    "id": "tactico",
+    "nombre": "Experto Táctico",
+    "urlImagen": "/img/U14K.gif",
+    "descripcion": "En cada familia es bueno tener a alguien que sepa al dedillo todas las buenas costumbres de etiqueta. Este chaval cumple todos los requisitos para ello, tiene profundos conocimientos de la anatomía humana, lo aprovecha para causar el mayor dolor si es necesario y a su vez es un experto en temas diplomáticos. Pero cuidado detrás de esa apariencia frágil se esconde en realidad un verdadero profesional del combate.",
+    "costoArmas": 5000,
+    "costoMunicion": 10000,
+    "costoDolares": 4000,
+    "duracion": 1,
+    "puntos": 76,
+    "ataque": 120,
+    "defensa": 300,
+    "capacidad": 4000,
+    "velocidad": 1000,
+    "salario": 1,
+    "tipo": "ATAQUE",
+    "requisitos": [],
+    "bonusAtaque": [],
+    "bonusDefensa": [],
+    "createdAt": "2025-07-22T00:40:48.868Z",
+    "updatedAt": "2025-07-22T03:45:34.833Z"
   }
 ]

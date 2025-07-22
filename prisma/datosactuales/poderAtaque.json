@@ -1,11 +1,5 @@
 [
   {
-    "id": "cmdcrdj0m0000110vihwwq7dp",
-    "propiedades": 1,
-    "honor": 0,
-    "modificador": 100
-  },
-  {
     "id": "cmdcrdj8l0001110vmgzvdrj4",
     "propiedades": 1,
     "honor": 1,
@@ -15,12 +9,6 @@
     "id": "cmdcrdjg30002110vnr3f40cv",
     "propiedades": 1,
     "honor": 2,
-    "modificador": 100
-  },
-  {
-    "id": "cmdcrdjne0003110v9ez2pi3f",
-    "propiedades": 1,
-    "honor": 3,
     "modificador": 100
   },
   {
@@ -120,12 +108,6 @@
     "modificador": 99
   },
   {
-    "id": "cmdcrdn6f000k110vy11yp7cw",
-    "propiedades": 2,
-    "honor": 9,
-    "modificador": 99
-  },
-  {
     "id": "cmdcrdne2000l110vcahgeffx",
     "propiedades": 2,
     "honor": 10,
@@ -219,12 +201,6 @@
     "id": "cmdcrdqif0010110vszybbohp",
     "propiedades": 4,
     "honor": 3,
-    "modificador": 99
-  },
-  {
-    "id": "cmdcrdqq30011110vz5b1ldfw",
-    "propiedades": 4,
-    "honor": 4,
     "modificador": 99
   },
   {
@@ -324,12 +300,6 @@
     "modificador": 99
   },
   {
-    "id": "cmdcrdu9h001i110vzkyve4ql",
-    "propiedades": 5,
-    "honor": 10,
-    "modificador": 99
-  },
-  {
     "id": "cmdcrduh9001j110vti8f3hcv",
     "propiedades": 6,
     "honor": 0,
@@ -423,12 +393,6 @@
     "id": "cmdcrdxlc001y110vvumc34qc",
     "propiedades": 7,
     "honor": 4,
-    "modificador": 99
-  },
-  {
-    "id": "cmdcrdxsu001z110vb3rhsrfc",
-    "propiedades": 7,
-    "honor": 5,
     "modificador": 99
   },
   {
@@ -528,12 +492,6 @@
     "modificador": 99
   },
   {
-    "id": "cmdcre1cy002g110vz69eltl4",
-    "propiedades": 9,
-    "honor": 0,
-    "modificador": 99
-  },
-  {
     "id": "cmdcre1ka002h110vvxgznirb",
     "propiedades": 9,
     "honor": 1,
@@ -630,12 +588,6 @@
     "modificador": 99
   },
   {
-    "id": "cmdcre4ve002x110vb3m3av1r",
-    "propiedades": 10,
-    "honor": 6,
-    "modificador": 99
-  },
-  {
     "id": "cmdcre530002y110vo0pseup7",
     "propiedades": 10,
     "honor": 7,
@@ -720,12 +672,6 @@
     "modificador": 99
   },
   {
-    "id": "cmdcre7zg003c110vyzwfobyq",
-    "propiedades": 11,
-    "honor": 10,
-    "modificador": 99
-  },
-  {
     "id": "cmdcre86q003d110vjy5gt18t",
     "propiedades": 12,
     "honor": 0,
@@ -735,12 +681,6 @@
     "id": "cmdcre8e5003e110v63203de0",
     "propiedades": 12,
     "honor": 1,
-    "modificador": 99
-  },
-  {
-    "id": "cmdcre8li003f110v9041epdj",
-    "propiedades": 12,
-    "honor": 2,
     "modificador": 99
   },
   {
@@ -840,12 +780,6 @@
     "modificador": 99
   },
   {
-    "id": "cmdcrec4l003w110vxwobo77y",
-    "propiedades": 13,
-    "honor": 8,
-    "modificador": 99
-  },
-  {
     "id": "cmdcreccc003x110v0lnk4uei",
     "propiedades": 13,
     "honor": 9,
@@ -939,12 +873,6 @@
     "id": "cmdcrefry004c110v7vcvemql",
     "propiedades": 15,
     "honor": 2,
-    "modificador": 99
-  },
-  {
-    "id": "cmdcrefzj004d110v3efplmts",
-    "propiedades": 15,
-    "honor": 3,
     "modificador": 99
   },
   {
@@ -1044,12 +972,6 @@
     "modificador": 99
   },
   {
-    "id": "cmdcrejhu004u110vjyjm803k",
-    "propiedades": 16,
-    "honor": 9,
-    "modificador": 99
-  },
-  {
     "id": "cmdcrejp8004v110vbuobzbj7",
     "propiedades": 16,
     "honor": 10,
@@ -1146,12 +1068,6 @@
     "modificador": 98
   },
   {
-    "id": "cmdcren0z005b110voky5dsn5",
-    "propiedades": 18,
-    "honor": 4,
-    "modificador": 99
-  },
-  {
     "id": "cmdcren8l005c110vvs1eur4w",
     "propiedades": 18,
     "honor": 5,
@@ -1245,12 +1161,6 @@
     "id": "cmdcreqdu005r110v4f8pqgtw",
     "propiedades": 19,
     "honor": 9,
-    "modificador": 99
-  },
-  {
-    "id": "cmdcreql8005s110vktr3k2x5",
-    "propiedades": 19,
-    "honor": 10,
     "modificador": 99
   },
   {
@@ -1350,12 +1260,6 @@
     "modificador": 98
   },
   {
-    "id": "cmdcreu3v0069110vw9nw6dxz",
-    "propiedades": 21,
-    "honor": 5,
-    "modificador": 98
-  },
-  {
     "id": "cmdcreubi006a110vjb360sfw",
     "propiedades": 21,
     "honor": 6,
@@ -1440,12 +1344,6 @@
     "modificador": 99
   },
   {
-    "id": "cmdcrex8v006o110vuhftwfnw",
-    "propiedades": 22,
-    "honor": 9,
-    "modificador": 99
-  },
-  {
     "id": "cmdcrexg8006p110vxbsqup0t",
     "propiedades": 22,
     "honor": 10,
@@ -1456,12 +1354,6 @@
     "propiedades": 23,
     "honor": 0,
     "modificador": 90
-  },
-  {
-    "id": "cmdcrexv3006r110vwq3gveb3",
-    "propiedades": 23,
-    "honor": 1,
-    "modificador": 92
   },
   {
     "id": "cmdcrey2f006s110voo4gqwha",
@@ -1560,12 +1452,6 @@
     "modificador": 97
   },
   {
-    "id": "cmdcrf1dg0078110v9zrnu3av",
-    "propiedades": 24,
-    "honor": 7,
-    "modificador": 98
-  },
-  {
     "id": "cmdcrf1kt0079110ve8uzyb3y",
     "propiedades": 24,
     "honor": 8,
@@ -1660,12 +1546,6 @@
     "propiedades": 26,
     "honor": 1,
     "modificador": 87
-  },
-  {
-    "id": "cmdcrf4wv007p110vgntw338y",
-    "propiedades": 26,
-    "honor": 2,
-    "modificador": 91
   },
   {
     "id": "cmdcrf54p007q110vdno6jrf6",
@@ -1764,12 +1644,6 @@
     "modificador": 97
   },
   {
-    "id": "cmdcrf8fi0086110vz4xouzhm",
-    "propiedades": 27,
-    "honor": 8,
-    "modificador": 98
-  },
-  {
     "id": "cmdcrf8n30087110vm8mcjwbm",
     "propiedades": 27,
     "honor": 9,
@@ -1866,12 +1740,6 @@
     "modificador": 85
   },
   {
-    "id": "cmdcrfbxx008n110v99798cbu",
-    "propiedades": 29,
-    "honor": 3,
-    "modificador": 89
-  },
-  {
     "id": "cmdcrfc5p008o110vhph1dl4f",
     "propiedades": 29,
     "honor": 4,
@@ -1965,12 +1833,6 @@
     "id": "cmdcrff9t0093110va65idquk",
     "propiedades": 30,
     "honor": 8,
-    "modificador": 97
-  },
-  {
-    "id": "cmdcrffh90094110vihrvoqr3",
-    "propiedades": 30,
-    "honor": 9,
     "modificador": 97
   },
   {
@@ -2070,12 +1932,6 @@
     "modificador": 84
   },
   {
-    "id": "cmdcrfj0g009l110vfk43oo39",
-    "propiedades": 32,
-    "honor": 4,
-    "modificador": 88
-  },
-  {
     "id": "cmdcrfj7j009m110vunobm0ny",
     "propiedades": 32,
     "honor": 5,
@@ -2160,12 +2016,6 @@
     "modificador": 94
   },
   {
-    "id": "cmdcrfm4c00a0110vccm6phka",
-    "propiedades": 33,
-    "honor": 8,
-    "modificador": 96
-  },
-  {
     "id": "cmdcrfmbl00a1110v9awr7lg3",
     "propiedades": 33,
     "honor": 9,
@@ -2176,12 +2026,6 @@
     "propiedades": 33,
     "honor": 10,
     "modificador": 97
-  },
-  {
-    "id": "cmdcrfmqh00a3110vngh51z5v",
-    "propiedades": 34,
-    "honor": 0,
-    "modificador": 59
   },
   {
     "id": "cmdcrfmxy00a4110v8xg19zj9",
@@ -2280,12 +2124,6 @@
     "modificador": 88
   },
   {
-    "id": "cmdcrfq9m00ak110vwpl9smlj",
-    "propiedades": 35,
-    "honor": 6,
-    "modificador": 91
-  },
-  {
     "id": "cmdcrfqh300al110v7ee1amh7",
     "propiedades": 35,
     "honor": 7,
@@ -2380,12 +2218,6 @@
     "propiedades": 37,
     "honor": 0,
     "modificador": 49
-  },
-  {
-    "id": "cmdcrftre00b1110vuzzj93mu",
-    "propiedades": 37,
-    "honor": 1,
-    "modificador": 58
   },
   {
     "id": "cmdcrftz300b2110vv4loxn9c",
@@ -2484,12 +2316,6 @@
     "modificador": 88
   },
   {
-    "id": "cmdcrfxab00bi110ve0p6e3ng",
-    "propiedades": 38,
-    "honor": 7,
-    "modificador": 91
-  },
-  {
     "id": "cmdcrfxi000bj110v900sr2mh",
     "propiedades": 38,
     "honor": 8,
@@ -2584,12 +2410,6 @@
     "propiedades": 40,
     "honor": 1,
     "modificador": 49
-  },
-  {
-    "id": "cmdcrg0tv00bz110v5qmdf3im",
-    "propiedades": 40,
-    "honor": 2,
-    "modificador": 59
   },
   {
     "id": "cmdcrg11700c0110vfn2c7aql",
@@ -2688,12 +2508,6 @@
     "modificador": 88
   },
   {
-    "id": "cmdcrg4c900cg110vz2wy6r10",
-    "propiedades": 41,
-    "honor": 8,
-    "modificador": 91
-  },
-  {
     "id": "cmdcrg4jf00ch110vi2zbkkvd",
     "propiedades": 41,
     "honor": 9,
@@ -2790,12 +2604,6 @@
     "modificador": 51
   },
   {
-    "id": "cmdcrg7uf00cx110v7lj1w1nj",
-    "propiedades": 43,
-    "honor": 3,
-    "modificador": 60
-  },
-  {
     "id": "cmdcrg81u00cy110vut018wyl",
     "propiedades": 43,
     "honor": 4,
@@ -2880,12 +2688,6 @@
     "modificador": 81
   },
   {
-    "id": "cmdcrgayb00dc110vrpjayosk",
-    "propiedades": 44,
-    "honor": 7,
-    "modificador": 86
-  },
-  {
     "id": "cmdcrgb6700dd110v39frlnqv",
     "propiedades": 44,
     "honor": 8,
@@ -2895,12 +2697,6 @@
     "id": "cmdcrgbdp00de110vdvhmm3ze",
     "propiedades": 44,
     "honor": 9,
-    "modificador": 91
-  },
-  {
-    "id": "cmdcrgbl500df110v8n4wdef2",
-    "propiedades": 44,
-    "honor": 10,
     "modificador": 91
   },
   {
@@ -3000,12 +2796,6 @@
     "modificador": 62
   },
   {
-    "id": "cmdcrgf5g00dw110v6gqhlnwa",
-    "propiedades": 46,
-    "honor": 5,
-    "modificador": 70
-  },
-  {
     "id": "cmdcrgfd300dx110vcxascu62",
     "propiedades": 46,
     "honor": 6,
@@ -3100,12 +2890,6 @@
     "propiedades": 47,
     "honor": 10,
     "modificador": 89
-  },
-  {
-    "id": "cmdcrgioq00ed110vsrxyit0x",
-    "propiedades": 48,
-    "honor": 0,
-    "modificador": 22
   },
   {
     "id": "cmdcrgiw100ee110vvu57ng3i",
@@ -3204,12 +2988,6 @@
     "modificador": 65
   },
   {
-    "id": "cmdcrgm6y00eu110v717yv30s",
-    "propiedades": 49,
-    "honor": 6,
-    "modificador": 73
-  },
-  {
     "id": "cmdcrgmeb00ev110vrb8vf64z",
     "propiedades": 49,
     "honor": 7,
@@ -3304,12 +3082,6 @@
     "propiedades": 51,
     "honor": 0,
     "modificador": 18
-  },
-  {
-    "id": "cmdcrgpp700fb110vzr57tiqu",
-    "propiedades": 51,
-    "honor": 1,
-    "modificador": 24
   },
   {
     "id": "cmdcrgpwk00fc110vpbwugr10",
@@ -3408,12 +3180,6 @@
     "modificador": 68
   },
   {
-    "id": "cmdcrgt7s00fs110vxygc6yvg",
-    "propiedades": 52,
-    "honor": 7,
-    "modificador": 76
-  },
-  {
     "id": "cmdcrgtfe00ft110vr9n64a1g",
     "propiedades": 52,
     "honor": 8,
@@ -3510,12 +3276,6 @@
     "modificador": 20
   },
   {
-    "id": "cmdcrgwso00g9110vu5os7ko9",
-    "propiedades": 54,
-    "honor": 2,
-    "modificador": 28
-  },
-  {
     "id": "cmdcrgx0200ga110vzfjoickv",
     "propiedades": 54,
     "honor": 3,
@@ -3600,12 +3360,6 @@
     "modificador": 54
   },
   {
-    "id": "cmdcrgzw800go110v3mrour2s",
-    "propiedades": 55,
-    "honor": 6,
-    "modificador": 63
-  },
-  {
     "id": "cmdcrh03o00gp110v8jmhn30r",
     "propiedades": 55,
     "honor": 7,
@@ -3616,12 +3370,6 @@
     "propiedades": 55,
     "honor": 8,
     "modificador": 79
-  },
-  {
-    "id": "cmdcrh0if00gr110vf3prdw8i",
-    "propiedades": 55,
-    "honor": 9,
-    "modificador": 80
   },
   {
     "id": "cmdcrh0pr00gs110vh7nhd0ii",
@@ -3720,12 +3468,6 @@
     "modificador": 30
   },
   {
-    "id": "cmdcrh41000h8110vopx194xq",
-    "propiedades": 57,
-    "honor": 4,
-    "modificador": 40
-  },
-  {
     "id": "cmdcrh48b00h9110vgihgegqo",
     "propiedades": 57,
     "honor": 5,
@@ -3820,12 +3562,6 @@
     "propiedades": 58,
     "honor": 9,
     "modificador": 76
-  },
-  {
-    "id": "cmdcrh7k400hp110vxl48f33p",
-    "propiedades": 58,
-    "honor": 10,
-    "modificador": 77
   },
   {
     "id": "cmdcrh7rm00hq110v05bv7jot",
@@ -3924,12 +3660,6 @@
     "modificador": 35
   },
   {
-    "id": "cmdcrhb2n00i6110vebls5ihd",
-    "propiedades": 60,
-    "honor": 5,
-    "modificador": 45
-  },
-  {
     "id": "cmdcrhbam00i7110v9nwppgxn",
     "propiedades": 60,
     "honor": 6,
@@ -4024,12 +3754,6 @@
     "propiedades": 61,
     "honor": 10,
     "modificador": 74
-  },
-  {
-    "id": "cmdcrhen700in110vagyd0yvr",
-    "propiedades": 62,
-    "honor": 0,
-    "modificador": 8
   },
   {
     "id": "cmdcrheup00io110vyttln2of",
@@ -4128,12 +3852,6 @@
     "modificador": 40
   },
   {
-    "id": "cmdcrhi5s00j4110vjxbld9pf",
-    "propiedades": 63,
-    "honor": 6,
-    "modificador": 50
-  },
-  {
     "id": "cmdcrhid000j5110v0sc4q3dd",
     "propiedades": 63,
     "honor": 7,
@@ -4230,12 +3948,6 @@
     "modificador": 6
   },
   {
-    "id": "cmdcrhlov00jl110vpwqkexbh",
-    "propiedades": 65,
-    "honor": 1,
-    "modificador": 10
-  },
-  {
     "id": "cmdcrhlvy00jm110vn6p00kox",
     "propiedades": 65,
     "honor": 2,
@@ -4320,12 +4032,6 @@
     "modificador": 27
   },
   {
-    "id": "cmdcrhose00k0110vhdpy7esu",
-    "propiedades": 66,
-    "honor": 5,
-    "modificador": 35
-  },
-  {
     "id": "cmdcrhozo00k1110vsoffyhor",
     "propiedades": 66,
     "honor": 6,
@@ -4336,12 +4042,6 @@
     "propiedades": 66,
     "honor": 7,
     "modificador": 55
-  },
-  {
-    "id": "cmdcrhpej00k3110v95kv5hay",
-    "propiedades": 66,
-    "honor": 8,
-    "modificador": 66
   },
   {
     "id": "cmdcrhplt00k4110vkm8rxsf7",
@@ -4440,12 +4140,6 @@
     "modificador": 12
   },
   {
-    "id": "cmdcrhswp00kk110vj7ntz09p",
-    "propiedades": 68,
-    "honor": 3,
-    "modificador": 17
-  },
-  {
     "id": "cmdcrht4g00kl110vnqdegf5h",
     "propiedades": 68,
     "honor": 4,
@@ -4540,12 +4234,6 @@
     "propiedades": 69,
     "honor": 8,
     "modificador": 62
-  },
-  {
-    "id": "cmdcrhwfk00l1110vvk9gp8co",
-    "propiedades": 69,
-    "honor": 9,
-    "modificador": 63
   },
   {
     "id": "cmdcrhwmt00l2110v0ndm8cgb",
@@ -4644,12 +4332,6 @@
     "modificador": 14
   },
   {
-    "id": "cmdcrhzz600li110vn896leq5",
-    "propiedades": 71,
-    "honor": 4,
-    "modificador": 21
-  },
-  {
     "id": "cmdcri06p00lj110vnqbtrys7",
     "propiedades": 71,
     "honor": 5,
@@ -4744,12 +4426,6 @@
     "propiedades": 72,
     "honor": 9,
     "modificador": 59
-  },
-  {
-    "id": "cmdcri3i700lz110v7porgd6o",
-    "propiedades": 72,
-    "honor": 10,
-    "modificador": 60
   },
   {
     "id": "cmdcri3pj00m0110vj8tverpp",
@@ -4848,12 +4524,6 @@
     "modificador": 18
   },
   {
-    "id": "cmdcri71k00mg110vveec2vys",
-    "propiedades": 74,
-    "honor": 5,
-    "modificador": 26
-  },
-  {
     "id": "cmdcri78r00mh110vkgt9d0qs",
     "propiedades": 74,
     "honor": 6,
@@ -4950,12 +4620,6 @@
     "modificador": 56
   },
   {
-    "id": "cmdcriajo00mx110v2a9yozxh",
-    "propiedades": 76,
-    "honor": 0,
-    "modificador": 3
-  },
-  {
     "id": "cmdcriarb00my110vri3h6hwp",
     "propiedades": 76,
     "honor": 1,
@@ -5040,12 +4704,6 @@
     "modificador": 11
   },
   {
-    "id": "cmdcridox00nc110v7j6acj8e",
-    "propiedades": 77,
-    "honor": 4,
-    "modificador": 16
-  },
-  {
     "id": "cmdcridwc00nd110v1mpfreig",
     "propiedades": 77,
     "honor": 5,
@@ -5056,12 +4714,6 @@
     "propiedades": 77,
     "honor": 6,
     "modificador": 31
-  },
-  {
-    "id": "cmdcrieba00nf110vkzfynchj",
-    "propiedades": 77,
-    "honor": 7,
-    "modificador": 42
   },
   {
     "id": "cmdcrieiq00ng110vblusibry",
@@ -5160,12 +4812,6 @@
     "modificador": 4
   },
   {
-    "id": "cmdcrihwk00nw110vc7gqba8h",
-    "propiedades": 79,
-    "honor": 2,
-    "modificador": 6
-  },
-  {
     "id": "cmdcrii4500nx110vdhs7707d",
     "propiedades": 79,
     "honor": 3,
@@ -5260,12 +4906,6 @@
     "propiedades": 80,
     "honor": 7,
     "modificador": 38
-  },
-  {
-    "id": "cmdcrilez00od110vrx7oog03",
-    "propiedades": 80,
-    "honor": 8,
-    "modificador": 48
   },
   {
     "id": "cmdcrilmb00oe110vre2qiryk",
@@ -5364,12 +5004,6 @@
     "modificador": 6
   },
   {
-    "id": "cmdcrioyb00ou110vplpghak4",
-    "propiedades": 82,
-    "honor": 3,
-    "modificador": 8
-  },
-  {
     "id": "cmdcrip5z00ov110vp0mr0sa7",
     "propiedades": 82,
     "honor": 4,
@@ -5464,12 +5098,6 @@
     "propiedades": 83,
     "honor": 8,
     "modificador": 45
-  },
-  {
-    "id": "cmdcrisic00pb110vegxw7kjf",
-    "propiedades": 83,
-    "honor": 9,
-    "modificador": 46
   },
   {
     "id": "cmdcrisps00pc110vgubnlch4",
@@ -5568,12 +5196,6 @@
     "modificador": 7
   },
   {
-    "id": "cmdcriw0d00ps110v9z7xwmd7",
-    "propiedades": 85,
-    "honor": 4,
-    "modificador": 11
-  },
-  {
     "id": "cmdcriw7q00pt110vb9ws7bet",
     "propiedades": 85,
     "honor": 5,
@@ -5670,12 +5292,6 @@
     "modificador": 43
   },
   {
-    "id": "cmdcrizju00q9110vciax36sj",
-    "propiedades": 86,
-    "honor": 10,
-    "modificador": 44
-  },
-  {
     "id": "cmdcrizre00qa110vm7vojrnk",
     "propiedades": 87,
     "honor": 0,
@@ -5760,12 +5376,6 @@
     "modificador": 4
   },
   {
-    "id": "cmdcrj2o600qo110vstk4b1cb",
-    "propiedades": 88,
-    "honor": 3,
-    "modificador": 6
-  },
-  {
     "id": "cmdcrj2vr00qp110vhjdrben4",
     "propiedades": 88,
     "honor": 4,
@@ -5776,12 +5386,6 @@
     "propiedades": 88,
     "honor": 5,
     "modificador": 14
-  },
-  {
-    "id": "cmdcrj3aq00qr110vpfz0zqbw",
-    "propiedades": 88,
-    "honor": 6,
-    "modificador": 20
   },
   {
     "id": "cmdcrj3i900qs110vsmuvei2h",
@@ -5880,12 +5484,6 @@
     "modificador": 1
   },
   {
-    "id": "cmdcrj6ud00r8110vn36pmd3p",
-    "propiedades": 90,
-    "honor": 1,
-    "modificador": 2
-  },
-  {
     "id": "cmdcrj71w00r9110vgj84ndh3",
     "propiedades": 90,
     "honor": 2,
@@ -5980,12 +5578,6 @@
     "propiedades": 91,
     "honor": 6,
     "modificador": 18
-  },
-  {
-    "id": "cmdcrjaci00rp110v7xh4m27o",
-    "propiedades": 91,
-    "honor": 7,
-    "modificador": 27
   },
   {
     "id": "cmdcrjak300rq110vqjj0sst5",
@@ -6084,12 +5676,6 @@
     "modificador": 2
   },
   {
-    "id": "cmdcrjdxb00s6110vvtlssv8g",
-    "propiedades": 93,
-    "honor": 2,
-    "modificador": 3
-  },
-  {
     "id": "cmdcrje4u00s7110vfmg1a5rm",
     "propiedades": 93,
     "honor": 3,
@@ -6184,12 +5770,6 @@
     "propiedades": 94,
     "honor": 7,
     "modificador": 25
-  },
-  {
-    "id": "cmdcrjhfw00sn110vhpui01kk",
-    "propiedades": 94,
-    "honor": 8,
-    "modificador": 34
   },
   {
     "id": "cmdcrjhn800so110vm32uqojd",
@@ -6288,12 +5868,6 @@
     "modificador": 3
   },
   {
-    "id": "cmdcrjl1500t4110vlapikms7",
-    "propiedades": 96,
-    "honor": 3,
-    "modificador": 4
-  },
-  {
     "id": "cmdcrjl8j00t5110vjo9vk8sq",
     "propiedades": 96,
     "honor": 4,
@@ -6390,12 +5964,6 @@
     "modificador": 31
   },
   {
-    "id": "cmdcrjojs00tl110v9a4x97ws",
-    "propiedades": 97,
-    "honor": 9,
-    "modificador": 32
-  },
-  {
     "id": "cmdcrjor400tm110vv9ajv9tm",
     "propiedades": 97,
     "honor": 10,
@@ -6478,6 +6046,438 @@
     "propiedades": 99,
     "honor": 1,
     "modificador": 1
+  },
+  {
+    "id": "cmdcrdj0m0000110vihwwq7dp",
+    "propiedades": 1,
+    "honor": 0,
+    "modificador": 100
+  },
+  {
+    "id": "cmdcrdjne0003110v9ez2pi3f",
+    "propiedades": 1,
+    "honor": 3,
+    "modificador": 100
+  },
+  {
+    "id": "cmdcrdn6f000k110vy11yp7cw",
+    "propiedades": 2,
+    "honor": 9,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcrdqq30011110vz5b1ldfw",
+    "propiedades": 4,
+    "honor": 4,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcrdu9h001i110vzkyve4ql",
+    "propiedades": 5,
+    "honor": 10,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcrdxsu001z110vb3rhsrfc",
+    "propiedades": 7,
+    "honor": 5,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcre1cy002g110vz69eltl4",
+    "propiedades": 9,
+    "honor": 0,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcre4ve002x110vb3m3av1r",
+    "propiedades": 10,
+    "honor": 6,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcre7zg003c110vyzwfobyq",
+    "propiedades": 11,
+    "honor": 10,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcre8li003f110v9041epdj",
+    "propiedades": 12,
+    "honor": 2,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcrec4l003w110vxwobo77y",
+    "propiedades": 13,
+    "honor": 8,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcrefzj004d110v3efplmts",
+    "propiedades": 15,
+    "honor": 3,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcrejhu004u110vjyjm803k",
+    "propiedades": 16,
+    "honor": 9,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcren0z005b110voky5dsn5",
+    "propiedades": 18,
+    "honor": 4,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcreql8005s110vktr3k2x5",
+    "propiedades": 19,
+    "honor": 10,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcreu3v0069110vw9nw6dxz",
+    "propiedades": 21,
+    "honor": 5,
+    "modificador": 98
+  },
+  {
+    "id": "cmdcrex8v006o110vuhftwfnw",
+    "propiedades": 22,
+    "honor": 9,
+    "modificador": 99
+  },
+  {
+    "id": "cmdcrexv3006r110vwq3gveb3",
+    "propiedades": 23,
+    "honor": 1,
+    "modificador": 92
+  },
+  {
+    "id": "cmdcrf1dg0078110v9zrnu3av",
+    "propiedades": 24,
+    "honor": 7,
+    "modificador": 98
+  },
+  {
+    "id": "cmdcrf4wv007p110vgntw338y",
+    "propiedades": 26,
+    "honor": 2,
+    "modificador": 91
+  },
+  {
+    "id": "cmdcrf8fi0086110vz4xouzhm",
+    "propiedades": 27,
+    "honor": 8,
+    "modificador": 98
+  },
+  {
+    "id": "cmdcrfbxx008n110v99798cbu",
+    "propiedades": 29,
+    "honor": 3,
+    "modificador": 89
+  },
+  {
+    "id": "cmdcrffh90094110vihrvoqr3",
+    "propiedades": 30,
+    "honor": 9,
+    "modificador": 97
+  },
+  {
+    "id": "cmdcrfj0g009l110vfk43oo39",
+    "propiedades": 32,
+    "honor": 4,
+    "modificador": 88
+  },
+  {
+    "id": "cmdcrfm4c00a0110vccm6phka",
+    "propiedades": 33,
+    "honor": 8,
+    "modificador": 96
+  },
+  {
+    "id": "cmdcrfmqh00a3110vngh51z5v",
+    "propiedades": 34,
+    "honor": 0,
+    "modificador": 59
+  },
+  {
+    "id": "cmdcrfq9m00ak110vwpl9smlj",
+    "propiedades": 35,
+    "honor": 6,
+    "modificador": 91
+  },
+  {
+    "id": "cmdcrftre00b1110vuzzj93mu",
+    "propiedades": 37,
+    "honor": 1,
+    "modificador": 58
+  },
+  {
+    "id": "cmdcrfxab00bi110ve0p6e3ng",
+    "propiedades": 38,
+    "honor": 7,
+    "modificador": 91
+  },
+  {
+    "id": "cmdcrg0tv00bz110v5qmdf3im",
+    "propiedades": 40,
+    "honor": 2,
+    "modificador": 59
+  },
+  {
+    "id": "cmdcrg4c900cg110vz2wy6r10",
+    "propiedades": 41,
+    "honor": 8,
+    "modificador": 91
+  },
+  {
+    "id": "cmdcrg7uf00cx110v7lj1w1nj",
+    "propiedades": 43,
+    "honor": 3,
+    "modificador": 60
+  },
+  {
+    "id": "cmdcrgayb00dc110vrpjayosk",
+    "propiedades": 44,
+    "honor": 7,
+    "modificador": 86
+  },
+  {
+    "id": "cmdcrgbl500df110v8n4wdef2",
+    "propiedades": 44,
+    "honor": 10,
+    "modificador": 91
+  },
+  {
+    "id": "cmdcrgf5g00dw110v6gqhlnwa",
+    "propiedades": 46,
+    "honor": 5,
+    "modificador": 70
+  },
+  {
+    "id": "cmdcrgioq00ed110vsrxyit0x",
+    "propiedades": 48,
+    "honor": 0,
+    "modificador": 22
+  },
+  {
+    "id": "cmdcrgm6y00eu110v717yv30s",
+    "propiedades": 49,
+    "honor": 6,
+    "modificador": 73
+  },
+  {
+    "id": "cmdcrgpp700fb110vzr57tiqu",
+    "propiedades": 51,
+    "honor": 1,
+    "modificador": 24
+  },
+  {
+    "id": "cmdcrgt7s00fs110vxygc6yvg",
+    "propiedades": 52,
+    "honor": 7,
+    "modificador": 76
+  },
+  {
+    "id": "cmdcrgwso00g9110vu5os7ko9",
+    "propiedades": 54,
+    "honor": 2,
+    "modificador": 28
+  },
+  {
+    "id": "cmdcrgzw800go110v3mrour2s",
+    "propiedades": 55,
+    "honor": 6,
+    "modificador": 63
+  },
+  {
+    "id": "cmdcrh0if00gr110vf3prdw8i",
+    "propiedades": 55,
+    "honor": 9,
+    "modificador": 80
+  },
+  {
+    "id": "cmdcrh41000h8110vopx194xq",
+    "propiedades": 57,
+    "honor": 4,
+    "modificador": 40
+  },
+  {
+    "id": "cmdcrh7k400hp110vxl48f33p",
+    "propiedades": 58,
+    "honor": 10,
+    "modificador": 77
+  },
+  {
+    "id": "cmdcrhb2n00i6110vebls5ihd",
+    "propiedades": 60,
+    "honor": 5,
+    "modificador": 45
+  },
+  {
+    "id": "cmdcrhen700in110vagyd0yvr",
+    "propiedades": 62,
+    "honor": 0,
+    "modificador": 8
+  },
+  {
+    "id": "cmdcrhi5s00j4110vjxbld9pf",
+    "propiedades": 63,
+    "honor": 6,
+    "modificador": 50
+  },
+  {
+    "id": "cmdcrhlov00jl110vpwqkexbh",
+    "propiedades": 65,
+    "honor": 1,
+    "modificador": 10
+  },
+  {
+    "id": "cmdcrhose00k0110vhdpy7esu",
+    "propiedades": 66,
+    "honor": 5,
+    "modificador": 35
+  },
+  {
+    "id": "cmdcrhpej00k3110v95kv5hay",
+    "propiedades": 66,
+    "honor": 8,
+    "modificador": 66
+  },
+  {
+    "id": "cmdcrhswp00kk110vj7ntz09p",
+    "propiedades": 68,
+    "honor": 3,
+    "modificador": 17
+  },
+  {
+    "id": "cmdcrhwfk00l1110vvk9gp8co",
+    "propiedades": 69,
+    "honor": 9,
+    "modificador": 63
+  },
+  {
+    "id": "cmdcrhzz600li110vn896leq5",
+    "propiedades": 71,
+    "honor": 4,
+    "modificador": 21
+  },
+  {
+    "id": "cmdcri3i700lz110v7porgd6o",
+    "propiedades": 72,
+    "honor": 10,
+    "modificador": 60
+  },
+  {
+    "id": "cmdcri71k00mg110vveec2vys",
+    "propiedades": 74,
+    "honor": 5,
+    "modificador": 26
+  },
+  {
+    "id": "cmdcriajo00mx110v2a9yozxh",
+    "propiedades": 76,
+    "honor": 0,
+    "modificador": 3
+  },
+  {
+    "id": "cmdcridox00nc110v7j6acj8e",
+    "propiedades": 77,
+    "honor": 4,
+    "modificador": 16
+  },
+  {
+    "id": "cmdcrieba00nf110vkzfynchj",
+    "propiedades": 77,
+    "honor": 7,
+    "modificador": 42
+  },
+  {
+    "id": "cmdcrihwk00nw110vc7gqba8h",
+    "propiedades": 79,
+    "honor": 2,
+    "modificador": 6
+  },
+  {
+    "id": "cmdcrilez00od110vrx7oog03",
+    "propiedades": 80,
+    "honor": 8,
+    "modificador": 48
+  },
+  {
+    "id": "cmdcrioyb00ou110vplpghak4",
+    "propiedades": 82,
+    "honor": 3,
+    "modificador": 8
+  },
+  {
+    "id": "cmdcrisic00pb110vegxw7kjf",
+    "propiedades": 83,
+    "honor": 9,
+    "modificador": 46
+  },
+  {
+    "id": "cmdcriw0d00ps110v9z7xwmd7",
+    "propiedades": 85,
+    "honor": 4,
+    "modificador": 11
+  },
+  {
+    "id": "cmdcrizju00q9110vciax36sj",
+    "propiedades": 86,
+    "honor": 10,
+    "modificador": 44
+  },
+  {
+    "id": "cmdcrj2o600qo110vstk4b1cb",
+    "propiedades": 88,
+    "honor": 3,
+    "modificador": 6
+  },
+  {
+    "id": "cmdcrj3aq00qr110vpfz0zqbw",
+    "propiedades": 88,
+    "honor": 6,
+    "modificador": 20
+  },
+  {
+    "id": "cmdcrj6ud00r8110vn36pmd3p",
+    "propiedades": 90,
+    "honor": 1,
+    "modificador": 2
+  },
+  {
+    "id": "cmdcrjaci00rp110v7xh4m27o",
+    "propiedades": 91,
+    "honor": 7,
+    "modificador": 27
+  },
+  {
+    "id": "cmdcrjdxb00s6110vvtlssv8g",
+    "propiedades": 93,
+    "honor": 2,
+    "modificador": 3
+  },
+  {
+    "id": "cmdcrjhfw00sn110vhpui01kk",
+    "propiedades": 94,
+    "honor": 8,
+    "modificador": 34
+  },
+  {
+    "id": "cmdcrjl1500t4110vlapikms7",
+    "propiedades": 96,
+    "honor": 3,
+    "modificador": 4
+  },
+  {
+    "id": "cmdcrjojs00tl110v9a4x97ws",
+    "propiedades": 97,
+    "honor": 9,
+    "modificador": 32
   },
   {
     "id": "cmdcrjrnn00u0110vfxtxvaws",
