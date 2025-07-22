@@ -210,7 +210,7 @@ export async function saveTroopConfig(formData: FormData) {
         ataque: parseNumber(formData.get('ataque')),
         defensa: parseNumber(formData.get('defensa')),
         capacidad: parseNumber(formData.get('capacidad')),
-        velocidad: parseNumber(formData.get('velocidad')),
+        velocidad: parseInt(parseString(formData.get('velocidad')), 10),
         salario: parseNumber(formData.get('salario')),
         tipo: parseString(formData.get('tipo')) as TipoTropa,
         requisitos: parseStringArray(formData.get('requisitos')),

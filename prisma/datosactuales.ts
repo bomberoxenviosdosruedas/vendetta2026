@@ -65,20 +65,21 @@ async function main() {
 
   for (const modelName of modelsToExport) {
     try {
-      if (typeof (prisma as any)[modelName]?.findMany !== 'function') {
-        console.log(`⚠️  El modelo '${modelName}' no tiene el método findMany y será omitido.`);
+      const model = modelName as string;
+      if (typeof (prisma as any)[model]?.findMany !== 'function') {
+        console.log(`⚠️  El modelo '${String(model)}' no tiene el método findMany y será omitido.`);
         continue;
       }
       
-      const data = await (prisma as any)[modelName].findMany();
+      const data = await (prisma as any)[model].findMany();
       const sanitizedData = convertBigIntsToNumbers(data);
-      const filePath = path.join(exportDir, `${modelName}.json`);
+      const filePath = path.join(exportDir, `${String(model)}.json`);
       
       fs.writeFileSync(filePath, JSON.stringify(sanitizedData, null, 2), 'utf-8');
       
-      console.log(`✅ Datos del modelo '${modelName}' exportados a ${filePath}`);
+      console.log(`✅ Datos del modelo '${String(model)}' exportados a ${filePath}`);
     } catch (error) {
-      console.error(`❌ Error exportando el modelo '${modelName}':`, error);
+      console.error(`❌ Error exportando el modelo '${String(modelName)}':`, error);
     }
   }
 
