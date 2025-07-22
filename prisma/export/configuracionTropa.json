@@ -1,25 +1,25 @@
 [
   {
-    "id": "policia",
-    "nombre": "Policía",
-    "urlImagen": "/img/defensa/T3.gif",
-    "descripcion": "Agente de la ley corrupto que trabaja para tu familia.",
-    "costoArmas": 5000,
-    "costoMunicion": 7500,
-    "costoDolares": 500,
-    "duracion": 3000,
-    "puntos": 25,
-    "ataque": 10,
-    "defensa": 40,
-    "capacidad": 0,
-    "velocidad": 0,
-    "salario": 10,
-    "tipo": "DEFENSA",
+    "id": "demoliciones",
+    "nombre": "Experto en Demoliciones",
+    "urlImagen": "/img/U15K.gif",
+    "descripcion": "Este tipo es capaz de cargarse a varios enemigos de un tirón, quizá no sea demasiado bueno en el combate físico, pero la ventaja es evidente. Puede hacer maravillas con un buen entrenamiento.",
+    "costoArmas": 40000,
+    "costoMunicion": 6000,
+    "costoDolares": 20000,
+    "duracion": 42000,
+    "puntos": 281,
+    "ataque": 2000,
+    "defensa": 400,
+    "capacidad": 2500,
+    "velocidad": 4200,
+    "salario": 100,
+    "tipo": "ATAQUE",
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": [],
-    "createdAt": "2025-07-20T06:48:43.948Z",
-    "updatedAt": "2025-07-20T09:32:28.511Z"
+    "createdAt": {},
+    "updatedAt": {}
   },
   {
     "id": "guardia_de_honor",
@@ -40,8 +40,8 @@
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": [],
-    "createdAt": "2025-07-20T06:48:44.513Z",
-    "updatedAt": "2025-07-20T09:32:29.083Z"
+    "createdAt": {},
+    "updatedAt": {}
   },
   {
     "id": "portero",
@@ -67,8 +67,8 @@
       "extorsion",
       "seguridad"
     ],
-    "createdAt": "2025-07-20T06:48:39.769Z",
-    "updatedAt": "2025-07-20T21:23:36.321Z"
+    "createdAt": {},
+    "updatedAt": {}
   },
   {
     "id": "guardaespaldas",
@@ -89,8 +89,8 @@
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": [],
-    "createdAt": "2025-07-20T06:48:44.240Z",
-    "updatedAt": "2025-07-20T09:32:28.799Z"
+    "createdAt": {},
+    "updatedAt": {}
   },
   {
     "id": "maton",
@@ -111,8 +111,8 @@
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": [],
-    "createdAt": "2025-07-20T06:48:39.471Z",
-    "updatedAt": "2025-07-20T21:22:53.290Z"
+    "createdAt": {},
+    "updatedAt": {}
   },
   {
     "id": "acuchillador",
@@ -139,8 +139,8 @@
       "extorsion",
       "combate"
     ],
-    "createdAt": "2025-07-20T06:48:40.045Z",
-    "updatedAt": "2025-07-20T21:24:07.967Z"
+    "createdAt": {},
+    "updatedAt": {}
   },
   {
     "id": "pistolero",
@@ -166,8 +166,8 @@
       "seguridad",
       "proteccion"
     ],
-    "createdAt": "2025-07-20T06:48:40.328Z",
-    "updatedAt": "2025-07-20T21:24:35.751Z"
+    "createdAt": {},
+    "updatedAt": {}
   },
   {
     "id": "mercenario",
@@ -206,8 +206,8 @@
       "guerrilla",
       "psicologico"
     ],
-    "createdAt": "2025-07-20T06:48:43.099Z",
-    "updatedAt": "2025-07-20T22:51:38.503Z"
+    "createdAt": {},
+    "updatedAt": {}
   },
   {
     "id": "ocupacion",
@@ -228,8 +228,8 @@
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": [],
-    "createdAt": "2025-07-20T06:48:40.610Z",
-    "updatedAt": "2025-07-20T09:32:25.087Z"
+    "createdAt": {},
+    "updatedAt": {}
   },
   {
     "id": "espia",
@@ -244,7 +244,7 @@
     "ataque": 1,
     "defensa": 1,
     "capacidad": 50,
-    "velocidad": 400000,
+    "velocidad": 160000000,
     "salario": 1,
     "tipo": "ESPIONAJE",
     "requisitos": [],
@@ -254,8 +254,8 @@
     "bonusDefensa": [
       "espionaje"
     ],
-    "createdAt": "2025-07-20T06:48:40.886Z",
-    "updatedAt": "2025-07-20T09:32:25.369Z"
+    "createdAt": {},
+    "updatedAt": {}
   },
   {
     "id": "porteador",
@@ -280,8 +280,8 @@
     "bonusDefensa": [
       "combate"
     ],
-    "createdAt": "2025-07-20T06:48:41.164Z",
-    "updatedAt": "2025-07-20T09:32:25.653Z"
+    "createdAt": {},
+    "updatedAt": {}
   },
   {
     "id": "cia",
@@ -309,8 +309,8 @@
       "proteccion",
       "guerrilla"
     ],
-    "createdAt": "2025-07-20T06:48:41.440Z",
-    "updatedAt": "2025-07-20T09:32:25.940Z"
+    "createdAt": {},
+    "updatedAt": {}
   },
   {
     "id": "fbi",
@@ -337,8 +337,8 @@
       "proteccion",
       "tiro"
     ],
-    "createdAt": "2025-07-20T06:48:41.722Z",
-    "updatedAt": "2025-07-20T09:32:26.227Z"
+    "createdAt": {},
+    "updatedAt": {}
   },
   {
     "id": "transportista",
@@ -364,8 +364,8 @@
       "proteccion",
       "psicologico"
     ],
-    "createdAt": "2025-07-20T06:48:41.997Z",
-    "updatedAt": "2025-07-20T09:32:26.510Z"
+    "createdAt": {},
+    "updatedAt": {}
   },
   {
     "id": "francotirador",
@@ -395,8 +395,8 @@
       "guerrilla",
       "psicologico"
     ],
-    "createdAt": "2025-07-20T06:48:42.279Z",
-    "updatedAt": "2025-07-20T09:32:26.794Z"
+    "createdAt": {},
+    "updatedAt": {}
   },
   {
     "id": "asesino",
@@ -429,8 +429,8 @@
       "guerrilla",
       "psicologico"
     ],
-    "createdAt": "2025-07-20T06:48:42.556Z",
-    "updatedAt": "2025-07-20T09:32:27.082Z"
+    "createdAt": {},
+    "updatedAt": {}
   },
   {
     "id": "ninja",
@@ -461,8 +461,8 @@
       "guerrilla",
       "psicologico"
     ],
-    "createdAt": "2025-07-20T06:48:42.824Z",
-    "updatedAt": "2025-07-20T09:32:27.360Z"
+    "createdAt": {},
+    "updatedAt": {}
   },
   {
     "id": "trabajador_ilegal",
@@ -483,8 +483,8 @@
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": [],
-    "createdAt": "2025-07-20T06:48:43.394Z",
-    "updatedAt": "2025-07-20T09:32:27.926Z"
+    "createdAt": {},
+    "updatedAt": {}
   },
   {
     "id": "centinela",
@@ -505,7 +505,58 @@
     "requisitos": [],
     "bonusAtaque": [],
     "bonusDefensa": [],
-    "createdAt": "2025-07-20T06:48:43.674Z",
-    "updatedAt": "2025-07-20T09:32:28.218Z"
+    "createdAt": {},
+    "updatedAt": {}
+  },
+  {
+    "id": "policia",
+    "nombre": "Policía",
+    "urlImagen": "/img/defensa/T3.gif",
+    "descripcion": "Agente de la ley corrupto que trabaja para tu familia.",
+    "costoArmas": 5000,
+    "costoMunicion": 7500,
+    "costoDolares": 500,
+    "duracion": 7500,
+    "puntos": 54,
+    "ataque": 60,
+    "defensa": 160,
+    "capacidad": 0,
+    "velocidad": 0,
+    "salario": 0,
+    "tipo": "DEFENSA",
+    "requisitos": [],
+    "bonusAtaque": [
+      "guerrilla",
+      "explosivos"
+    ],
+    "bonusDefensa": [
+      "explosivos",
+      "tiro",
+      "proteccion"
+    ],
+    "createdAt": {},
+    "updatedAt": {}
+  },
+  {
+    "id": "tactico",
+    "nombre": "Experto Táctico",
+    "urlImagen": "/img/U14K.gif",
+    "descripcion": "En cada familia es bueno tener a alguien que sepa al dedillo todas las buenas costumbres de etiqueta. Este chaval cumple todos los requisitos para ello, tiene profundos conocimientos de la anatomía humana, lo aprovecha para causar el mayor dolor si es necesario y a su vez es un experto en temas diplomáticos. Pero cuidado detrás de esa apariencia frágil se esconde en realidad un verdadero profesional del combate.",
+    "costoArmas": 5000,
+    "costoMunicion": 10000,
+    "costoDolares": 4000,
+    "duracion": 1,
+    "puntos": 76,
+    "ataque": 120,
+    "defensa": 300,
+    "capacidad": 4000,
+    "velocidad": 1000,
+    "salario": 1,
+    "tipo": "ATAQUE",
+    "requisitos": [],
+    "bonusAtaque": [],
+    "bonusDefensa": [],
+    "createdAt": {},
+    "updatedAt": {}
   }
 ]

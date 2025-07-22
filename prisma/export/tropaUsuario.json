@@ -6,12 +6,6 @@
     "cantidad": 0
   },
   {
-    "id": "cmd6re68n002dzi0wd56b3ml8",
-    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
-    "configuracionTropaId": "mercenario",
-    "cantidad": 2
-  },
-  {
     "id": "cmd6re4qh001zzi0wil07h24e",
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionTropaId": "acuchillador",
@@ -21,12 +15,6 @@
     "id": "cmd6re4ym0021zi0wc0534w2p",
     "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
     "configuracionTropaId": "asesino",
-    "cantidad": 0
-  },
-  {
-    "id": "cmd6re5e30025zi0wpkakwer4",
-    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
-    "configuracionTropaId": "espia",
     "cantidad": 0
   },
   {
@@ -84,9 +72,27 @@
     "cantidad": 0
   },
   {
-    "id": "cmdbs78d600053s0wleg35gu9",
-    "propiedadId": "cmdbpx0yh00010u0wfrt37soa",
-    "configuracionTropaId": "porteador",
+    "id": "cmd6re68n002dzi0wd56b3ml8",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "mercenario",
+    "cantidad": 56701
+  },
+  {
+    "id": "cmd6re4qh001zzi0wil07h222",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "demoliciones",
     "cantidad": 0
+  },
+  {
+    "id": "cmd6re4qh001zzi0wil07222",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "tactico",
+    "cantidad": 0
+  },
+  {
+    "id": "cmd6re5e30025zi0wpkakwer4",
+    "propiedadId": "cmd6rdxey0005zi0wo4g1kht1",
+    "configuracionTropaId": "espia",
+    "cantidad": 1
   }
 ]

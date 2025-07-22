@@ -12,12 +12,6 @@
     "nivel": 30
   },
   {
-    "id": "cmd6re2aa001dzi0w1ztflurn",
-    "userId": "cmd6rdx740003zi0w5d7c67xp",
-    "configuracionEntrenamientoId": "seguridad",
-    "nivel": 30
-  },
-  {
     "id": "cmd6re1uj0019zi0wntqzib38",
     "userId": "cmd6rdx740003zi0w5d7c67xp",
     "configuracionEntrenamientoId": "encargos",
@@ -36,24 +30,6 @@
     "nivel": 30
   },
   {
-    "id": "cmd6re36u001lzi0w3ywdyyz8",
-    "userId": "cmd6rdx740003zi0w5d7c67xp",
-    "configuracionEntrenamientoId": "psicologico",
-    "nivel": 30
-  },
-  {
-    "id": "cmd6re2i5001fzi0wd3m7tos0",
-    "userId": "cmd6rdx740003zi0w5d7c67xp",
-    "configuracionEntrenamientoId": "espionaje",
-    "nivel": 30
-  },
-  {
-    "id": "cmd6re2yy001jzi0wnqlgqr4k",
-    "userId": "cmd6rdx740003zi0w5d7c67xp",
-    "configuracionEntrenamientoId": "guerrilla",
-    "nivel": 30
-  },
-  {
     "id": "cmd6re16f0013zi0w84ohgxur",
     "userId": "cmd6rdx740003zi0w5d7c67xp",
     "configuracionEntrenamientoId": "honor",
@@ -63,12 +39,6 @@
     "id": "cmd6re3ur001rzi0wkde052nz",
     "userId": "cmd6rdx740003zi0w5d7c67xp",
     "configuracionEntrenamientoId": "combate",
-    "nivel": 30
-  },
-  {
-    "id": "cmd6re3mz001pzi0wmka30l3u",
-    "userId": "cmd6rdx740003zi0w5d7c67xp",
-    "configuracionEntrenamientoId": "armas",
     "nivel": 30
   },
   {
@@ -90,9 +60,39 @@
     "nivel": 30
   },
   {
+    "id": "cmd6re2aa001dzi0w1ztflurn",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
+    "configuracionEntrenamientoId": "seguridad",
+    "nivel": 58
+  },
+  {
+    "id": "cmd6re2yy001jzi0wnqlgqr4k",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
+    "configuracionEntrenamientoId": "guerrilla",
+    "nivel": 71
+  },
+  {
+    "id": "cmd6re36u001lzi0w3ywdyyz8",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
+    "configuracionEntrenamientoId": "psicologico",
+    "nivel": 53
+  },
+  {
+    "id": "cmd6re2i5001fzi0wd3m7tos0",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
+    "configuracionEntrenamientoId": "espionaje",
+    "nivel": 120
+  },
+  {
     "id": "cmd6re3f4001nzi0we0a0k3g1",
     "userId": "cmd6rdx740003zi0w5d7c67xp",
     "configuracionEntrenamientoId": "proteccion",
-    "nivel": 30
+    "nivel": 64
+  },
+  {
+    "id": "cmd6re3mz001pzi0wmka30l3u",
+    "userId": "cmd6rdx740003zi0w5d7c67xp",
+    "configuracionEntrenamientoId": "armas",
+    "nivel": 52
   }
 ]
