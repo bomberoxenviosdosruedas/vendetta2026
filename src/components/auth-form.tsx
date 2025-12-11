@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Loader2, Terminal } from 'lucide-react';
+import { Loader2, Terminal, Eye, EyeOff } from 'lucide-react';
 import { login } from '@/lib/auth';
 import { registerUser } from '@/lib/actions/auth.actions';
 import { getUserByUsername } from '@/lib/data';
@@ -24,6 +24,7 @@ export function AuthForm() {
     const [username, setUsername] = useState('bomberox');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     
     // Registration state (optional)
@@ -109,7 +110,31 @@ export function AuthForm() {
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="password">Contraseña</Label>
-                        <Input id="password" type="password" placeholder="Tu código secreto" value={password} onChange={(e) => setPassword(e.target.value)} required disabled={isPending} />
+                        <div className="relative">
+                            <Input
+                                id="password"
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Tu código secreto"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                disabled={isPending}
+                            />
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                                onClick={() => setShowPassword(!showPassword)}
+                                aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                            >
+                                {showPassword ? (
+                                    <EyeOff className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                                ) : (
+                                    <Eye className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                                )}
+                            </Button>
+                        </div>
                     </div>
                     {!isLoginView && (
                          <div className="space-y-2 animate-fade-in">
