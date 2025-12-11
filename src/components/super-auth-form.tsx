@@ -7,13 +7,14 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { loginSuperUser } from "@/lib/actions/super-auth.actions";
-import { Loader2 } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Image from "next/image";
 
 export function SuperAuthForm() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [isPending, startTransition] = useTransition();
     const { toast } = useToast();
 
@@ -59,14 +60,30 @@ export function SuperAuthForm() {
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="password">Contraseña</Label>
-                        <Input 
-                            id="password" 
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            disabled={isPending}
-                            required
-                        />
+                        <div className="relative">
+                            <Input
+                                id="password"
+                                type={showPassword ? "text" : "password"}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                disabled={isPending}
+                                required
+                            />
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                                onClick={() => setShowPassword(!showPassword)}
+                                aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                            >
+                                {showPassword ? (
+                                    <EyeOff className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                                ) : (
+                                    <Eye className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                                )}
+                            </Button>
+                        </div>
                     </div>
                 </CardContent>
                 <CardFooter>
