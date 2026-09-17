@@ -7,7 +7,8 @@ import prisma from './prisma/prisma';
 const SESSION_COOKIE_NAME = 'vendetta-session';
 
 export async function login(userId: string, username: string) {
-  cookies().set(SESSION_COOKIE_NAME, username, {
+  const cookieStore = await cookies();
+  cookieStore.set(SESSION_COOKIE_NAME, username, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     maxAge: 60 * 60 * 24 * 7, // One week
@@ -16,7 +17,7 @@ export async function login(userId: string, username: string) {
 
   // Log login history
   try {
-    const headerList = headers();
+    const headerList = await headers();
     const ip = headerList.get('x-forwarded-for') ?? 'unknown';
     const userAgent = headerList.get('user-agent') ?? 'unknown';
     
@@ -33,11 +34,12 @@ export async function login(userId: string, username: string) {
 }
 
 export async function logout() {
-  cookies().delete(SESSION_COOKIE_NAME);
+  const cookieStore = await cookies();
+  cookieStore.delete(SESSION_COOKIE_NAME);
 }
 
 export async function getSessionUser() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const username = cookieStore.get(SESSION_COOKIE_NAME)?.value;
   if (!username) {
     return null;

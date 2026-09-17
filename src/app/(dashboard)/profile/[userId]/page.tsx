@@ -24,13 +24,14 @@ function ProfileLoading() {
     );
 }
 
-export default async function ProfilePage({ params }: { params: { userId: string } }) {
+export default async function ProfilePage({ params }: { params: Promise<{ userId: string }> }) {
     const sessionUser = await getSessionUser();
     if (!sessionUser) {
         redirect('/');
     }
 
-    const userProfile = await getUserProfileById(params.userId);
+    const resolvedParams = await params;
+    const userProfile = await getUserProfileById(resolvedParams.userId);
 
     if (!userProfile) {
         return (

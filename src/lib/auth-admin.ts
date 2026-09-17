@@ -12,7 +12,8 @@ export async function loginAdmin(password: string) {
         return { success: false, error: "Contraseña incorrecta." };
     }
 
-    cookies().set(ADMIN_COOKIE_NAME, 'true', {
+    const cookieStore = await cookies();
+    cookieStore.set(ADMIN_COOKIE_NAME, 'true', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         maxAge: 60 * 60 * 8, // 8 hours
@@ -25,18 +26,19 @@ export async function loginAdmin(password: string) {
 }
 
 export async function logoutAdmin() {
-    cookies().delete(ADMIN_COOKIE_NAME);
+    const cookieStore = await cookies();
+    cookieStore.delete(ADMIN_COOKIE_NAME);
     redirect('/admin');
 }
 
 export async function getAdminSession(): Promise<boolean> {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const cookie = cookieStore.get(ADMIN_COOKIE_NAME);
     return cookie?.value === 'true';
 }
 
 export async function verifyAdminSession(): Promise<boolean> {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const cookie = cookieStore.get(ADMIN_COOKIE_NAME);
     return cookie?.value === 'true';
 }

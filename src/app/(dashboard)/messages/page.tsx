@@ -26,16 +26,17 @@ function MessagesLoading() {
 export default async function MessagesPage({
     searchParams
 }: {
-    searchParams?: {
+    searchParams?: Promise<{
         categoria?: string;
-    };
+    }>;
 }) {
     const user = await getSessionUser();
     if (!user) {
         redirect('/');
     }
 
-    const initialCategory = searchParams?.categoria?.toUpperCase() || 'JUGADOR';
+    const resolvedSearchParams = await searchParams;
+    const initialCategory = resolvedSearchParams?.categoria?.toUpperCase() || 'JUGADOR';
     const [messages, users] = await Promise.all([
         getMessagesForUser(user.id),
         getUsers()

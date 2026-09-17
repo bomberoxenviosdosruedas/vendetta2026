@@ -25,14 +25,15 @@ function MembersLoading() {
 export default async function FamilyMembersPage({
     searchParams,
 }: {
-    searchParams: { id?: string };
+    searchParams: Promise<{ id?: string }>;
 }) {
     const user = await getSessionUser();
     if (!user) {
         redirect('/');
     }
 
-    const familyId = searchParams.id;
+    const resolvedSearchParams = await searchParams;
+    const familyId = resolvedSearchParams.id;
     if (!familyId) {
         // Redirect to main family page if no ID is provided
         redirect('/family');

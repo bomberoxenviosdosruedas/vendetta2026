@@ -42,8 +42,9 @@ function TableSkeleton() {
 export default async function AdminPanelPage({
     searchParams
 }: {
-    searchParams?: { tab?: string }
+    searchParams?: Promise<{ tab?: string }>
 }) {
+    const resolvedSearchParams = await searchParams;
     const isAdmin = await getAdminSession();
     if (!isAdmin) {
         redirect('/admin');
@@ -64,7 +65,7 @@ export default async function AdminPanelPage({
                 <LogoutButton />
             </div>
 
-            <Tabs defaultValue={searchParams?.tab || "habitaciones"}>
+            <Tabs defaultValue={resolvedSearchParams?.tab || "habitaciones"}>
                 <TabsList>
                     <TabsTrigger value="habitaciones" asChild><Link href="?tab=habitaciones">Habitaciones</Link></TabsTrigger>
                     <TabsTrigger value="entrenamientos" asChild><Link href="?tab=entrenamientos">Entrenamientos</Link></TabsTrigger>

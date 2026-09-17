@@ -72,6 +72,26 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
     const [isSubmitting, setIsSubmitting] = useState<string | null>(null);
     const { toast } = useToast();
 
+    const construccionEnCola = selectedProperty?.colaConstruccion || [];
+
+    useEffect(() => {
+        if (!construccionEnCola || construccionEnCola.length === 0) return;
+        
+        const construccionActiva = construccionEnCola.find(c => c.fechaFinalizacion && new Date(c.fechaFinalizacion) > new Date());
+        if (!construccionActiva?.fechaFinalizacion) return;
+
+        const fin = new Date(construccionActiva.fechaFinalizacion).getTime();
+        const interval = setInterval(() => {
+            const ahora = new Date().getTime();
+            if (ahora >= fin) {
+                router.refresh();
+                clearInterval(interval);
+            }
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [construccionEnCola, router]);
+
     if (!selectedProperty) {
       return (
         <div className="main-view">
@@ -84,8 +104,6 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
         </div>
       )
     }
-
-    const construccionEnCola = selectedProperty.colaConstruccion;
 
     const userRoomsMap = new Map(selectedProperty.habitaciones.map(h => [h.configuracionHabitacionId, h]));
       
@@ -132,25 +150,6 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
             requirementsText,
         };
     }).filter((r): r is NonNullable<typeof r> => r !== null);
-
-
-    useEffect(() => {
-        if (!construccionEnCola || construccionEnCola.length === 0) return;
-        
-        const construccionActiva = construccionEnCola.find(c => c.fechaFinalizacion && new Date(c.fechaFinalizacion) > new Date());
-        if (!construccionActiva?.fechaFinalizacion) return;
-
-        const fin = new Date(construccionActiva.fechaFinalizacion).getTime();
-        const interval = setInterval(() => {
-            const ahora = new Date().getTime();
-            if (ahora >= fin) {
-                router.refresh();
-                clearInterval(interval);
-            }
-        }, 1000);
-
-        return () => clearInterval(interval);
-    }, [construccionEnCola, router]);
 
     const isQueueFull = construccionEnCola.length >= 5;
 

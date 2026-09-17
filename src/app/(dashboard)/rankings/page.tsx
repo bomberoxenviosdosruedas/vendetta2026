@@ -25,9 +25,10 @@ function RankingsLoading() {
 export default async function RankingsPage({
     searchParams
 }: {
-    searchParams?: { type?: string }
+    searchParams?: Promise<{ type?: string }>
 }) {
-    const rankingType = searchParams?.type || '0'; // Default to '0' (Jugadores)
+    const resolvedSearchParams = await searchParams;
+    const rankingType = resolvedSearchParams?.type || '0'; // Default to '0' (Jugadores)
 
     const users = rankingType === '0' ? await getUsersForRanking() : [];
     const families = rankingType === '1' ? await getFamiliesForRanking() : [];

@@ -21,19 +21,20 @@ function MapLoading() {
 export default async function MapPage({
     searchParams
 }: {
-    searchParams?: {
+    searchParams?: Promise<{
         ciudad?: string;
         barrio?: string;
-    };
+    }>;
 }) {
     const user = await getSessionUser();
     if (!user) {
         redirect('/');
     }
     
+    const resolvedSearchParams = await searchParams;
     // Si no hay params, usamos la ubicación de la primera propiedad del usuario
-    const initialCiudad = searchParams?.ciudad ? parseInt(searchParams.ciudad, 10) : user.propiedades?.[0]?.ciudad || 1;
-    const initialBarrio = searchParams?.barrio ? parseInt(searchParams.barrio, 10) : user.propiedades?.[0]?.barrio || 1;
+    const initialCiudad = resolvedSearchParams?.ciudad ? parseInt(resolvedSearchParams.ciudad, 10) : user.propiedades?.[0]?.ciudad || 1;
+    const initialBarrio = resolvedSearchParams?.barrio ? parseInt(resolvedSearchParams.barrio, 10) : user.propiedades?.[0]?.barrio || 1;
 
     const properties = await getPropertiesByLocation(initialCiudad, initialBarrio);
 

@@ -7,7 +7,8 @@ import { redirect } from "next/navigation";
 const SUPER_USER_COOKIE_NAME = 'vendetta-super-session';
 
 export async function loginSuperUserSession() {
-    cookies().set(SUPER_USER_COOKIE_NAME, 'true', {
+    const cookieStore = await cookies();
+    cookieStore.set(SUPER_USER_COOKIE_NAME, 'true', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         maxAge: 60 * 60 * 24, // 24 hours
@@ -17,7 +18,7 @@ export async function loginSuperUserSession() {
 }
 
 export async function getSuperUserSession(): Promise<boolean> {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const cookie = cookieStore.get(SUPER_USER_COOKIE_NAME);
     return cookie?.value === 'true';
 }
