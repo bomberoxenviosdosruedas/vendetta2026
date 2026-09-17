@@ -607,4 +607,239 @@ export async function getUserWithProgressByUsername(username: string): Promise<U
     }
 }
 
+export type ActivityType = 'CONSTRUCCION' | 'RECLUTAMIENTO' | 'ATAQUE' | 'ENTRENAMIENTO' | 'SISTEMA';
+export type ActivityStatus = 'COMPLETADO' | 'EN_CURSO' | 'DESPLEGADO';
+
+export interface ActivityItem {
+    id: string;
+    type: ActivityType;
+    title: string;
+    description: string;
+    timestamp: Date;
+    status: ActivityStatus;
+    propertyName?: string;
+    coordinates?: string;
+    metadata?: {
+        level?: number;
+        units?: string;
+        target?: string;
+        category?: string;
+    };
+}
+
+export const getUserActivityHistory = cache(async (userId: string): Promise<ActivityItem[]> => {
+    try {
+        const [messages, userState] = await Promise.all([
+            prisma.message.findMany({
+                where: {
+                    recipientId: userId,
+                    category: {
+                        in: [
+                            MessageCategory.CONSTRUCCION,
+                            MessageCategory.BATALLA,
+                            MessageCategory.SISTEMA,
+                        ]
+                    }
+                },
+                orderBy: { createdAt: 'desc' },
+                take: 30,
+            }),
+            prisma.user.findUnique({
+                where: { id: userId },
+                select: {
+                    createdAt: true,
+                    propiedades: {
+                        select: {
+                            nombre: true,
+                            ciudad: true,
+                            barrio: true,
+                            edificio: true,
+                            colaConstruccion: {
+                                select: {
+                                    id: true,
+                                    habitacionId: true,
+                                    nivelDestino: true,
+                                    fechaInicio: true,
+                                    fechaFinalizacion: true,
+                                    createdAt: true,
+                                },
+                                orderBy: { createdAt: 'desc' }
+                            },
+                            colaReclutamiento: {
+                                select: {
+                                    id: true,
+                                    cantidad: true,
+                                    fechaInicio: true,
+                                    fechaFinalizacion: true,
+                                    tropaConfig: {
+                                        select: { nombre: true }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    colaEntrenamientos: {
+                        select: {
+                            id: true,
+                            nivelDestino: true,
+                            fechaInicio: true,
+                            fechaFinalizacion: true,
+                            entrenamiento: { select: { nombre: true } },
+                            propiedad: { select: { nombre: true } }
+                        },
+                        orderBy: { fechaFinalizacion: 'asc' }
+                    },
+                    misiones: {
+                        select: {
+                            id: true,
+                            tipoMision: true,
+                            destinoCiudad: true,
+                            destinoBarrio: true,
+                            destinoEdificio: true,
+                            fechaInicio: true,
+                            fechaLlegada: true,
+                        },
+                        orderBy: { fechaLlegada: 'asc' }
+                    }
+                }
+            })
+        ]);
+
+        const items: ActivityItem[] = [];
+
+        // 1. In-progress items from active queues
+        if (userState) {
+            // Military missions in transit
+            for (const m of userState.misiones) {
+                items.push({
+                    id: `queue-mision-${m.id}`,
+                    type: 'ATAQUE',
+                    title: `Misión de ${m.tipoMision} en marcha`,
+                    description: `Despliegue militar activo con destino a las coordenadas [${m.destinoCiudad}:${m.destinoBarrio}:${m.destinoEdificio}].`,
+                    timestamp: m.fechaInicio,
+                    status: 'DESPLEGADO',
+                    coordinates: `[${m.destinoCiudad}:${m.destinoBarrio}:${m.destinoEdificio}]`,
+                    metadata: {
+                        target: `[${m.destinoCiudad}:${m.destinoBarrio}:${m.destinoEdificio}]`,
+                        category: m.tipoMision
+                    }
+                });
+            }
+
+            // Constructions in queue
+            for (const prop of userState.propiedades) {
+                for (const c of prop.colaConstruccion) {
+                    const cleanName = c.habitacionId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    items.push({
+                        id: `queue-const-${c.id}`,
+                        type: 'CONSTRUCCION',
+                        title: `Ampliación: ${cleanName} (Nivel ${c.nivelDestino})`,
+                        description: `Obras en ejecución en "${prop.nombre}" [${prop.ciudad}:${prop.barrio}:${prop.edificio}].`,
+                        timestamp: c.fechaInicio || c.createdAt,
+                        status: 'EN_CURSO',
+                        propertyName: prop.nombre,
+                        coordinates: `[${prop.ciudad}:${prop.barrio}:${prop.edificio}]`,
+                        metadata: { level: c.nivelDestino }
+                    });
+                }
+
+                // Recruitments in queue
+                if (prop.colaReclutamiento) {
+                    const r = prop.colaReclutamiento;
+                    items.push({
+                        id: `queue-recluta-${r.id}`,
+                        type: 'RECLUTAMIENTO',
+                        title: `Reclutamiento: ${r.cantidad}x ${r.tropaConfig.nombre}`,
+                        description: `Adiestramiento militar en curso en la propiedad "${prop.nombre}".`,
+                        timestamp: r.fechaInicio,
+                        status: 'EN_CURSO',
+                        propertyName: prop.nombre,
+                        metadata: { units: `${r.cantidad}x ${r.tropaConfig.nombre}` }
+                    });
+                }
+            }
+
+            // Trainings in queue
+            for (const e of userState.colaEntrenamientos) {
+                items.push({
+                    id: `queue-entrena-${e.id}`,
+                    type: 'ENTRENAMIENTO',
+                    title: `Investigación: ${e.entrenamiento.nombre} (Nivel ${e.nivelDestino})`,
+                    description: `Investigación activa en la propiedad "${e.propiedad.nombre}".`,
+                    timestamp: e.fechaInicio,
+                    status: 'EN_CURSO',
+                    propertyName: e.propiedad.nombre,
+                    metadata: { level: e.nivelDestino }
+                });
+            }
+        }
+
+        // 2. Completed / historical items from Messages
+        for (const msg of messages) {
+            let type: ActivityType = 'SISTEMA';
+            let status: ActivityStatus = 'COMPLETADO';
+
+            const sub = msg.subject.toLowerCase();
+            const cont = msg.content.toLowerCase();
+
+            if (msg.category === MessageCategory.CONSTRUCCION || sub.includes('construcción') || sub.includes('ampliación')) {
+                type = 'CONSTRUCCION';
+                if (sub.includes('iniciada') || cont.includes('iniciado')) status = 'EN_CURSO';
+            } else if (msg.category === MessageCategory.BATALLA || sub.includes('misión') || sub.includes('ataque') || sub.includes('batalla') || sub.includes('despliegue')) {
+                type = 'ATAQUE';
+                if (sub.includes('despliegue') || sub.includes('enviada') || sub.includes('en marcha')) status = 'DESPLEGADO';
+            } else if (sub.includes('recluta') || cont.includes('recluta') || sub.includes('adiestramiento') || cont.includes('tropa')) {
+                type = 'RECLUTAMIENTO';
+                if (sub.includes('iniciado')) status = 'EN_CURSO';
+            } else if (sub.includes('entrena') || cont.includes('entrena') || sub.includes('investiga') || cont.includes('investiga')) {
+                type = 'ENTRENAMIENTO';
+                if (sub.includes('iniciado')) status = 'EN_CURSO';
+            }
+
+            items.push({
+                id: `msg-${msg.id}`,
+                type,
+                title: msg.subject,
+                description: msg.content,
+                timestamp: msg.createdAt,
+                status
+            });
+        }
+
+        // 3. Fallback baseline if account has few actions (guarantees a warm, lively first-time experience)
+        if (items.length < 3 && userState) {
+            const firstProp = userState.propiedades[0];
+            items.push({
+                id: `init-hq-${userId}`,
+                type: 'CONSTRUCCION',
+                title: 'Control territorial establecido',
+                description: firstProp 
+                    ? `Establecida la base de operaciones "${firstProp.nombre}" en las coordenadas [${firstProp.ciudad}:${firstProp.barrio}:${firstProp.edificio}].`
+                    : 'Base de operaciones principal asegurada por la organización.',
+                timestamp: userState.createdAt || new Date(),
+                status: 'COMPLETADO',
+                propertyName: firstProp?.nombre,
+                coordinates: firstProp ? `[${firstProp.ciudad}:${firstProp.barrio}:${firstProp.edificio}]` : undefined
+            });
+
+            items.push({
+                id: `init-syndicate-${userId}`,
+                type: 'SISTEMA',
+                title: 'Sindicato de la Familia Activado',
+                description: 'La organización criminal ha sido formalmente registrada en el bajo mundo de Vendetta.',
+                timestamp: userState.createdAt || new Date(),
+                status: 'COMPLETADO'
+            });
+        }
+
+        // Sort descending by date
+        items.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+        return items;
+    } catch (e) {
+        console.error("Error fetching user activity history:", e);
+        return [];
+    }
+});
+
     

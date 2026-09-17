@@ -8,7 +8,8 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Bell, Briefcase, MessageSquare, UserPlus, Users2 } from "lucide-react";
 import { QueueStatusCard } from "./queue-status-card";
-import { getRoomConfigurations } from "@/lib/data";
+import { ActivityHistoryCard } from "./activity-history";
+import { getRoomConfigurations, getUserActivityHistory } from "@/lib/data";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import Link from "next/link";
 import { FamilyRole } from "@prisma/client";
@@ -59,7 +60,10 @@ export async function OverviewView() {
     }
 
     const { puntuacion, familyMember } = user;
-    const allRoomConfigs = await getRoomConfigurations();
+    const [allRoomConfigs, activities] = await Promise.all([
+        getRoomConfigurations(),
+        getUserActivityHistory(user.id)
+    ]);
     const simpleRoomConfigs = allRoomConfigs.map(r => ({ id: r.id, nombre: r.nombre }));
     const unreadMessages = user._count?.receivedMessages || 0;
 
@@ -126,6 +130,11 @@ export async function OverviewView() {
                  {/* Queue Status Card */}
                  <div className="md:col-span-3">
                     <QueueStatusCard user={user} allRooms={simpleRoomConfigs} />
+                </div>
+
+                {/* Historial de Actividad Reciente */}
+                <div className="md:col-span-3">
+                    <ActivityHistoryCard activities={activities} />
                 </div>
             </div>
 

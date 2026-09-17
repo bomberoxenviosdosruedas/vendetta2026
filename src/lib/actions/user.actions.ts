@@ -4,6 +4,7 @@
 
 import prisma from "../prisma/prisma";
 import type { FullPropiedad, UserWithProgress } from "../data";
+import { MessageCategory } from "@prisma/client";
 import { calculateStorageCapacity, calcularProduccionTotalPorSegundo } from "../formulas/room-formulas";
 import { revalidatePath } from "next/cache";
 import { calcularPuntosEntrenamientos, calcularPuntosHabitaciones, calcularPuntosTropas } from "../formulas/score-formulas";
@@ -142,6 +143,16 @@ async function verificarYFinalizarConstruccionDePropiedad(propiedad: FullPropied
                 await tx.colaConstruccion.delete({
                     where: { id: terminada.id },
                 });
+
+                const habitacionNombre = propiedad.habitaciones?.find(h => h.configuracionHabitacionId === terminada.habitacionId)?.configuracion?.nombre || terminada.habitacionId.replace(/_/g, ' ');
+                await tx.message.create({
+                    data: {
+                        recipientId: propiedad.userId,
+                        subject: `Construcción completada: ${habitacionNombre}`,
+                        content: `La ampliación de ${habitacionNombre} al Nivel ${terminada.nivelDestino} en "${propiedad.nombre}" [${propiedad.ciudad}:${propiedad.barrio}:${propiedad.edificio}] ha finalizado con éxito.`,
+                        category: MessageCategory.CONSTRUCCION,
+                    }
+                });
             }
         });
         seHizoUnCambio = true;
@@ -260,6 +271,15 @@ async function verificarYFinalizarReclutamientoDePropiedad(propiedad: FullPropie
             }
 
             await tx.colaReclutamiento.delete({ where: { id: reclutamientoActivo.id } });
+
+            await tx.message.create({
+                data: {
+                    recipientId: propiedad.userId,
+                    subject: `Reclutamiento completado: ${reclutamientoActivo.cantidad}x ${reclutamientoActivo.tropaConfig.nombre}`,
+                    content: `Se ha completado el adiestramiento de ${reclutamientoActivo.cantidad} unidades de ${reclutamientoActivo.tropaConfig.nombre} en "${propiedad.nombre}". Las tropas se han incorporado al arsenal.`,
+                    category: MessageCategory.SISTEMA,
+                }
+            });
         });
         
         const propiedadRefrescada = await prisma.propiedad.findUnique({
@@ -312,6 +332,16 @@ export async function verificarYFinalizarEntrenamientos(user: UserWithProgress):
                     });
                     await tx.colaEntrenamiento.delete({
                         where: { id: terminado.id }
+                    });
+
+                    const nombreEntrenamiento = terminado.entrenamiento?.nombre || terminado.entrenamientoId.replace(/_/g, ' ');
+                    await tx.message.create({
+                        data: {
+                            recipientId: terminado.userId,
+                            subject: `Entrenamiento completado: ${nombreEntrenamiento}`,
+                            content: `La investigación de ${nombreEntrenamiento} al Nivel ${terminado.nivelDestino} ha concluido satisfactoriamente.`,
+                            category: MessageCategory.SISTEMA,
+                        }
                     });
                 }
             });
@@ -375,6 +405,15 @@ export async function verificarYFinalizarMisiones(user: UserWithProgress): Promi
                         }
                     }
                     await tx.colaMisiones.delete({ where: { id: mision.id } });
+
+                    await tx.message.create({
+                        data: {
+                            recipientId: user.id,
+                            subject: `Misión de ${mision.tipoMision} finalizada`,
+                            content: `La misión militar de tipo ${mision.tipoMision} hacia [${mision.destinoCiudad}:${mision.destinoBarrio}:${mision.destinoEdificio}] ha concluido y las tropas han retornado a la base.`,
+                            category: MessageCategory.BATALLA,
+                        }
+                    });
                 }
             });
             seHizoUnCambio = true;

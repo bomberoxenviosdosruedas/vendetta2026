@@ -92,6 +92,14 @@ export async function iniciarAmpliacion(propiedadId: string, habitacionId: strin
                 fechaInicio: fechaInicio,
                 fechaFinalizacion: fechaFinalizacion,
             }
+        }),
+        prisma.message.create({
+            data: {
+                recipientId: user.id,
+                subject: `Construcción iniciada: ${config.nombre} (Nivel ${nivelSiguiente})`,
+                content: `Se ha iniciado la obra de ampliación para ${config.nombre} al Nivel ${nivelSiguiente} en "${propiedadActual.nombre}" [${propiedadActual.ciudad}:${propiedadActual.barrio}:${propiedadActual.edificio}].`,
+                category: 'CONSTRUCCION',
+            }
         })
       ]);
   

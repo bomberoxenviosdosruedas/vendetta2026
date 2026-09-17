@@ -78,6 +78,15 @@ export async function iniciarEntrenamiento(trainingId: string, propertyId: strin
                 fechaFinalizacion,
             }
         });
+
+        await tx.message.create({
+            data: {
+                recipientId: user.id,
+                subject: `Investigación iniciada: ${config.nombre} (Nivel ${nivelSiguiente})`,
+                content: `Se ha iniciado la investigación de ${config.nombre} al Nivel ${nivelSiguiente} en "${propiedadActual.nombre}".`,
+                category: 'SISTEMA',
+            }
+        });
       });
   
       revalidatePath('/training');

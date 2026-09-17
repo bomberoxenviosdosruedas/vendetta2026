@@ -76,6 +76,14 @@ export async function iniciarReclutamiento(propiedadId: string, tropaId: string,
                 fechaInicio: fechaInicio,
                 fechaFinalizacion: fechaFinalizacion
             }
+        }),
+        prisma.message.create({
+            data: {
+                recipientId: user.id,
+                subject: `Reclutamiento iniciado: ${cantidad}x ${config.nombre}`,
+                content: `Se ha iniciado el adiestramiento de ${cantidad} unidades de ${config.nombre} en "${propiedadActual.nombre}".`,
+                category: 'SISTEMA',
+            }
         })
       ]);
   
@@ -159,6 +167,14 @@ export async function iniciarEntrenamientoSeguridad(propiedadId: string, tropaId
                 cantidad: cantidad,
                 fechaInicio: fechaInicio,
                 fechaFinalizacion: fechaFinalizacion
+            }
+        }),
+        prisma.message.create({
+            data: {
+                recipientId: user.id,
+                subject: `Entrenamiento de seguridad iniciado: ${cantidad}x ${config.nombre}`,
+                content: `Se ha iniciado el entrenamiento defensivo de ${cantidad} unidades de ${config.nombre} en "${propiedadActual.nombre}".`,
+                category: 'SISTEMA',
             }
         })
       ]);

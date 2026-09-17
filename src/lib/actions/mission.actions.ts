@@ -149,6 +149,16 @@ export async function enviarMision(input: MissionInput) {
                     });
                 }
             }
+
+            const tropasDesplegadas = tropas.filter(t => t.cantidad > 0).map(t => `${t.cantidad}x ${t.id}`).join(', ');
+            await tx.message.create({
+                data: {
+                    recipientId: user.id,
+                    subject: `Despliegue militar: Misión de ${tipo}`,
+                    content: `Has ordenado el despliegue de una misión de ${tipo} hacia [${coordinates.ciudad}:${coordinates.barrio}:${coordinates.edificio}] desde la propiedad "${origenPropiedad.nombre}". Tropas asignadas: ${tropasDesplegadas}.`,
+                    category: 'BATALLA',
+                }
+            });
         });
 
     } catch (error) {
