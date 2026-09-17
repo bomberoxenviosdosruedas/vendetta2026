@@ -1,0 +1,96 @@
+# .aiexclude - Filtro de contexto para herramientas y agentes IA
+# Reduce drásticamente el consumo de tokens y omite archivos binarios, volcados pesados y artefactos de compilación.
+
+# ----------------------------------------------------
+# 1. Dependencias y Entornos de Ejecución
+# ----------------------------------------------------
+node_modules/
+.pnp/
+.pnp.*
+.yarn/
+vendor/
+
+# ----------------------------------------------------
+# 2. Artefactos de Compilación y Cache
+# ----------------------------------------------------
+.next/
+out/
+build/
+dist/
+.turbo/
+.cache/
+.vercel/
+*.tsbuildinfo
+next-env.d.ts
+
+# ----------------------------------------------------
+# 3. Multimedia y Assets Binarios Pesados
+# ----------------------------------------------------
+public/img/
+public/nuevas/
+public/icons/
+public/*.gif
+public/*.jpg
+public/*.jpeg
+public/*.png
+public/*.webp
+public/*.svg
+public/*.ico
+*.mp4
+*.mp3
+*.wav
+*.pdf
+
+# ----------------------------------------------------
+# 4. Volcados y Semillas de Datos Masivos de Base de Datos
+# (Grandes listas JSON que agotan la ventana de contexto de IA)
+# ----------------------------------------------------
+prisma/datosactuales/
+prisma/export/
+prisma/importar/
+prisma/*.json
+*.sql
+*.sqlite
+*.sqlite3
+*.dump
+*.csv
+*.tsv
+*.xlsx
+
+# ----------------------------------------------------
+# 5. Registros, Métricas y Depuración
+# ----------------------------------------------------
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+firebase-debug.log*
+firestore-debug.log*
+coverage/
+.nyc_output/
+
+# ----------------------------------------------------
+# 6. Secretos y Entornos Locales
+# ----------------------------------------------------
+.env
+.env*.local
+.env.development
+.env.production
+.env.test
+*.pem
+*.key
+*.cert
+
+# ----------------------------------------------------
+# 7. Control de Versiones y Metadatos de IDE
+# ----------------------------------------------------
+.git/
+.svn/
+.hg/
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db

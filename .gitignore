@@ -1,6 +1,8 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# ----------------------------------------------------
+# Vendetta - Git Ignore Configuration
+# ----------------------------------------------------
 
-# dependencies
+# Dependencias
 /node_modules
 /.pnp
 .pnp.*
@@ -10,45 +12,55 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
-/prompts
-
-# next.js
+# Compilación y Salida de Next.js
 /.next/
 /out/
-/.idx/
-
-# production
 /build
+/dist
+*.tsbuildinfo
+next-env.d.ts
 
-# misc
-.DS_Store
-*.pem
+# Variables de Entorno y Secretos (nunca subir claves ni credenciales)
+.env
+.env*.local
+.env.development
+.env.production
+.env.test
+!.env.example
 
-# debug
+# Logs y Depuración
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+firebase-debug.log*
+firestore-debug.log*
 
-# vercel
+# Cobertura de Pruebas
+/coverage
+/.nyc_output
+
+# Plataformas en la Nube y Caches de Despliegue
 .vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
+/.idx/
 .genkit/*
-.env*
 
+# Archivos del Sistema Operativo e IDEs
+.DS_Store
+Thumbs.db
+*.pem
+*.key
+*.cert
+.idea/
+*.sublime-project
+*.sublime-workspace
 
-# firebase
-firebase-debug.log
-firestore-debug.log
+# Artefactos y Bases de Datos Locales
+*.sqlite
+*.sqlite3
+*.db
 /src/generated/prisma
-.idx/dev.nix
-
-#custom
 /vendetta/
 /vendetta
