@@ -12,6 +12,9 @@
     "postinstall": "if [ \"$VERCEL_ENV\" = \"production\" ]; then prisma generate --no-engine; else prisma generate; fi",
     "typecheck": "tsc --noEmit",
     "generate": "prisma generate",
+    "prisma:generate": "prisma generate",
+    "prisma7:generate": "prisma7 generate",
+    "prisma8:migrate": "prisma db migrate --advance-ref db",
     "db:export": "bun /prisma/exportacion.ts"
   },
   "prisma": {
@@ -23,6 +26,7 @@
     "@hookform/resolvers": "^3.10.0",
     "@prisma/client": "^6.12.0",
     "@prisma/extension-accelerate": "^2.0.2",
+    "@prisma/orm-postgres": "^8.0.0-rc.11",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-avatar": "^1.1.10",
@@ -77,7 +81,8 @@
     "eslint-config-next": "15.4.2",
     "genkit-cli": "^1.15.2",
     "postcss": "^8.5.6",
-    "prisma": "^6.12.0",
+    "prisma": "^6.19.3",
+    "@prisma/prisma7": "^7.10.0-dev.58",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"

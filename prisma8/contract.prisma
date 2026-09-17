@@ -1,0 +1,405 @@
+// Prisma ORM 8 Contract Specification for PostgreSQL
+// Auto-aligned for Vendetta Database Schema
+
+enum TipoTropa {
+  ATAQUE
+  DEFENSA
+  ESPIONAJE
+  TRANSPORTE
+  OCUPAR
+}
+
+enum FamilyRole {
+  LEADER
+  CO_LEADER
+  MEMBER
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+}
+
+enum InvitationType {
+  INVITATION
+  REQUEST
+}
+
+enum MessageCategory {
+  JUGADOR
+  FAMILIA
+  SISTEMA
+  BATALLA
+  CONSTRUCCION
+}
+
+model ConfiguracionHabitacion {
+  id                 String              @id(map: "ConfiguracionHabitacion_pkey")
+  nombre             String
+  descripcion        String
+  urlImagen          String
+  costoArmas         Int
+  costoMunicion      Int
+  costoDolares       Int
+  duracion           Int
+  produccionBase     Float
+  produccionRecurso  String?
+  puntos             Float
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  habitaciones       HabitacionUsuario[]
+  colaConstruccion   ColaConstruccion[]
+  requirements       RoomRequirement[]   @relation("RequiredFor")
+  requiredFor        RoomRequirement[]   @relation("Requires")
+
+  @@map("ConfiguracionHabitacion")
+}
+
+model RoomRequirement {
+  id             String                  @id(map: "RoomRequirement_pkey") @default(cuid())
+  roomId         String
+  requiredRoomId String
+  requiredLevel  Int
+  room           ConfiguracionHabitacion @relation("RequiredFor", fields: [roomId], references: [id], onDelete: Cascade)
+  requiredRoom   ConfiguracionHabitacion @relation("Requires", fields: [requiredRoomId], references: [id], onDelete: Cascade)
+
+  @@unique([roomId, requiredRoomId], map: "RoomRequirement_roomId_requiredRoomId_key")
+  @@map("RoomRequirement")
+}
+
+model ConfiguracionEntrenamiento {
+  id                 String                 @id(map: "ConfiguracionEntrenamiento_pkey")
+  nombre             String
+  urlImagen          String
+  costoArmas         Int
+  costoMunicion      Int
+  costoDolares       Int
+  duracion           Int
+  puntos             Float
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+  entrenamientos     EntrenamientoUsuario[]
+  colaEntrenamientos ColaEntrenamiento[]
+  requirements       TrainingRequirement[]  @relation("RequiredFor")
+  requiredFor        TrainingRequirement[]  @relation("Requires")
+
+  @@map("ConfiguracionEntrenamiento")
+}
+
+model TrainingRequirement {
+  id                 String                     @id(map: "TrainingRequirement_pkey") @default(cuid())
+  trainingId         String
+  requiredTrainingId String
+  requiredLevel      Int
+  training           ConfiguracionEntrenamiento @relation("RequiredFor", fields: [trainingId], references: [id], onDelete: Cascade)
+  requiredTraining   ConfiguracionEntrenamiento @relation("Requires", fields: [requiredTrainingId], references: [id], onDelete: Cascade)
+
+  @@unique([trainingId, requiredTrainingId], map: "TrainingRequirement_trainingId_requiredTrainingId_key")
+  @@map("TrainingRequirement")
+}
+
+model ConfiguracionTropa {
+  id                  String                   @id(map: "ConfiguracionTropa_pkey")
+  nombre              String
+  descripcion         String
+  urlImagen           String
+  costoArmas          Int
+  costoMunicion       Int
+  costoDolares        Int
+  duracion            Int
+  puntos              Float
+  ataque              Int
+  defensa             Int
+  capacidad           Int
+  velocidad           Int
+  salario             Int
+  tipo                TipoTropa
+  requisitos          String[]
+  bonusAtaque         String[]
+  bonusDefensa        String[]
+  createdAt           DateTime                 @default(now())
+  updatedAt           DateTime                 @updatedAt
+  tropas              TropaUsuario[]
+  tropasSeguridad     TropaSeguridadUsuario[]
+  colaReclutamiento   ColaReclutamiento[]
+  bonusContrincante   TropaBonusContrincante[] @relation("Atacante")
+  bonusRecibido       TropaBonusContrincante[] @relation("Defensor")
+
+  @@map("ConfiguracionTropa")
+}
+
+model PoderAtaque {
+  id           String @id(map: "PoderAtaque_pkey") @default(cuid())
+  propiedades  Int
+  honor        Int
+  modificador  Int
+
+  @@unique([propiedades, honor], map: "PoderAtaque_propiedades_honor_key")
+  @@map("PoderAtaque")
+}
+
+model TropaBonusContrincante {
+  id               String             @id(map: "TropaBonusContrincante_pkey") @default(cuid())
+  tropaAtacanteId  String
+  tropaDefensoraId String
+  factorPrioridad  Float
+  tropaAtacante    ConfiguracionTropa @relation("Atacante", fields: [tropaAtacanteId], references: [id], onDelete: Cascade)
+  tropaDefensora   ConfiguracionTropa @relation("Defensor", fields: [tropaDefensoraId], references: [id], onDelete: Cascade)
+
+  @@unique([tropaAtacanteId, tropaDefensoraId], map: "TropaBonusContrincante_tropaAtacanteId_tropaDefensoraId_key")
+  @@map("TropaBonusContrincante")
+}
+
+model User {
+  id                 String                 @id(map: "User_pkey") @default(cuid())
+  name               String
+  username           String                 @unique(map: "User_username_key")
+  password           String
+  title              String?
+  avatarUrl          String?
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+  lastSeen           DateTime               @default(now())
+  propiedades        Propiedad[]
+  entrenamientos     EntrenamientoUsuario[]
+  puntuacion         PuntuacionUsuario?
+  misiones           ColaMisiones[]
+  colaEntrenamientos ColaEntrenamiento[]
+  familyMember       FamilyMember?
+  sentMessages       Message[]              @relation("Sender")
+  receivedMessages   Message[]              @relation("Recipient")
+  loginHistory       LoginHistory[]
+  invitations        FamilyInvitation[]
+
+  @@map("User")
+}
+
+model LoginHistory {
+  id        String   @id(map: "LoginHistory_pkey") @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ipAddress String
+  userAgent String
+  loginTime DateTime @default(now())
+
+  @@map("LoginHistory")
+}
+
+model Propiedad {
+  id                  String                  @id(map: "Propiedad_pkey") @default(cuid())
+  userId              String
+  nombre              String
+  ciudad              Int
+  barrio              Int
+  edificio            Int
+  armas               Float
+  municion            Float
+  alcohol             Float
+  dolares             Float
+  ultimaActualizacion DateTime                @default(now())
+  user                User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  habitaciones        HabitacionUsuario[]
+  TropaUsuario        TropaUsuario[]
+  TropaSeguridad      TropaSeguridadUsuario[]
+  misionesOrigen      ColaMisiones[]
+  colaConstruccion    ColaConstruccion[]
+  colaReclutamiento   ColaReclutamiento?
+  colaEntrenamiento   ColaEntrenamiento?
+
+  @@unique([ciudad, barrio, edificio], map: "Propiedad_ciudad_barrio_edificio_key")
+  @@map("Propiedad")
+}
+
+model HabitacionUsuario {
+  id                        String                  @id(map: "HabitacionUsuario_pkey") @default(cuid())
+  propiedadId               String
+  configuracionHabitacionId String
+  nivel                     Int
+  propiedad                 Propiedad               @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
+  configuracion             ConfiguracionHabitacion @relation(fields: [configuracionHabitacionId], references: [id])
+
+  @@unique([propiedadId, configuracionHabitacionId], map: "HabitacionUsuario_propiedadId_configuracionHabitacionId_key")
+  @@map("HabitacionUsuario")
+}
+
+model TropaUsuario {
+  id                   String             @id(map: "TropaUsuario_pkey") @default(cuid())
+  propiedadId          String
+  configuracionTropaId String
+  cantidad             Int
+  propiedad            Propiedad          @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
+  configuracion        ConfiguracionTropa @relation(fields: [configuracionTropaId], references: [id])
+
+  @@unique([propiedadId, configuracionTropaId], map: "TropaUsuario_propiedadId_configuracionTropaId_key")
+  @@map("TropaUsuario")
+}
+
+model TropaSeguridadUsuario {
+  id                   String             @id(map: "TropaSeguridadUsuario_pkey") @default(cuid())
+  propiedadId          String
+  configuracionTropaId String
+  cantidad             Int
+  propiedad            Propiedad          @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
+  configuracion        ConfiguracionTropa @relation(fields: [configuracionTropaId], references: [id])
+
+  @@unique([propiedadId, configuracionTropaId], map: "TropaSeguridadUsuario_propiedadId_configuracionTropaId_key")
+  @@map("TropaSeguridadUsuario")
+}
+
+model EntrenamientoUsuario {
+  id                           String                     @id(map: "EntrenamientoUsuario_pkey") @default(cuid())
+  userId                       String
+  configuracionEntrenamientoId String
+  nivel                        Int
+  user                         User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  configuracion                ConfiguracionEntrenamiento @relation(fields: [configuracionEntrenamientoId], references: [id])
+
+  @@unique([userId, configuracionEntrenamientoId], map: "EntrenamientoUsuario_userId_configuracionEntrenamientoId_key")
+  @@map("EntrenamientoUsuario")
+}
+
+model PuntuacionUsuario {
+  id                   String   @id(map: "PuntuacionUsuario_pkey") @default(cuid())
+  userId               String   @unique(map: "PuntuacionUsuario_userId_key")
+  puntosHabitaciones   Float
+  puntosTropas         Float
+  puntosEntrenamientos Float
+  puntosTotales        Float
+  updatedAt            DateTime @updatedAt
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("PuntuacionUsuario")
+}
+
+model ColaConstruccion {
+  id                String                  @id(map: "ColaConstruccion_pkey") @default(cuid())
+  propiedadId       String
+  habitacionId      String
+  nivelDestino      Int
+  duracion          Int
+  fechaInicio       DateTime?
+  fechaFinalizacion DateTime?
+  createdAt         DateTime                @default(now())
+  propiedad         Propiedad               @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
+  habitacion        ConfiguracionHabitacion @relation(fields: [habitacionId], references: [id])
+
+  @@map("ColaConstruccion")
+}
+
+model ColaReclutamiento {
+  id                String             @id(map: "ColaReclutamiento_pkey") @default(cuid())
+  propiedadId       String             @unique(map: "ColaReclutamiento_propiedadId_key")
+  tropaId           String
+  cantidad          Int
+  fechaInicio       DateTime
+  fechaFinalizacion DateTime
+  propiedad         Propiedad          @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
+  tropaConfig       ConfiguracionTropa @relation(fields: [tropaId], references: [id])
+
+  @@map("ColaReclutamiento")
+}
+
+model ColaMisiones {
+  id                String    @id(map: "ColaMisiones_pkey") @default(cuid())
+  userId            String
+  propiedadOrigenId String
+  tipoMision        String
+  tropas            String
+  origenCiudad      Int
+  origenBarrio      Int
+  origenEdificio    Int
+  destinoCiudad     Int
+  destinoBarrio     Int
+  destinoEdificio   Int
+  fechaInicio       DateTime
+  fechaLlegada      DateTime
+  fechaRegreso      DateTime?
+  velocidadFlota    Float
+  duracionViaje     Int
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  propiedadOrigen   Propiedad @relation(fields: [propiedadOrigenId], references: [id], onDelete: Cascade)
+
+  @@map("ColaMisiones")
+}
+
+model ColaEntrenamiento {
+  id                String                     @id(map: "ColaEntrenamiento_pkey") @default(cuid())
+  userId            String
+  propiedadId       String                     @unique(map: "ColaEntrenamiento_propiedadId_key")
+  entrenamientoId   String
+  nivelDestino      Int
+  fechaInicio       DateTime
+  fechaFinalizacion DateTime
+  createdAt         DateTime                   @default(now())
+  user              User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  propiedad         Propiedad                  @relation(fields: [propiedadId], references: [id], onDelete: Cascade)
+  entrenamiento     ConfiguracionEntrenamiento @relation(fields: [entrenamientoId], references: [id])
+
+  @@map("ColaEntrenamiento")
+}
+
+model Family {
+  id          String             @id(map: "Family_pkey") @default(cuid())
+  name        String             @unique(map: "Family_name_key")
+  tag         String             @unique(map: "Family_tag_key")
+  description String?
+  avatarUrl   String?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  members     FamilyMember[]
+  invitations FamilyInvitation[]
+
+  @@map("Family")
+}
+
+model FamilyMember {
+  id       String     @id(map: "FamilyMember_pkey") @default(cuid())
+  userId   String     @unique(map: "FamilyMember_userId_key")
+  familyId String
+  role     FamilyRole
+  joinedAt DateTime   @default(now())
+  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  family   Family     @relation(fields: [familyId], references: [id], onDelete: Cascade)
+
+  @@map("FamilyMember")
+}
+
+model FamilyInvitation {
+  id        String           @id(map: "FamilyInvitation_pkey") @default(cuid())
+  familyId  String
+  userId    String
+  status    InvitationStatus @default(PENDING)
+  type      InvitationType
+  createdAt DateTime         @default(now())
+  expiresAt DateTime?
+  family    Family           @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([familyId, userId], map: "FamilyInvitation_familyId_userId_key")
+  @@map("FamilyInvitation")
+}
+
+model Message {
+  id          String          @id(map: "Message_pkey") @default(cuid())
+  senderId    String?
+  recipientId String
+  subject     String
+  content     String
+  isRead      Boolean         @default(false)
+  category    MessageCategory
+  createdAt   DateTime        @default(now())
+  sender      User?           @relation("Sender", fields: [senderId], references: [id], onDelete: SetNull)
+  recipient   User            @relation("Recipient", fields: [recipientId], references: [id], onDelete: Cascade)
+
+  @@map("Message")
+}
+
+model SuperUser {
+  id       String @id(map: "SuperUser_pkey") @default(cuid())
+  username String @unique(map: "SuperUser_username_key")
+  password String
+
+  @@map("SuperUser")
+}
