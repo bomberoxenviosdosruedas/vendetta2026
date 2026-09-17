@@ -9,22 +9,22 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "if [ \"$VERCEL_ENV\" = \"production\" ]; then prisma generate --no-engine; else prisma generate; fi",
+    "postinstall": "prisma generate",
     "typecheck": "tsc --noEmit",
     "generate": "prisma generate",
     "prisma:generate": "prisma generate",
     "prisma7:generate": "prisma7 generate",
     "prisma8:migrate": "prisma db migrate --advance-ref db",
-    "db:export": "bun /prisma/exportacion.ts"
+    "db:export": "bun prisma/exportacion.ts"
   },
   "prisma": {
-    "seed": "bun /prisma/seed.ts"
+    "seed": "bun prisma/seed.ts"
   },
   "dependencies": {
     "@genkit-ai/googleai": "^1.15.2",
     "@genkit-ai/next": "^1.15.2",
     "@hookform/resolvers": "^3.10.0",
-    "@prisma/client": "^6.12.0",
+    "@prisma/client": "^6.19.3",
     "@prisma/extension-accelerate": "^2.0.2",
     "@prisma/orm-postgres": "^8.0.0-rc.11",
     "@radix-ui/react-accordion": "^1.2.11",
@@ -57,8 +57,6 @@
     "firebase": "^11.10.0",
     "firebase-admin": "^13.4.0",
     "genkit": "^1.15.2",
-    "i": "^0.3.7",
-    "install": "^0.13.0",
     "lodash": "^4.18.1",
     "lucide-react": "^0.525.0",
     "next": "15.3.3",
