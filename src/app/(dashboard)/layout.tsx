@@ -8,6 +8,8 @@ import { getSessionUser } from "@/lib/auth";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PropertyProvider } from "@/contexts/property-context";
 
+export const dynamic = 'force-dynamic';
+
 function ResourceBarFallback() {
     return (
         <div className="w-full bg-black/80 text-white p-2 sticky top-14 sm:top-16 z-10">

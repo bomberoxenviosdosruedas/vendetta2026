@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Bell, Briefcase, MessageSquare, UserPlus, Users2 } from "lucide-react";
 import { QueueStatusCard } from "./queue-status-card";
 import { ActivityHistoryCard } from "./activity-history";
+import { CityNewsCard } from "./city-news-ticker";
 import { getRoomConfigurations, getUserActivityHistory } from "@/lib/data";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import Link from "next/link";
@@ -127,8 +128,13 @@ export async function OverviewView() {
                     <ActionIcons unreadMessages={unreadMessages} inFamily={!!familyMember} />
                 </Card>
                 
-                 {/* Queue Status Card */}
-                 <div className="md:col-span-3">
+                {/* City News Ticker & Card */}
+                <div className="md:col-span-3">
+                    <CityNewsCard />
+                </div>
+
+                {/* Queue Status Card */}
+                <div className="md:col-span-3">
                     <QueueStatusCard user={user} allRooms={simpleRoomConfigs} />
                 </div>
 

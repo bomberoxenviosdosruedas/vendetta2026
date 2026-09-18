@@ -2,12 +2,10 @@
 
 "use server"
 
-import { PrismaClient, User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember, TrainingRequirement, RoomRequirement, TropaBonusContrincante, Message, MessageCategory, ColaEntrenamiento, FamilyInvitation, InvitationStatus, InvitationType, Prisma } from '@prisma/client/edge'
-import { withAccelerate } from '@prisma/extension-accelerate'
+import { User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember, TrainingRequirement, RoomRequirement, TropaBonusContrincante, Message, MessageCategory, ColaEntrenamiento, FamilyInvitation, InvitationStatus, InvitationType, Prisma } from '@prisma/client'
 import { cache } from 'react';
 import { calculateStorageCapacity } from './formulas/room-formulas';
-
-const prisma = new PrismaClient().$extends(withAccelerate())
+import prisma from './prisma/prisma';
 
 export type FullConfiguracionHabitacion = ConfiguracionHabitacion & {
   requirements: RoomRequirement[];
