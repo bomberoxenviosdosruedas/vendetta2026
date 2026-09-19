@@ -1,0 +1,77 @@
+/**
+ * Vendetta Syndicate Noir 2.0 - Core Design Tokens & Game Domain Utilities
+ * Extends base Shadcn/Tailwind palette with Mafia RTS tactical layers and resource tokens.
+ */
+
+:root {
+  /* Extended Elevation Surface Tokens */
+  --surface-lowest: 240 12% 3.5%;   /* #070709 - Base background under everything */
+  --surface-card: 240 9% 8.5%;      /* #131317 - Primary card container */
+  --surface-elevated: 240 10% 11.5%;/* #1a1a20 - Hover states & active items */
+  --surface-overlay: 240 10% 15%;   /* #22222a - Floating modals, dropdowns, sticky bars */
+
+  /* Dedicated Game Resource Tokens (RTS Economy) */
+  --resource-armas: 0 84% 60%;      /* #ef4444 - Weapons / Ballistics */
+  --resource-municion: 38 92% 50%;  /* #f59e0b - Ammunition / Gunpowder */
+  --resource-alcohol: 35 90% 44%;   /* #d97706 - Contraband / Alcohol */
+  --resource-dolares: 160 84% 39%;  /* #10b981 - Dirty Cash / Laundered Dollars */
+
+  /* Tactical Aura & Glow Effects */
+  --glow-crimson: 0 75% 50%;
+  --glow-gold: 45 90% 50%;
+}
+
+/* Domain Utility Classes for RTS Game HUD & Tactical Feedback */
+.btn-tactical-press {
+  transition: transform 0.08s ease-in-out, filter 0.15s ease;
+}
+.btn-tactical-press:active {
+  transform: scale(0.98) translateY(1px);
+  filter: brightness(0.92);
+}
+
+.resource-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  font-family: var(--font-roboto), sans-serif;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  border: 1px solid transparent;
+}
+
+.resource-pill-armas {
+  background-color: hsl(var(--resource-armas) / 0.12);
+  color: hsl(var(--resource-armas));
+  border-color: hsl(var(--resource-armas) / 0.25);
+}
+
+.resource-pill-municion {
+  background-color: hsl(var(--resource-municion) / 0.12);
+  color: hsl(var(--resource-municion));
+  border-color: hsl(var(--resource-municion) / 0.25);
+}
+
+.resource-pill-alcohol {
+  background-color: hsl(var(--resource-alcohol) / 0.12);
+  color: hsl(var(--resource-alcohol));
+  border-color: hsl(var(--resource-alcohol) / 0.25);
+}
+
+.resource-pill-dolares {
+  background-color: hsl(var(--resource-dolares) / 0.12);
+  color: hsl(var(--resource-dolares));
+  border-color: hsl(var(--resource-dolares) / 0.25);
+}
+
+/* Ambient glow container for high-tier crime operations */
+.glow-border-crimson {
+  box-shadow: 0 0 15px -3px hsl(var(--glow-crimson) / 0.25);
+}
+
+.glow-border-gold {
+  box-shadow: 0 0 15px -3px hsl(var(--glow-gold) / 0.25);
+}

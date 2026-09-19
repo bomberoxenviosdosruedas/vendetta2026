@@ -1,7 +1,7 @@
 import type {Config} from 'tailwindcss';
 
 const config: Config = {
-  darkMode: ['class'],
+  darkMode: 'class',
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -75,6 +75,18 @@ const config: Config = {
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))',
         },
+        surface: {
+          lowest: 'hsl(var(--surface-lowest, 240 12% 3.5%))',
+          card: 'hsl(var(--surface-card, 240 9% 8.5%))',
+          elevated: 'hsl(var(--surface-elevated, 240 10% 11.5%))',
+          overlay: 'hsl(var(--surface-overlay, 240 10% 15%))',
+        },
+        resource: {
+          armas: 'hsl(var(--resource-armas, 0 84% 60%))',
+          municion: 'hsl(var(--resource-municion, 38 92% 50%))',
+          alcohol: 'hsl(var(--resource-alcohol, 35 90% 44%))',
+          dolares: 'hsl(var(--resource-dolares, 160 84% 39%))',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -111,6 +123,14 @@ const config: Config = {
             transform: 'translateX(100%)',
           },
         },
+        'pulse-subtle': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.6' },
+        },
+        'glow-crimson': {
+          '0%, 100%': { boxShadow: '0 0 15px rgba(225, 29, 46, 0.4)' },
+          '50%': { boxShadow: '0 0 5px rgba(225, 29, 46, 0.2)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -118,6 +138,8 @@ const config: Config = {
         'fade-in': 'fade-in 0.5s ease-in-out',
         'fade-in-up': 'fade-in-up 0.5s ease-in-out',
         shimmer: 'shimmer 1.5s infinite',
+        'pulse-subtle': 'pulse-subtle 2s ease-in-out infinite',
+        'glow-crimson': 'glow-crimson 2s ease-in-out infinite',
       },
     },
   },
