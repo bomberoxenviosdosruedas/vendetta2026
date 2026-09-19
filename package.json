@@ -13,18 +13,15 @@
     "typecheck": "tsc --noEmit",
     "generate": "prisma generate",
     "prisma:generate": "prisma generate",
-    "prisma7:generate": "prisma7 generate",
     "prisma8:migrate": "prisma db migrate --advance-ref db",
     "db:export": "bun prisma/exportacion.ts"
-  },
-  "prisma": {
-    "seed": "bun prisma/seed.ts"
   },
   "dependencies": {
     "@genkit-ai/googleai": "^1.15.2",
     "@genkit-ai/next": "^1.15.2",
     "@hookform/resolvers": "^3.10.0",
-    "@prisma/client": "^6.19.3",
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "^7.10.0",
     "@prisma/extension-accelerate": "^2.0.2",
     "@prisma/orm-postgres": "^8.0.0-rc.11",
     "@radix-ui/react-accordion": "^1.2.11",
@@ -61,6 +58,7 @@
     "lucide-react": "^0.525.0",
     "next": "15.3.3",
     "patch-package": "^8.0.0",
+    "pg": "^8.23.0",
     "react": "^18.3.1",
     "react-day-picker": "^9.8.0",
     "react-dom": "^18.3.1",
@@ -73,14 +71,14 @@
   "devDependencies": {
     "@types/lodash": "^4.17.20",
     "@types/node": "^22.16.5",
+    "@types/pg": "^8.23.1",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
     "eslint": "^9.31.0",
     "eslint-config-next": "15.4.2",
     "genkit-cli": "^1.15.2",
     "postcss": "^8.5.6",
-    "prisma": "^6.19.3",
-    "@prisma/prisma7": "^7.10.0-dev.58",
+    "prisma": "^7.10.0",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"

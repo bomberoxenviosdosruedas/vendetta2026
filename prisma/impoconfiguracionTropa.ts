@@ -1,8 +1,7 @@
 
-import { PrismaClient, TipoTropa } from '@prisma/client/edge';
+import { TipoTropa } from '@prisma/client';
+import prisma from '../src/lib/prisma/prisma';
 import * as datosTropas from './datosactuales/configuracionTropa.json';
-
-const prisma = new PrismaClient();
 
 const tropasDefensaIds = [
     "trabajador_ilegal",

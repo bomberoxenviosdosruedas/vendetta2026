@@ -1,8 +1,6 @@
 
-import { PrismaClient } from '@prisma/client/edge';
+import prisma from '../src/lib/prisma/prisma';
 import * as datosHabitaciones from './datosactuales/configuracionHabitacion.json';
-
-const prisma = new PrismaClient();
 
 interface HabitacionData {
   id: string;

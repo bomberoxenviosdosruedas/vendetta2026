@@ -1,9 +1,7 @@
 
 
-import { PrismaClient } from '@prisma/client/edge';
+import prisma from '../src/lib/prisma/prisma';
 import * as datosPoderAtaque from './datosactuales/poderAtaquemodificado.json';
-
-const prisma = new PrismaClient();
 
 interface PoderAtaqueData {
   propiedades: number;

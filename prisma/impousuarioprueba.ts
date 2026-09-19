@@ -1,9 +1,7 @@
 
-import { PrismaClient } from '@prisma/client/edge';
+import prisma from '../src/lib/prisma/prisma';
 import * as datosUsuarios from './datosactuales/user.json';
 import * as datosPropiedades from './datosactuales/propiedad.json';
-
-const prisma = new PrismaClient();
 
 async function main() {
   console.log('🚀 Iniciando la importación de usuarios y propiedades...');
@@ -11,13 +9,18 @@ async function main() {
   const usuarios = (datosUsuarios as any).default || datosUsuarios;
   const propiedades = (datosPropiedades as any).default || datosPropiedades;
 
+  const parseDate = (val: any) => (val && typeof val === 'string' && !isNaN(new Date(val).getTime()) ? new Date(val) : new Date());
+
   for (const userData of usuarios) {
     try {
       console.log(`👤 Procesando usuario: ${userData.username}`);
+      const createdAt = parseDate(userData.createdAt);
+      const updatedAt = parseDate(userData.updatedAt);
+      const lastSeen = parseDate(userData.lastSeen);
       await prisma.user.upsert({
         where: { id: userData.id },
-        update: { ...userData, createdAt: new Date(userData.createdAt), updatedAt: new Date(userData.updatedAt) },
-        create: { ...userData, createdAt: new Date(userData.createdAt), updatedAt: new Date(userData.updatedAt) },
+        update: { ...userData, createdAt, updatedAt, lastSeen },
+        create: { ...userData, createdAt, updatedAt, lastSeen },
       });
     } catch (e) {
       console.error(`Error con usuario ${userData.username}`, e);
@@ -27,10 +30,13 @@ async function main() {
   for (const propData of propiedades) {
     try {
       console.log(`🏡 Procesando propiedad: ${propData.nombre} de usuario ${propData.userId}`);
+      const ultimaActualizacion = propData.ultimaActualizacion && !isNaN(new Date(propData.ultimaActualizacion).getTime())
+        ? new Date(propData.ultimaActualizacion)
+        : new Date();
       await prisma.propiedad.upsert({
         where: { id: propData.id },
-        update: { ...propData, ultimaActualizacion: new Date(propData.ultimaActualizacion) },
-        create: { ...propData, ultimaActualizacion: new Date(propData.ultimaActualizacion) },
+        update: { ...propData, ultimaActualizacion },
+        create: { ...propData, ultimaActualizacion },
       });
     } catch(e) {
       console.error(`Error con propiedad ${propData.id}`, e);

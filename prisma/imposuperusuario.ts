@@ -1,9 +1,7 @@
 
 
-import { PrismaClient } from '@prisma/client/edge';
+import prisma from '../src/lib/prisma/prisma';
 import * as datosSuperUsuarios from './datosactuales/superUser.json';
-
-const prisma = new PrismaClient();
 
 async function main() {
   console.log('👤✨ Iniciando la importación de superusuarios...');

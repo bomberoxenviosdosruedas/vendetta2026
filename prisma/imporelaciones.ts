@@ -1,6 +1,6 @@
 
 
-import { PrismaClient } from '@prisma/client/edge';
+import prisma from '../src/lib/prisma/prisma';
 import * as datosFamilies from './datosactuales/family.json';
 import * as datosFamilyMembers from './datosactuales/familyMember.json';
 import * as datosFamilyInvitations from './datosactuales/familyInvitation.json';
@@ -17,12 +17,12 @@ import * as datosColaReclutamiento from './datosactuales/colaReclutamiento.json'
 import * as datosColaMisiones from './datosactuales/colaMisiones.json';
 import * as datosColaEntrenamiento from './datosactuales/colaEntrenamiento.json';
 
-
-const prisma = new PrismaClient();
-
 async function main() {
     console.log('🤝 Iniciando la importación de datos relacionales y de progreso...');
     
+    const parseDate = (val: any) => (val && typeof val === 'string' && !isNaN(new Date(val).getTime()) ? new Date(val) : new Date());
+    const parseOptionalDate = (val: any) => (val && typeof val === 'string' && !isNaN(new Date(val).getTime()) ? new Date(val) : null);
+
     const families = (datosFamilies as any).default || datosFamilies;
     const familyMembers = (datosFamilyMembers as any).default || datosFamilyMembers;
     const familyInvitations = (datosFamilyInvitations as any).default || datosFamilyInvitations;
@@ -84,10 +84,11 @@ async function main() {
     for (const puntData of puntuaciones) {
         try {
          const { ...restOfPuntData } = puntData;
+         const updatedAt = parseDate(restOfPuntData.updatedAt);
          await prisma.puntuacionUsuario.upsert({
              where: { id: restOfPuntData.id },
-             update: { ...restOfPuntData, updatedAt: new Date(restOfPuntData.updatedAt) },
-             create: { ...restOfPuntData, updatedAt: new Date(restOfPuntData.updatedAt) },
+             update: { ...restOfPuntData, updatedAt },
+             create: { ...restOfPuntData, updatedAt },
          });
         } catch (e) {
            console.error(`Error con puntuacion ${puntData.id}`, e);
@@ -103,21 +104,21 @@ async function main() {
    
     for (const cola of colasConstruccion) {
         try {
-          await prisma.colaConstruccion.create({ data: {...cola, fechaInicio: cola.fechaInicio ? new Date(cola.fechaInicio) : null, fechaFinalizacion: cola.fechaFinalizacion ? new Date(cola.fechaFinalizacion) : null, createdAt: new Date(cola.createdAt)} });
+          await prisma.colaConstruccion.create({ data: {...cola, fechaInicio: parseOptionalDate(cola.fechaInicio), fechaFinalizacion: parseOptionalDate(cola.fechaFinalizacion), createdAt: parseDate(cola.createdAt)} });
         } catch (e) {
             console.error(`Error creando cola construccion ${cola.id}`, e);
         }
     }
     for (const cola of colasReclutamiento) {
         try {
-          await prisma.colaReclutamiento.create({ data: {...cola, fechaInicio: new Date(cola.fechaInicio), fechaFinalizacion: new Date(cola.fechaFinalizacion)} });
+          await prisma.colaReclutamiento.create({ data: {...cola, fechaInicio: parseDate(cola.fechaInicio), fechaFinalizacion: parseDate(cola.fechaFinalizacion)} });
         } catch (e) {
            console.error(`Error creando cola reclutamiento ${cola.id}`, e);
         }
     }
     for (const cola of colasMisiones) {
        try {
-        await prisma.colaMisiones.create({ data: {...cola, fechaLlegada: new Date(cola.fechaLlegada), fechaRegreso: cola.fechaRegreso ? new Date(cola.fechaRegreso) : null, fechaInicio: new Date(cola.fechaInicio)} });
+        await prisma.colaMisiones.create({ data: {...cola, fechaLlegada: parseDate(cola.fechaLlegada), fechaRegreso: parseOptionalDate(cola.fechaRegreso), fechaInicio: parseDate(cola.fechaInicio)} });
        } catch(e) {
            console.error(`Error creando cola mision ${cola.id}`, e);
        }
@@ -125,7 +126,7 @@ async function main() {
   
     for (const cola of colasEntrenamiento) {
       try {
-        await prisma.colaEntrenamiento.create({ data: {...cola, fechaInicio: new Date(cola.fechaInicio), fechaFinalizacion: new Date(cola.fechaFinalizacion)} });
+        await prisma.colaEntrenamiento.create({ data: {...cola, fechaInicio: parseDate(cola.fechaInicio), fechaFinalizacion: parseDate(cola.fechaFinalizacion)} });
       } catch(e) {
           console.error(`Error creando cola entrenamiento ${cola.id}`, e);
       }
@@ -134,10 +135,12 @@ async function main() {
 
     for (const familyData of families) {
         try {
+          const createdAt = parseDate(familyData.createdAt);
+          const updatedAt = parseDate(familyData.updatedAt);
           await prisma.family.upsert({
               where: { id: familyData.id },
-              update: familyData,
-              create: familyData,
+              update: { ...familyData, createdAt, updatedAt },
+              create: { ...familyData, createdAt, updatedAt },
           });
         } catch(e) {
            console.error(`Error con familia ${familyData.id}`, e);
@@ -146,10 +149,11 @@ async function main() {
   
     for (const memberData of familyMembers) {
         try {
+          const joinedAt = parseDate(memberData.joinedAt);
           await prisma.familyMember.upsert({
               where: { userId: memberData.userId },
-              update: memberData,
-              create: memberData,
+              update: { ...memberData, joinedAt },
+              create: { ...memberData, joinedAt },
           });
         } catch(e) {
            console.error(`Error con miembro de familia ${memberData.userId}`, e);
@@ -160,8 +164,8 @@ async function main() {
         try {
           await prisma.familyInvitation.upsert({
               where: { id: invitationData.id },
-              update: { ...invitationData, expiresAt: new Date(invitationData.expiresAt) },
-              create: { ...invitationData, expiresAt: new Date(invitationData.expiresAt) },
+              update: { ...invitationData, expiresAt: parseDate(invitationData.expiresAt) },
+              create: { ...invitationData, expiresAt: parseDate(invitationData.expiresAt) },
           });
         } catch(e) {
            console.error(`Error con invitacion de familia ${invitationData.id}`, e);
@@ -196,8 +200,8 @@ async function main() {
         try {
             await prisma.message.upsert({
                 where: { id: messageData.id },
-                update: { ...messageData, createdAt: new Date(messageData.createdAt) },
-                create: { ...messageData, createdAt: new Date(messageData.createdAt) },
+                update: { ...messageData, createdAt: parseDate(messageData.createdAt) },
+                create: { ...messageData, createdAt: parseDate(messageData.createdAt) },
             });
         } catch(e) {
             console.error(`Error con mensaje ${messageData.id}`, e);

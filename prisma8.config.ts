@@ -1,8 +1,8 @@
 import "dotenv/config";
-import { definePrismaConfig } from "prisma/config";
+import { defineConfig } from "prisma/config";
 import { defineConfig as definePostgresConfig } from "@prisma/orm-postgres/config";
 
-export default definePrismaConfig({
+export default defineConfig({
   orm: definePostgresConfig({
     contract: "prisma8/contract.prisma",
     output: "generated/prisma8",
