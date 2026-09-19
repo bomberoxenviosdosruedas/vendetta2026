@@ -22,7 +22,7 @@ export function SuperAuthForm() {
         e.preventDefault();
         startTransition(async () => {
             const result = await loginSuperUser({username, password});
-            if (result.error) {
+            if (result?.error) {
                 toast({
                     variant: 'destructive',
                     title: 'Error de Acceso',

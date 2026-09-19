@@ -1,6 +1,8 @@
 
 'use server';
 
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { loginSuperUserSession } from "../auth-super";
 import prisma from "../prisma/prisma";
 
@@ -10,9 +12,9 @@ interface LoginInput {
 }
 
 export async function loginSuperUser(credentials: LoginInput) {
-    try {
-        const { username, password } = credentials;
+    const { username, password } = credentials;
 
+    try {
         const superUser = await prisma.superUser.findUnique({
             where: { username },
         });
@@ -28,11 +30,11 @@ export async function loginSuperUser(credentials: LoginInput) {
         }
 
         await loginSuperUserSession();
-        
-        // The redirect will be handled by the page component after revalidation
-        return { success: true };
+        revalidatePath('/');
     } catch (err) {
         console.error("Error en loginSuperUser:", err);
         return { error: "Error de conexión o base de datos. Intente nuevamente." };
     }
+
+    redirect('/login');
 }

@@ -2,7 +2,6 @@
 'use server';
 
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 const SUPER_USER_COOKIE_NAME = 'vendetta-super-session';
 
@@ -14,7 +13,6 @@ export async function loginSuperUserSession() {
         maxAge: 60 * 60 * 24, // 24 hours
         path: '/',
     });
-     redirect('/login');
 }
 
 export async function getSuperUserSession(): Promise<boolean> {
