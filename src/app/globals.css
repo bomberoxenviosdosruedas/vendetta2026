@@ -1,8 +1,6 @@
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
 @import "../styles/design-tokens.css";
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 @layer base {
   :root {
@@ -85,7 +83,7 @@
 
 @layer base {
   *, ::before, ::after {
-    @apply border-border;
+    border-color: hsl(var(--border));
     font-family: Tahoma, Arial, Helvetica, sans-serif;
   }
 
@@ -147,7 +145,8 @@
   }
 
   h1, h2, h3, h4 {
-    @apply font-heading tracking-wide;
+    font-family: var(--font-bebas-neue), Tahoma, sans-serif;
+    letter-spacing: 0.03em;
   }
 
   .tabular-nums {
@@ -570,10 +569,17 @@ div.div_main    { width: 660px; height: calc(100% - 141px); margin: 0; padding: 
 
 @layer components {
   .main-view {
-    @apply flex flex-col space-y-4 animate-fade-in;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+    animation: fadeIn 0.3s ease-in-out;
   }
 
   .tactical-card {
-    @apply bg-gradient-to-b from-card to-card/75 border border-border/60 shadow-lg relative overflow-hidden;
+    background-image: linear-gradient(to bottom, hsl(var(--card)), hsl(var(--card) / 0.75));
+    border: 1px solid hsl(var(--border) / 0.6);
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6);
+    position: relative;
+    overflow: hidden;
   }
 }
