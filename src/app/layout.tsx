@@ -1,7 +1,7 @@
 import type {Metadata, Viewport} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
-import { Roboto, Bebas_Neue as BebasNeue } from 'next/font/google';
+import { Roboto, Bebas_Neue as BebasNeue, Roboto_Mono as RobotoMono } from 'next/font/google';
 
 const roboto = Roboto({
   subsets: ['latin'],
@@ -13,6 +13,12 @@ const bebas_neue = BebasNeue({
   subsets: ['latin'],
   weight: '400',
   variable: '--font-bebas-neue',
+});
+
+const roboto_mono = RobotoMono({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-mono',
 });
 
 const APP_NAME = "Vendetta";
@@ -91,7 +97,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className="dark">
-      <body className={`${roboto.variable} ${bebas_neue.variable} font-sans antialiased bg-background`}>
+      <body className={`${roboto.variable} ${bebas_neue.variable} ${roboto_mono.variable} font-sans antialiased bg-background`}>
         {children}
         <Toaster />
       </body>

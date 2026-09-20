@@ -1,4 +1,3 @@
-
 import { getSessionUser } from "@/lib/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
@@ -6,46 +5,55 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { Bell, Briefcase, MessageSquare, UserPlus, Users2 } from "lucide-react";
+import { Bell, Briefcase, MessageSquare, Users2, Building2, ChevronRight, ShieldCheck, MapPin } from "lucide-react";
 import { QueueStatusCard } from "./queue-status-card";
 import { ActivityHistoryCard } from "./activity-history";
 import { CityNewsCard } from "./city-news-ticker";
 import { getRoomConfigurations, getUserActivityHistory } from "@/lib/data";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import Link from "next/link";
-import { FamilyRole } from "@prisma/client";
 
-
-function ActionIcons({ unreadMessages, inFamily }: { unreadMessages: number, inFamily: boolean }) {
+function ActionIcons({ unreadMessages }: { unreadMessages: number }) {
     const actions = [
-        { href: "/messages?categoria=SISTEMA", icon: <Bell className="h-5 w-5" />, notification: 0, label: "Notificaciones del Sistema" },
-        { href: "/messages", icon: <MessageSquare className="h-5 w-5" />, notification: unreadMessages, label: "Mensajes" },
-        { href: "/family", icon: <Users2 className="h-5 w-5" />, notification: 0, label: "Familia" },
-    ]
+        { href: "/messages?categoria=SISTEMA", icon: <Bell className="h-4 w-4" />, notification: 0, label: "Notificaciones del Sistema" },
+        { href: "/messages", icon: <MessageSquare className="h-4 w-4" />, notification: unreadMessages, label: "Mensajes Clandestinos" },
+        { href: "/settings", icon: <Briefcase className="h-4 w-4" />, notification: 0, label: "Ajustes de la Organización" },
+    ];
+
     return (
-        <div className="absolute top-4 right-4 flex flex-col items-center gap-3">
+        <div className="flex items-center gap-1.5">
             {actions.map((action, index) => (
-                 <TooltipProvider key={index} delayDuration={0}>
+                <TooltipProvider key={index} delayDuration={100}>
                     <Tooltip>
                         <TooltipTrigger asChild>
-                             <Button asChild variant="outline" size="icon" className="h-9 w-9 bg-background/50 border-white/20 hover:bg-white/10 text-white relative">
+                            <Button 
+                                asChild 
+                                variant="outline" 
+                                size="icon" 
+                                className="h-8 w-8 bg-background/60 border-white/10 hover:bg-white/10 text-zinc-300 hover:text-white relative btn-tactical-press"
+                            >
                                 <Link href={action.href}>
                                     {action.icon}
                                     <span className="sr-only">{action.label}</span>
-                                    {action.notification > 0 && 
-                                        <Badge variant="destructive" className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center p-0">{action.notification}</Badge>
-                                    }
+                                    {action.notification > 0 && (
+                                        <Badge 
+                                            variant="destructive" 
+                                            className="absolute -top-1 -right-1 h-4 min-w-4 px-1 flex items-center justify-center text-[10px] font-mono leading-none bg-red-600 animate-pulse-subtle"
+                                        >
+                                            {action.notification}
+                                        </Badge>
+                                    )}
                                 </Link>
                             </Button>
                         </TooltipTrigger>
-                        <TooltipContent side="left">
-                            <p>{action.label}</p>
+                        <TooltipContent side="bottom">
+                            <p className="text-xs">{action.label}</p>
                         </TooltipContent>
                     </Tooltip>
-                 </TooltipProvider>
+                </TooltipProvider>
             ))}
         </div>
-    )
+    );
 }
 
 function formatPoints(points: number | null | undefined): string {
@@ -57,7 +65,11 @@ export async function OverviewView() {
     const user = await getSessionUser();
 
     if (!user) {
-        return <div>Usuario no encontrado.</div>
+        return (
+            <div className="p-8 text-center text-muted-foreground">
+                Usuario no encontrado o sesión expirada.
+            </div>
+        );
     }
 
     const { puntuacion, familyMember } = user;
@@ -68,108 +80,241 @@ export async function OverviewView() {
     const simpleRoomConfigs = allRoomConfigs.map(r => ({ id: r.id, nombre: r.nombre }));
     const unreadMessages = user._count?.receivedMessages || 0;
 
+    const puntosTotales = (puntuacion?.puntosHabitaciones || 0) + 
+                          (puntuacion?.puntosTropas || 0) + 
+                          (puntuacion?.puntosEntrenamientos || 0);
+
+    const mainProperty = user.propiedades[0];
+
     return (
         <div className="flex-grow space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-[min-content,1fr] gap-4 h-full">
+            {/* Top Tactical Command Header (3 Balanced Columns) */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 
-                {/* Player Card */}
-                <Card className="md:col-span-1 md:row-span-1">
-                    <CardContent className="p-4 flex items-center gap-4 h-full">
-                        <Avatar className="h-16 w-16 border-2 border-primary">
-                            <AvatarImage src={user.avatarUrl || ''} alt={user.name} data-ai-hint="mafia boss" />
-                            <AvatarFallback>{user.name?.charAt(0).toUpperCase()}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                            <p className="text-sm text-muted-foreground">Jugador</p>
-                            <p className="text-xl font-bold font-heading tracking-wider">{user.name}</p>
+                {/* 1. Boss Dossier Card */}
+                <Card className="tactical-card flex flex-col justify-between p-4 min-h-[250px]">
+                    <div>
+                        <div className="flex items-center justify-between gap-2 pb-3 border-b border-border/40">
+                            <span className="text-[11px] font-mono font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-1.5">
+                                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                                EXPEDIENTE CRIMINAL
+                            </span>
+                            <ActionIcons unreadMessages={unreadMessages} />
                         </div>
-                    </CardContent>
+
+                        <div className="flex items-center gap-3.5 mt-4">
+                            <Avatar className="h-16 w-16 border-2 border-primary ring-2 ring-primary/20 shadow-md">
+                                <AvatarImage src={user.avatarUrl || ''} alt={user.name} data-ai-hint="mafia boss" />
+                                <AvatarFallback className="bg-surface-elevated text-zinc-100 font-heading text-xl">
+                                    {user.name?.charAt(0).toUpperCase()}
+                                </AvatarFallback>
+                            </Avatar>
+                            <div className="min-w-0">
+                                <p className="text-xs text-muted-foreground uppercase tracking-wider font-mono">
+                                    {user.title || "Don de la Familia"}
+                                </p>
+                                <h3 className="text-2xl font-bold font-heading tracking-wide text-zinc-100 truncate">
+                                    {user.name}
+                                </h3>
+                                <div className="inline-flex items-center gap-1.5 text-[11px] font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-900/40 px-2 py-0.5 rounded mt-1">
+                                    <span className="relative flex h-1.5 w-1.5">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
+                                    </span>
+                                    EN LÍNEA // OPERATIVO
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="pt-3 border-t border-border/40 flex items-center justify-between text-xs mt-3">
+                        <span className="text-muted-foreground uppercase font-mono tracking-wider">
+                            Puntuación Global
+                        </span>
+                        <span className="font-mono font-bold text-accent tabular-nums text-sm">
+                            {formatPoints(puntosTotales)} pts
+                        </span>
+                    </div>
                 </Card>
 
-                {/* Main Property Card */}
-                <Card className="md:col-span-1 md:row-span-2 relative overflow-hidden min-h-[250px]">
+                {/* 2. Main Turf Headquarters Card */}
+                <Card className="relative overflow-hidden min-h-[250px] rounded-lg border border-border/60 shadow-lg group flex flex-col justify-between">
                     <Image 
                         src="/nuevas/edificionuevo.jpg"
-                        alt="Vista de la propiedad principal"
+                        alt="Vista de la sede principal"
                         fill
-                        className="object-cover"
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
                         data-ai-hint="mafia building dark"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                    <CardContent className="absolute bottom-0 left-0 p-4 text-white">
-                        <p className="font-bold text-lg font-heading tracking-wide">Visión General - Propiedad Principal</p>
-                        <p className="text-muted-foreground text-white/80">[{user.propiedades[0]?.ciudad}:{user.propiedades[0]?.barrio}:{user.propiedades[0]?.edificio}]</p>
-                    </CardContent>
-                </Card>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/20" />
 
-                {/* Family Card */}
-                <Card className="md:col-span-1 md:row-span-2 relative min-h-[250px]">
-                    <CardContent className="p-4 flex flex-col items-center justify-center gap-2 h-full">
-                        {familyMember ? (
-                            <>
-                                <Avatar className="h-24 w-24 border-2 border-primary">
-                                    <AvatarImage src={familyMember.family.avatarUrl || ''} alt={familyMember.family.name} data-ai-hint="family crest" />
-                                    <AvatarFallback>{familyMember.family.tag}</AvatarFallback>
-                                </Avatar>
-                                <p className="text-sm text-muted-foreground">Familia</p>
-                                <p className="text-xl font-bold font-heading tracking-widest">{familyMember.family.name}</p>
-                                <Badge variant="secondary">[{familyMember.family.tag}]</Badge>
-                            </>
-                        ) : (
-                            <>
-                                <Users2 className="h-24 w-24 text-muted-foreground" />
-                                <p className="text-sm text-muted-foreground">Sin Familia</p>
-                                <Button asChild variant="outline" size="sm">
-                                    <Link href="/family">Unirse o Crear</Link>
-                                </Button>
-                            </>
+                    {/* Top coordinate badge */}
+                    <div className="relative z-10 p-4 flex items-center justify-between">
+                        <span className="inline-flex items-center gap-1.5 text-[11px] font-mono text-zinc-200 bg-black/60 backdrop-blur-md border border-white/15 px-2 py-0.5 rounded">
+                            <Building2 className="h-3 w-3 text-primary" />
+                            SEDE PRINCIPAL
+                        </span>
+                        {mainProperty && (
+                            <span className="text-[11px] font-mono text-red-400 bg-red-950/70 border border-red-900/50 px-2 py-0.5 rounded">
+                                [{mainProperty.ciudad}:{mainProperty.barrio}:{mainProperty.edificio}]
+                            </span>
                         )}
-                    </CardContent>
-                    <ActionIcons unreadMessages={unreadMessages} inFamily={!!familyMember} />
+                    </div>
+
+                    {/* Bottom property details & quick action */}
+                    <div className="relative z-10 p-4 flex items-end justify-between gap-2">
+                        <div>
+                            <p className="text-xs text-zinc-400 uppercase font-mono tracking-wider">
+                                Cuartel General
+                            </p>
+                            <h3 className="text-xl font-bold font-heading tracking-wide text-white uppercase truncate">
+                                {mainProperty?.nombre || "Propiedad Principal"}
+                            </h3>
+                        </div>
+                        {mainProperty && (
+                            <Button 
+                                asChild 
+                                size="sm" 
+                                variant="outline" 
+                                className="bg-black/60 backdrop-blur-md border-white/20 hover:bg-white/10 text-white text-xs h-8 px-3 btn-tactical-press"
+                            >
+                                <Link href={`/rooms/${mainProperty.ciudad}:${mainProperty.barrio}:${mainProperty.edificio}`}>
+                                    Entrar
+                                    <ChevronRight className="h-3.5 w-3.5 ml-1" />
+                                </Link>
+                            </Button>
+                        )}
+                    </div>
                 </Card>
-                
-                {/* City News Ticker & Card */}
-                <div className="md:col-span-3">
-                    <CityNewsCard />
-                </div>
 
-                {/* Queue Status Card */}
-                <div className="md:col-span-3">
-                    <QueueStatusCard user={user} allRooms={simpleRoomConfigs} />
-                </div>
+                {/* 3. Syndicate / Family Card */}
+                <Card className="tactical-card flex flex-col justify-between p-4 min-h-[250px]">
+                    <div>
+                        <div className="flex items-center justify-between gap-2 pb-3 border-b border-border/40">
+                            <span className="text-[11px] font-mono font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-1.5">
+                                <Users2 className="h-3.5 w-3.5 text-accent" />
+                                SINDICATO CLANDESTINO
+                            </span>
+                            <Badge 
+                                variant="outline" 
+                                className={`text-[10px] font-mono uppercase ${
+                                    familyMember 
+                                        ? 'border-accent/40 text-accent bg-accent/10' 
+                                        : 'border-zinc-700 text-zinc-400'
+                                }`}
+                            >
+                                {familyMember ? 'AFILIADO' : 'INDEPENDIENTE'}
+                            </Badge>
+                        </div>
 
-                {/* Historial de Actividad Reciente */}
-                <div className="md:col-span-3">
-                    <ActivityHistoryCard activities={activities} />
-                </div>
+                        <div className="mt-3 flex flex-col items-center text-center">
+                            {familyMember ? (
+                                <>
+                                    <Avatar className="h-14 w-14 border-2 border-accent ring-2 ring-accent/20 shadow-md mb-2">
+                                        <AvatarImage src={familyMember.family.avatarUrl || ''} alt={familyMember.family.name} data-ai-hint="family crest" />
+                                        <AvatarFallback className="bg-surface-elevated text-accent font-heading text-lg">
+                                            {familyMember.family.tag}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                    <h4 className="text-xl font-bold font-heading tracking-widest text-zinc-100">
+                                        {familyMember.family.name}
+                                    </h4>
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <Badge variant="secondary" className="font-mono text-[11px] px-2 py-0 border border-white/10">
+                                            [{familyMember.family.tag}]
+                                        </Badge>
+                                        <span className="text-xs text-muted-foreground font-mono">
+                                            Rol: <span className="text-zinc-200">{familyMember.role}</span>
+                                        </span>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="h-12 w-12 rounded-full bg-surface-elevated border border-border flex items-center justify-center text-muted-foreground mb-2">
+                                        <Users2 className="h-6 w-6" />
+                                    </div>
+                                    <p className="text-base font-bold font-heading text-zinc-200">
+                                        Sin Familia Asignada
+                                    </p>
+                                    <p className="text-xs text-muted-foreground mt-0.5 max-w-[200px]">
+                                        Únete a un clan para protección territorial y bonificaciones.
+                                    </p>
+                                </>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="pt-3 border-t border-border/40 mt-3">
+                        <Button 
+                            asChild 
+                            variant="outline" 
+                            size="sm" 
+                            className="w-full text-xs h-8 bg-surface-elevated/80 hover:bg-surface-overlay border-border/80 text-zinc-200 btn-tactical-press"
+                        >
+                            <Link href="/family">
+                                {familyMember ? 'Cuartel de Familia' : 'Buscar o Fundar Familia'}
+                                <ChevronRight className="h-3.5 w-3.5 ml-1" />
+                            </Link>
+                        </Button>
+                    </div>
+                </Card>
             </div>
 
-            {/* Bottom Stats Bar */}
-            <Card>
-                <CardContent className="p-3 grid grid-cols-2 md:grid-cols-5 gap-y-2 gap-x-4 items-center justify-items-center">
+            {/* City News Ticker */}
+            <CityNewsCard />
+
+            {/* Live Operational Queues */}
+            <QueueStatusCard user={user} allRooms={simpleRoomConfigs} />
+
+            {/* Recent Activity Ledger */}
+            <ActivityHistoryCard activities={activities} />
+
+            {/* Syndicate Empire Ledger (Bottom Stats Bar - Real Data) */}
+            <Card className="tactical-card">
+                <CardContent className="p-3.5 grid grid-cols-2 sm:grid-cols-5 gap-3 items-center justify-items-center">
                     <div className="text-center">
-                        <p className="text-xs text-muted-foreground">Puntos (Entrenamiento)</p>
-                        <p className="font-bold text-lg">{formatPoints(puntuacion?.puntosEntrenamientos)}</p>
+                        <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
+                            Puntos Totales
+                        </p>
+                        <p className="font-bold font-mono tabular-nums text-lg text-accent">
+                            {formatPoints(puntosTotales)}
+                        </p>
                     </div>
-                     <Separator orientation="vertical" className="h-8 hidden md:block" />
+                    <Separator orientation="vertical" className="h-8 hidden sm:block bg-border/60" />
                     <div className="text-center">
-                        <p className="text-xs text-muted-foreground">Puntos (Edificios)</p>
-                        <p className="font-bold text-lg">{formatPoints(puntuacion?.puntosHabitaciones)}</p>
+                        <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
+                            Habitaciones
+                        </p>
+                        <p className="font-bold font-mono tabular-nums text-lg text-zinc-100">
+                            {formatPoints(puntuacion?.puntosHabitaciones)}
+                        </p>
                     </div>
-                     <Separator orientation="vertical" className="h-8 hidden md:block" />
+                    <Separator orientation="vertical" className="h-8 hidden sm:block bg-border/60" />
                     <div className="text-center">
-                        <p className="text-xs text-muted-foreground">Puntos (Tropas)</p>
-                        <p className="font-bold text-lg">{formatPoints(puntuacion?.puntosTropas)}</p>
+                        <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
+                            Tropas
+                        </p>
+                        <p className="font-bold font-mono tabular-nums text-lg text-zinc-100">
+                            {formatPoints(puntuacion?.puntosTropas)}
+                        </p>
                     </div>
-                    <Separator orientation="vertical" className="h-8 hidden md:block" />
+                    <Separator orientation="vertical" className="h-8 hidden sm:block bg-border/60" />
                     <div className="text-center">
-                        <p className="text-xs text-muted-foreground">Propiedades</p>
-                        <p className="font-bold text-lg">{user.propiedades.length}</p>
+                        <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
+                            Entrenamientos
+                        </p>
+                        <p className="font-bold font-mono tabular-nums text-lg text-zinc-100">
+                            {formatPoints(puntuacion?.puntosEntrenamientos)}
+                        </p>
                     </div>
-                    <Separator orientation="vertical" className="h-8 hidden md:block" />
-                    <div className="text-center">
-                        <p className="text-xs text-muted-foreground">Lealtad</p>
-                        <p className="font-bold text-lg">99%</p>
+                    <Separator orientation="vertical" className="h-8 hidden sm:block bg-border/60" />
+                    <div className="text-center col-span-2 sm:col-span-1">
+                        <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
+                            Territorios
+                        </p>
+                        <p className="font-bold font-mono tabular-nums text-lg text-zinc-100">
+                            {user.propiedades.length}
+                        </p>
                     </div>
                 </CardContent>
             </Card>
