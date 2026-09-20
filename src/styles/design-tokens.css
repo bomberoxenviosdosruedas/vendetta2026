@@ -3,12 +3,12 @@
  * Extends base Shadcn/Tailwind palette with Mafia RTS tactical layers and resource tokens.
  */
 
-:root {
+:root, .dark {
   /* Extended Elevation Surface Tokens */
-  --surface-lowest: 240 10% 4.5%;   /* #09090c - Base background under everything */
-  --surface-card: 240 8% 8.5%;      /* #131317 - Primary card container */
-  --surface-elevated: 240 7% 12%;   /* #1c1c23 - Hover states & active items */
-  --surface-overlay: 240 7% 15%;    /* #23232c - Floating modals, dropdowns, sticky bars */
+  --surface-lowest: 0 0% 6.7%;   /* #111111 - Base background */
+  --surface-card: 0 0% 10%;      /* #1a1a1a - Primary card container */
+  --surface-elevated: 0 0% 14%;  /* #242424 - Hover states & active items */
+  --surface-overlay: 0 0% 17%;   /* #2b2b2b - Floating modals, dropdowns, sticky bars */
 
   /* Dedicated Game Resource Tokens (RTS Economy) */
   --resource-armas: 0 72% 51%;      /* #dc2626 - Weapons / Ballistics */
