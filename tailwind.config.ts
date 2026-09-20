@@ -21,8 +21,9 @@ const config: Config = {
         '17': 'repeat(17, minmax(0, 1fr))',
       },
       fontFamily: {
-        sans: ['var(--font-roboto)', 'sans-serif'],
-        heading: ['var(--font-bebas-neue)', 'sans-serif'],
+        sans: ['Tahoma', 'Arial', 'Helvetica', 'sans-serif'],
+        tahoma: ['Tahoma', 'Arial', 'Helvetica', 'sans-serif'],
+        heading: ['var(--font-bebas-neue)', 'Tahoma', 'sans-serif'],
         mono: ['var(--font-mono)', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
       },
       boxShadow: {
@@ -32,6 +33,15 @@ const config: Config = {
         'glow-gold': '0 0 15px -3px rgba(234, 179, 8, 0.35)',
       },
       colors: {
+        vendetta: {
+          burgundy: '#6C0000',
+          pink: '#ffcccc',
+          yellow: '#fff400',
+          gold: '#ffe569',
+          orange: '#ee7000',
+          dark: '#111111',
+          black: '#020202',
+        },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {

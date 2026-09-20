@@ -17,10 +17,13 @@ A high-stakes Mafia RTS tactical command interface ("Cockpit Dense", Variance: 6
 - **Ballistics / Weapons** (`#EF4444` / `0 84% 60%`) — Armaments stockpile metric.
 - **Off-White Text** (`#F4F4F6` / `210 25% 96%`) — Primary typography, high legibility.
 - **Muted Zinc Text** (`#A1A1AA` / `215 16% 62%`) — Subtitles, coordinates, and metadata.
+- **Vendetta Classic Burgundy** (`#6C0000`) — Authentic retro syndicate button and header background.
+- **Vendetta Classic Pink** (`#FFCCCC`) — Authentic retro cell text and indicator dots (`.dotF`, `.dotE`).
+- **Vendetta Classic Gold** (`#FFF400` / `#FFE569`) — Retro hover state and highlighted ranking accent.
 
 ## 3. Typography Rules
-- **Display / Headlines:** `Bebas Neue` (`var(--font-bebas-neue)`) — Track-wide, uppercase, assertive, cinematic mobster hierarchy. Never lowercase for major titles.
-- **Body / Interface:** `Roboto` (`var(--font-roboto)`) — Balanced, neutral reading experience, 65ch maximum width in story text.
+- **Display / Headlines:** `Bebas Neue` (`var(--font-bebas-neue)`) / `Tahoma` — Track-wide, uppercase, assertive, cinematic mobster hierarchy.
+- **Body / Interface:** `Tahoma`, `Arial`, `Helvetica`, `sans-serif` (10pt base) — Authentic Vendetta syndicate feel, high density readability.
 - **Mono / Tactical HUD:** `Roboto Mono` (`var(--font-mono)`) — Tabular numbers for coordinates `[X:Y:Z]`, resource quantities, countdown timers, and statistics. Never use proportional digits for RTS data.
 - **Banned:** `Inter`, generic serif fonts (`Times New Roman`, `Georgia`), pure black (`#000000`), neon purple gradients.
 
@@ -38,7 +41,8 @@ A high-stakes Mafia RTS tactical command interface ("Cockpit Dense", Variance: 6
 - Strict containment: `container` padding with sticky resource bar.
 
 ## 6. Motion & Interaction
-- Tactile feedback on buttons and interactive cards (`btn-tactical-press`).
+- **wz_tooltip animations:** 100ms ultra-fast cubic-bezier fade-in (`wz-fade-in`) and fade-out (`wz-fade-out`) with shadow offset (`box-shadow: 4px 4px 10px rgba(0,0,0,0.65)`).
+- Tactile feedback on buttons and interactive cards (`btn-tactical-press`, `vendetta-btn:active`).
 - Micro-shimmer on active countdown bars and loading skeletons.
 - Smooth `fadeIn` / `fadeInUp` transitions for tab changes and layout views.
 - No heavy physics that lag or disrupt gameplay.
