@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useRouter } from "next/navigation";
@@ -25,6 +24,10 @@ function CountdownTimer({ label, endDate, onFinish }: {label: string, endDate: s
 
     useEffect(() => {
         const end = new Date(endDate).getTime();
+        if (isNaN(end)) {
+            setTimeLeft('00:00:00');
+            return;
+        }
         const intervalId = setInterval(() => {
             const now = new Date().getTime();
             const difference = Math.floor((end - now) / 1000);
@@ -68,14 +71,19 @@ export function RecruitmentStatus({ recruitments, totalSlots }: RecruitmentStatu
             </div>
             <div className="bg-card text-card-foreground px-4 py-3 rounded-b-md space-y-2">
                 {recruitments.length > 0 ? (
-                     recruitments.map(queueItem => (
-                        <CountdownTimer 
-                            key={queueItem.id}
-                            label={`${queueItem.propiedadNombre}: ${queueItem.cantidad} x ${queueItem.tropaConfig.nombre}`}
-                            endDate={new Date(queueItem.fechaFinalizacion).toISOString()}
-                            onFinish={handleRefresh}
-                         />
-                    ))
+                     recruitments.map(queueItem => {
+                        const endDate = typeof queueItem.fechaFinalizacion === 'string'
+                            ? queueItem.fechaFinalizacion
+                            : new Date(queueItem.fechaFinalizacion).toISOString();
+                        return (
+                            <CountdownTimer 
+                                key={queueItem.id}
+                                label={`${queueItem.propiedadNombre}: ${queueItem.cantidad} x ${queueItem.tropaConfig.nombre}`}
+                                endDate={endDate}
+                                onFinish={handleRefresh}
+                            />
+                        )
+                    })
                 ) : (
                     <p className="text-muted-foreground text-center text-sm">No hay reclutamientos en cola.</p>
                 )}

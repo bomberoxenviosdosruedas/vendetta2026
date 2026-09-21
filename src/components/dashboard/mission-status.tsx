@@ -1,5 +1,4 @@
-
-'use client'
+'use client';
 
 import type { ColaMisiones } from "@prisma/client";
 import { useRouter } from "next/navigation";
@@ -18,7 +17,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-  } from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog"
 
 type MissionStatusProps = {
     missions: ColaMisiones[];
@@ -43,6 +42,13 @@ function formatTime(totalSeconds: number): string {
         .join(':');
 }
 
+// Helper to safely get timestamp from Date or ISO string
+function getTimestamp(dateValue: Date | string | null | undefined): number | null {
+    if (!dateValue) return null;
+    const timestamp = new Date(dateValue).getTime();
+    return isNaN(timestamp) ? null : timestamp;
+}
+
 function MissionCountdown({ mission }: { mission: ColaMisiones }) {
     const router = useRouter();
     const { toast } = useToast();
@@ -59,15 +65,15 @@ function MissionCountdown({ mission }: { mission: ColaMisiones }) {
             const now = new Date().getTime();
             
             let currentLabel = "Llegando";
-            let currentEndDate: number | null = mission.fechaLlegada?.getTime();
+            let currentEndTimestamp = getTimestamp(mission.fechaLlegada);
 
             if (mission.tipoMision === 'REGRESO') {
                 currentLabel = "Regresando";
-                currentEndDate = mission.fechaRegreso?.getTime() || null;
-            } else if (now > mission.fechaLlegada.getTime()) {
-                if (mission.fechaRegreso) {
+                currentEndTimestamp = getTimestamp(mission.fechaRegreso);
+            } else if (currentEndTimestamp && now > currentEndTimestamp) {
+                currentEndTimestamp = getTimestamp(mission.fechaRegreso);
+                if (currentEndTimestamp) {
                     currentLabel = "Regresando";
-                    currentEndDate = mission.fechaRegreso.getTime();
                 } else {
                     setStatus({ label: "Finalizada", endDate: null, timeLeft: "" });
                     router.refresh();
@@ -75,19 +81,19 @@ function MissionCountdown({ mission }: { mission: ColaMisiones }) {
                 }
             }
             
-            if (!currentEndDate) {
+            if (!currentEndTimestamp) {
                 setStatus({ label: "Completada", endDate: null, timeLeft: "" });
-                 router.refresh();
+                router.refresh();
                 return;
             }
 
-            const difference = Math.floor((currentEndDate - now) / 1000);
+            const difference = Math.floor((currentEndTimestamp - now) / 1000);
             
             if (difference < -2) { // Allow a 2-second grace period
                 setStatus({ label: "Completada", endDate: null, timeLeft: "" });
                 router.refresh();
             } else {
-                setStatus({ label: currentLabel, endDate: new Date(currentEndDate), timeLeft: formatTime(difference) });
+                setStatus({ label: currentLabel, endDate: new Date(currentEndTimestamp), timeLeft: formatTime(difference) });
             }
         };
 
@@ -120,7 +126,7 @@ function MissionCountdown({ mission }: { mission: ColaMisiones }) {
             <div className="flex items-center gap-2">
                 <span className="text-xs text-muted-foreground">{status.label}</span>
                 <span className="font-mono text-accent font-bold">{status.timeLeft}</span>
-                {mission.tipoMision !== 'REGRESO' && new Date() < new Date(mission.fechaLlegada) && (
+                {mission.tipoMision !== 'REGRESO' && getTimestamp(mission.fechaLlegada) && new Date() < new Date(getTimestamp(mission.fechaLlegada)!) && (
                      <AlertDialog>
                         <AlertDialogTrigger asChild>
                             <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive" disabled={isPending}>

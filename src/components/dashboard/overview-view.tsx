@@ -12,6 +12,7 @@ import { CityNewsCard } from "./city-news-ticker";
 import { getRoomConfigurations, getUserActivityHistory } from "@/lib/data";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import Link from "next/link";
+import { ErrorBoundary, DashboardSectionErrorFallback } from "./error-boundary";
 
 function ActionIcons({ unreadMessages }: { unreadMessages: number }) {
     const actions = [
@@ -264,13 +265,19 @@ export async function OverviewView() {
             </div>
 
             {/* City News Ticker */}
-            <CityNewsCard />
+            <ErrorBoundary fallback={<DashboardSectionErrorFallback title="Teletipo de la Ciudad" />}>
+                <CityNewsCard />
+            </ErrorBoundary>
 
             {/* Live Operational Queues */}
-            <QueueStatusCard user={user} allRooms={simpleRoomConfigs} />
+            <ErrorBoundary fallback={<DashboardSectionErrorFallback title="Colas Operativas" />}>
+                <QueueStatusCard user={user} allRooms={simpleRoomConfigs} />
+            </ErrorBoundary>
 
             {/* Recent Activity Ledger */}
-            <ActivityHistoryCard activities={activities} />
+            <ErrorBoundary fallback={<DashboardSectionErrorFallback title="Historial de Actividad" />}>
+                <ActivityHistoryCard activities={activities} />
+            </ErrorBoundary>
 
             {/* Syndicate Empire Ledger (Bottom Stats Bar - Real Data) */}
             <Card className="tactical-card">

@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useRouter } from "next/navigation";
@@ -25,6 +24,10 @@ function CountdownTimer({ label, endDate, onFinish }: {label: string, endDate: s
 
     useEffect(() => {
         const end = new Date(endDate).getTime();
+        if (isNaN(end)) {
+            setTimeLeft('00:00:00');
+            return;
+        }
         const intervalId = setInterval(() => {
             const now = new Date().getTime();
             const difference = Math.floor((end - now) / 1000);
@@ -68,14 +71,19 @@ export function TrainingStatus({ trainings, totalSlots }: TrainingStatusProps) {
             </div>
             <div className="bg-card text-card-foreground px-4 py-3 rounded-b-md space-y-2">
                 {trainings.length > 0 ? (
-                     trainings.map(queueItem => (
-                        <CountdownTimer 
-                            key={queueItem.id}
-                            label={`${queueItem.propiedad.nombre}: ${queueItem.entrenamiento.nombre} (Nvl ${queueItem.nivelDestino})`}
-                            endDate={new Date(queueItem.fechaFinalizacion).toISOString()}
-                            onFinish={handleRefresh}
-                         />
-                    ))
+                     trainings.map(queueItem => {
+                        const endDate = typeof queueItem.fechaFinalizacion === 'string'
+                            ? queueItem.fechaFinalizacion
+                            : new Date(queueItem.fechaFinalizacion).toISOString();
+                        return (
+                            <CountdownTimer 
+                                key={queueItem.id}
+                                label={`${queueItem.propiedad.nombre}: ${queueItem.entrenamiento.nombre} (Nvl ${queueItem.nivelDestino})`}
+                                endDate={endDate}
+                                onFinish={handleRefresh}
+                            />
+                        )
+                    })
                 ) : (
                     <p className="text-muted-foreground text-center text-sm">-</p>
                 )}

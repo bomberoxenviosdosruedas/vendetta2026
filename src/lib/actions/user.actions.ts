@@ -197,10 +197,30 @@ async function verificarYFinalizarConstruccionDePropiedad(propiedad: FullPropied
   return propiedad;
 }
 
+/**
+ * Serializes Date objects to ISO strings for safe client component consumption
+ */
+function serializeDates<T>(obj: T): T {
+    if (obj === null || obj === undefined) return obj;
+    if (obj instanceof Date) return obj.toISOString() as any;
+    if (Array.isArray(obj)) return obj.map(serializeDates) as any;
+    if (typeof obj === 'object') {
+        const result: any = {};
+        for (const [key, value] of Object.entries(obj)) {
+            result[key] = serializeDates(value);
+        }
+        return result;
+    }
+    return obj;
+}
+
+
 export async function verificarYFinalizarConstruccion(user: UserWithProgress): Promise<UserWithProgress> {
+    console.log('[GameTick] verificarYFinalizarConstruccion - start');
     const propiedadesActualizadas = await Promise.all(
         user.propiedades.map(prop => verificarYFinalizarConstruccionDePropiedad(prop))
     );
+    console.log('[GameTick] verificarYFinalizarConstruccion - done');
     return { ...user, propiedades: propiedadesActualizadas };
 }
 
@@ -301,13 +321,16 @@ async function verificarYFinalizarReclutamientoDePropiedad(propiedad: FullPropie
 
 
 export async function verificarYFinalizarReclutamiento(user: UserWithProgress): Promise<UserWithProgress> {
+    console.log('[GameTick] verificarYFinalizarReclutamiento - start');
     const propiedadesActualizadas = await Promise.all(
         user.propiedades.map(prop => prop.colaReclutamiento ? verificarYFinalizarReclutamientoDePropiedad(prop) : prop)
     );
+    console.log('[GameTick] verificarYFinalizarReclutamiento - done');
     return { ...user, propiedades: propiedadesActualizadas };
 }
 
 export async function verificarYFinalizarEntrenamientos(user: UserWithProgress): Promise<UserWithProgress> {
+    console.log('[GameTick] verificarYFinalizarEntrenamientos - start');
     if (!user.colaEntrenamientos || user.colaEntrenamientos.length === 0) return user;
 
     const ahora = new Date();
@@ -365,14 +388,17 @@ export async function verificarYFinalizarEntrenamientos(user: UserWithProgress):
                 }
             } 
         });
+        console.log('[GameTick] verificarYFinalizarEntrenamientos - done with changes');
         return { ...user, colaEntrenamientos: userRefrescado?.colaEntrenamientos || [] };
     }
     
+    console.log('[GameTick] verificarYFinalizarEntrenamientos - done no changes');
     return user;
 }
 
 
 export async function verificarYFinalizarMisiones(user: UserWithProgress): Promise<UserWithProgress> {
+    console.log('[GameTick] verificarYFinalizarMisiones - start');
     if (!user.misiones || user.misiones.length === 0) return user;
 
     const ahora = new Date();
@@ -439,10 +465,50 @@ export async function verificarYFinalizarMisiones(user: UserWithProgress): Promi
                 misiones: { orderBy: { fechaLlegada: 'asc' } }
             }
         });
+        console.log('[GameTick] verificarYFinalizarMisiones - done with changes');
         return userRefrescado as UserWithProgress;
     }
 
+    console.log('[GameTick] verificarYFinalizarMisiones - done no changes');
     return user;
+}
+
+
+/**
+ * Unified game tick processor - runs all checks sequentially with proper data flow
+ * This ensures each step sees the updates from previous steps
+ */
+export async function processGameTick(user: UserWithProgress): Promise<UserWithProgress> {
+    console.log('[GameTick] processGameTick - START for user:', user.id);
+    
+    // Step 1: Construction queue
+    let updatedUser = await verificarYFinalizarConstruccion(user);
+    console.log('[GameTick] After construction:', updatedUser.propiedades?.length, 'props');
+    
+    // Step 2: Recruitment queue (sees updated properties from step 1)
+    updatedUser = await verificarYFinalizarReclutamiento(updatedUser);
+    console.log('[GameTick] After recruitment:', updatedUser.propiedades?.length, 'props');
+    
+    // Step 3: Missions (sees updated properties from step 2)
+    updatedUser = await verificarYFinalizarMisiones(updatedUser);
+    console.log('[GameTick] After missions:', updatedUser.misiones?.length, 'missions');
+    
+    // Step 4: Trainings (sees updated user from step 3)
+    updatedUser = await verificarYFinalizarEntrenamientos(updatedUser);
+    console.log('[GameTick] After trainings:', updatedUser.colaEntrenamientos?.length, 'trainings');
+    
+    // Step 5: Update resources based on time elapsed (sees all queue updates)
+    updatedUser = await obtenerEstadoJuegoActualizado(updatedUser);
+    console.log('[GameTick] After resource update');
+    
+    // Step 6: Recalculate score (sees everything)
+    updatedUser = await actualizarPuntuacionUsuario(updatedUser);
+    console.log('[GameTick] After score update');
+    
+    // Serialize dates for client components
+    const serialized = serializeDates(updatedUser);
+    console.log('[GameTick] processGameTick - COMPLETE');
+    return serialized;
 }
 
 

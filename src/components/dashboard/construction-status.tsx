@@ -25,7 +25,13 @@ function CountdownTimer({ label, endDate, onFinish }: {label: string, endDate: s
     const [timeLeft, setTimeLeft] = useState('');
 
     useEffect(() => {
+        // Parse endDate as ISO string - handle both Date objects and ISO strings
         const end = new Date(endDate).getTime();
+        if (isNaN(end)) {
+            setTimeLeft('00:00:00');
+            return;
+        }
+        
         const intervalId = setInterval(() => {
             const now = new Date().getTime();
             const difference = Math.floor((end - now) / 1000);
@@ -72,11 +78,15 @@ export function ConstructionStatus({ constructions, totalSlots, allRooms }: Cons
                     constructions.map(queueItem => {
                         const room = allRooms.find(r => r.id === queueItem.habitacionId);
                         if (!room || !queueItem.fechaFinalizacion) return null;
+                        // Ensure fechaFinalizacion is ISO string
+                        const endDate = typeof queueItem.fechaFinalizacion === 'string' 
+                            ? queueItem.fechaFinalizacion 
+                            : new Date(queueItem.fechaFinalizacion).toISOString();
                         return (
                              <CountdownTimer 
                                 key={queueItem.id}
                                 label={`${queueItem.propiedadNombre}: ${room.nombre} (Nvl ${queueItem.nivelDestino})`}
-                                endDate={new Date(queueItem.fechaFinalizacion).toISOString()}
+                                endDate={endDate}
                                 onFinish={handleRefresh}
                              />
                         )
