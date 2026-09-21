@@ -20,7 +20,8 @@ import {
     Eye,
     Maximize2,
     SlidersHorizontal,
-    Volume2
+    Volume2,
+    ChevronDown
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -33,6 +34,12 @@ import {
     DialogDescription,
 } from '@/components/ui/dialog';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { 
+    DropdownMenu, 
+    DropdownMenuTrigger, 
+    DropdownMenuContent, 
+    DropdownMenuItem 
+} from '@/components/ui/dropdown-menu';
 
 export type NewsCategory = 'TODAS' | 'BAJO_MUNDO' | 'POLICIAL' | 'MERCADO_NEGRO' | 'RUMORES';
 
@@ -168,6 +175,8 @@ const CATEGORY_LABELS: Record<NewsCategory, { label: string; color: string; icon
     RUMORES: { label: 'Rumores & Inteligencia', color: 'bg-purple-950/60 text-purple-300 border-purple-800/60', icon: <Radio className="h-3.5 w-3.5" /> },
 };
 
+const CATEGORIES: NewsCategory[] = ['TODAS', 'BAJO_MUNDO', 'POLICIAL', 'MERCADO_NEGRO', 'RUMORES'];
+
 export function CityNewsCard() {
     const [news, setNews] = useState<NewsItem[]>(INITIAL_NEWS_ITEMS);
     const [selectedCategory, setSelectedCategory] = useState<NewsCategory>('TODAS');
@@ -175,7 +184,6 @@ export function CityNewsCard() {
     const [isAutoPlay, setIsAutoPlay] = useState(true);
     const [selectedNewsDetail, setSelectedNewsDetail] = useState<NewsItem | null>(null);
     const [isRefreshing, setIsRefreshing] = useState(false);
-    const [audioFeedback, setAudioFeedback] = useState(false);
 
     // Filter items according to selected category
     const filteredNews = useMemo(() => {
@@ -214,11 +222,9 @@ export function CityNewsCard() {
     // Handle wire refresh / new dispatch
     const handleRefreshWire = () => {
         setIsRefreshing(true);
-        // Shuffle or add small time variance for dynamic feel
         setTimeout(() => {
             setNews(prev => {
                 const updated = [...prev];
-                // Rotate items slightly
                 const first = updated.shift();
                 if (first) updated.push(first);
                 return updated;
@@ -269,91 +275,132 @@ export function CityNewsCard() {
                         </div>
                     </div>
 
-                    {/* Quick ticker controls */}
+                    {/* Quick ticker controls - simplified on mobile */}
                     <div className="flex items-center gap-1.5 self-end sm:self-auto">
-                        <TooltipProvider delayDuration={150}>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
+                        {/* Category filter - dropdown on mobile, tabs on desktop */}
+                        <div className="hidden sm:block">
+                            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+                                {CATEGORIES.map(cat => {
+                                    const isSelected = selectedCategory === cat;
+                                    const config = CATEGORY_LABELS[cat];
+                                    return (
+                                        <button
+                                            key={cat}
+                                            onClick={() => setSelectedCategory(cat)}
+                                            className={`inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-1 rounded-full border transition-all whitespace-nowrap ${
+                                                isSelected 
+                                                    ? `${config.color} ring-1 ring-white/20 shadow-sm` 
+                                                    : 'bg-background/40 text-zinc-400 border-white/5 hover:bg-white/5 hover:text-zinc-200'
+                                            }`}
+                                        >
+                                            {config.icon}
+                                            {config.label}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                        
+                        {/* Mobile category dropdown */}
+                        <div className="sm:hidden">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
                                     <Button 
                                         variant="outline" 
-                                        size="icon" 
-                                        className="h-7 w-7 text-zinc-400 hover:text-white border-white/10 hover:bg-white/5"
-                                        onClick={handleRefreshWire}
-                                        disabled={isRefreshing}
+                                        size="sm"
+                                        className="h-8 px-3 text-xs font-medium bg-background/40 border-white/5 hover:bg-white/5"
                                     >
-                                        <RefreshCw className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin text-amber-400' : ''}`} />
+                                        <Newspaper className="h-3.5 w-3.5 mr-1" />
+                                        {CATEGORY_LABELS[selectedCategory].label}
+                                        <ChevronDown className="h-3.5 w-3.5 ml-1" />
                                     </Button>
-                                </TooltipTrigger>
-                                <TooltipContent side="top">
-                                    <p className="text-xs">Sintonizar nueva frecuencia de teletipo</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-56">
+                                    {CATEGORIES.map(cat => {
+                                        const isSelected = selectedCategory === cat;
+                                        const config = CATEGORY_LABELS[cat];
+                                        return (
+                                            <DropdownMenuItem
+                                                key={cat}
+                                                onSelect={() => setSelectedCategory(cat)}
+                                                className={`flex items-center gap-2 px-2 py-1.5 text-sm ${
+                                                    isSelected ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-sidebar-accent'
+                                                }`}
+                                            >
+                                                {config.icon}
+                                                <span>{config.label}</span>
+                                                {isSelected && <span className="ml-auto text-primary">✓</span>}
+                                            </DropdownMenuItem>
+                                        );
+                                    })}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
 
-                        <TooltipProvider delayDuration={150}>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button 
-                                        variant="outline" 
-                                        size="icon" 
-                                        className="h-7 w-7 text-zinc-400 hover:text-white border-white/10 hover:bg-white/5"
-                                        onClick={() => setIsAutoPlay(!isAutoPlay)}
-                                    >
-                                        {isAutoPlay ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5 text-emerald-400" />}
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent side="top">
-                                    <p className="text-xs">{isAutoPlay ? 'Pausar avance automático' : 'Reanudar avance automático'}</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
+                        {/* Play/Pause & Navigation - only on desktop */}
+                        <div className="hidden sm:flex items-center gap-1.5 ml-2">
+                            <TooltipProvider delayDuration={150}>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button 
+                                            variant="outline" 
+                                            size="icon" 
+                                            className="h-7 w-7 text-zinc-400 hover:text-white border-white/10 hover:bg-white/5"
+                                            onClick={handleRefreshWire}
+                                            disabled={isRefreshing}
+                                        >
+                                            <RefreshCw className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin text-amber-400' : ''}`} />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent side="top">
+                                        <p className="text-xs">Sintonizar nueva frecuencia de teletipo</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
 
-                        <div className="flex items-center rounded-md border border-white/10 bg-background/50 p-0.5">
-                            <Button 
-                                variant="ghost" 
-                                size="icon" 
-                                className="h-6 w-6 text-zinc-400 hover:text-white hover:bg-white/10"
-                                onClick={handlePrev}
-                                disabled={filteredNews.length <= 1}
-                            >
-                                <ChevronLeft className="h-3.5 w-3.5" />
-                            </Button>
-                            <span className="text-[11px] font-mono px-1.5 text-zinc-400">
-                                {filteredNews.length > 0 ? `${currentIndex + 1}/${filteredNews.length}` : '0/0'}
-                            </span>
-                            <Button 
-                                variant="ghost" 
-                                size="icon" 
-                                className="h-6 w-6 text-zinc-400 hover:text-white hover:bg-white/10"
-                                onClick={handleNext}
-                                disabled={filteredNews.length <= 1}
-                            >
-                                <ChevronRight className="h-3.5 w-3.5" />
-                            </Button>
+                            <TooltipProvider delayDuration={150}>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button 
+                                            variant="outline" 
+                                            size="icon" 
+                                            className="h-7 w-7 text-zinc-400 hover:text-white border-white/10 hover:bg-white/5"
+                                            onClick={() => setIsAutoPlay(!isAutoPlay)}
+                                        >
+                                            {isAutoPlay ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5 text-emerald-400" />}
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent side="top">
+                                        <p className="text-xs">{isAutoPlay ? 'Pausar avance automático' : 'Reanudar avance automático'}</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+
+                            <div className="flex items-center rounded-md border border-white/10 bg-background/50 p-0.5">
+                                <Button 
+                                    variant="ghost" 
+                                    size="icon" 
+                                    className="h-6 w-6 text-zinc-400 hover:text-white hover:bg-white/10"
+                                    onClick={handlePrev}
+                                    disabled={filteredNews.length <= 1}
+                                >
+                                    <ChevronLeft className="h-3.5 w-3.5" />
+                                </Button>
+                                <span className="text-[11px] font-mono px-1.5 text-zinc-400">
+                                    {filteredNews.length > 0 ? `${currentIndex + 1}/${filteredNews.length}` : '0/0'}
+                                </span>
+                                <Button 
+                                    variant="ghost" 
+                                    size="icon" 
+                                    className="h-6 w-6 text-zinc-400 hover:text-white hover:bg-white/10"
+                                    onClick={handleNext}
+                                    disabled={filteredNews.length <= 1}
+                                >
+                                    <ChevronRight className="h-3.5 w-3.5" />
+                                </Button>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                {/* Category filter tabs */}
-                <div className="flex items-center gap-1.5 pt-2 overflow-x-auto no-scrollbar">
-                    {(['TODAS', 'BAJO_MUNDO', 'POLICIAL', 'MERCADO_NEGRO', 'RUMORES'] as NewsCategory[]).map(cat => {
-                        const isSelected = selectedCategory === cat;
-                        const config = CATEGORY_LABELS[cat];
-                        return (
-                            <button
-                                key={cat}
-                                onClick={() => setSelectedCategory(cat)}
-                                className={`inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-1 rounded-full border transition-all whitespace-nowrap ${
-                                    isSelected 
-                                        ? `${config.color} ring-1 ring-white/20 shadow-sm` 
-                                        : 'bg-background/40 text-zinc-400 border-white/5 hover:bg-white/5 hover:text-zinc-200'
-                                }`}
-                            >
-                                {config.icon}
-                                {config.label}
-                            </button>
-                        );
-                    })}
                 </div>
             </CardHeader>
 

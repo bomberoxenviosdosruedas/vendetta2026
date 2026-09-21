@@ -1,5 +1,4 @@
-
-'use client'
+'use client';
 
 import { LiveClock } from "./live-clock";
 import type { UserWithProgress } from '@/lib/data';
@@ -75,11 +74,11 @@ export function ResourceBar({ user }: ResourceBarProps) {
     ];
 
     return (
-        <header className="w-full h-14 bg-background/95 backdrop-blur-sm border-b border-border/40 shadow-md z-20 sticky top-0">
-            <div className="container mx-auto flex h-full items-center justify-between px-3 md:px-6 gap-4">
-                {/* Resources - horizontal scroll on mobile, grid on larger screens */}
+        <header className="w-full h-14 sm:h-auto min-h-[56px] sm:min-h-[56px] py-2 sm:py-0 bg-background/95 backdrop-blur-sm border-b border-border/40 shadow-md z-20 sticky top-0">
+            <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between px-3 md:px-6 gap-3">
+                {/* Resources - vertical stack on mobile, horizontal on tablet+ */}
                 <nav 
-                    className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-1 -mb-1 flex-shrink-0 min-w-0"
+                    className="flex flex-col sm:flex-row items-center gap-2 w-full sm:flex-1 min-w-0"
                     role="list"
                     aria-label="Recursos de la propiedad"
                 >
@@ -91,35 +90,40 @@ export function ResourceBar({ user }: ResourceBarProps) {
                         return (
                             <div 
                                 key={res.key} 
-                                className="flex flex-col items-start gap-1 min-w-[140px] sm:min-w-[160px] px-2.5 py-1.5 rounded-lg border border-border/40 bg-card/80 backdrop-blur-sm flex-shrink-0"
+                                className={cn(
+                                    "flex flex-col sm:flex-row items-start sm:items-center gap-1.5 sm:gap-2",
+                                    "px-2.5 py-1.5 sm:px-3 sm:py-2",
+                                    "rounded-lg border border-border/40 bg-card/80 backdrop-blur-sm",
+                                    "flex-shrink-0 w-full sm:min-w-[140px] sm:max-w-[200px]"
+                                )}
                                 role="listitem"
                             >
-                                <div className="flex items-center gap-1.5 w-full">
-                                    <div className={cn("flex-shrink-0 p-1 rounded", resourceBgColors[res.key])}>
+                                <div className="flex items-center gap-1.5 w-full sm:w-auto flex-shrink-0">
+                                    <div className={cn("flex-shrink-0 p-1.5 rounded", resourceBgColors[res.key])}>
                                         <Image 
                                             src={res.icon} 
                                             alt="" 
-                                            width={18} 
-                                            height={18} 
-                                            className="h-4.5 w-4.5"
+                                            width={20} 
+                                            height={20} 
+                                            className="h-5 w-5"
                                         />
                                     </div>
-                                    <span className="text-[10px] font-mono font-semibold tracking-wider uppercase text-muted-foreground hidden sm:inline">
+                                    <span className="text-[11px] font-mono font-semibold tracking-wider uppercase text-muted-foreground hidden sm:inline whitespace-nowrap">
                                         {res.name}
                                     </span>
                                 </div>
                                 
-                                <div className="w-full flex items-center justify-between gap-2">
+                                <div className="w-full sm:w-auto flex items-center justify-between gap-2 min-w-0">
                                     <span className={cn("font-bold tabular-nums text-sm sm:text-base", resourceColors[res.key])}>
                                         {formatNumber(res.value)}
                                     </span>
-                                    <span className={cn("text-[10px] font-mono tabular-nums text-muted-foreground", textColor)}>
+                                    <span className={cn("text-[11px] font-mono tabular-nums text-muted-foreground", textColor)}>
                                         / {formatNumber(res.capacity)}
                                     </span>
                                 </div>
                                 
-                                {/* Capacity progress bar */}
-                                <div className="w-full h-1.5 bg-background/50 rounded-full overflow-hidden">
+                                {/* Capacity progress bar - full width on mobile, fixed width on desktop */}
+                                <div className="w-full sm:w-24 h-1.5 bg-background/50 rounded-full overflow-hidden">
                                     <div 
                                         className={cn("h-full rounded-full transition-all duration-500 ease-out", progressColor)}
                                         style={{ width: `${percentage}%` }}
@@ -136,10 +140,7 @@ export function ResourceBar({ user }: ResourceBarProps) {
                 </nav>
                 
                 {/* Clock - fixed position on right */}
-                <div className="flex-shrink-0 ml-auto hidden sm:block">
-                    <LiveClock />
-                </div>
-                <div className="flex-shrink-0 ml-2 sm:hidden">
+                <div className="flex-shrink-0 ml-auto sm:ml-0">
                     <LiveClock />
                 </div>
             </div>
