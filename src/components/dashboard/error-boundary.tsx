@@ -36,7 +36,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                 return this.props.fallback;
             }
             return (
-                <div className="p-4 text-center text-muted-foreground border border-border/40 rounded-lg bg-background/50">
+                <div className="p-4 text-center text-muted-foreground border border-border/40 rounded-base bg-background/50 shadow-base">
                     <p className="font-medium text-foreground">Error cargando esta sección</p>
                     <p className="text-xs text-muted-foreground mt-1">
                         {this.state.error?.message || 'Error desconocido'}
@@ -57,7 +57,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
 export function DashboardSectionErrorFallback({ title = 'Sección no disponible' }: { title?: string }) {
     return (
-        <div className="p-4 text-center text-muted-foreground border border-border/40 rounded-lg bg-background/50">
+        <div className="p-4 text-center text-muted-foreground border border-border/40 rounded-base bg-background/50 shadow-base">
             <p className="font-medium text-foreground">{title}</p>
             <p className="text-xs text-muted-foreground mt-1">No se pudo cargar esta sección</p>
         </div>

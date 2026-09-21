@@ -262,21 +262,30 @@ const SidebarTrigger = React.memo(React.forwardRef<
   const { toggleSidebar } = useSidebar()
 
   return (
-    <Button
-      ref={ref}
-      data-sidebar="trigger"
-      variant="ghost"
-      size="icon"
-      className={cn("h-7 w-7 sm:h-11 sm:w-11 min-h-[44px] min-w-[44px]", className)}
-      onClick={(event) => {
-        onClick?.(event)
-        toggleSidebar()
-      }}
-      {...props}
-    >
-      <PanelLeft className="h-4 w-4 sm:h-5 sm:w-5" />
-      <span className="sr-only">Toggle Sidebar</span>
-    </Button>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            ref={ref}
+            data-sidebar="trigger"
+            variant="ghost"
+            size="icon"
+            className={cn("h-7 w-7 sm:h-11 sm:w-11 min-h-[44px] min-w-[44px]", className)}
+            onClick={(event) => {
+              onClick?.(event)
+              toggleSidebar()
+            }}
+            {...props}
+          >
+            <PanelLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="sr-only">Toggle Sidebar</span>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="right" align="center">
+          <kbd className="px-1.5 py-0.5 text-xs font-mono bg-muted rounded border border-border">⌘/Ctrl + B</kbd>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }))
 SidebarTrigger.displayName = "SidebarTrigger"

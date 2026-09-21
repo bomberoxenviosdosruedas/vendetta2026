@@ -74,7 +74,7 @@ export function ResourceBar({ user }: ResourceBarProps) {
     ];
 
     return (
-        <header className="w-full h-14 sm:h-auto min-h-[56px] sm:min-h-[56px] py-2 sm:py-0 bg-background/95 backdrop-blur-sm border-b border-border/40 shadow-md z-20 sticky top-0">
+        <header className="w-full h-14 sm:h-auto min-h-[56px] sm:min-h-[56px] py-2 sm:py-0 bg-background/95 backdrop-blur-sm border-b border-border/40 shadow-tactical z-20 sticky top-0">
             <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between px-3 md:px-6 gap-3">
                 {/* Resources - vertical stack on mobile, horizontal on tablet+ */}
                 <nav 
@@ -93,13 +93,13 @@ export function ResourceBar({ user }: ResourceBarProps) {
                                 className={cn(
                                     "flex flex-col sm:flex-row items-start sm:items-center gap-1.5 sm:gap-2",
                                     "px-2.5 py-1.5 sm:px-3 sm:py-2",
-                                    "rounded-lg border border-border/40 bg-card/80 backdrop-blur-sm",
+                                    "rounded-base border border-border/40 bg-card/80 backdrop-blur-sm",
                                     "flex-shrink-0 w-full sm:min-w-[140px] sm:max-w-[200px]"
                                 )}
                                 role="listitem"
                             >
                                 <div className="flex items-center gap-1.5 w-full sm:w-auto flex-shrink-0">
-                                    <div className={cn("flex-shrink-0 p-1.5 rounded", resourceBgColors[res.key])}>
+                                    <div className={cn("flex-shrink-0 p-1.5 rounded-md", resourceBgColors[res.key])}>
                                         <Image 
                                             src={res.icon} 
                                             alt="" 

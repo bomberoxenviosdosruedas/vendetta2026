@@ -248,7 +248,7 @@ export function CityNewsCard() {
     };
 
     return (
-        <Card className="border-border/60 bg-gradient-to-b from-card to-card/70 shadow-lg relative overflow-hidden" id="city-news-card">
+        <Card className="rounded-base border border-border/60 bg-gradient-to-b from-card to-card/70 shadow-tactical relative overflow-hidden" id="city-news-card">
             {/* Top decorative subtle wire indicator line */}
             <div className="h-0.5 w-full bg-gradient-to-r from-red-600/40 via-amber-500/40 to-transparent" />
 

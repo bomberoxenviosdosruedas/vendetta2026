@@ -63,14 +63,21 @@
   --font-heading: var(--font-bebas-neue), Tahoma, sans-serif;
   --font-mono: var(--font-mono), ui-monospace, monospace;
 
-  --radius-lg: var(--radius);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-sm: calc(var(--radius) - 4px);
+  /* Standardized radius scale: base=8px (0.5rem) */
+  --radius-base: 0.5rem;       /* 8px - cards, main containers */
+  --radius-lg: var(--radius-base);       /* 8px */
+  --radius-md: calc(var(--radius-base) - 2px);  /* 6px - buttons, inputs */
+  --radius-sm: calc(var(--radius-base) - 4px);  /* 4px - badges, small elements */
+  --radius-xl: calc(var(--radius-base) + 4px);  /* 12px - modals, prominent cards */
+  --radius-full: 9999px;       /* pills, avatars */
 
+  /* Standardized shadow system */
+  --shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px hsl(var(--border) / 0.3);
   --shadow-tactical: 0 4px 20px -2px rgba(0, 0, 0, 0.6), 0 0 0 1px hsl(var(--border) / 0.6);
   --shadow-tactical-elevated: 0 12px 32px -4px rgba(0, 0, 0, 0.75), 0 0 0 1px hsl(var(--border));
   --shadow-glow-crimson: 0 0 15px -3px rgba(220, 38, 38, 0.35);
   --shadow-glow-gold: 0 0 15px -3px rgba(234, 179, 8, 0.35);
+  --shadow-inner-glow: inset 0 1px 0 0 hsl(var(--primary) / 0.2);
 }
 
 @layer base {
@@ -228,6 +235,15 @@
     letter-spacing: 0.03em;
   }
 
+  /* Ensure CardTitle, DialogTitle, and other heading components use Bebas Neue */
+  .font-heading,
+  [class*="CardTitle"],
+  [class*="DialogTitle"],
+  [class*="SidebarMenuButton"] {
+    font-family: var(--font-bebas-neue), Tahoma, sans-serif !important;
+    letter-spacing: 0.03em;
+  }
+
   .tabular-nums {
     font-variant-numeric: tabular-nums;
   }
@@ -241,6 +257,23 @@
   input[type=number] {
     -moz-appearance: textfield;
   }
+}
+
+/* Standardized radius utilities */
+@layer utilities {
+  .radius-base { border-radius: var(--radius-base); }
+  .radius-lg { border-radius: var(--radius-lg); }
+  .radius-md { border-radius: var(--radius-md); }
+  .radius-sm { border-radius: var(--radius-sm); }
+  .radius-xl { border-radius: var(--radius-xl); }
+  .radius-full { border-radius: var(--radius-full); }
+
+  /* Standardized shadow utilities */
+  .shadow-base { box-shadow: var(--shadow-base); }
+  .shadow-tactical { box-shadow: var(--shadow-tactical); }
+  .shadow-tactical-elevated { box-shadow: var(--shadow-tactical-elevated); }
+  .shadow-glow-crimson { box-shadow: var(--shadow-glow-crimson); }
+  .shadow-glow-gold { box-shadow: var(--shadow-glow-gold); }
 }
 
 /* ==========================================================================

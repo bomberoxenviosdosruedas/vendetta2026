@@ -163,7 +163,7 @@ export function ActivityHistoryCard({ activities }: ActivityHistoryProps) {
     const activeConfig = selectedActivity ? getActivityConfig(selectedActivity.type) : null;
 
     return (
-        <Card id="activity-history-card" className="border-border/60 bg-card/60 backdrop-blur-sm shadow-md">
+        <Card id="activity-history-card" className="rounded-base border border-border/60 bg-card/80 shadow-tactical">
             <CardHeader className="pb-3 border-b border-border/40">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                     <div className="flex items-center gap-2.5">

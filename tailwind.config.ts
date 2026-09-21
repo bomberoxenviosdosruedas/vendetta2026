@@ -34,6 +34,7 @@ const config: Config = {
         mono: ['var(--font-mono)', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
       },
       boxShadow: {
+        'base': '0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px hsl(var(--border) / 0.3)',
         'tactical': '0 4px 20px -2px rgba(0, 0, 0, 0.6), 0 0 0 1px hsl(var(--border) / 0.6)',
         'tactical-elevated': '0 12px 32px -4px rgba(0, 0, 0, 0.75), 0 0 0 1px hsl(var(--border))',
         'glow-crimson': '0 0 15px -3px rgba(220, 38, 38, 0.35)',
@@ -113,10 +114,12 @@ const config: Config = {
         },
       },
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
-        xl: 'calc(var(--radius) + 4px)',
+        base: 'var(--radius-base)',
+        lg: 'var(--radius-lg)',
+        md: 'var(--radius-md)',
+        sm: 'var(--radius-sm)',
+        xl: 'var(--radius-xl)',
+        full: 'var(--radius-full)',
       },
       keyframes: {
         'accordion-down': {

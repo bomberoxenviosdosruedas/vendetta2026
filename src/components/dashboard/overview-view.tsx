@@ -93,7 +93,7 @@ export async function OverviewView() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 
                 {/* 1. Boss Dossier Card */}
-                <Card className="tactical-card flex flex-col justify-between p-4 min-h-[200px] sm:min-h-[250px]">
+                <Card className="rounded-base border border-border/60 bg-card/80 shadow-tactical flex flex-col justify-between p-4 min-h-[200px] sm:min-h-[250px]">
                     <div>
                         <div className="flex items-center justify-between gap-2 pb-3 border-b border-border/40">
                             <span className="text-[11px] font-mono font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-1.5">
@@ -139,7 +139,7 @@ export async function OverviewView() {
                 </Card>
 
                 {/* 2. Main Turf Headquarters Card */}
-                <Card className="relative overflow-hidden min-h-[200px] sm:min-h-[250px] rounded-lg border border-border/60 shadow-lg group flex flex-col justify-between">
+                <Card className="relative overflow-hidden min-h-[200px] sm:min-h-[250px] rounded-base border border-border/60 shadow-tactical-elevated group flex flex-col justify-between">
                     <div className="relative aspect-[16/9] w-full">
                         <Image 
                             src="/nuevas/edificionuevo.jpg"
@@ -192,7 +192,7 @@ export async function OverviewView() {
                 </Card>
 
                 {/* 3. Syndicate / Family Card */}
-                <Card className="tactical-card flex flex-col justify-between p-4 min-h-[200px] sm:min-h-[250px]">
+                <Card className="rounded-base border border-border/60 bg-card/80 shadow-tactical flex flex-col justify-between p-4 min-h-[200px] sm:min-h-[250px]">
                     <div>
                         <div className="flex items-center justify-between gap-2 pb-3 border-b border-border/40">
                             <span className="text-[11px] font-mono font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-1.5">
@@ -280,7 +280,7 @@ export async function OverviewView() {
             </ErrorBoundary>
 
             {/* Syndicate Empire Ledger (Bottom Stats Bar - Real Data) */}
-            <Card className="tactical-card">
+            <Card className="rounded-base border border-border/60 bg-card/80 shadow-tactical">
                 <CardContent className="p-3.5">
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 items-center">
                         <div className="text-center p-2 sm:py-1">
