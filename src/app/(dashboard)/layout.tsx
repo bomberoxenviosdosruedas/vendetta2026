@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PropertyProvider } from "@/contexts/property-context";
+import { GameAnimationProvider } from "@/components/dashboard/animations";
 
 export const dynamic = 'force-dynamic';
 
@@ -60,16 +61,18 @@ export default async function DashboardLayout({
   return (
     <Suspense>
       <PropertyProvider initialProperties={sortedProperties}>
-          <DashboardClientLayout user={finalUser}>
-              <Suspense fallback={<ResourceBarFallback />}>
-                  <ResourceBar user={finalUser} />
-              </Suspense>
-              <div className="flex-1">
-                <main className="p-4 md:p-6 max-w-7xl mx-auto w-full">
-                  {children}
-                </main>
-              </div>
-          </DashboardClientLayout>
+          <GameAnimationProvider>
+            <DashboardClientLayout user={finalUser}>
+                <Suspense fallback={<ResourceBarFallback />}>
+                    <ResourceBar user={finalUser} />
+                </Suspense>
+                <div className="flex-1">
+                  <main className="p-4 md:p-6 max-w-7xl mx-auto w-full">
+                    {children}
+                  </main>
+                </div>
+            </DashboardClientLayout>
+          </GameAnimationProvider>
       </PropertyProvider>
     </Suspense>
   )

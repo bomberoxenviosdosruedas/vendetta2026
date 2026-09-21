@@ -1,11 +1,13 @@
 'use client';
 
+import { useState, useEffect, useRef } from 'react';
 import { LiveClock } from "./live-clock";
 import type { UserWithProgress } from '@/lib/data';
 import { useProperty } from '@/contexts/property-context';
 import Image from "next/image";
 import { calculateStorageCapacity } from "@/lib/formulas/room-formulas";
 import { cn } from "@/lib/utils";
+import { animateResourceCounter, animateProgressFill } from '@/components/dashboard/animations';
 
 const resourceIcons: { [key: string]: string } = {
     armas: '/img/recursos/armas.svg',
@@ -47,12 +49,119 @@ function getProgressColor(current: number, max: number): string {
     return 'bg-accent';
 }
 
+interface ResourceItemProps {
+    res: {
+        key: string;
+        name: string;
+        value: number;
+        icon: string;
+        capacity: number;
+    };
+    prevValue: number;
+    prevPercentage: number;
+}
+
+function ResourceItem({ res, prevValue, prevPercentage }: ResourceItemProps) {
+    const percentage = res.capacity > 0 ? Math.min(100, (res.value / res.capacity) * 100) : 0;
+    const progressColor = getProgressColor(res.value, res.capacity);
+    const textColor = getCapacityColor(res.value, res.capacity);
+    const counterRef = useRef<HTMLSpanElement>(null);
+    const progressRef = useRef<HTMLDivElement>(null);
+    const [hasMounted, setHasMounted] = useState(false);
+
+    useEffect(() => {
+        setHasMounted(true);
+        
+        // Animate counter
+        const counterTl = animateResourceCounter(
+            counterRef.current!,
+            prevValue,
+            res.value,
+            { duration: 1.2, ease: 'power2.out' }
+        );
+        counterTl.play();
+
+        // Animate progress bar
+        const progressTl = animateProgressFill(
+            progressRef.current!,
+            prevPercentage,
+            percentage,
+            { duration: 0.8, ease: 'power2.out' }
+        );
+        progressTl.play();
+
+        return () => {
+            counterTl.kill();
+            progressTl.kill();
+        };
+    }, [res.value, res.capacity, percentage]);
+
+    // Don't animate on initial mount
+    const prevVal = hasMounted ? prevValue : res.value;
+    const prevPerc = hasMounted ? prevPercentage : percentage;
+
+    return (
+        <div 
+            key={res.key} 
+            className={cn(
+                "flex flex-col sm:flex-row items-start sm:items-center gap-1.5 sm:gap-2",
+                "px-2.5 py-1.5 sm:px-3 sm:py-2",
+                "rounded-base border border-border/40 bg-card/80 backdrop-blur-sm",
+                "flex-shrink-0 w-full sm:min-w-[140px] sm:max-w-[200px]"
+            )}
+            role="listitem"
+        >
+            <div className="flex items-center gap-1.5 w-full sm:w-auto flex-shrink-0">
+                <div className={cn("flex-shrink-0 p-1.5 rounded-md", resourceBgColors[res.key])}>
+                    <Image 
+                        src={res.icon} 
+                        alt="" 
+                        width={20} 
+                        height={20} 
+                        className="h-5 w-5"
+                    />
+                </div>
+                <span className="text-[11px] font-mono font-semibold tracking-wider uppercase text-muted-foreground hidden sm:inline whitespace-nowrap">
+                    {res.name}
+                </span>
+            </div>
+            
+            <div className="w-full sm:w-auto flex items-center justify-between gap-2 min-w-0">
+                <span 
+                    ref={counterRef}
+                    className={cn("font-bold tabular-nums text-sm sm:text-base", resourceColors[res.key])}
+                >
+                    {formatNumber(res.value)}
+                </span>
+                <span className={cn("text-[11px] font-mono tabular-nums text-muted-foreground", textColor)}>
+                    / {formatNumber(res.capacity)}
+                </span>
+            </div>
+            
+            {/* Capacity progress bar - full width on mobile, fixed width on desktop */}
+            <div className="w-full sm:w-24 h-1.5 bg-background/50 rounded-full overflow-hidden">
+                <div 
+                    ref={progressRef}
+                    className={cn("h-full rounded-full", progressColor)}
+                    style={{ width: `${percentage}%` }}
+                    role="progressbar"
+                    aria-valuenow={Math.round(percentage)}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-label={`${res.name}: ${Math.round(percentage)}% de capacidad`}
+                />
+            </div>
+        </div>
+    );
+}
+
 interface ResourceBarProps {
     user: UserWithProgress | null;
 }
 
 export function ResourceBar({ user }: ResourceBarProps) {
     const { selectedProperty } = useProperty();
+    const [prevResources, setPrevResources] = useState<Record<string, { value: number; percentage: number }>>({});
 
     if (!user || !selectedProperty) {
         return (
@@ -73,6 +182,16 @@ export function ResourceBar({ user }: ResourceBarProps) {
         { key: 'dolares', name: 'DÓLARES', value: selectedProperty.dolares, icon: resourceIcons.dolares, capacity: capacity.dolares },
     ];
 
+    // Update previous values when resources change
+    useEffect(() => {
+        const newPrev: Record<string, { value: number; percentage: number }> = {};
+        resources.forEach(res => {
+            const percentage = res.capacity > 0 ? Math.min(100, (res.value / res.capacity) * 100) : 0;
+            newPrev[res.key] = { value: res.value, percentage };
+        });
+        setPrevResources(newPrev);
+    }, [resources]);
+
     return (
         <header className="w-full h-14 sm:h-auto min-h-[56px] sm:min-h-[56px] py-2 sm:py-0 bg-background/95 backdrop-blur-sm border-b border-border/40 shadow-tactical z-20 sticky top-0">
             <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between px-3 md:px-6 gap-3">
@@ -86,55 +205,15 @@ export function ResourceBar({ user }: ResourceBarProps) {
                         const percentage = res.capacity > 0 ? Math.min(100, (res.value / res.capacity) * 100) : 0;
                         const progressColor = getProgressColor(res.value, res.capacity);
                         const textColor = getCapacityColor(res.value, res.capacity);
+                        const prev = prevResources[res.key] || { value: res.value, percentage };
                         
                         return (
-                            <div 
-                                key={res.key} 
-                                className={cn(
-                                    "flex flex-col sm:flex-row items-start sm:items-center gap-1.5 sm:gap-2",
-                                    "px-2.5 py-1.5 sm:px-3 sm:py-2",
-                                    "rounded-base border border-border/40 bg-card/80 backdrop-blur-sm",
-                                    "flex-shrink-0 w-full sm:min-w-[140px] sm:max-w-[200px]"
-                                )}
-                                role="listitem"
-                            >
-                                <div className="flex items-center gap-1.5 w-full sm:w-auto flex-shrink-0">
-                                    <div className={cn("flex-shrink-0 p-1.5 rounded-md", resourceBgColors[res.key])}>
-                                        <Image 
-                                            src={res.icon} 
-                                            alt="" 
-                                            width={20} 
-                                            height={20} 
-                                            className="h-5 w-5"
-                                        />
-                                    </div>
-                                    <span className="text-[11px] font-mono font-semibold tracking-wider uppercase text-muted-foreground hidden sm:inline whitespace-nowrap">
-                                        {res.name}
-                                    </span>
-                                </div>
-                                
-                                <div className="w-full sm:w-auto flex items-center justify-between gap-2 min-w-0">
-                                    <span className={cn("font-bold tabular-nums text-sm sm:text-base", resourceColors[res.key])}>
-                                        {formatNumber(res.value)}
-                                    </span>
-                                    <span className={cn("text-[11px] font-mono tabular-nums text-muted-foreground", textColor)}>
-                                        / {formatNumber(res.capacity)}
-                                    </span>
-                                </div>
-                                
-                                {/* Capacity progress bar - full width on mobile, fixed width on desktop */}
-                                <div className="w-full sm:w-24 h-1.5 bg-background/50 rounded-full overflow-hidden">
-                                    <div 
-                                        className={cn("h-full rounded-full transition-all duration-500 ease-out", progressColor)}
-                                        style={{ width: `${percentage}%` }}
-                                        role="progressbar"
-                                        aria-valuenow={Math.round(percentage)}
-                                        aria-valuemin={0}
-                                        aria-valuemax={100}
-                                        aria-label={`${res.name}: ${Math.round(percentage)}% de capacidad`}
-                                    />
-                                </div>
-                            </div>
+                            <ResourceItem 
+                                key={res.key}
+                                res={res}
+                                prevValue={prev.value}
+                                prevPercentage={prev.percentage}
+                            />
                         );
                     })}
                 </nav>
