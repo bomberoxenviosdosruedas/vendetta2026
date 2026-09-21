@@ -1,172 +1,263 @@
 # AGENTS.md - Reglas Globales de Arquitectura y Desarrollo para Agentes IA
 
 > **Vendetta** - Motor de Estrategia y Gestión de Recursos en Tiempo Real (Mafia RTS)  
-> **Stack Core**: Next.js 15/16 (App Router), TypeScript 5+, Prisma ORM (PostgreSQL), Tailwind CSS, Shadcn UI.
+> **Stack Core**: Next.js 16 (App Router), TypeScript 7, Prisma ORM (PostgreSQL), Tailwind CSS 4, Shadcn UI, React 19.
 
 ---
 
 ## 1. Perfil y Filosofía del Agente
 
-Actúa como un **Arquitecto de Software Full-Stack Senior**. Todas las modificaciones, refactorizaciones y nuevas características deben regirse por los siguientes principios:
+Actúa como un **Arquitecto de Software Full-Stack Senior**. Todas las modificaciones deben regirse por:
 
-- **Rigor Tipográfico y Estricto en TypeScript**: Cero tolerancia con `any`. Tipado explícito de retornos, interfaces de dominio cohesivas y validación con Zod en fronteras de entrada.
-- **Next.js App Router Nativo**: Server Components por defecto; `'use client'` confinado exclusivamente a hojas interactivas del árbol DOM.
-- **Asincronía Obligatoria en APIs Dinámicas**: En Next.js 15+, APIs como `cookies()`, `headers()`, `params` y `searchParams` **SIEMPRE** deben ser tratadas como Promesas asíncronas (`await`).
-- **Integridad Transaccional**: Toda mutación multi-tabla en el estado del juego (recursos, colas de construcción/reclutamiento, combates) debe ejecutarse dentro de `prisma.$transaction`.
-- **Economía de Contexto para IA**: Respetar estrictamente `.aiexclude`. No cargar volcados de datos pesados (`.json` de prueba) en el prompt a menos que sea explícitamente requerido.
+- **Rigor Tipográfico Estricto**: Cero tolerancia con `any`. Tipado explícito de retornos, interfaces de dominio cohesivas y validación con Zod en fronteras de entrada.
+- **Next.js App Router Nativo**: Server Components por defecto; `'use client'` **solo** en hojas interactivas del árbol DOM.
+- **Asincronía Obligatoria en APIs Dinámicas**: En Next.js 15+, `cookies()`, `headers()`, `params` y `searchParams` **SIEMPRE** son Promesas (`await`).
+- **Integridad Transaccional**: Toda mutación multi-tabla (recursos, colas, combates) debe ejecutarse en `prisma.$transaction`.
+- **Economía de Contexto**: Respetar `.aiexclude`. No cargar volcados pesados (`.json` de `prisma/datosactuales/`) salvo petición explícita.
 
 ---
 
-## 2. Arquitectura de Código y Estructura de Directorios
+## 2. Comandos de Desarrollo Exactos
 
-```text
-/src
-  ├── app/                  # Rutas del App Router (Server Components por defecto)
-  │    ├── (dashboard)/     # Layout protegido con Game Tick en cada navegación
-  │    ├── admin/           # Panel de administración y balanceo del juego
-  │    └── api/             # Endpoints HTTP (solo para webhooks / integraciones externas)
-  ├── components/           # Componentes UI organizados por dominio
-  │    ├── dashboard/       # Vistas de juego (RoomsView, MissionsView, etc.)
-  │    ├── admin/           # Tablas y matrices de configuración
-  │    └── ui/              # Primitivas de Shadcn UI accesibles y headless
-  ├── contexts/             # Contextos de React para estado transitorio de cliente
-  ├── lib/                  # Núcleo de lógica de negocio y persistencia
-  │    ├── actions/         # Server Actions (mutaciones de base de datos)
-  │    ├── formulas/        # Funciones puras de cálculo de juego (tiempo, coste, daño)
-  │    ├── prisma/          # Instancia singleton del cliente Prisma
-  │    ├── data.ts          # Data Access Layer (DAL) para lecturas optimizadas
-  │    └── auth*.ts         # Gestión de sesiones y cookies seguras
-  └── types/                # Definiciones de tipos globales del dominio
-/prisma
-  ├── schema.prisma         # Esquema declarativo de base de datos
-  ├── seed.ts               # Orquestador de carga inicial
-  └── datosactuales/        # Datos semilla (omitir en revisiones rutinarias de IA)
+```bash
+# Desarrollo (puerto 3000, bind 0.0.0.0)
+npm run dev
+
+# Build de producción (standalone output)
+npm run build
+
+# Ejecución producción
+npm run start
+
+# Lint + Typecheck (orden obligatorio)
+npm run lint && npm run typecheck
+
+# Prisma
+npm run generate          # prisma generate (postinstall automático)
+npx prisma db push        # Sync schema en dev
+npx prisma migrate dev --name <nombre>  # Migración formal
+npm run prisma:seed       # Poblar BD con seed maestro
+npx prisma studio         # UI visual
+
+# Genkit (IA)
+npm run genkit:dev        # Dev server Genkit
+npm run genkit:watch      # Con watch mode
 ```
 
+**Orden de verificación pre-commit**: `lint → typecheck → build`
+
 ---
 
-## 3. Directrices Específicas de Next.js (App Router)
+## 3. Arquitectura de Código y Estructura Crítica
 
-### 3.1 Manejo de Cookies y Headers
+```
+src/
+├── app/
+│   ├── (dashboard)/          # Layout protegido + Game Tick en cada navegación
+│   │   ├── layout.tsx        # EJECUTA: verificarYFinalizar* en paralelo + obtenerEstadoJuegoActualizado + actualizarPuntuacionUsuario
+│   │   ├── rooms/            # Construcción/gestión habitaciones
+│   │   ├── training/         # Árbol tecnológico
+│   │   ├── recruitment/      # Reclutamiento tropas
+│   │   ├── missions/         # Centro de mando
+│   │   ├── map/              # Exploración coordenadas
+│   │   ├── family/           # Gestión familias
+│   │   └── rankings/         # Clasificaciones globales
+│   ├── admin/                # Panel balance (ruta /admin)
+│   ├── login/                # Auth usuarios
+│   └── page.tsx              # Puerta acceso + verificación superuser
+├── components/
+│   ├── dashboard/            # Vistas interactivas ('use client')
+│   ├── admin/                # Formularios/matrices balanceo
+│   └── ui/                   # Primitivas Shadcn (@/components/ui/*)
+├── contexts/                 # React Context (ej: property-context.tsx)
+├── lib/
+│   ├── actions/              # Server Actions (mutaciones BD)
+│   ├── formulas/             # Funciones PURAS (sin Prisma, sin side-effects)
+│   ├── prisma/prisma.ts      # Singleton Prisma con adapter PrismaPg + Accelerate
+│   ├── data.ts               # DAL con React.cache() + Promise.all
+│   ├── auth.ts               # Auth jugadores (cookies HTTP-only)
+│   ├── auth-admin.ts         # Auth panel admin
+│   └── auth-super.ts         # Auth superuser
+├── hooks/                    # useToast, useMobile, etc.
+└── types/                    # Tipos globales dominio
+prisma/
+├── schema.prisma             # Esquema integral (ver modelos clave abajo)
+├── seed.ts                   # Orquestador seeding
+└── datosactuales/            # Datasets base (EXCLUIDOS en .aiexclude)
+```
+
+### Modelos Prisma Clave (referencia rápida)
+- `ConfiguracionHabitacion` / `ConfiguracionEntrenamiento` / `ConfiguracionTropa`: Config estática del juego
+- `Propiedad` / `HabitacionUsuario` / `ColaConstruccion` / `ColaReclutamiento`: Estado por jugador
+- `TropaUsuario` / `EntrenamientoUsuario` / `ColaEntrenamiento`: Ejército e investigación
+- `ColaMisiones` / `Family` / `FamilyMember` / `Message`: Misiones, alianzas, mensajería
+- `PuntuacionUsuario`: Score global (edificios + tropas + investigaciones)
+
+---
+
+## 4. Directrices Next.js 16 (App Router) - Patrones Verificados
+
+### 4.1 Cookies / Headers / Params - **SIEMPRE ASYNC**
 ```typescript
-// ✅ CORRECTO (Next.js 15+)
+// ✅ CORRECTO
 import { cookies, headers } from 'next/headers';
 
 export async function getSessionUser() {
   const cookieStore = await cookies();
   const token = cookieStore.get('vendetta-session')?.value;
-  if (!token) return null;
   // ...
 }
 
-// ❌ INCORRECTO - Lanzará runtime error: sync-dynamic-apis
-const cookieStore = cookies();
-const token = cookieStore.get('vendetta-session')?.value;
-```
-
-### 3.2 Tipado y Resolución de `params` y `searchParams`
-```typescript
-// ✅ CORRECTO: params y searchParams son Promises
+// ✅ CORRECTO - params y searchParams son Promises
 interface PageProps {
   params: Promise<{ propertyCoords: string }>;
   searchParams: Promise<{ tab?: string }>;
 }
-
 export default async function Page({ params, searchParams }: PageProps) {
   const { propertyCoords } = await params;
   const { tab } = await searchParams;
-  // ...
 }
 ```
 
-### 3.3 Server Actions (`src/lib/actions/`)
-- Utilizar `'use server'` en la parte superior del módulo o función.
-- Validar parámetros con esquemas `Zod` antes de consultar o mutar el estado.
-- Retornar siempre un formato de respuesta estándar:
+### 4.2 Server Actions (`src/lib/actions/`)
+- `'use server'` **al inicio del módulo** (no por función)
+- Validar con **Zod** antes de consultar/mutar
+- Retorno estándar:
   ```typescript
   type ActionResult<T = unknown> = 
     | { success: true; data: T; message?: string }
     | { success: false; error: string; code?: string };
   ```
-- Llamar a `revalidatePath('/[ruta]')` únicamente cuando la mutación afecte datos mostrados en pantalla.
+- `revalidatePath()` **solo** si la mutación afecta datos en pantalla
+- Usar `prisma.$transaction([...])` para mutaciones atómicas multi-tabla
+
+### 4.3 Path Aliases (tsconfig.json)
+```json
+"@/*": ["./src/*"]
+```
+Imports: `@/lib/actions/room.actions`, `@/components/ui/button`, etc.
 
 ---
 
-## 4. Estándares para Prisma ORM y Base de Datos
+## 5. Prisma ORM - Patrones Críticos Verificados
 
-### 4.1 Instancia de Prisma (`src/lib/prisma/prisma.ts`)
-- Utilizar siempre el singleton global para evitar agotamiento del pool de conexiones en recargas de desarrollo:
-  ```typescript
-  import { PrismaClient } from '@prisma/client';
+### 5.1 Cliente Singleton (`src/lib/prisma/prisma.ts`)
+```typescript
+import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { withAccelerate } from '@prisma/extension-accelerate';
 
-  const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
+const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
+const databaseUrl = process.env.DATABASE_URL || '';
+const isAccelerate = databaseUrl.startsWith('prisma://') || databaseUrl.startsWith('prisma+postgres://');
 
-  export const prisma = globalForPrisma.prisma || new PrismaClient();
+function createPrismaClient() {
+  if (isAccelerate) {
+    return new PrismaClient({ accelerateUrl: databaseUrl }).$extends(withAccelerate()) as unknown as PrismaClient;
+  }
+  const adapter = new PrismaPg({ connectionString: databaseUrl });
+  return new PrismaClient({ adapter });
+}
 
-  if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
-  ```
+export const prisma = globalForPrisma.prisma || createPrismaClient();
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+```
+**Soporta ambos**: PostgreSQL directo (`postgresql://`) y Prisma Accelerate (`prisma://`).
 
-### 4.2 Mutaciones Críticas y Atomicidad
-Las operaciones de compra, reclutamiento y órdenes de misión deducen recursos y crean registros en cola. **Deben** ejecutarse en una transacción:
+### 5.2 Transacciones Atómicas (Patrón Obligatorio)
 ```typescript
 await prisma.$transaction(async (tx) => {
   // 1. Verificar y decrementar recursos
-  const updatedProp = await tx.propiedad.update({
+  const updated = await tx.propiedad.update({
     where: { id: propiedadId },
-    data: {
-      dinero: { decrement: costo.dinero },
-      armas: { decrement: costo.armas },
-    }
+    data: { dinero: { decrement: costo.dinero }, armas: { decrement: costo.armas } }
   });
+  if (updated.dinero < 0 || updated.armas < 0) throw new Error("Recursos insuficientes");
 
-  if (updatedProp.dinero < 0 || updatedProp.armas < 0) {
-    throw new Error("Recursos insuficientes para completar la operación.");
-  }
-
-  // 2. Registrar en la cola correspondiente
-  await tx.colaConstruccion.create({
-    data: {
-      propiedadId,
-      habitacionId,
-      nivelObjetivo,
-      fechaFinalizacion,
-    }
-  });
+  // 2. Registrar en cola
+  await tx.colaConstruccion.create({ data: { propiedadId, habitacionId, nivelDestino, fechaFinalizacion } });
 });
 ```
 
-### 4.3 Data Access Layer (`src/lib/data.ts`)
-- Agrupar lecturas relacionadas usando `Promise.all` para evitar cascadas (waterfalls).
-- Emplear `React.cache()` para memorizar lecturas idempotentes durante el ciclo de vida de una misma petición HTTP.
+### 5.3 Data Access Layer (`src/lib/data.ts`)
+- **`React.cache()`** para memorizar lecturas idempotentes por request HTTP
+- **`Promise.all`** para agrupar lecturas relacionadas y evitar waterfalls
+- Tipos extendidos con `& { relations }` para cargar datos completos en una query
 
 ---
 
-## 5. Arquitectura del Game Loop (Motor de Tiempo Real)
+## 6. Game Loop - Lazy Server-Authoritative Tick
 
-El juego utiliza un enfoque **Server-Authoritative Lazy Tick**:
-1. **Lazy Evaluation**: Los recursos y colas no dependen de un daemon continuo de fondo que sature el servidor. Se calculan diferencialmente en función de `Date.now() - ultimaActualizacion`.
-2. **Game Tick en Layout**: Al navegar en `(dashboard)/layout.tsx`, se resuelven en paralelo:
-   - `verificarYFinalizarConstruccion`
-   - `verificarYFinalizarReclutamiento`
-   - `verificarYFinalizarMisiones`
-   - `verificarYFinalizarEntrenamientos`
-3. **Formulas Puras (`src/lib/formulas/`)**: Toda matemática de escalado de edificios, bonus de investigación o poder de combate debe aislarse en funciones puras sin efectos secundarios ni dependencias a Prisma. Esto garantiza testeabilidad y balanceo ágil.
+**No hay daemon de fondo**. El tick se ejecuta en `(dashboard)/layout.tsx` en cada navegación:
+
+```typescript
+// En layout.tsx - EJECUCIÓN PARALELA
+const [afterConstruction, afterRecruitment, afterMission, afterTraining] = await Promise.all([
+  verificarYFinalizarConstruccion(sessionUser),
+  verificarYFinalizarReclutamiento(sessionUser),
+  verificarYFinalizarMisiones(sessionUser),
+  verificarYFinalizarEntrenamientos(sessionUser),
+]);
+
+// Merge resultados + actualizar recursos + recalcular score
+const combinedUser = { ...sessionUser, ...afterConstruction, ...afterRecruitment, ...afterMission, ...afterTraining };
+const userWithResources = await obtenerEstadoJuegoActualizado(combinedUser);  // Cálculo diferencial Date.now() - ultimaActualizacion
+const finalUser = await actualizarPuntuacionUsuario(userWithResources);
+```
+
+**Fórmulas Puras** (`src/lib/formulas/`): Sin Prisma, sin side-effects, testeables unitariamente. Incluyen:
+- `room-formulas.ts`: costos, tiempos, producción, capacidad almacenamiento
+- `troop-formulas.ts`, `training-formulas.ts`, `mission-formulas.ts`, `score-formulas.ts`, `produccion-formulas.ts`
 
 ---
 
-## 6. Convenciones de UI y Estilo
+## 7. Convenciones UI y Estilo
 
-- **Librería de Iconos**: Exclusivamente `lucide-react`. Prohibido incrustar SVGs crudos cuando exista un icono estándar.
-- **Componentes Base**: Utilizar primitivas de Shadcn UI (`@/components/ui/*`).
-- **Paleta y Tema**: Tema oscuro mafioso por defecto (`dark`), contrastes con variables HSL definidas en `globals.css` (acentos carmesí `#dc2626` y dorados `#eab308`).
-- **Animaciones**: Utilizar Tailwind transitions y `motion` (`motion/react`) para micro-interacciones suaves.
-- **Feedback al Usuario**: Utilizar `useToast` para notificaciones de error, advertencia o éxito en Server Actions.
+- **Iconos**: Solo `lucide-react`. Nada de SVGs inline si existe en lucide.
+- **Componentes base**: Shadcn UI (`@/components/ui/*`).
+- **Tema**: Oscuro (`dark`) por defecto. Variables HSL en `globals.css` / `src/styles/design-tokens.css`.
+  - Acentos: Carmesí `#dc2626` (red-600), Dorado `#eab308` (yellow-600)
+- **Animaciones**: Tailwind transitions + `motion/react` (Framer Motion) para micro-interacciones.
+- **Feedback**: `useToast` (toast sonoro/visual) para errores/éxitos en Server Actions.
 
 ---
 
-## 7. Buenas Prácticas de Optimización para Agentes IA
+## 8. Variables de Entorno Requeridas
 
-1. **Inspección Quirúrgica**: Leer únicamente los fragmentos y archivos necesarios. No cargar carpetas de volcados completos.
-2. **Edición Segura**: Validar sintaxis y dependencias antes de proponer cambios extensos. No asumir la existencia de paquetes no declarados en `package.json`.
-3. **Preservar Rutas Existentes**: No renombrar endpoints o componentes sin verificar referencias cruzadas con `grep`.
-4. **Verificación Post-Cambio**: Ejecutar validación de compilación y linteo para garantizar integridad del build.
+```env
+# .env (no commiteado - ver .env.example)
+DATABASE_URL="postgresql://user:pass@localhost:5432/vendetta?schema=public"
+# O para Prisma Accelerate:
+# DATABASE_URL="prisma://accelerate-url"
+
+GEMINI_API_KEY=""           # Opcional - features IA
+NODE_ENV="development"
+```
+
+---
+
+## 9. Buenas Prácticas Operativas para Agentes
+
+1. **Inspección Quirúrgica**: Leer solo archivos necesarios. No cargar `prisma/datosactuales/`, `public/img/`, `public/nuevas/`.
+2. **Edición Segura**: Verificar sintaxis y deps en `package.json` antes de proponer cambios. No asumir paquetes no declarados.
+3. **Preservar Rutas**: No renombrar endpoints/componentes sin `grep` de referencias cruzadas.
+4. **Verificación Post-Cambio**: `npm run lint && npm run typecheck && npm run build` antes de confirmar.
+5. **Game Tick Awareness**: Cualquier cambio en recursos/colas/entradas debe considerar el flujo en `(dashboard)/layout.tsx`.
+
+---
+
+## 10. Referencias de Archivos Clave para Contexto Rápido
+
+| Archivo | Propósito |
+|---------|-----------|
+| `src/app/(dashboard)/layout.tsx` | Game Tick entry point, auth guard, resource calc |
+| `src/lib/actions/user.actions.ts` | `verificarYFinalizar*`, `obtenerEstadoJuegoActualizado`, `actualizarPuntuacionUsuario` |
+| `src/lib/data.ts` | DAL con `React.cache()`, tipos extendidos, queries optimizadas |
+| `src/lib/prisma/prisma.ts` | Singleton Prisma (PrismaPg + Accelerate) |
+| `src/lib/formulas/room-formulas.ts` | Matemática pura: costos, tiempos, producción, capacidad |
+| `prisma/schema.prisma` | Esquema completo BD |
+| `.aiexclude` | Filtro contexto IA (respeta estrictamente) |
+
+---
+
+*Última actualización: 2026-09-21. Verificar contra código real si hay dudas.*

@@ -12,9 +12,9 @@ export const dynamic = 'force-dynamic';
 
 function ResourceBarFallback() {
     return (
-        <div className="w-full bg-black/80 text-white p-2 sticky top-14 sm:top-16 z-10">
-            <div className="container mx-auto flex items-center justify-between h-8">
-                <Skeleton className="h-5 w-full bg-muted shimmer" />
+        <div className="w-full h-14 bg-background/95 backdrop-blur-sm border-b border-border/40 sticky top-0 z-10">
+            <div className="container mx-auto flex h-full items-center justify-center">
+                <Skeleton className="h-5 w-full max-w-7xl mx-auto px-3 md:px-6 bg-muted shimmer" />
             </div>
         </div>
     )
@@ -51,7 +51,7 @@ export default async function DashboardLayout({
       // For now, just show an error message or redirect to overview with a message
       return (
         <DashboardClientLayout user={finalUser}>
-            <main className="p-4 md:p-6">
+            <main className="p-4 md:p-6 max-w-7xl mx-auto w-full">
               <h2 className="text-2xl font-bold">Sin propiedades</h2>
               <p>No tienes ninguna propiedad. ¡Crea una para empezar!</p>
             </main>
@@ -70,13 +70,11 @@ export default async function DashboardLayout({
     <Suspense>
       <PropertyProvider initialProperties={sortedProperties}>
           <DashboardClientLayout user={finalUser}>
-              <div className="sticky top-14 sm:top-16 z-20">
-                  <Suspense fallback={<ResourceBarFallback />}>
-                      <ResourceBar user={finalUser} />
-                  </Suspense>
-              </div>
+              <Suspense fallback={<ResourceBarFallback />}>
+                  <ResourceBar user={finalUser} />
+              </Suspense>
               <div className="flex-1">
-                <main className="p-4 md:p-6">
+                <main className="p-4 md:p-6 max-w-7xl mx-auto w-full">
                   {children}
                 </main>
               </div>

@@ -65,17 +65,22 @@ export function DashboardClientLayout({
           </div>
         </SidebarFooter>
       </Sidebar>
-      <SidebarInset className="flex flex-col">
-        {/* Main Header */}
-        <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:h-16 sm:px-6">
-            <div className="flex items-center gap-2 md:hidden">
-                <Swords className="h-6 w-6 text-primary" />
-                <span className="font-semibold text-lg">Vendetta</span>
+      <SidebarInset className="flex flex-col min-h-screen">
+        {/* Main Header - h-14 matches ResourceBar height */}
+        <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background/80 px-3 md:px-6 backdrop-blur-sm">
+            {/* Mobile brand + sidebar trigger */}
+            <div className="flex items-center gap-2 md:hidden min-w-0">
+                <Swords className="h-6 w-6 text-primary flex-shrink-0" />
+                <span className="font-semibold text-lg truncate">Vendetta</span>
             </div>
              <div className="flex-1" />
-            <SidebarTrigger className="md:hidden" />
+            <SidebarTrigger className="md:hidden min-h-[44px] min-w-[44px]" />
         </header>
-        {children}
+        
+        {/* Main content area */}
+        <main className="flex-1 overflow-y-auto">
+            {children}
+        </main>
       </SidebarInset>
     </SidebarProvider>
   )

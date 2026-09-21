@@ -87,7 +87,7 @@ export async function OverviewView() {
     const mainProperty = user.propiedades[0];
 
     return (
-        <div className="flex-grow space-y-4">
+        <div className="flex-grow space-y-4 max-w-7xl mx-auto w-full px-3 md:px-6">
             {/* Top Tactical Command Header (Responsive: 1→2→3 cols) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 
@@ -103,7 +103,7 @@ export async function OverviewView() {
                         </div>
 
                         <div className="flex items-center gap-3.5 mt-4">
-                            <Avatar className="h-16 w-16 border-2 border-primary ring-2 ring-primary/20 shadow-md">
+                            <Avatar className="h-16 w-16 border-2 border-primary ring-2 ring-primary/20 shadow-md flex-shrink-0">
                                 <AvatarImage src={user.avatarUrl || ''} alt={user.name} data-ai-hint="mafia boss" />
                                 <AvatarFallback className="bg-surface-elevated text-zinc-100 font-heading text-xl">
                                     {user.name?.charAt(0).toUpperCase()}
@@ -139,31 +139,34 @@ export async function OverviewView() {
 
                 {/* 2. Main Turf Headquarters Card */}
                 <Card className="relative overflow-hidden min-h-[200px] sm:min-h-[250px] rounded-lg border border-border/60 shadow-lg group flex flex-col justify-between">
-                    <Image 
-                        src="/nuevas/edificionuevo.jpg"
-                        alt="Vista de la sede principal"
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        data-ai-hint="mafia building dark"
-                    />
+                    <div className="relative aspect-[16/9] w-full">
+                        <Image 
+                            src="/nuevas/edificionuevo.jpg"
+                            alt="Vista de la sede principal"
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                            data-ai-hint="mafia building dark"
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        />
+                    </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/20" />
 
                     {/* Top coordinate badge */}
-                    <div className="relative z-10 p-4 flex items-center justify-between">
-                        <span className="inline-flex items-center gap-1.5 text-[11px] font-mono text-zinc-200 bg-black/60 backdrop-blur-md border border-white/15 px-2 py-0.5 rounded">
+                    <div className="relative z-10 p-4 flex items-center justify-between flex-wrap gap-2">
+                        <span className="inline-flex items-center gap-1.5 text-[11px] font-mono text-zinc-200 bg-black/60 backdrop-blur-md border border-white/15 px-2 py-0.5 rounded whitespace-nowrap">
                             <Building2 className="h-3 w-3 text-primary" />
                             SEDE PRINCIPAL
                         </span>
                         {mainProperty && (
-                            <span className="text-[11px] font-mono text-red-400 bg-red-950/70 border border-red-900/50 px-2 py-0.5 rounded">
+                            <span className="text-[11px] font-mono text-red-400 bg-red-950/70 border border-red-900/50 px-2 py-0.5 rounded whitespace-nowrap">
                                 [{mainProperty.ciudad}:{mainProperty.barrio}:{mainProperty.edificio}]
                             </span>
                         )}
                     </div>
 
                     {/* Bottom property details & quick action */}
-                    <div className="relative z-10 p-4 flex items-end justify-between gap-2">
-                        <div>
+                    <div className="relative z-10 p-4 flex items-end justify-between gap-2 flex-wrap">
+                        <div className="min-w-0">
                             <p className="text-xs sm:text-base text-zinc-400 uppercase font-mono tracking-wider">
                                 Cuartel General
                             </p>
@@ -176,7 +179,7 @@ export async function OverviewView() {
                                 asChild 
                                 size="sm" 
                                 variant="outline" 
-                                className="bg-black/60 backdrop-blur-md border-white/20 hover:bg-white/10 text-white text-xs sm:text-base h-10 px-3 btn-tactical-press min-h-[44px]"
+                                className="bg-black/60 backdrop-blur-md border-white/20 hover:bg-white/10 text-white text-xs sm:text-base h-10 px-3 btn-tactical-press min-h-[44px] flex-shrink-0"
                             >
                                 <Link href={`/rooms/${mainProperty.ciudad}:${mainProperty.barrio}:${mainProperty.edificio}`}>
                                     Entrar
@@ -219,7 +222,7 @@ export async function OverviewView() {
                                     <h4 className="text-xl font-bold font-heading tracking-widest text-zinc-100">
                                         {familyMember.family.name}
                                     </h4>
-                                    <div className="flex items-center gap-2 mt-1">
+                                    <div className="flex items-center gap-2 mt-1 flex-wrap justify-center">
                                         <Badge variant="secondary" className="font-mono text-[11px] px-2 py-0 border border-white/10">
                                             [{familyMember.family.tag}]
                                         </Badge>
@@ -271,50 +274,52 @@ export async function OverviewView() {
 
             {/* Syndicate Empire Ledger (Bottom Stats Bar - Real Data) */}
             <Card className="tactical-card">
-                <CardContent className="p-3.5 grid grid-cols-2 sm:grid-cols-5 gap-3 items-center justify-items-center">
-                    <div className="text-center">
-                        <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
-                            Puntos Totales
-                        </p>
-                        <p className="font-bold font-mono tabular-nums text-lg text-accent">
-                            {formatPoints(puntosTotales)}
-                        </p>
-                    </div>
-                    <Separator orientation="vertical" className="h-8 hidden sm:block bg-border/60" />
-                    <div className="text-center">
-                        <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
-                            Habitaciones
-                        </p>
-                        <p className="font-bold font-mono tabular-nums text-lg text-zinc-100">
-                            {formatPoints(puntuacion?.puntosHabitaciones)}
-                        </p>
-                    </div>
-                    <Separator orientation="vertical" className="h-8 hidden sm:block bg-border/60" />
-                    <div className="text-center">
-                        <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
-                            Tropas
-                        </p>
-                        <p className="font-bold font-mono tabular-nums text-lg text-zinc-100">
-                            {formatPoints(puntuacion?.puntosTropas)}
-                        </p>
-                    </div>
-                    <Separator orientation="vertical" className="h-8 hidden sm:block bg-border/60" />
-                    <div className="text-center">
-                        <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
-                            Entrenamientos
-                        </p>
-                        <p className="font-bold font-mono tabular-nums text-lg text-zinc-100">
-                            {formatPoints(puntuacion?.puntosEntrenamientos)}
-                        </p>
-                    </div>
-                    <Separator orientation="vertical" className="h-8 hidden sm:block bg-border/60" />
-                    <div className="text-center col-span-2 sm:col-span-1">
-                        <p className="text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
-                            Territorios
-                        </p>
-                        <p className="font-bold font-mono tabular-nums text-lg text-zinc-100">
-                            {user.propiedades.length}
-                        </p>
+                <CardContent className="p-3.5">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 items-center">
+                        <div className="text-center p-2 sm:py-1">
+                            <p className="text-[10px] sm:text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
+                                Puntos Totales
+                            </p>
+                            <p className="font-bold font-mono tabular-nums text-lg sm:text-xl text-accent">
+                                {formatPoints(puntosTotales)}
+                            </p>
+                        </div>
+                        <Separator orientation="vertical" className="h-10 mx-auto hidden sm:block bg-border/60" />
+                        <div className="text-center p-2 sm:py-1">
+                            <p className="text-[10px] sm:text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
+                                Habitaciones
+                            </p>
+                            <p className="font-bold font-mono tabular-nums text-lg sm:text-xl text-zinc-100">
+                                {formatPoints(puntuacion?.puntosHabitaciones)}
+                            </p>
+                        </div>
+                        <Separator orientation="vertical" className="h-10 mx-auto hidden sm:block bg-border/60" />
+                        <div className="text-center p-2 sm:py-1">
+                            <p className="text-[10px] sm:text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
+                                Tropas
+                            </p>
+                            <p className="font-bold font-mono tabular-nums text-lg sm:text-xl text-zinc-100">
+                                {formatPoints(puntuacion?.puntosTropas)}
+                            </p>
+                        </div>
+                        <Separator orientation="vertical" className="h-10 mx-auto hidden sm:block bg-border/60" />
+                        <div className="text-center p-2 sm:py-1">
+                            <p className="text-[10px] sm:text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
+                                Entrenamientos
+                            </p>
+                            <p className="font-bold font-mono tabular-nums text-lg sm:text-xl text-zinc-100">
+                                {formatPoints(puntuacion?.puntosEntrenamientos)}
+                            </p>
+                        </div>
+                        <Separator orientation="vertical" className="h-10 mx-auto hidden sm:block bg-border/60" />
+                        <div className="text-center p-2 sm:py-1">
+                            <p className="text-[10px] sm:text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
+                                Territorios
+                            </p>
+                            <p className="font-bold font-mono tabular-nums text-lg sm:text-xl text-zinc-100">
+                                {user.propiedades.length}
+                            </p>
+                        </div>
                     </div>
                 </CardContent>
             </Card>

@@ -2,7 +2,7 @@
 
 "use client"
 
-import Link from "next/link"
+import { useRouter } from "next/navigation";
 import { usePathname, useSearchParams } from "next/navigation"
 import {
   SidebarMenu,
@@ -33,7 +33,6 @@ import {
 import { PropertySelector } from "./property-selector"
 import type { UserWithProgress } from "@/lib/data"
 import { useProperty } from "@/contexts/property-context"
-import { ComponentProps } from "react"
 
 interface NavItem {
   href: string
@@ -76,8 +75,16 @@ export function SidebarNav({ user }: SidebarNavProps) {
   const searchParams = useSearchParams();
   const { selectedProperty } = useProperty();
   const { setOpenMobile, isMobile } = useSidebar();
+  const router = useRouter();
 
   const handleClick = () => {
+    if (isMobile) {
+        setOpenMobile(false)
+    }
+  }
+
+  const handleNavigate = (href: string) => {
+    router.push(href);
     if (isMobile) {
         setOpenMobile(false)
     }
@@ -103,16 +110,14 @@ export function SidebarNav({ user }: SidebarNavProps) {
         return (
           <SidebarMenuItem key={item.href}>
             <SidebarMenuButton
-              asChild
               isActive={pathname.startsWith(item.href)}
               tooltip={isMobile ? undefined : item.label}
-              onClick={handleClick}
+              onClick={() => handleNavigate(finalHref)}
               size="default"
+              className="w-full flex items-center gap-2"
             >
-              <Link href={finalHref} className="w-full flex items-center gap-2">
                 {item.icon}
                 <span className="truncate">{item.label}</span>
-              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         )
