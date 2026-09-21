@@ -56,12 +56,18 @@ export function ResourceBar({ user }: ResourceBarProps) {
     return (
         <header className="w-full bg-background/95 backdrop-blur-sm text-white shadow-md z-20">
             <div className="container mx-auto flex h-full items-center justify-between p-2">
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-2 md:flex md:items-center md:gap-x-6 w-full">
-                    {resources.map((res) => (
-                        <div key={res.name} className="flex items-center gap-2" title={`Capacidad: ${formatNumber(res.capacity)}`}>
-                            <Image src={res.icon} alt={res.name} width={20} height={20} className="h-5 w-5" />
-                            <div className="flex flex-col">
-                                <span className="hidden sm:inline text-xs font-semibold tracking-wider uppercase text-muted-foreground">{res.name}</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:flex md:items-center md:gap-x-4 w-full">
+                    {resources.map((res, idx) => (
+                        <div key={res.name} className="flex items-center gap-2" style={{ order: idx < 2 ? 1 : 2 }}>
+                            <Image 
+                            src={res.icon} 
+                            alt={res.name} 
+                            width={20} 
+                            height={20} 
+                            className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0" 
+                        />
+                            <div className="flex flex-col min-h-[44px] min-w-[44px]">
+                                <span className="hidden sm:inline text-xs sm:text-base font-semibold tracking-wider uppercase text-muted-foreground">{res.name}</span>
                                 <span className={cn("font-bold tabular-nums text-foreground")}>
                                     {formatNumber(res.value)}
                                 </span>

@@ -105,12 +105,13 @@ export function SidebarNav({ user }: SidebarNavProps) {
             <SidebarMenuButton
               asChild
               isActive={pathname.startsWith(item.href)}
-              tooltip={item.label}
+              tooltip={isMobile ? undefined : item.label}
               onClick={handleClick}
+              size="default"
             >
-              <Link href={finalHref}>
+              <Link href={finalHref} className="w-full flex items-center gap-2">
                 {item.icon}
-                <span>{item.label}</span>
+                <span className="truncate">{item.label}</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

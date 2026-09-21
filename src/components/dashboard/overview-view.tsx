@@ -30,7 +30,7 @@ function ActionIcons({ unreadMessages }: { unreadMessages: number }) {
                                 asChild 
                                 variant="outline" 
                                 size="icon" 
-                                className="h-8 w-8 bg-background/60 border-white/10 hover:bg-white/10 text-zinc-300 hover:text-white relative btn-tactical-press"
+                                className="h-11 w-11 bg-background/60 border-white/10 hover:bg-white/10 text-zinc-300 hover:text-white relative btn-tactical-press min-h-[44px] min-w-[44px]"
                             >
                                 <Link href={action.href}>
                                     {action.icon}
@@ -47,7 +47,7 @@ function ActionIcons({ unreadMessages }: { unreadMessages: number }) {
                             </Button>
                         </TooltipTrigger>
                         <TooltipContent side="bottom">
-                            <p className="text-xs">{action.label}</p>
+                            <p className="text-xs sm:text-base">{action.label}</p>
                         </TooltipContent>
                     </Tooltip>
                 </TooltipProvider>
@@ -88,11 +88,11 @@ export async function OverviewView() {
 
     return (
         <div className="flex-grow space-y-4">
-            {/* Top Tactical Command Header (3 Balanced Columns) */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Top Tactical Command Header (Responsive: 1→2→3 cols) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 
                 {/* 1. Boss Dossier Card */}
-                <Card className="tactical-card flex flex-col justify-between p-4 min-h-[250px]">
+                <Card className="tactical-card flex flex-col justify-between p-4 min-h-[200px] sm:min-h-[250px]">
                     <div>
                         <div className="flex items-center justify-between gap-2 pb-3 border-b border-border/40">
                             <span className="text-[11px] font-mono font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-1.5">
@@ -110,7 +110,7 @@ export async function OverviewView() {
                                 </AvatarFallback>
                             </Avatar>
                             <div className="min-w-0">
-                                <p className="text-xs text-muted-foreground uppercase tracking-wider font-mono">
+                                <p className="text-xs sm:text-base text-muted-foreground uppercase tracking-wider font-mono">
                                     {user.title || "Don de la Familia"}
                                 </p>
                                 <h3 className="text-2xl font-bold font-heading tracking-wide text-zinc-100 truncate">
@@ -127,7 +127,7 @@ export async function OverviewView() {
                         </div>
                     </div>
 
-                    <div className="pt-3 border-t border-border/40 flex items-center justify-between text-xs mt-3">
+                    <div className="pt-3 border-t border-border/40 flex items-center justify-between text-xs sm:text-base mt-3">
                         <span className="text-muted-foreground uppercase font-mono tracking-wider">
                             Puntuación Global
                         </span>
@@ -138,7 +138,7 @@ export async function OverviewView() {
                 </Card>
 
                 {/* 2. Main Turf Headquarters Card */}
-                <Card className="relative overflow-hidden min-h-[250px] rounded-lg border border-border/60 shadow-lg group flex flex-col justify-between">
+                <Card className="relative overflow-hidden min-h-[200px] sm:min-h-[250px] rounded-lg border border-border/60 shadow-lg group flex flex-col justify-between">
                     <Image 
                         src="/nuevas/edificionuevo.jpg"
                         alt="Vista de la sede principal"
@@ -164,7 +164,7 @@ export async function OverviewView() {
                     {/* Bottom property details & quick action */}
                     <div className="relative z-10 p-4 flex items-end justify-between gap-2">
                         <div>
-                            <p className="text-xs text-zinc-400 uppercase font-mono tracking-wider">
+                            <p className="text-xs sm:text-base text-zinc-400 uppercase font-mono tracking-wider">
                                 Cuartel General
                             </p>
                             <h3 className="text-xl font-bold font-heading tracking-wide text-white uppercase truncate">
@@ -176,7 +176,7 @@ export async function OverviewView() {
                                 asChild 
                                 size="sm" 
                                 variant="outline" 
-                                className="bg-black/60 backdrop-blur-md border-white/20 hover:bg-white/10 text-white text-xs h-8 px-3 btn-tactical-press"
+                                className="bg-black/60 backdrop-blur-md border-white/20 hover:bg-white/10 text-white text-xs sm:text-base h-10 px-3 btn-tactical-press min-h-[44px]"
                             >
                                 <Link href={`/rooms/${mainProperty.ciudad}:${mainProperty.barrio}:${mainProperty.edificio}`}>
                                     Entrar
@@ -188,7 +188,7 @@ export async function OverviewView() {
                 </Card>
 
                 {/* 3. Syndicate / Family Card */}
-                <Card className="tactical-card flex flex-col justify-between p-4 min-h-[250px]">
+                <Card className="tactical-card flex flex-col justify-between p-4 min-h-[200px] sm:min-h-[250px]">
                     <div>
                         <div className="flex items-center justify-between gap-2 pb-3 border-b border-border/40">
                             <span className="text-[11px] font-mono font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-1.5">
@@ -223,7 +223,7 @@ export async function OverviewView() {
                                         <Badge variant="secondary" className="font-mono text-[11px] px-2 py-0 border border-white/10">
                                             [{familyMember.family.tag}]
                                         </Badge>
-                                        <span className="text-xs text-muted-foreground font-mono">
+                                        <span className="text-xs sm:text-base text-muted-foreground font-mono">
                                             Rol: <span className="text-zinc-200">{familyMember.role}</span>
                                         </span>
                                     </div>
@@ -236,7 +236,7 @@ export async function OverviewView() {
                                     <p className="text-base font-bold font-heading text-zinc-200">
                                         Sin Familia Asignada
                                     </p>
-                                    <p className="text-xs text-muted-foreground mt-0.5 max-w-[200px]">
+                                    <p className="text-xs sm:text-base text-muted-foreground mt-0.5 max-w-[200px]">
                                         Únete a un clan para protección territorial y bonificaciones.
                                     </p>
                                 </>
@@ -249,7 +249,7 @@ export async function OverviewView() {
                             asChild 
                             variant="outline" 
                             size="sm" 
-                            className="w-full text-xs h-8 bg-surface-elevated/80 hover:bg-surface-overlay border-border/80 text-zinc-200 btn-tactical-press"
+                            className="w-full text-xs sm:text-base h-10 bg-surface-elevated/80 hover:bg-surface-overlay border-border/80 text-zinc-200 btn-tactical-press min-h-[44px]"
                         >
                             <Link href="/family">
                                 {familyMember ? 'Cuartel de Familia' : 'Buscar o Fundar Familia'}
