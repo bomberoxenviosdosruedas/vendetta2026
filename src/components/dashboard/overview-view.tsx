@@ -1,335 +1,257 @@
 import { getSessionUser } from "@/lib/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
-import { Bell, Briefcase, MessageSquare, Users2, Building2, ChevronRight, ShieldCheck, MapPin } from "lucide-react";
+import MaterialIcon from "@/components/ui/material-icon";
 import { QueueStatusCard } from "./queue-status-card";
 import { ActivityHistoryCard } from "./activity-history";
 import { CityNewsCard } from "./city-news-ticker";
+import { ResourceBar } from "./resource-bar";
 import { getRoomConfigurations, getUserActivityHistory } from "@/lib/data";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import Link from "next/link";
 import { ErrorBoundary, DashboardSectionErrorFallback } from "./error-boundary";
 
 function ActionIcons({ unreadMessages }: { unreadMessages: number }) {
-    const actions = [
-        { href: "/messages?categoria=SISTEMA", icon: <Bell className="h-4 w-4" />, notification: 0, label: "Notificaciones del Sistema" },
-        { href: "/messages", icon: <MessageSquare className="h-4 w-4" />, notification: unreadMessages, label: "Mensajes Clandestinos" },
-        { href: "/settings", icon: <Briefcase className="h-4 w-4" />, notification: 0, label: "Ajustes de la Organización" },
-    ];
+  const actions = [
+    { href: "/messages?categoria=SISTEMA", iconName: "notifications", notification: 0, label: "Notificaciones" },
+    { href: "/messages", iconName: "mail", notification: unreadMessages, label: "Mensajes" },
+    { href: "/settings", iconName: "settings", notification: 0, label: "Opciones" },
+  ];
 
-    return (
-        <div className="flex items-center gap-1.5">
-            {actions.map((action, index) => (
-                <TooltipProvider key={index} delayDuration={100}>
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button 
-                                asChild 
-                                variant="outline" 
-                                size="icon" 
-                                className="h-11 w-11 bg-background/60 border-white/10 hover:bg-white/10 text-zinc-300 hover:text-white relative btn-tactical-press min-h-[44px] min-w-[44px]"
-                            >
-                                <Link href={action.href}>
-                                    {action.icon}
-                                    <span className="sr-only">{action.label}</span>
-                                    {action.notification > 0 && (
-                                        <Badge 
-                                            variant="destructive" 
-                                            className="absolute -top-1 -right-1 h-4 min-w-4 px-1 flex items-center justify-center text-[10px] font-mono leading-none bg-red-600 animate-pulse-subtle"
-                                        >
-                                            {action.notification}
-                                        </Badge>
-                                    )}
-                                </Link>
-                            </Button>
-                        </TooltipTrigger>
-                        <TooltipContent side="bottom">
-                            <p className="text-xs sm:text-base">{action.label}</p>
-                        </TooltipContent>
-                    </Tooltip>
-                </TooltipProvider>
-            ))}
-        </div>
-    );
+  return (
+    <div className="flex items-center gap-1.5">
+      {actions.map((action, index) => (
+        <TooltipProvider key={index} delayDuration={100}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                asChild
+                className="btn-tactical h-11 w-11 min-h-[44px] min-w-[44px] p-0 relative"
+              >
+                <Link href={action.href} className="flex items-center justify-center">
+                  <MaterialIcon name={action.iconName} size={18} />
+                  <span className="sr-only">{action.label}</span>
+                  {action.notification > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-[#ff0000] text-white text-[9px] font-bold px-1 rounded-sm font-['Space_Mono'] animate-pulse">
+                      {action.notification}
+                    </span>
+                  )}
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="bg-[#0d0d0d] border-[#333333] text-[#dfdbc9] text-xs">
+              <p>{action.label}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      ))}
+    </div>
+  );
 }
 
 function formatPoints(points: number | null | undefined): string {
-    if (points === null || points === undefined) return "0";
-    return Math.floor(points).toLocaleString('de-DE');
+  if (points === null || points === undefined) return "0";
+  return Math.floor(points).toLocaleString('de-DE');
 }
 
 export async function OverviewView() {
-    const user = await getSessionUser();
+  const user = await getSessionUser();
 
-    if (!user) {
-        return (
-            <div className="p-8 text-center text-muted-foreground">
-                Usuario no encontrado o sesión expirada.
-            </div>
-        );
-    }
-
-    const { puntuacion, familyMember } = user;
-    const [allRoomConfigs, activities] = await Promise.all([
-        getRoomConfigurations(),
-        getUserActivityHistory(user.id)
-    ]);
-    const simpleRoomConfigs = allRoomConfigs.map(r => ({ id: r.id, nombre: r.nombre }));
-    const unreadMessages = user._count?.receivedMessages || 0;
-
-    const puntosTotales = (puntuacion?.puntosHabitaciones || 0) + 
-                          (puntuacion?.puntosTropas || 0) + 
-                          (puntuacion?.puntosEntrenamientos || 0);
-
-    const mainProperty = user.propiedades[0];
-
+  if (!user) {
     return (
-        <div className="flex-grow space-y-4 max-w-7xl mx-auto w-full px-3 md:px-6">
-            {/* Top Tactical Command Header (Responsive: 1→2→3 cols) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                
-                {/* 1. Boss Dossier Card */}
-                <Card className="rounded-base border border-border/60 bg-card/80 shadow-tactical flex flex-col justify-between p-4 min-h-[200px] sm:min-h-[250px]">
-                    <div>
-                        <div className="flex items-center justify-between gap-2 pb-3 border-b border-border/40">
-                            <span className="text-[11px] font-mono font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-1.5">
-                                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                                EXPEDIENTE CRIMINAL
-                            </span>
-                            <ActionIcons unreadMessages={unreadMessages} />
-                        </div>
-
-                        <div className="flex items-center gap-3.5 mt-4">
-                            <Avatar className="h-16 w-16 border-2 border-primary ring-2 ring-primary/20 shadow-md flex-shrink-0">
-                                <AvatarImage src={user.avatarUrl || ''} alt={user.name} data-ai-hint="mafia boss" />
-                                <AvatarFallback className="bg-surface-elevated text-zinc-100 font-heading text-xl">
-                                    {user.name?.charAt(0).toUpperCase()}
-                                </AvatarFallback>
-                            </Avatar>
-                            <div className="min-w-0">
-                                <p className="text-xs sm:text-base text-muted-foreground uppercase tracking-wider font-mono">
-                                    {user.title || "Don de la Familia"}
-                                </p>
-                                <h3 className="text-2xl font-bold font-heading tracking-wide text-zinc-100 truncate">
-                                    {user.name}
-                                </h3>
-                                <div className="inline-flex items-center gap-1.5 text-[11px] font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-900/40 px-2 py-0.5 rounded mt-1">
-                                    <span className="relative flex h-1.5 w-1.5">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
-                                    </span>
-                                    EN LÍNEA // OPERATIVO
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="pt-3 border-t border-border/40 flex items-center justify-between text-xs sm:text-base mt-3">
-                        <span className="text-muted-foreground uppercase font-mono tracking-wider">
-                            Puntuación Global
-                        </span>
-                        <span className="font-mono font-bold text-accent tabular-nums text-sm">
-                            {formatPoints(puntosTotales)} pts
-                        </span>
-                    </div>
-                </Card>
-
-                {/* 2. Main Turf Headquarters Card */}
-                <Card className="relative overflow-hidden min-h-[200px] sm:min-h-[250px] rounded-base border border-border/60 shadow-tactical-elevated group flex flex-col justify-between">
-                    <div className="relative aspect-[16/9] w-full">
-                        <Image 
-                            src="/nuevas/edificionuevo.jpg"
-                            alt="Vista de la sede principal"
-                            fill
-                            className="object-cover transition-transform duration-700 group-hover:scale-105"
-                            data-ai-hint="mafia building dark"
-                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        />
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/20" />
-
-                    {/* Top coordinate badge */}
-                    <div className="relative z-10 p-4 flex items-center justify-between flex-wrap gap-2">
-                        <span className="inline-flex items-center gap-1.5 text-[11px] font-mono text-zinc-200 bg-black/60 backdrop-blur-md border border-white/15 px-2 py-0.5 rounded whitespace-nowrap">
-                            <Building2 className="h-3 w-3 text-primary" />
-                            SEDE PRINCIPAL
-                        </span>
-                        {mainProperty && (
-                            <span className="text-[11px] font-mono text-red-400 bg-red-950/70 border border-red-900/50 px-2 py-0.5 rounded whitespace-nowrap">
-                                [{mainProperty.ciudad}:{mainProperty.barrio}:{mainProperty.edificio}]
-                            </span>
-                        )}
-                    </div>
-
-                    {/* Bottom property details & quick action */}
-                    <div className="relative z-10 p-4 flex items-end justify-between gap-2 flex-wrap">
-                        <div className="min-w-0">
-                            <p className="text-xs sm:text-base text-zinc-400 uppercase font-mono tracking-wider">
-                                Cuartel General
-                            </p>
-                            <h3 className="text-xl font-bold font-heading tracking-wide text-white uppercase truncate">
-                                {mainProperty?.nombre || "Propiedad Principal"}
-                            </h3>
-                        </div>
-                        {mainProperty && (
-                            <Button 
-                                asChild 
-                                size="sm" 
-                                variant="outline" 
-                                className="bg-black/60 backdrop-blur-md border-white/20 hover:bg-white/10 text-white text-xs sm:text-base h-10 px-3 btn-tactical-press min-h-[44px] flex-shrink-0"
-                            >
-                                <Link href={`/rooms/${mainProperty.ciudad}:${mainProperty.barrio}:${mainProperty.edificio}`}>
-                                    Entrar
-                                    <ChevronRight className="h-3.5 w-3.5 ml-1" />
-                                </Link>
-                            </Button>
-                        )}
-                    </div>
-                </Card>
-
-                {/* 3. Syndicate / Family Card */}
-                <Card className="rounded-base border border-border/60 bg-card/80 shadow-tactical flex flex-col justify-between p-4 min-h-[200px] sm:min-h-[250px]">
-                    <div>
-                        <div className="flex items-center justify-between gap-2 pb-3 border-b border-border/40">
-                            <span className="text-[11px] font-mono font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-1.5">
-                                <Users2 className="h-3.5 w-3.5 text-accent" />
-                                SINDICATO CLANDESTINO
-                            </span>
-                            <Badge 
-                                variant="outline" 
-                                className={`text-[10px] font-mono uppercase ${
-                                    familyMember 
-                                        ? 'border-accent/40 text-accent bg-accent/10' 
-                                        : 'border-zinc-700 text-zinc-400'
-                                }`}
-                            >
-                                {familyMember ? 'AFILIADO' : 'INDEPENDIENTE'}
-                            </Badge>
-                        </div>
-
-                        <div className="mt-3 flex flex-col items-center text-center">
-                            {familyMember ? (
-                                <>
-                                    <Avatar className="h-14 w-14 border-2 border-accent ring-2 ring-accent/20 shadow-md mb-2">
-                                        <AvatarImage src={familyMember.family.avatarUrl || ''} alt={familyMember.family.name} data-ai-hint="family crest" />
-                                        <AvatarFallback className="bg-surface-elevated text-accent font-heading text-lg">
-                                            {familyMember.family.tag}
-                                        </AvatarFallback>
-                                    </Avatar>
-                                    <h4 className="text-xl font-bold font-heading tracking-widest text-zinc-100">
-                                        {familyMember.family.name}
-                                    </h4>
-                                    <div className="flex items-center gap-2 mt-1 flex-wrap justify-center">
-                                        <Badge variant="secondary" className="font-mono text-[11px] px-2 py-0 border border-white/10">
-                                            [{familyMember.family.tag}]
-                                        </Badge>
-                                        <span className="text-xs sm:text-base text-muted-foreground font-mono">
-                                            Rol: <span className="text-zinc-200">{familyMember.role}</span>
-                                        </span>
-                                    </div>
-                                </>
-                            ) : (
-                                <>
-                                    <div className="h-12 w-12 rounded-full bg-surface-elevated border border-border flex items-center justify-center text-muted-foreground mb-2">
-                                        <Users2 className="h-6 w-6" />
-                                    </div>
-                                    <p className="text-base font-bold font-heading text-zinc-200">
-                                        Sin Familia Asignada
-                                    </p>
-                                    <p className="text-xs sm:text-base text-muted-foreground mt-0.5 max-w-[200px]">
-                                        Únete a un clan para protección territorial y bonificaciones.
-                                    </p>
-                                </>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="pt-3 border-t border-border/40 mt-3">
-                        <Button 
-                            asChild 
-                            variant="outline" 
-                            size="sm" 
-                            className="w-full text-xs sm:text-base h-10 bg-surface-elevated/80 hover:bg-surface-overlay border-border/80 text-zinc-200 btn-tactical-press min-h-[44px]"
-                        >
-                            <Link href="/family">
-                                {familyMember ? 'Cuartel de Familia' : 'Buscar o Fundar Familia'}
-                                <ChevronRight className="h-3.5 w-3.5 ml-1" />
-                            </Link>
-                        </Button>
-                    </div>
-                </Card>
-            </div>
-
-            {/* City News Ticker */}
-            <ErrorBoundary fallback={<DashboardSectionErrorFallback title="Teletipo de la Ciudad" />}>
-                <CityNewsCard />
-            </ErrorBoundary>
-
-            {/* Live Operational Queues */}
-            <ErrorBoundary fallback={<DashboardSectionErrorFallback title="Colas Operativas" />}>
-                <QueueStatusCard user={user} allRooms={simpleRoomConfigs} />
-            </ErrorBoundary>
-
-            {/* Recent Activity Ledger */}
-            <ErrorBoundary fallback={<DashboardSectionErrorFallback title="Historial de Actividad" />}>
-                <ActivityHistoryCard activities={activities} />
-            </ErrorBoundary>
-
-            {/* Syndicate Empire Ledger (Bottom Stats Bar - Real Data) */}
-            <Card className="rounded-base border border-border/60 bg-card/80 shadow-tactical">
-                <CardContent className="p-3.5">
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 items-center">
-                        <div className="text-center p-2 sm:py-1">
-                            <p className="text-[10px] sm:text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
-                                Puntos Totales
-                            </p>
-                            <p className="font-bold font-mono tabular-nums text-lg sm:text-xl text-accent">
-                                {formatPoints(puntosTotales)}
-                            </p>
-                        </div>
-                        <Separator orientation="vertical" className="h-10 mx-auto hidden sm:block bg-border/60" />
-                        <div className="text-center p-2 sm:py-1">
-                            <p className="text-[10px] sm:text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
-                                Habitaciones
-                            </p>
-                            <p className="font-bold font-mono tabular-nums text-lg sm:text-xl text-zinc-100">
-                                {formatPoints(puntuacion?.puntosHabitaciones)}
-                            </p>
-                        </div>
-                        <Separator orientation="vertical" className="h-10 mx-auto hidden sm:block bg-border/60" />
-                        <div className="text-center p-2 sm:py-1">
-                            <p className="text-[10px] sm:text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
-                                Tropas
-                            </p>
-                            <p className="font-bold font-mono tabular-nums text-lg sm:text-xl text-zinc-100">
-                                {formatPoints(puntuacion?.puntosTropas)}
-                            </p>
-                        </div>
-                        <Separator orientation="vertical" className="h-10 mx-auto hidden sm:block bg-border/60" />
-                        <div className="text-center p-2 sm:py-1">
-                            <p className="text-[10px] sm:text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
-                                Entrenamientos
-                            </p>
-                            <p className="font-bold font-mono tabular-nums text-lg sm:text-xl text-zinc-100">
-                                {formatPoints(puntuacion?.puntosEntrenamientos)}
-                            </p>
-                        </div>
-                        <Separator orientation="vertical" className="h-10 mx-auto hidden sm:block bg-border/60" />
-                        <div className="text-center p-2 sm:py-1">
-                            <p className="text-[10px] sm:text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
-                                Territorios
-                            </p>
-                            <p className="font-bold font-mono tabular-nums text-lg sm:text-xl text-zinc-100">
-                                {user.propiedades.length}
-                            </p>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
-        </div>
+      <div className="p-8 text-center text-[#a0a0a0] font-mono">
+        Usuario no encontrado o sesión expirada.
+      </div>
     );
+  }
+
+  const { puntuacion, familyMember } = user;
+  const [allRoomConfigs, activities] = await Promise.all([
+    getRoomConfigurations(),
+    getUserActivityHistory(user.id)
+  ]);
+  const simpleRoomConfigs = allRoomConfigs.map(r => ({ id: r.id, nombre: r.nombre }));
+  const unreadMessages = user._count?.receivedMessages || 0;
+
+  const puntosTotales = (puntuacion?.puntosHabitaciones || 0) + 
+                        (puntuacion?.puntosTropas || 0) + 
+                        (puntuacion?.puntosEntrenamientos || 0);
+
+  const mainProperty = user.propiedades[0];
+
+  return (
+    <div className="flex-grow space-y-2 w-full">
+      {/* Sticky Resource Bar */}
+      <ResourceBar user={user} />
+
+      {/* 1. CUARTEL GENERAL / COMMAND CABIN */}
+      <section className="cell-darker p-2 border border-[#333333]">
+        <div className="crimson-th text-white px-2 py-1 flex items-center justify-between font-['Space_Grotesk'] font-bold text-[11px] uppercase tracking-wider mb-2">
+          <div className="flex items-center gap-1.5">
+            <MaterialIcon name="military_tech" size={15} className="text-[#fff400]" />
+            <span>CUARTEL GENERAL // VISIÓN DE OPERACIONES</span>
+          </div>
+          <Button asChild className="btn-tactical text-[#fff400] hover:text-white text-[10px] px-2 py-0.5 uppercase tracking-wider min-h-[36px] h-auto">
+            <Link href="/map" className="flex items-center gap-1">
+              <MaterialIcon name="public" size={12} />
+              <span className="hidden sm:inline">VISIÓN GLOBAL DEL IMPERIO</span>
+            </Link>
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+          {/* Jugador & Rango */}
+          <div className="cell-dark p-2 flex items-center gap-2.5">
+            <div className="relative w-12 h-12 shrink-0 border border-[#444444] bg-black overflow-hidden shadow-inner">
+              <Avatar className="w-full h-full rounded-none">
+                <AvatarImage src={user.avatarUrl || ''} alt={user.name} className="object-cover" />
+                <AvatarFallback className="bg-black text-[#fff400] font-['Space_Grotesk'] text-lg font-bold rounded-none">
+                  {user.name?.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#00ff00] border border-black" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="text-[9px] text-[#888888] font-['Space_Mono'] uppercase">
+                {user.title || "CAPORÉGIME"}
+              </div>
+              <div className="text-[14px] font-bold text-[#fff400] truncate font-['Space_Grotesk']">
+                {user.name}
+              </div>
+              <div className="text-[10px] text-[#00ff00] font-['Space_Mono'] truncate">
+                ID: #{user.id.slice(0, 6)} • ACTIVO
+              </div>
+            </div>
+          </div>
+
+          {/* Base Matriz */}
+          <div className="cell-dark p-2 flex items-center gap-2.5">
+            <div className="relative w-12 h-12 shrink-0 border border-[#444444] bg-black overflow-hidden shadow-inner">
+              <img
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3NA-NDL9KcSmY0sNt8GJ_SpKcPFCC2ARvkyhs0dCEn8wzdqP2Koba6gTHFnxsdXg-6Jp3m8C7szE6-5A45UXMcmqIZv9sgBOMXg1uxPN4KMkkRIcDu450di2uIt4umbq41RTokQgT53G07BYn3XzfG2aCnlgHg0zjrCaR_u4vLOnypYs0XaYNfkqatwjrrmazJG3B6Y4hldnYltODccQO6GkivB1mZ5GZJCSIdYEhN2-Jv5O0F9rGmyKSGPmcYgtR2zw"
+                alt="Base Matriz"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="text-[9px] text-[#888888] font-['Space_Mono'] uppercase">
+                BASE MATRIZ
+              </div>
+              <div className="text-[14px] font-bold text-white truncate font-['Space_Grotesk']">
+                {mainProperty?.nombre || "Sector 09"}
+              </div>
+              <div className="text-[10px] text-[#fabd00] font-['Space_Mono']">
+                COORD: {mainProperty ? `${mainProperty.ciudad}:${mainProperty.barrio}:${mainProperty.edificio}` : "40:23:220"}
+              </div>
+            </div>
+          </div>
+
+          {/* Familia Sindicato */}
+          <div className="cell-dark p-2 flex items-center justify-between gap-2.5 sm:col-span-2 lg:col-span-1">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-12 h-12 shrink-0 border border-[#444444] bg-[#0c1424] flex items-center justify-center text-[#fabd00]">
+                <MaterialIcon name="shield" size={26} />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[9px] text-[#888888] font-['Space_Mono'] uppercase">
+                  FAMILIA SINDICATO
+                </div>
+                <div className="text-[14px] font-bold text-white truncate font-['Space_Grotesk']">
+                  {familyMember ? familyMember.family.name : "ArGenTeaM"}
+                </div>
+                <div className="text-[10px] text-[#ff3f3f] font-['Space_Mono'] font-bold">
+                  {familyMember ? `[${familyMember.family.tag}] • ${familyMember.role}` : "[ArGt] • Rango #3"}
+                </div>
+              </div>
+            </div>
+            <ActionIcons unreadMessages={unreadMessages} />
+          </div>
+        </div>
+
+        {/* Accesos rápidos tácticos */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 mt-2">
+          <Link href="/messages" className="btn-tactical p-2 flex items-center justify-between min-h-[44px]">
+            <div className="flex items-center gap-1.5">
+              <MaterialIcon name="mail" size={16} className="text-[#fabd00]" />
+              <span className="text-[11px] font-bold uppercase tracking-wider">MENSAJES</span>
+            </div>
+            <span className="bg-[#ff0000] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-sm font-['Space_Mono']">
+              {unreadMessages}
+            </span>
+          </Link>
+          <Link href="/messages?categoria=INFORMES" className="btn-tactical p-2 flex items-center justify-between min-h-[44px]">
+            <div className="flex items-center gap-1.5">
+              <MaterialIcon name="description" size={16} className="text-[#dfdbc9]" />
+              <span className="text-[11px] font-bold uppercase tracking-wider">INFORMES</span>
+            </div>
+            <span className="bg-[#282828] border border-[#444444] text-[#fabd00] text-[9px] font-bold px-1.5 py-0.5 rounded-sm font-['Space_Mono']">
+              99+
+            </span>
+          </Link>
+          <Link href="/missions" className="btn-tactical p-2 flex items-center justify-between min-h-[44px]">
+            <div className="flex items-center gap-1.5">
+              <MaterialIcon name="sync_alt" size={16} className="text-[#00ff00]" />
+              <span className="text-[11px] font-bold uppercase tracking-wider">FLOTAS</span>
+            </div>
+            <span className="bg-[#003800] border border-[#00c000] text-[#00ff00] text-[9px] font-bold px-1.5 py-0.5 rounded-sm font-['Space_Mono']">
+              12
+            </span>
+          </Link>
+          <Link href="/simulator" className="btn-tactical p-2 flex items-center justify-between min-h-[44px]">
+            <div className="flex items-center gap-1.5">
+              <MaterialIcon name="swords" size={16} className="text-[#ff3f3f]" />
+              <span className="text-[11px] font-bold uppercase tracking-wider">COMBATES</span>
+            </div>
+            <span className="bg-[#4d0000] border border-[#ff3f3f] text-[#ffdad4] text-[9px] font-bold px-1.5 py-0.5 rounded-sm font-['Space_Mono']">
+              SIM
+            </span>
+          </Link>
+        </div>
+      </section>
+
+      {/* City News Ticker */}
+      <ErrorBoundary fallback={<DashboardSectionErrorFallback title="Teletipo de la Ciudad" />}>
+        <CityNewsCard />
+      </ErrorBoundary>
+
+      {/* Live Operational Queues */}
+      <ErrorBoundary fallback={<DashboardSectionErrorFallback title="Colas Operativas" />}>
+        <QueueStatusCard user={user} allRooms={simpleRoomConfigs} />
+      </ErrorBoundary>
+
+      {/* Recent Activity Ledger */}
+      <ErrorBoundary fallback={<DashboardSectionErrorFallback title="Historial de Actividad" />}>
+        <ActivityHistoryCard activities={activities} />
+      </ErrorBoundary>
+
+      {/* Estadísticas de Puntuación */}
+      <section className="cell-darker p-2 border border-[#333333]">
+        <div className="crimson-th text-white px-2 py-0.5 flex justify-between items-center text-[10px] font-['Space_Grotesk'] font-bold uppercase mb-1.5">
+          <span className="flex items-center gap-1">
+            <MaterialIcon name="leaderboard" size={13} className="text-[#fff400]" />
+            ESTADÍSTICAS & LEALTAD
+          </span>
+          <span className="text-[#fabd00] font-['Space_Mono']">ACTUALIZADO</span>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1.5 font-['Space_Mono'] text-[10px]">
+          <div className="flex justify-between items-center cell-dark px-2 py-1.5">
+            <span className="text-[#888888]">HABITACIONES:</span>
+            <span className="text-white font-bold tabular-nums">{formatPoints(puntuacion?.puntosHabitaciones)}</span>
+          </div>
+          <div className="flex justify-between items-center cell-dark px-2 py-1.5">
+            <span className="text-[#888888]">TROPAS:</span>
+            <span className="text-[#ff3f3f] font-bold tabular-nums">{formatPoints(puntuacion?.puntosTropas)}</span>
+          </div>
+          <div className="flex justify-between items-center cell-dark px-2 py-1.5">
+            <span className="text-[#888888]">ENTRENAMIENTO:</span>
+            <span className="text-white font-bold tabular-nums">{formatPoints(puntuacion?.puntosEntrenamientos)}</span>
+          </div>
+          <div className="flex justify-between items-center bg-[#1f1616] border border-[#6C0000] px-2 py-1.5">
+            <span className="text-[#fabd00] font-bold font-['Space_Grotesk'] uppercase">TOTAL:</span>
+            <span className="text-[#fff400] font-bold text-[12px] tabular-nums">{formatPoints(puntosTotales)} pts</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
 }

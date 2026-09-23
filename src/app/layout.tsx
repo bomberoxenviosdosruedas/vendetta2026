@@ -1,24 +1,24 @@
-import type {Metadata, Viewport} from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
-import { Roboto, Bebas_Neue as BebasNeue, Roboto_Mono as RobotoMono } from 'next/font/google';
+import { Work_Sans as WorkSans, Space_Grotesk as SpaceGrotesk, Space_Mono as SpaceMono } from 'next/font/google';
 
-const roboto = Roboto({
-  subsets: ['latin'],
-  weight: ['400', '500', '700'],
-  variable: '--font-roboto',
-});
-
-const bebas_neue = BebasNeue({
-  subsets: ['latin'],
-  weight: '400',
-  variable: '--font-bebas-neue',
-});
-
-const roboto_mono = RobotoMono({
+const workSans = WorkSans({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
-  variable: '--font-mono',
+  variable: '--font-work-sans',
+});
+
+const spaceGrotesk = SpaceGrotesk({
+  subsets: ['latin'],
+  weight: ['500', '700'],
+  variable: '--font-space-grotesk',
+});
+
+const spaceMono = SpaceMono({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-space-mono',
 });
 
 const APP_NAME = "Vendetta";
@@ -54,13 +54,13 @@ export const metadata: Metadata = {
     url: new URL(APP_URL),
     locale: "es_ES",
     images: [
-        {
-          url: `${APP_URL}/icons/og-image.png`,
-          width: 1200,
-          height: 630,
-          alt: "Banner de Vendetta, un juego de estrategia de mafia.",
-          type: "image/png",
-        },
+      {
+        url: `${APP_URL}/icons/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: "Banner de Vendetta, un juego de estrategia de mafia.",
+        type: "image/png",
+      },
     ],
   },
   twitter: {
@@ -71,11 +71,11 @@ export const metadata: Metadata = {
     },
     description: APP_DESCRIPTION,
     images: [
-        {
-          url: `${APP_URL}/icons/og-image.png`,
-          alt: "Banner de Vendetta, un juego de estrategia de mafia.",
-        },
-      ],
+      {
+        url: `${APP_URL}/icons/og-image.png`,
+        alt: "Banner de Vendetta, un juego de estrategia de mafia.",
+      },
+    ],
   },
   keywords: ["vendetta", "mafia", "estrategia", "juego online", "gestión de recursos", "juego de navegador"],
   authors: [{ name: "Vendetta Team" }],
@@ -89,7 +89,6 @@ export const viewport: Viewport = {
   colorScheme: "dark",
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -97,7 +96,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className="dark">
-      <body className={`${roboto.variable} ${bebas_neue.variable} ${roboto_mono.variable} font-sans antialiased bg-background`}>
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+        />
+      </head>
+      <body className={`${workSans.variable} ${spaceGrotesk.variable} ${spaceMono.variable} font-sans antialiased bg-background`}>
         {children}
         <Toaster />
       </body>

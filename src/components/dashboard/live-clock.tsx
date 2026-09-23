@@ -1,32 +1,34 @@
-
-"use client"
+"use client";
 
 import { useState, useEffect } from 'react';
-import { Clock } from 'lucide-react';
 
 export function LiveClock() {
-    const [currentTime, setCurrentTime] = useState('');
+  const [currentTime, setCurrentTime] = useState('');
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            const now = new Date();
-            const timeZone = 'Africa/Nouakchott';
-            const date = now.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit', timeZone });
-            const time = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone, hour12: false });
-            setCurrentTime(`${date}, ${time}`);
-        }, 1000);
+  useEffect(() => {
+    const updateClock = () => {
+      const now = new Date();
+      const d = String(now.getDate()).padStart(2, '0');
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const y = now.getFullYear();
+      const h = String(now.getHours()).padStart(2, '0');
+      const min = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      setCurrentTime(`${d}-${m}-${y} ${h}:${min}:${s}`);
+    };
 
-        return () => clearInterval(timer);
-    }, []);
+    updateClock();
+    const timer = setInterval(updateClock, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
-    if (!currentTime) {
-        return null;
-    }
+  if (!currentTime) {
+    return <span className="text-[#fff400] font-bold font-['Space_Mono']">--:--:--</span>;
+  }
 
-    return (
-        <div className="hidden items-center gap-2 rounded-md bg-black/50 px-3 py-1 text-sm font-medium text-white lg:flex">
-            <Clock className="h-4 w-4 text-primary" />
-            <span className="tabular-nums">{currentTime}</span>
-        </div>
-    );
+  return (
+    <span className="text-[#fff400] font-bold font-['Space_Mono'] tabular-nums">
+      {currentTime}
+    </span>
+  );
 }
