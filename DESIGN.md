@@ -1,193 +1,287 @@
-# Design System: Vendetta Syndicate Noir
+# Design System: Vendetta — Retro Syndicate Ops (RTS Tactical Cockpit)
+
+> Fuente de verdad visual: `docs/ejemplo.html` (vendetta 2X — Syndicate Wars retro 2004).
+> Este documento reemplaza la versión anterior y **incorpora los ajustes de la design critique**:
+> breakpoints móviles corregidos, tipografía mínima 14px, touch targets ≥44px, contraste verificado,
+> radios/sombras unificados y reglas de colapso mobile-first.
+
+---
+
+## Configuration — Style Dials
+
+| Dial | Level | Description |
+|------|-------|-------------|
+| **Creativity** | `7` | Retro fiel a 2004, sin modernizarlo a SaaS. Tipografía display fuerte, texturas borderline pixel-art, 1px borders duros |
+| **Density** | `8–9` | Cockpit Dense — HUD táctico de operaciones: muchas lecturas por pantalla, mono labels diminutas, datos en tablas |
+| **Variance** | `6–7` | Columna de juego centrada (máx. 910px) con side-rails texturizados; asimetría del layout de comando izquierdo (165px) |
+| **Motion Intent** | `5–6` | Pulsos (`animate-pulse`) en estados vivos, `transition-colors 0.15s` en hovers, reloj 1s. Sin cinemática |
+
+---
 
 ## 1. Visual Theme & Atmosphere
-A high-stakes Mafia RTS tactical command interface ("Cockpit Dense", Variance: 6, Motion: 6, Density: 8). The visual mood is nocturnal, ruthless, and meticulously engineered: deep obsidian and charcoal layers accented by razor-sharp syndicate crimson (`#dc2626`) and warm cartel gold (`#eab308`). The atmosphere evokes an executive syndicate operations table illuminated by streetlamps and radar terminals—dark, tactile, disciplined, and free from consumer-app fluff or neon slop.
 
-**Atmosphere Scores:**
-- Density: 8 (Cockpit Dense) — High information density, tactical HUD feel
-- Variance: 6 (Offset Asymmetric) — Intentional asymmetry in hero/command sections
-- Motion: 6 (Fluid CSS) — Spring-physics micro-interactions, no cinematic choreography
+Operaciones nocturnas de un sindicato retro: pantalla de mando estilo *Vendetta / OGame* de 2004.
+Canvas negro `#080808`, columna de juego `#111111` centrada de **910px máx.**, nav lateral izquierda
+de 165px y side-rails de 53px (solo `lg`) con textura de fondo. Tipografía diminuta en mayúsculas,
+labels mono `[40:23:220]`, timers `00:00:07`, bordes duros de 1px (`#333333`), cabeceras con degradado
+granate `crimson-th`. La sensación: una sala de operaciones iluminada por terminales CRT, deliberadamente
+retro y densa — **nunca** un dashboard SaaS moderno.
+
+**Atmosphere Scores:** Density `8–9` (Cockpit Dense) · Variance `6–7` (Offset Asymmetric) · Motion `5–6` (Fluid CSS, micro-pulsos)
+
+---
 
 ## 2. Color Palette & Roles
-- **Obsidian Void** (`#09090C` / `240 10% 4.5%`) — Primary background foundation under everything; deep non-pure-black noir canvas.
-- **Charcoal Surface** (`#131317` / `240 8% 8.5%`) — Standard card, module, and container fill.
-- **Elevated Bunker** (`#1C1C23` / `240 7% 12%`) — Interactive surface, hover states, and active list items.
-- **Overlay Floating** (`#23232C` / `240 7% 15%`) — Floating modals, dropdowns, sticky tactical bars.
-- **Whisper Border** (`#272730` / `240 6% 16%`) — 1px structural containment lines with subtle opacity.
-- **Syndicate Crimson** (`#DC2626` / `0 72% 51%`) — Primary accent for critical CTA buttons, combat indicators, alerts, and offensive posture. **Max saturation: 72%**.
-- **Cartel Gold** (`#EAB308` / `45 93% 47%`) — Secondary prestige accent for family tags, ranking crowns, and high-tier achievements.
-- **Dirty Cash / Dollars** (`#10B981` / `160 84% 39%`) — Laundered cash economy metric.
-- **Gunpowder / Ammunition** (`#F59E0B` / `38 92% 50%`) — Munitions inventory metric.
-- **Bootleg Alcohol** (`#D97706` / `35 90% 44%`) — Contraband alcohol metric.
-- **Ballistics / Weapons** (`#EF4444` / `0 84% 60%`) — Armaments stockpile metric.
-- **Off-White Text** (`#F4F4F6` / `210 25% 96%`) — Primary typography, high legibility.
-- **Muted Zinc Text** (`#A1A1AA` / `215 16% 62%`) — Subtitles, coordinates, and metadata. **Verify contrast ≥ 4.5:1 on dark surfaces**.
-- **Vendetta Classic Burgundy** (`#6C0000`) — Authentic retro syndicate button and header background.
-- **Vendetta Classic Pink** (`#FFCCCC`) — Authentic retro cell text and indicator dots (`.dotF`, `.dotE`).
-- **Vendetta Classic Gold** (`#FFF400` / `#FFE569`) — Retro hover state and highlighted ranking accent.
 
-**Color Constraints:**
-- Maximum 1 primary accent (Syndicate Crimson). Secondary accent (Cartel Gold) for prestige only.
-- No purple/blue neon gradients. No oversaturated accents above 80% saturation.
-- Never use pure black (`#000000`) — use Obsidian Void or Charcoal Surface.
+### Superficies (layout master frame)
+| Rol | Hex | Uso |
+|-----|-----|-----|
+| **Canvas** | `#080808` | Fondo de página fuera de la columna de juego (`bg-[#080808]`) |
+| **Main Column** | `#111111` | Columna de juego `max-w-[910px]`, `border-x #333333` |
+| **Nav / Cell Panel** | `#0d0d0d` | `cell-darker`, nav de comando izquierda, paneles secundarios |
+| **Resource Bar** | `#0a0a0a` | Franja sticky de recursos (4 celdas de estado) |
+| **Side Rails** | `#000000` | Rails texturizados 53px (única excepción de negro puro: textura decorativa, solo `lg`) |
+
+### Bordes estructurales
+- `#333333` — bordes primarios (columna, celdas, header, inputs, tracks de progreso)
+- `#282828` — bordes secundarios / hover subtil
+- `#222222` — rails, dividers de tablas (`divide-[#222222]`)
+- 1px duro siempre. Nunca bordes "suaves" con blur.
+
+### Texto
+| Rol | Hex | Uso |
+|-----|-----|-----|
+| **Primary** | `#dfdbc9` | Texto principal (off-white cálido, NO blanco puro) |
+| **Hot / Highlight** | `#ffdad4` | Título cabecera, cantidades destacadas, hover texto |
+| **Muted (uppercase meta)** | `#a0a0a0` | Velocidad, reloj label, captions |
+| **Meta labels** | `#888888` | Labels mono de coordenadas, footnotes |
+| **Footer** | `#777777` | Línea de pie |
+
+### Acentos (semántica de juego)
+| Rol | Hex | Uso |
+|-----|-----|-----|
+| **Burgundy (activo)** | `#6C0000` | Nav activo, hover de celdas, headers `crimson-th`, primary `--primary` |
+| **Crimson (peligro/combate)** | `#ff3f3f` | ATAQUE, estados críticos, alcohol `[LLENO]`, cantidades en alerta |
+| **Pink (texto caliente)** | `#ffdad4` | Título cabecera, números destacados sobre fondo oscuro |
+| **Gold (jerarquía/live)** | `#fff400` | Reloj del servidor, coordenadas `40:23:220`, highlights de ranking |
+| **Amber (secundario)** | `#fabd00` | Stats secundarias, badges, `[#42]` id capo, mail/descripciones |
+| **Green (positivo/online)** | `#00ff00` | `+60.850/h`, velocidades, estado ONLINE/defensa, éxito |
+| **Orange (armas/porcentaje)** | `#ee7000` | % de capacidad de ARMAS y MUNICIÓN, iconos de amunición |
+| **Rojo alerta (full)** | `#93000a` | Border/estado de celda llena (alcohol `[LLENO]`) |
+| **Badge count rojo** | `#ff0000` | Contadores de notificación (pill) |
+| **Badge count verde** | `#003800` | Pills de estado positivo |
+
+### Degradados obligatorios (brand gradients)
+- **`crimson-th`** (sección header): `linear-gradient(180deg, #7a0000 0%, #4f0000 100%)`, border inferior `#8e1515`
+- **`btn-crimson`**: `linear-gradient(180deg, #8a0c0c 0%, #520000 100%)` → hover `#a61212 → #680000`
+- **`btn-tactical`**: `linear-gradient(180deg, #262626 0%, #151515 100%)` → hover `#363636 → #202020`
+- **Barras de progreso**: track `#000000` con `border #333333`; fill por color de recurso.
+
+### Contraste verificado (WCAG)
+| Par | Ratio | Estado |
+|-----|-------|--------|
+| `#dfdbc9` sobre `#111111` | ≈ 12.4:1 | ✅ AAA — texto primario |
+| `#a0a0a0` sobre `#111111` | ≈ 6.7:1 | ✅ AA — muted |
+| `#888888` sobre `#0d0d0d` | ≈ 5.6:1 | ✅ AA — meta labels |
+| `#ff3f3f` sobre `#111111` | ≈ 5.0:1 | ✅ AA — usar bold en tamaños <14px |
+| `#ee7000` sobre `#111111` | ≈ 5.7:1 | ✅ AA — cantidades/porcentajes |
+
+### Banned
+- Negro puro `#000000` como superficie de texto/celda (solo rails decorativos).
+- `Inter`, serif genéricas (`Times New Roman`, `Georgia`), gradientes "AI purple".
+- Acentos saturados >80% fuera de la paleta; mezcla de grises cálidos/fríos.
+
+---
 
 ## 3. Typography Rules
-- **Display / Headlines:** `Bebas Neue` (`var(--font-bebas-neue)`) / `Tahoma` — Track-wide, uppercase, assertive, cinematic mobster hierarchy. `letter-spacing: 0.03em`.
-- **Body / Interface:** `Tahoma`, `Arial`, `Helvetica`, `sans-serif` (base: **14px / 0.875rem minimum**, not 10pt) — Authentic Vendetta syndicate feel, high density readability. **Mobile-first: `sm:text-base` for critical text currently at `text-xs`**.
-- **Mono / Tactical HUD:** `Roboto Mono` (`var(--font-mono)`) — Tabular numbers for coordinates `[X:Y:Z]`, resource quantities, countdown timers, and statistics. Never use proportional digits for RTS data. **Enforced for all numbers at Density ≥ 7**.
-- **Banned:** `Inter`, generic serif fonts (`Times New Roman`, `Georgia`, `Garamond`, `Palatino`), pure black (`#000000`), neon purple gradients.
-- **Line Height:** Relaxed leading for body (1.6), tight for headlines (1.1).
-- **Max Line Width:** 65 characters for body text.
+
+> Migración objetivo desde la implementación actual (Roboto/Bebas Neue/Roboto Mono + Tahoma) hacia
+> el sistema auténtico de `ejemplo.html`. Ver §9 Implementation Sync.
+
+| Rol | Fuente | Reglas |
+|-----|--------|--------|
+| **Display / Headers** | `Space Grotesk` (500/700) | Títulos de sección, nav groups, badges principales. `uppercase tracking-wider`. Ej.: título header `VENDETTA 2X` a `18px bold` |
+| **Data / Timers / Coordenadas** | `Space Mono` | **TODOS** los números: `40:23:220`, `00:00:07`, `93.7%`, `+60.850/h`, reloj `31-08-2024 04:51:38`, cantidades de recursos. `tabular-nums` obligatorio |
+| **Body / UI** | `Work Sans` (400–700), fallback `Tahoma` (ya en `--font-sans`) | Botones, tablas, descripciones, tooltips |
+| **Iconos** | `Material Symbols Outlined` (fill vs outline para estados) | Tamaños 12–20px según jerarquía; iconos de acción 15px estándar |
+
+### Escala tipográfica canónica
+- **Base UI densa (desktop)**: `12px` (`text-[12px]` en `body`) — densidad retro intencional.
+- **Body crítico (móvil)**: mínimo **14px** (`text-sm` → `sm:text-base` en texto crítico). Regla de la critique: no `text-[10px]`/`text-[11px]` para contenido esencial.
+- **Mono metadata**: `9–13px` (`text-[9px]`..`text-[13px]`) — permitido solo para meta no crítica (coords, badges, labels).
+- **Headings**: `18px` header principal / `text-[11px] bold uppercase` labels de celda de recurso.
+- **Line height**: leading 1.6 body, 1.1 headers. Max line width 65ch.
+
+### Reglas
+- Mayúsculas + `tracking-wider` en todos los labels de sección y nav (`OPERACIONES`, `ARMAS`, `MUNICIÓN`).
+- Números SIEMPRE mono con `tabular-nums` (Density ≥ 7).
+- No `Inter`. No `Proportional digits` en datos de juego.
+
+---
 
 ## 4. Component Stylings
-- **Buttons:** Tactile feedback (`-1px translateY` on active, `scale 0.98`). Solid crimson or subtle border variants. No neon outer glows. **Minimum touch target: 44×44px including padding**.
-- **Cards:** Crisp 1px borders with `border-border/60`, subtle dark gradient fill (`from-card to-card/70`), soft ambient drop shadow. **Generously rounded corners: `rounded-xl` (0.75rem / 12px)**. Used only when elevation serves hierarchy. **High-density (mobile): replace with `border-t` dividers or negative space**.
-- **Badges / Status:** Compact, `rounded-md` with 1px border and semitransparent background.
-- **Loaders:** Skeletal shimmer matching exact layout dimensions; no generic circular spinners.
-- **Empty States:** Composed syndicate dossier cards with actionable CTA (e.g., "Sin Familia - Unirse o Crear").
-- **Images:** **Responsive by default** — `w-full h-auto object-cover` with relative constraints. **No fixed `w-20 h-16` dimensions**. Cards: `min-h-[200px] sm:min-h-[250px]`.
-- **Tables:** **Mobile stack** — convert to vertical card layout `< 768px`. Desktop: `font-size: 0.875rem` minimum, tabular-nums for data columns.
-- **Inputs/Forms:** Label above input, helper text optional, error text below. Standard gap spacing. Focus ring in Syndicate Crimson (`focus:ring-2 focus:ring-primary`).
 
-## 5. Layout Principles
-- **Grid-first responsive architecture** — CSS Grid over Flexbox math. Never use `calc()` percentage hacks.
-- **Mobile-first collapse:** All multi-column layouts collapse to single column **< 768px (sm breakpoint)**. No horizontal overflow.
-- **Hero/Command Header:** Asymmetric Split Screen or Left-Aligned. **Centered Hero layouts BANNED** when variance > 4.
-- **Feature rows:** **No 3-column equal card layouts**. Use 2-column Zig-Zag, asymmetric grid, or horizontal scroll.
-- **Containment:** `max-w-[1400px]` centered container with consistent padding (`padding: 2rem` desktop, `1.5rem` mobile).
-- **Full-height sections:** Use `min-h-[100dvh]` — **never `h-screen`** (iOS Safari catastrophic jump).
-- **Sticky Resource Bar:** Fixed top, backdrop blur, z-20, responsive grid collapse.
+### Paneles (`cell-dark` / `cell-darker`)
+- Borde 1px `#333333`, fondo `#111111` (`cell-dark`) o `#0d0d0d` (`cell-darker`), padding `p-1.5`.
+- Hover: `border-[#6C0000]` + `transition-colors`. Nunca glow.
 
-## 6. Responsive Breakpoints (Tailwind Config)
-```typescript
-// tailwind.config.ts - REQUIRED ADDITIONS
-screens: {
-  sm: '640px',    // Mobile landscape / small tablet
-  md: '768px',    // Tablet portrait
-  lg: '1024px',   // Desktop
-  xl: '1280px',   // Large desktop
-  '2xl': '1400px', // Ultra-wide
-}
+### Section headers (`crimson-th`)
+- `<th>` / headers de sección con degradado `#7a0000 → #4f0000`, border `#8e1515`, texto `#ffdad4`/blanco, mono small uppercase.
+
+### Botones
+- **`btn-tactical`**: degradado `#262626 → #151515`, hover `#363636 → #202020`. Botón neutro/estándar.
+- **`btn-crimson`**: degradado `#8a0c0c → #520000`, hover `#a61212 → #680000`. Acción primaria/destructiva.
+- **Táctil**: `:active` → `scale(0.98) translateY(1px)`, `filter: brightness(0.92)` (`btn-tactical-press`).
+- **Touch targets: mínimo `44×44px`** (`min-h-[44px] min-w-[44px]`).
+- Icon buttons: `w-5 h-5` internamente pero con área de tap ≥44px.
+
+### Tablas
+- Filas con `divide-[#222222]`, hover fila `bg-[#1f1f1f]`, headers `crimson-th`.
+- Datos numéricos en `Space Mono`, animación `fade-in-up` por fila (stagger).
+
+### Barras de progreso
+- Track: `bg-[#000000] h-1.5 border border-[#333333] overflow-hidden`.
+- Fill por recurso (armas rojo, munición ámbar, alcohol naranja→`#93000a` al lleno, dólares verde).
+- Estado `[LLENO] 100%`: texto `#ff3f3f` + `animate-pulse` + border `#93000a`.
+
+### Pills / Badges
+- Contador de notificación: pill `#ff0000` (rojo puro) sobre icono; pill de estado positivo `#003800`.
+- `rounded` mínimo, mono, `tracking-wider` (ej. badge `V2` `#fabd00` border `#ffc107/40`).
+
+### Cards / Celdas de recursos
+- Celdas `cell-dark` apiladas en grid; hover `border-[#6C0000]`.
+- Radios **unificados** (ya en `globals.css`): `base=8px` (cards), `md=6px` (botones/inputs), `sm=4px` (badges), `xl=12px` (modals). Prohibido radio arbitrario.
+
+### Sombras
+- `--shadow-base`, `--shadow-tactical` (cards), `--shadow-tactical-elevated` (modals). `--shadow-glow-crimson/gold` SOLO para trofeos/highlights de ranking, nunca en botones.
+
+### Loaders
+- Skeleton shimmer (`animate-shimmer 1.5s`) con dimensiones exactas del layout. **Prohibido spinner circular.**
+
+---
+
+## 5. Layout Principles (Master Frame)
+
 ```
-**Mobile-First Rules:**
-- **< 640px (base):** Single column, stacked cards, full-width buttons
-- **sm (≥ 640px):** 2-column grids for resource bars, dashboard widgets
-- **md (≥ 768px):** 3-column command header, sidebar navigation visible
-- **lg (≥ 1024px):** Full tactical layout, 4-column resource bar
-- **xl (≥ 1280px):** Expanded whitespace, side panels
+┌────────────────────────────────────────────────────────────┐
+│ page #080808   [rail 53px]  [game column 910px #111111] [rail] │
+│                              max-w-[910px] border-x #333333   │
+│   ┌───────┐  ┌──────────────────────────────────────────┐    │
+│   │ HEADER │  │ h-11 fixed — VENDETTA 2X • RELOJ • CAPO │    │
+│   └───────┘  └──────────────────────────────────────────┘    │
+│   ┌──────┐   ┌──────────────────────────────────────────┐    │
+│   │RESOURCE│ │ bg #0a0a0a — ARMAS MUNICIÓN ALCOHOL DÓLARES│   │
+│   └──────┘   └──────────────────────────────────────────┘    │
+│   ┌─nav 165px─┐ ┌─────────── main panel ────────────────┐   │
+│   │ bg #0d0d0d│ │ secciones apiladas (cell-dark)         │   │
+│   │ border-r  │ │ grids 1→2→3 col responsive             │   │
+└───────────┴──────────────────────────────────────────┘
+```
+
+- **Grid-first**: CSS Grid para todo layout estructural. Sin `calc(33% - …)`, sin flex-math.
+- **Columna de juego**: `max-w-[910px]` centrada, `border-x #333333`, `bg #111111`, `min-h-[100dvh]`.
+- **Side rails**: `w-[53px]` texturizados, `hidden lg:block` (decorativos, `pointer-events-none`).
+- **Header táctico**: `h-11` fijo, marcas mono `VELOCIDAD: x2 TICK` (`#00ff00`), `RELOJ:` (`#fff400`), `CAPO: [id]`.
+- **Nav de comando**: `w-[165px]` desde `sm`; en móvil (<sm) se apila a ancho completo — AJUSTE critique.
+- **ResourceBar**: grid `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4` — **AJUSTE critique** (antes rompía en <640px).
+- **Overview header**: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3` — **AJUSTE critique**.
+- **Contenedores**: `border-[#333333]` 1px, padding módulo `p-1.5`, gaps estándar `gap-1.5/3`.
+- **Full-height**: `min-h-[100dvh]`, nunca `h-screen`.
+
+---
+
+## 6. Responsive Rules
+
+**Responsive es requisito duro** — probar en: `375px` (SE), `390px` (iPhone 14), `768px` (iPad), `1024px`, `1440px`.
+
+| Breakpoint | Comportamiento |
+|------------|----------------|
+| `<640px` (base) | 1 columna estricta. Nav 165px → apilada full-width. ResourceBar `grid-cols-1`. Header comandos se colapsa a bloques |
+| `sm ≥640px` | ResourceBar 2 columnas; nav lateral visible (165px); tabs/accordion de sección |
+| `md ≥768px` | ResourceBar 2→4; filas de 2 en grids; dialogs amplían a grid interno |
+| `lg ≥1024px` | ResourceBar `grid-cols-4`; side rails 53px aparecen; layout maestro completo |
+| `xl ≥1280px` | Sin cambios estructurales — sólo respiración |
+
+### Ajustes obligatorios de la critique
+1. **ResourceBar**: `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3` — nunca columna horizontal overflow.
+2. **Overview header**: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`.
+3. **Tipografía móvil**: texto crítico en `text-xs` pasa a `text-xs sm:text-base` (`14px` min). No `text-[10px]` para contenido esencial.
+4. **Mapa móvil**: vista *lista* de coordenadas cercanas `<640px` (grid de botones) en lugar del canvas de 900px+.
+5. **QueueStatusCard**: en móvil las 4 secciones (Misiones/Construcción/Reclutamiento/Entrenamiento) colapsan en **Accordion**; solo Misiones expandida por defecto.
+6. **Dialogs (rooms/recruitment/tech)**: grids internos `md:grid-cols-12` → `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-12`.
+7. **Touch targets**: todo elemento interactivo `≥44×44px`.
+8. **Imágenes**: `w-full h-auto object-cover`, nunca `w-20 h-16` fijas. Cards `min-h-[200px] sm:min-h-[250px]`.
+9. **Tablas móvil**: stack a cards verticales `<768px`; datos mono 14px mínimo.
+
+---
 
 ## 7. Motion & Interaction
-- **Spring Physics Default:** `stiffness: 100, damping: 20` — premium, weighty feel. No linear easing.
-- **wz_tooltip animations:** 100ms ultra-fast cubic-bezier fade-in (`wz-fade-in`: `cubic-bezier(0.16, 1, 0.3, 1)`) and fade-out with shadow offset.
-- **Tactile feedback:** `btn-tactical-press` — `transform: scale(0.98) translateY(1px)`, `filter: brightness(0.92)` on `:active`.
-- **Perpetual Micro-Loops:** Active dashboard components (countdown bars, live tickers) use `pulse-subtle` (2s ease-in-out infinite) or `shimmer` (1.5s infinite).
-- **Staggered Orchestration:** Cascade delays for waterfall reveals — `delay-75`, `delay-150`, `delay-225` for list items.
-- **Performance:** Animate exclusively via `transform` and `opacity`. Never animate `top`, `left`, `width`, `height`.
-- **prefers-reduced-motion:** **ALL animations respect `@media (prefers-reduced-motion: reduce)`** — disable `wz-fade-in`, `glow-crimson` infinite, `pulse-subtle`, `shimmer`.
 
-```css
-@media (prefers-reduced-motion: reduce) {
-  .wz-tooltip { animation: none; opacity: 1; transform: none; }
-  .animate-glow-crimson,
-  .animate-pulse-subtle,
-  .animate-shimmer { animation: none; }
-}
-```
+- **Pulso perpetuo**: `animate-pulse` (2s) en puntos de estado vivo y barras `[LLENO]`/alertas.
+- **Hover de celda**: `transition-colors 0.15s` + `border-[#6C0000]`.
+- **Presión táctil**: `scale(0.98) translateY(1px)` en `:active` (`btn-tactical-press`, transición 0.08s).
+- **Reloj vivo**: tick 1s (`setInterval`) mostrando hora del servidor en `#fff400` mono.
+- **Entrada de filas**: `fade-in-up` 0.3s con stagger `delay-75/150/225`.
+- **Shimmer**: loaders skeleton `1.5s infinite`.
+- **Hardware**: animar SOLO `transform` y `opacity`. Nunca `top/left/width/height`.
+- **`prefers-reduced-motion: reduce`**: desactivar `animate-pulse`, `animate-shimmer`, `glow-*`, tooltips fades. (Guard existente en `globals.css`.)
 
-## 8. Border Radius Convention
-**Unified Radius System** — Single source of truth in `tailwind.config.ts`:
-```typescript
-borderRadius: {
-  lg: 'var(--radius)',        // 0.5rem / 8px — Cards, modals
-  md: 'calc(var(--radius) - 2px)', // 0.375rem / 6px — Buttons, badges, inputs
-  sm: 'calc(var(--radius) - 4px)', // 0.25rem / 4px — Small badges, dots
-  xl: 'calc(var(--radius) + 4px)', // 0.75rem / 12px — Hero cards, featured panels
-}
-```
-**Usage:** Use semantic tokens (`rounded-lg`, `rounded-md`, `rounded-sm`, `rounded-xl`) — **never arbitrary `rounded-[value]` or mixed `rounded-md` vs `calc()`**.
+---
 
-## 9. Component-Specific Responsive Fixes (Priority Recommendations)
+## 8. Anti-Patterns (Banned)
 
-### 🔴 CRITICAL: overview-view.tsx — Tactical Command Header Grid
-```tsx
-// BEFORE (broken mobile):
-<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+- Emojis en cualquier parte de la UI.
+- Inter o serif genéricas.
+- Negro puro `#000000` en superficies de contenido (solo rails decorativos).
+- Gradientes/neones "AI purple"; glows en botones.
+- Layout de 3 columnas iguales para features.
+- Hero centrado (variance ≥6).
+- `h-screen` — usar `min-h-[100dvh]`.
+- Spinners circulares — skeleton shimmer.
+- Texto filler ("Scroll para explorar", chevrons rebotando).
+- Nombres genéricos ("John Doe", "Acme", "Nexus").
+- **Números fabricados/estadísticas inventadas** — datos del juego reales o placeholders `[metric]`. Las cantidades en `ejemplo.html` son ilustrativas; el producto renderiza datos vivos.
+- `LABEL // YEAR`. **Excepción auténtica**: el ejemplo usa `CUARTEL GENERAL // VISIÓN DE OPERACIONES` como recurso retro deliberado del *layout de ejemplo*; prohibido fuera de ese patrón de cabecera de ejemplo.
+- Clichés de copy AI ("Elevate", "Seamless", "Unleash").
+- Ratios de contraste < AA para texto esencial (usar tabla de §2).
+- Radios/sombras arbitrarios fuera del sistema unificado.
 
-// AFTER (fixed):
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-```
-**Impact:** Fixes header táctico principal disposition on mobile. Cards stack 1→2→3 columns.
+---
 
-### 🟡 HIGH: Typography Mobile Scaling
-```css
-/* globals.css - UPDATE base font-size */
-html { font-size: 14px; } /* was 10pt ≈ 13.3px */
+## 9. Implementation Sync Status
 
-/* Components: apply sm:text-base to critical text-xs text */
-<span className="text-xs sm:text-base font-mono ..."> /* metadata, coordinates */
-```
+### Ya alineado en código (`globals.css` / `tailwind.config.ts`)
+| Token real | Valor | Coincide con |
+|-----------|-------|--------------|
+| `--background` | `0 0% 6.7%` → `#111111` | ✅ main column |
+| `--primary` | `355 100% 21%` → `#6C0000` | ✅ burgundy |
+| `--border` / `--input` | `0 0% 20%` → `#333333` | ✅ borde primario |
+| `--muted-foreground` | `0 0% 75%` → `#bfbfbf` | ✅ AA sobre `#111111` (≈9.4:1) — ajuste critique aplicado |
+| `--primary-foreground` | `0 100% 90%` → `#ffcccc` | ✅ pink retro |
+| Radii | `base 8 / md 6 / sm 4 / xl 12` | ✅ sistema unificado |
+| Shadows | `base / tactical / tactical-elevated` | ✅ tokens canónicos |
+| `--resource-*` | armas/municion/alcohol/dolares | ✅ tokens RTS (`design-tokens.css`) |
 
-### 🟡 HIGH: Scalable Images & Cards
-```tsx
-// BEFORE (fixed dimensions):
-<Image ... width={20} height={20} className="h-5 w-5" />
-<Card className="min-h-[250px]">
+### Pendiente de migración (objetivo `ejemplo.html`)
+| Hoy (código) | Objetivo | Nota |
+|--------------|----------|------|
+| Body: `Roboto`/`Tahoma` (`--font-roboto`, `font-sans: Tahoma…`) | `Work Sans` (fallback `Tahoma`) | Reemplazar en `next/font/google` + `--font-sans` |
+| Display: `Bebas Neue` (`--font-bebas-neue`) | `Space Grotesk` 500/700 | Resultado más fiel al ejemplo; Bebas Neue es legado |
+| Mono: `Roboto Mono` (`--font-mono`) | `Space Mono` | Números/coords/timers |
+| Iconos: `lucide-react` | `Material Symbols Outlined` | Iconografía del ejemplo; migración progresiva por vista |
+| Faltan clases | `crimson-th`, `cell-dark`, `cell-darker`, `btn-tactical`, `btn-crimson`, `retro-border` | Portar CSS de `docs/ejemplo.html` a `design-tokens.css` + utilidades |
 
-// AFTER (responsive):
-<Image ... className="h-5 w-5 sm:h-6 sm:w-6" /> /* or w-full h-auto object-cover */
-<Card className="min-h-[200px] sm:min-h-[250px]">
-```
+### Checklist de ajustes de la critique (referencias)
+- [ ] `resource-bar.tsx` → `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`
+- [ ] `overview-view.tsx` header → `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`
+- [ ] `map-view.tsx` → vista lista móvil <640px
+- [ ] `queue-status-card.tsx` → Accordion en móvil
+- [ ] Dialogs rooms/recruitment/tech → grids colapsables
+- [ ] `text-[10px]`/`text-[11px]` críticos → `text-xs sm:text-base`
+- [ ] Touch targets `≥44px` en icon buttons
+- [ ] Tablas móvil → stack vertical <768px
+- [ ] Imágenes responsive (`w-full h-auto`), cards `min-h-[200px] sm:min-h-[250px]`
 
-### 🟡 HIGH: resource-bar.tsx — Mobile Grid Collapse & Reorder
-```tsx
-// BEFORE:
-<div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-2 md:flex md:items-center md:gap-x-6 w-full">
+---
 
-// AFTER:
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:flex md:items-center md:gap-x-4 w-full">
-  {resources.map((res, idx) => (
-    <div key={res.name} className="flex items-center gap-2" style={{ order: idx < 2 ? 1 : 2 }}>
-      {/* Mobile: 2×2 grid, Desktop: 4-column flex */}
-    </div>
-  ))}
-</div>
-```
-
-### 🟢 MEDIUM: Contrast & Touch Targets
-- **Verify:** `#A1A1AA` (Muted Zinc) on `Charcoal Surface` `#131317` = **4.8:1** ✓ Passes AA
-- **Verify:** `#A1A1AA` on `Obsidian Void` `#09090C` = **4.2:1** ⚠️ Fails AA for small text — **use `#D4D4D8` (Zinc-300) for body on darkest backgrounds**
-- **Touch targets:** All interactive elements ≥ 44×44px. Icon buttons: `h-10 w-10` minimum. Add `min-h-[44px] min-w-[44px]` to clickable areas.
-
-## 10. Anti-Patterns (Banned) — Enforced by DESIGN.md
-- No emojis anywhere in the interface.
-- No `Inter` font.
-- No generic serif fonts.
-- No pure black (`#000000`).
-- No AI purple/blue neon glows.
-- No oversaturated accents (>80% saturation).
-- No fake round numbers (`99.99%`, `50%`, hardcoded `99%` loyalty).
-- No fabricated data or statistics.
-- No uneven grid layout gaps or overlapping elements.
-- No centered Hero sections (variance > 4).
-- No 3-column equal card feature rows.
-- No generic placeholder names ("John Doe", "Acme", "Nexus").
-- No `LABEL // YEAR` formatting ("SYSTEM // 2024").
-- No AI copywriting clichés ("Elevate", "Seamless", "Unleash", "Next-Gen").
-- No filler UI text: "Scroll to explore", "Swipe down", scroll arrows, bouncing chevrons.
-- No broken Unsplash links — use `picsum.photos` or SVG avatars.
-- No `h-screen` — use `min-h-[100dvh]`.
-- No fixed pixel dimensions on images/cards — use relative constraints.
-- No animations without `prefers-reduced-motion` guard.
-
-## 11. Implementation Checklist (Tailwind Config Sync)
-- [ ] Add `sm: '640px'`, `md: '768px'`, `lg: '1024px'`, `xl: '1280px'` to `theme.screens`
-- [ ] Add `xl: 'calc(var(--radius) + 4px)'` to `theme.borderRadius`
-- [ ] Add `prefers-reduced-motion` media query to globals.css
-- [ ] Update `html` font-size to `14px` (0.875rem base)
-- [ ] Replace all `text-xs` critical metadata with `text-xs sm:text-base`
-- [ ] Replace fixed `min-h-[250px]` with `min-h-[200px] sm:min-h-[250px]`
-- [ ] Replace fixed image dimensions with responsive classes
-- [ ] Update resource-bar grid to `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`
-- [ ] Update overview-view header grid to `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`
-- [ ] Verify Muted Zinc contrast on darkest surfaces; adjust to Zinc-300 if needed
-- [ ] Audit all interactive elements for ≥ 44×44px touch targets
+*Fuente: `docs/ejemplo.html` · Estructura: `taste-design` · Ajustes: design critique (response 2026-09-23). Valores verificados contra código real en `globals.css`, `design-tokens.css`, `tailwind.config.ts`, `src/app/layout.tsx`.*

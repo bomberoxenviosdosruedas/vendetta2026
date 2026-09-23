@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_dashboard" name="shell-type"/>
+<title>Vendetta 2X - Visión General</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Work+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: #080808;
+        color: #dfdbc9;
+        font-family: 'Work Sans', Tahoma, sans-serif;
+      }
+      body {
+        overscroll-behavior: none;
+      }
+    }
+    .retro-border {
+      border: 1px solid #333333;
+    }
+    .crimson-th {
+      background: linear-gradient(180deg, #7a0000 0%, #4f0000 100%);
+      border: 1px solid #8e1515;
+    }
+    .cell-dark {
+      background-color: #141414;
+      border: 1px solid #282828;
+    }
+    .cell-darker {
+      background-color: #0d0d0d;
+      border: 1px solid #222222;
+    }
+    .btn-tactical {
+      background: linear-gradient(180deg, #262626 0%, #151515 100%);
+      border: 1px solid #3d3d3d;
+      transition: all 0.15s ease;
+    }
+    .btn-tactical:hover {
+      background: linear-gradient(180deg, #363636 0%, #202020 100%);
+      color: #fff400;
+      border-color: #777777;
+    }
+    .btn-crimson {
+      background: linear-gradient(180deg, #8a0c0c 0%, #520000 100%);
+      border: 1px solid #a81c1c;
+    }
+    .btn-crimson:hover {
+      background: linear-gradient(180deg, #a61212 0%, #680000 100%);
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body class="bg-[#080808] text-[#dfdbc9] text-[12px] select-none antialiased">
+<!-- CONTENEDOR MAESTRO DE 3 COLUMNAS DEL JUEGO ORIGINAL (910px centrado) -->
+<div class="min-h-screen flex justify-center bg-[#080808]">
+<!-- COLUMNA LATERAL IZQUIERDA (53px texturizado original) -->
+<aside class="hidden lg:block w-[53px] shrink-0 bg-[#000000] border-r border-[#222222] relative overflow-hidden" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA4XbxrCL94yDR-pz6uvVqdCXRTU1r_RB1EI8H-TpFpk4VmLJYkG7ksIfO2m4xWEAvOsDnPIqxJJaoD0mBsPfjvtR_DwrFzGOgj9C0vBUEE-4PoI2NkEOm4yZpVlbK8jU8JW8VAoE-aCdeh8qBwA2TT-dtZBRmJzBYUBygHuulH4jdeo1uHk-V80BlxOnhrBfzn48UN8d_U76ZHNHrfI9lDjZBBCGtpr2Dz7B0umrqNIyI2OTPxggSGE8opT9Jlm3TT_Xk'); background-repeat: repeat-y; background-position: center top;">
+<div class="absolute inset-0 bg-black/40 pointer-events-none"></div>
+</aside>
+<!-- COLUMNA PRINCIPAL DE JUEGO (Ancho máximo ~910px con bordes tácticos) -->
+<div class="w-full max-w-[910px] bg-[#111111] border-x border-[#333333] flex flex-col shadow-2xl min-h-screen">
+<!-- ENCABEZADO TÁCTICO CON TEXTURA ORIGINAL navigation_bg.gif -->
+<header class="w-full h-11 border-b border-[#333333] flex items-center justify-between px-3 shrink-0 relative overflow-hidden text-white" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAeSWEDkD1TfClCfySVtJOMkmSsNbsPzyRBygbx1BEBFXqzPmAdWzm2ID-rwZvH0wItz5h2aoGtjFS1wff8tQv1LpVehEOMV2rRvDDbVahfvJtvmmSCHHlfPQtBTTcqQCgNQn1onvN0837T3R9bRc5wcf571O_Z-zAdbSqjHbhaffKkNMyw9t70P4QE81a8H-j4PbosyZBmfcQFywUMpVK-6p8B2M7DmE5952knk6VFC-SMWmgcZSlgrX_yccnAidRQ9C8'); background-size: cover; background-position: center;">
+<div class="flex items-center gap-3">
+<span class="font-['Space_Grotesk'] font-bold text-[18px] tracking-wider text-[#ffdad4] drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+            VENDETTA <span class="text-[#ff3f3f]">2X</span>
+</span>
+<span class="hidden sm:inline-block px-1.5 py-0.5 text-[9px] font-['Space_Mono'] bg-[#000000]/70 text-[#fabd00] border border-[#ffc107]/40 uppercase tracking-widest">
+            SYNDICATE WARS • REV. 2004
+          </span>
+</div>
+<!-- Estados en tiempo real del servidor -->
+<div class="flex items-center gap-4 text-[11px] font-['Space_Mono']">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-[#00ff00] animate-pulse"></span>
+<span class="text-[#a0a0a0] hidden sm:inline">VELOCIDAD:</span>
+<span class="text-[#00ff00] font-bold">x2 TICK</span>
+</div>
+<div class="hidden md:flex items-center gap-1">
+<span class="text-[#a0a0a0]">RELOJ:</span>
+<span class="text-[#fff400] font-bold" id="live-server-clock">31-08-2024 04:51:38</span>
+</div>
+<div class="flex items-center gap-1.5 bg-[#000000]/60 px-2 py-0.5 border border-[#333333]">
+<span class="text-[#a0a0a0]">CAPO:</span>
+<span class="text-[#dfdbc9] font-bold">Bomberox</span>
+<span class="text-[#fabd00] ml-1">[#42]</span>
+</div>
+</div>
+</header>
+<!-- BARRA SUPERIOR DE RECURSOS (4 ACTIVOS CON ICONOS ORIGINALES M0S, M1S, M2S, M3S) -->
+<section class="w-full bg-[#0a0a0a] border-b border-[#333333] p-1.5">
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-1.5">
+<!-- 1. Armas (M0S.gif) -->
+<div class="cell-dark p-1.5 flex flex-col justify-between hover:border-[#6C0000] transition-colors">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<img alt="Armas" class="w-[22px] h-[15px] object-contain shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuANPdzyWkcOPgw2W7DDsCCp2wikwr4klPOBHkerPVldcV2OrXMt0llkrLJEMxVVZRx5ys1QzYkMjz4Jwt9uCvL-l8sXiPCjFxqkZZ3FGzJ-5vpV5ypNp0mkPJVV-1AfCR6U9YqgHH2rODhUg0E3_WbEKZiWbaea42FP38igW1FlA5Y1Yyr16kmGm9UbeyrmPxYv0xoIuDst64Va7Rw2K4M2NqDJTdwPNh2jmO77qWEmexIWJR7dEg86GAj3eF1lbp8N_E8"/>
+<span class="font-bold text-[11px] text-[#dfdbc9] uppercase tracking-wider font-['Space_Grotesk']">ARMAS</span>
+</div>
+<span class="text-[10px] font-['Space_Mono'] text-[#ee7000] font-bold">93.7%</span>
+</div>
+<div class="mt-1 flex items-baseline justify-between font-['Space_Mono']">
+<span class="text-[13px] font-bold text-white tracking-tight">7.462.002</span>
+<span class="text-[10px] text-[#00ff00]">+60.850/h</span>
+</div>
+<!-- Progress bar -->
+<div class="w-full bg-[#000000] h-1.5 mt-1 border border-[#333333] overflow-hidden">
+<div class="bg-[#ee7000] h-full w-[93.7%]"></div>
+</div>
+</div>
+<!-- 2. Munición (M1S.gif) -->
+<div class="cell-dark p-1.5 flex flex-col justify-between hover:border-[#6C0000] transition-colors">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<img alt="Munición" class="w-[16px] h-[16px] object-contain shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVJNmkmmBHVzIkQK36ILBHq0GvGpMDLKBBHd1IM7LChA_Bc4RU8RXEYW59ZAvSpHb03vbhKPmGYw9ZWYUtiO0Mw2u4jHjD-mlUHxs14bW_RlrwdMd-S7ucyv7a1LXvZDNarQ90k2XJeW1FyEMhyGZwI7yEI7NkP5LOwSeudAG2V3AfSCkae5R7I3QGgeBj6RO2HwjVnrOvj2cyeFIDsU7KXxfYrEi9Wqz_OLZJqjuVLpffiWkqevbAlyINhbY9xf7fBYg"/>
+<span class="font-bold text-[11px] text-[#dfdbc9] uppercase tracking-wider font-['Space_Grotesk']">MUNICIÓN</span>
+</div>
+<span class="text-[10px] font-['Space_Mono'] text-[#ee7000] font-bold">82.9%</span>
+</div>
+<div class="mt-1 flex items-baseline justify-between font-['Space_Mono']">
+<span class="text-[13px] font-bold text-white tracking-tight">15.429.615</span>
+<span class="text-[10px] text-[#00ff00]">+92.170/h</span>
+</div>
+<!-- Progress bar -->
+<div class="w-full bg-[#000000] h-1.5 mt-1 border border-[#333333] overflow-hidden">
+<div class="bg-[#ee7000] h-full w-[82.9%]"></div>
+</div>
+</div>
+<!-- 3. Alcohol (M2S.gif) - LLENO / ALERTA -->
+<div class="cell-dark p-1.5 flex flex-col justify-between border-[#93000a] bg-[#1a0808] hover:border-[#ff3f3f] transition-colors">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<img alt="Alcohol" class="w-[16px] h-[16px] object-contain shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJfigJPQaHbVVQYIiwcVN7I4DXGtfspIdl1lSSOfRdBSvouYPF2ZolCsuP_0pgsbb6GAi2Qs3WnILsKpcc47C5VfUeWOW0RYnW7QLpj6ozCTuOgrmchUpr5mbkbQKdHnA_AtlI6R3JyAz6-us1e5Kc1IgMh9S_RU_8Vl53Aaw2tJekanexrBmqgLu6U2SQwh8qx-dVPH87A3OS-S3pS49BNlN8xhLHV9PyHyLl1J0m5kfe6Ao0WjgnMAEV4TeDpTFi7a0"/>
+<span class="font-bold text-[11px] text-[#ff3f3f] uppercase tracking-wider font-['Space_Grotesk']">ALCOHOL</span>
+</div>
+<span class="text-[10px] font-['Space_Mono'] text-[#ff3f3f] font-bold animate-pulse">[LLENO] 100%</span>
+</div>
+<div class="mt-1 flex items-baseline justify-between font-['Space_Mono']">
+<span class="text-[13px] font-bold text-[#ffdad4] tracking-tight">3.010.000</span>
+<span class="text-[10px] text-[#ff3f3f]">+2.650/h</span>
+</div>
+<!-- Progress bar full -->
+<div class="w-full bg-[#000000] h-1.5 mt-1 border border-[#93000a] overflow-hidden">
+<div class="bg-[#ff0000] h-full w-[100%] animate-pulse"></div>
+</div>
+</div>
+<!-- 4. Dólares (M3S.gif) -->
+<div class="cell-dark p-1.5 flex flex-col justify-between hover:border-[#6C0000] transition-colors">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<img alt="Dólares" class="w-[16px] h-[16px] object-contain shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLcVJkpTBnikmMwaRBzEtjZeLwS1R5l8J789APZCdI8TrZpvRrvR7ojCsCL8pKUzcqDdxLYRzgGJ59NzvlIk4AZ27AUXJ0VMskWsNU319V-auvexYGmFKgPRkwWRZusQ1FrM3wd17vRukqWyHRra-n3-399Zw0WSRJNQ68AsV76LhPb68y19mxCR8ShGB-yHwnhp0nc4A_pA3WlelHdMWeKCmexn423xSL8JQQvRPuTs0iXYMlBjLhr9v2sBIWVzTcTdU"/>
+<span class="font-bold text-[11px] text-[#fabd00] uppercase tracking-wider font-['Space_Grotesk']">DÓLARES</span>
+</div>
+<span class="text-[10px] font-['Space_Mono'] text-[#00ff00] font-bold">65.3%</span>
+</div>
+<div class="mt-1 flex items-baseline justify-between font-['Space_Mono']">
+<span class="text-[13px] font-bold text-[#fff400] tracking-tight">$2.356.277</span>
+<span class="text-[10px] text-[#00ff00]">+27.791/h</span>
+</div>
+<!-- Progress bar -->
+<div class="w-full bg-[#000000] h-1.5 mt-1 border border-[#333333] overflow-hidden">
+<div class="bg-[#00c000] h-full w-[65.3%]"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- CUERPO PRINCIPAL: NAVEGADOR DE COMANDO (nav.html) + VISIÓN GENERAL (overview.html) -->
+<div class="flex flex-1 flex-col sm:flex-row relative">
+<!-- MENÚ LATERAL IZQUIERDO DE COMANDO (~165px auténtico retro) -->
+<aside class="w-full sm:w-[165px] shrink-0 bg-[#0d0d0d] border-r border-[#333333] p-1.5 flex flex-col gap-1.5">
+<!-- Selector de Coordenadas de Base -->
+<div class="cell-dark p-1 text-center">
+<div class="text-[9px] text-[#888888] font-['Space_Mono'] uppercase tracking-widest">COORDENADAS</div>
+<div class="flex items-center justify-between mt-1 gap-1">
+<button class="w-5 h-5 btn-tactical text-[10px] flex items-center justify-center font-bold" title="Anterior">▲</button>
+<div class="font-['Space_Mono'] text-[11px] font-bold text-[#fff400] truncate">40:23:220</div>
+<button class="w-5 h-5 btn-tactical text-[10px] flex items-center justify-center font-bold" title="Siguiente">▼</button>
+</div>
+<div class="text-[10px] text-[#dfdbc9] mt-0.5 truncate font-['Space_Grotesk']">[Principal] Sector 09</div>
+</div>
+<!-- Grupo: Cuartel Principal -->
+<nav class="flex flex-col gap-[2px]">
+<div class="crimson-th text-white font-['Space_Grotesk'] text-[10px] font-bold uppercase px-2 py-0.5 tracking-wider shadow-sm">
+              PRINCIPAL
+            </div>
+<a class="px-2 py-1 bg-[#6C0000] text-[#ffffff] font-bold border-l-2 border-[#fff400] text-[11px] flex items-center justify-between" href="#">
+<span>Visión General</span>
+<span class="w-1.5 h-1.5 rounded-full bg-[#fff400]"></span>
+</a>
+<a class="px-2 py-1 cell-dark text-[#dfdbc9] hover:bg-[#1f1f1f] hover:text-[#fff400] text-[11px] transition-colors" href="#">
+              Habitaciones
+            </a>
+<a class="px-2 py-1 cell-dark text-[#dfdbc9] hover:bg-[#1f1f1f] hover:text-[#fff400] text-[11px] transition-colors" href="#">
+              Reclutamiento
+            </a>
+<a class="px-2 py-1 cell-dark text-[#dfdbc9] hover:bg-[#1f1f1f] hover:text-[#fff400] text-[11px] transition-colors" href="#">
+              Seguridad
+            </a>
+<a class="px-2 py-1 cell-dark text-[#dfdbc9] hover:bg-[#1f1f1f] hover:text-[#fff400] text-[11px] transition-colors" href="#">
+              Entrenamiento
+            </a>
+<a class="px-2 py-1 cell-dark text-[#dfdbc9] hover:bg-[#1f1f1f] hover:text-[#fff400] text-[11px] transition-colors" href="#">
+              Edificios
+            </a>
+<a class="px-2 py-1 cell-dark text-[#dfdbc9] hover:bg-[#1f1f1f] hover:text-[#fff400] text-[11px] transition-colors" href="#">
+              Buscar
+            </a>
+<!-- Grupo: Táctico & Alianza -->
+<div class="crimson-th text-white font-['Space_Grotesk'] text-[10px] font-bold uppercase px-2 py-0.5 tracking-wider mt-1 shadow-sm">
+              TÁCTICO &amp; FAMILIA
+            </div>
+<a class="px-2 py-1 cell-dark text-[#dfdbc9] hover:bg-[#1f1f1f] hover:text-[#fff400] text-[11px] transition-colors" href="#">Tecnologías</a>
+<a class="px-2 py-1 cell-dark text-[#dfdbc9] hover:bg-[#1f1f1f] hover:text-[#fff400] text-[11px] transition-colors" href="#">Familia</a>
+<a class="px-2 py-1 cell-dark text-[#dfdbc9] hover:bg-[#1f1f1f] hover:text-[#fff400] text-[11px] transition-colors" href="#">Recursos</a>
+<a class="px-2 py-1 cell-dark text-[#dfdbc9] hover:bg-[#1f1f1f] hover:text-[#fff400] text-[11px] transition-colors" href="#">Mapa</a>
+<a class="px-2 py-1 cell-dark text-[#dfdbc9] hover:bg-[#1f1f1f] hover:text-[#fff400] text-[11px] transition-colors" href="#">Misiones</a>
+<a class="px-2 py-1 cell-dark text-[#dfdbc9] hover:bg-[#1f1f1f] hover:text-[#fff400] text-[11px] transition-colors" href="#">Simulador</a>
+<a class="px-2 py-1 cell-dark text-[#dfdbc9] hover:bg-[#1f1f1f] hover:text-[#fff400] text-[11px] transition-colors" href="#">Lista de Granjas</a>
+<a class="px-2 py-1 cell-dark text-[#dfdbc9] hover:bg-[#1f1f1f] hover:text-[#fff400] text-[11px] transition-colors flex justify-between items-center" href="#">
+<span>Mensajes</span>
+<span class="bg-[#ff0000] text-white text-[9px] font-bold px-1 rounded-sm">4</span>
+</a>
+<a class="px-2 py-1 cell-dark text-[#dfdbc9] hover:bg-[#1f1f1f] hover:text-[#fff400] text-[11px] transition-colors" href="#">Estadísticas</a>
+<a class="px-2 py-1 cell-dark text-[#dfdbc9] hover:bg-[#1f1f1f] hover:text-[#fff400] text-[11px] transition-colors" href="#">Clasificaciones</a>
+<!-- Grupo: Comunidad -->
+<div class="crimson-th text-white font-['Space_Grotesk'] text-[10px] font-bold uppercase px-2 py-0.5 tracking-wider mt-1 shadow-sm">
+              COMUNIDAD
+            </div>
+<a class="px-2 py-1 cell-dark text-[#dfdbc9] hover:bg-[#1f1f1f] hover:text-[#fff400] text-[11px] transition-colors" href="#">Chat</a>
+<a class="px-2 py-1 cell-dark text-[#dfdbc9] hover:bg-[#1f1f1f] hover:text-[#fff400] text-[11px] transition-colors" href="#">Foro</a>
+<a class="px-2 py-1 cell-dark text-[#dfdbc9] hover:bg-[#1f1f1f] hover:text-[#fff400] text-[11px] transition-colors" href="#">Reglas</a>
+<a class="px-2 py-1 cell-dark text-[#dfdbc9] hover:bg-[#1f1f1f] hover:text-[#fff400] text-[11px] transition-colors" href="#">Opciones</a>
+<a class="px-2 py-1 cell-dark text-[#ff3f3f] hover:bg-[#3a0000] hover:text-white text-[11px] font-bold transition-colors" href="#">Salir</a>
+</nav>
+</aside>
+<!-- PANEL CENTRAL DE JUEGO (VISIÓN GENERAL RETRO TÁCTICA) -->
+<main class="flex-1 bg-[#111111] p-2 flex flex-col gap-2 overflow-x-hidden">
+<!-- 1. TARJETA CUARTEL DE MANDO: JUGADOR, BASE ACTUAL CON nobase.jpg Y FAMILIA -->
+<section class="cell-darker p-2 border border-[#333333]">
+<div class="crimson-th text-white px-2 py-1 flex items-center justify-between font-['Space_Grotesk'] font-bold text-[11px] uppercase tracking-wider mb-2">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-[#fff400]">military_tech</span>
+<span>CUARTEL GENERAL // VISIÓN DE OPERACIONES</span>
+</div>
+<button class="btn-tactical text-[#fff400] hover:text-white text-[10px] px-2 py-0.5 uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">public</span>
+<span>VISIÓN GLOBAL DEL IMPERIO</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+<!-- Jugador & Rango -->
+<div class="cell-dark p-2 flex items-center gap-2.5">
+<div class="relative w-12 h-12 shrink-0 border border-[#444444] bg-black overflow-hidden shadow-inner">
+<img alt="Capo Bomberox" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBl0Ipu6nfnbYLdN3SB5SBHSxqMPfBmtzKixJwptLTzIg72OlkdnDmqzC-JiDmzITGphqeV0R48Cft6SoX-VvBSU6uqX1xPlx50JL1Z92ioTpYt_g32eQZHayWBxf-7cKn8lg9eun68JiiCotCkTf_v5cRkhxhxMfbDbaDZMs5CT7mZh9Qvugv1T-VF1_08t_AzoczU5xYfb3AxLt1hsfkFJYm9w1uEjtzteyGHC0i2OyiJM4n3uh4Urg"/>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#00ff00] border border-black"></span>
+</div>
+<div class="min-w-0">
+<div class="text-[9px] text-[#888888] font-['Space_Mono'] uppercase">CAPORÉGIME</div>
+<div class="text-[14px] font-bold text-[#fff400] truncate font-['Space_Grotesk']">Bomberox</div>
+<div class="text-[10px] text-[#00ff00] font-['Space_Mono']">ID: #882410 • ACTIVO</div>
+</div>
+</div>
+<!-- Base Matriz con IMAGEN ORIGINAL https://lh3.googleusercontent.com/aida-public/AB6AXuC3NA-NDL9KcSmY0sNt8GJ_SpKcPFCC2ARvkyhs0dCEn8wzdqP2Koba6gTHFnxsdXg-6Jp3m8C7szE6-5A45UXMcmqIZv9sgBOMXg1uxPN4KMkkRIcDu450di2uIt4umbq41RTokQgT53G07BYn3XzfG2aCnlgHg0zjrCaR_u4vLOnypYs0XaYNfkqatwjrrmazJG3B6Y4hldnYltODccQO6GkivB1mZ5GZJCSIdYEhN2-Jv5O0F9rGmyKSGPmcYgtR2zw (nobase.jpg) -->
+<div class="cell-dark p-2 flex items-center gap-2.5">
+<div class="relative w-12 h-12 shrink-0 border border-[#444444] bg-black overflow-hidden shadow-inner">
+<img alt="Base Matriz" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqdZ3n0CJobttrY5NUtYddO85pfgy2Xv0mB6AhQWPlVaZY8N3edGCw2UWGpw8k2HbDRoWF3ugkFCd7KUjYAYt4aQ6stnmyZTbIUg3YQCCBd95J-ALJ2hv1pD2ns66gwXYQAFwQ4AzrKkBVydKeJ4R1i-QSWWZkiPL18jbQBblYx1g5Pkmq2aBk9AnUdzJNCmhMyRe6kwrAPGx3zKELc9oDfjrrNvxR8fpxR2tE3AfN6Kf8d9lWs_2pQAhSWNqb1P9AZ0g"/>
+</div>
+<div class="min-w-0">
+<div class="text-[9px] text-[#888888] font-['Space_Mono'] uppercase">BASE MATRIZ</div>
+<div class="text-[14px] font-bold text-white truncate font-['Space_Grotesk']">Sector 09</div>
+<div class="text-[10px] text-[#fabd00] font-['Space_Mono']">COORD: 40:23:220</div>
+</div>
+</div>
+<!-- Familia Sindicato -->
+<div class="cell-dark p-2 flex items-center gap-2.5">
+<div class="w-12 h-12 shrink-0 border border-[#444444] bg-[#0c1424] flex items-center justify-center text-[#fabd00]">
+<span class="material-symbols-outlined text-[26px]">shield</span>
+</div>
+<div class="min-w-0">
+<div class="text-[9px] text-[#888888] font-['Space_Mono'] uppercase">FAMILIA SINDICATO</div>
+<div class="text-[14px] font-bold text-white truncate font-['Space_Grotesk']">ArGenTeaM</div>
+<div class="text-[10px] text-[#ff3f3f] font-['Space_Mono'] font-bold">[ArGt] • Rango #3</div>
+</div>
+</div>
+</div>
+<!-- Accesos rápidos tácticos tipo OGame / Vendetta (Mensajes, Informes, Flotas, Combates) -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 mt-2">
+<a class="btn-tactical p-1.5 flex items-center justify-between" href="#">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-[#fabd00]">mail</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">MENSAJES</span>
+</div>
+<span class="bg-[#ff0000] text-white text-[9px] font-bold px-1.5 py-0.2 rounded-sm font-['Space_Mono']">4</span>
+</a>
+<a class="btn-tactical p-1.5 flex items-center justify-between" href="#">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-[#dfdbc9]">description</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">INFORMES</span>
+</div>
+<span class="bg-[#282828] border border-[#444444] text-[#fabd00] text-[9px] font-bold px-1.5 py-0.2 rounded-sm font-['Space_Mono']">99+</span>
+</a>
+<a class="btn-tactical p-1.5 flex items-center justify-between" href="#">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-[#00ff00]">sync_alt</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">FLOTAS</span>
+</div>
+<span class="bg-[#003800] border border-[#00c000] text-[#00ff00] text-[9px] font-bold px-1.5 py-0.2 rounded-sm font-['Space_Mono']">12</span>
+</a>
+<a class="btn-tactical p-1.5 flex items-center justify-between" href="#">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-[#ff3f3f]">swords</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">COMBATES</span>
+</div>
+<span class="bg-[#4d0000] border border-[#ff3f3f] text-[#ffdad4] text-[9px] font-bold px-1.5 py-0.2 rounded-sm font-['Space_Mono']">99+</span>
+</a>
+</div>
+</section>
+<!-- 2. MONITOREO DE FLOTA TÁCTICA (TABLA AUTÉNTICA OSCURA CON CUENTA REGRESIVA) -->
+<section class="cell-darker p-2 border border-[#333333]">
+<div class="crimson-th text-white px-2 py-1 flex items-center justify-between font-['Space_Grotesk'] font-bold text-[11px] uppercase tracking-wider mb-1.5">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-[#00ff00]">radar</span>
+<span>MONITOREO DE FLOTAS // 12 MISIONES ACTIVAS</span>
+</div>
+<span class="text-[10px] text-[#fabd00] font-['Space_Mono'] font-normal">TICK: x2 EXPEDICIÓN</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse text-[11px]">
+<thead>
+<tr class="bg-[#1c1c1c] text-[#dfdbc9] font-['Space_Grotesk'] uppercase border-b border-[#333333]">
+<th class="p-1.5 font-bold">TIPO</th>
+<th class="p-1.5 font-bold">ORIGEN</th>
+<th class="p-1.5 font-bold text-center">RUTA</th>
+<th class="p-1.5 font-bold">DESTINO</th>
+<th class="p-1.5 font-bold">UNIDADES / CARGA</th>
+<th class="p-1.5 font-bold text-right font-['Space_Mono']">TIEMPO ESTIMADO</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#222222] font-['Space_Mono'] text-[11px]">
+<!-- Fila 1 -->
+<tr class="bg-[#141414] hover:bg-[#1f1f1f] transition-colors">
+<td class="p-1.5 text-[#fabd00] font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-[#fabd00]"></span> RETORNO
+                    </td>
+<td class="p-1.5 text-white">40:23:220</td>
+<td class="p-1.5 text-center text-[#fabd00] font-bold">&gt;&gt;&gt;</td>
+<td class="p-1.5 text-[#ffdad4]">40:22:169</td>
+<td class="p-1.5 text-[#dfdbc9]">13.000 Tropas</td>
+<td class="p-1.5 text-right text-[#fff400] font-bold text-[12px]">00:00:07</td>
+</tr>
+<!-- Fila 2 -->
+<tr class="bg-[#101010] hover:bg-[#1f1f1f] transition-colors">
+<td class="p-1.5 text-[#fabd00] font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-[#fabd00]"></span> RETORNO
+                    </td>
+<td class="p-1.5 text-white">40:23:220</td>
+<td class="p-1.5 text-center text-[#fabd00] font-bold">&gt;&gt;&gt;</td>
+<td class="p-1.5 text-[#ffdad4]">40:22:135</td>
+<td class="p-1.5 text-[#dfdbc9]">13.000 Tropas</td>
+<td class="p-1.5 text-right text-[#fff400] font-bold text-[12px]">00:00:31</td>
+</tr>
+<!-- Fila 3 -->
+<tr class="bg-[#141414] hover:bg-[#1f1f1f] transition-colors">
+<td class="p-1.5 text-[#fabd00] font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-[#fabd00]"></span> RETORNO
+                    </td>
+<td class="p-1.5 text-white">40:23:220</td>
+<td class="p-1.5 text-center text-[#fabd00] font-bold">&gt;&gt;&gt;</td>
+<td class="p-1.5 text-[#ffdad4]">40:22:84</td>
+<td class="p-1.5 text-[#dfdbc9]">13.000 Tropas</td>
+<td class="p-1.5 text-right text-[#fff400] font-bold text-[12px]">00:00:40</td>
+</tr>
+<!-- Fila 4 -->
+<tr class="bg-[#101010] hover:bg-[#1f1f1f] transition-colors">
+<td class="p-1.5 text-[#00ff00] font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-[#00ff00]"></span> REAGRUPAR
+                    </td>
+<td class="p-1.5 text-white">27:27:111</td>
+<td class="p-1.5 text-center text-[#00ff00] font-bold">&gt;&gt;&gt;</td>
+<td class="p-1.5 text-[#ffdad4]">40:23:168</td>
+<td class="p-1.5 text-[#dfdbc9]">3 Vehículos Escolta</td>
+<td class="p-1.5 text-right text-[#00ff00] font-bold text-[12px]">00:04:18</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- 3. TRES COLUMNAS DE COLAS ACTIVAS: CONSTRUCCIÓN, RECLUTAMIENTO, ENTRENAMIENTO -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-2">
+<!-- Columna 1: Construcción de Habitaciones -->
+<div class="cell-darker p-1.5 border border-[#333333] flex flex-col gap-1.5">
+<div class="crimson-th text-white px-2 py-0.5 flex justify-between items-center text-[10px] font-['Space_Grotesk'] font-bold uppercase">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-[#fff400]">construction</span>
+                  HABITACIONES
+                </span>
+<span class="bg-black/60 px-1 text-[#fff400]">74/76</span>
+</div>
+<div class="flex flex-col gap-1 font-['Space_Mono'] text-[10px]">
+<div class="cell-dark p-1.5">
+<div class="flex justify-between font-bold text-white">
+<span>Contrabando (Nv 52)</span>
+<span class="text-[#00ff00]">00:02:46</span>
+</div>
+<div class="flex justify-between text-[#888888] text-[9px] mt-0.5">
+<span>Sector 40:23:162</span>
+<span class="text-[#fabd00]">88%</span>
+</div>
+<div class="w-full bg-black h-1 mt-1 border border-[#333333]">
+<div class="bg-[#00ff00] h-full w-[88%]"></div>
+</div>
+</div>
+<div class="cell-dark p-1.5">
+<div class="flex justify-between font-bold text-white">
+<span>Contrabando (Nv 52)</span>
+<span class="text-[#fff400]">00:06:21</span>
+</div>
+<div class="flex justify-between text-[#888888] text-[9px] mt-0.5">
+<span>Sector 40:23:63</span>
+<span class="text-[#fabd00]">64%</span>
+</div>
+<div class="w-full bg-black h-1 mt-1 border border-[#333333]">
+<div class="bg-[#fabd00] h-full w-[64%]"></div>
+</div>
+</div>
+<div class="cell-dark p-1.5">
+<div class="flex justify-between font-bold text-white">
+<span>Campo Entrenamiento (Nv 43)</span>
+<span class="text-[#a0a0a0]">00:12:59</span>
+</div>
+<div class="flex justify-between text-[#888888] text-[9px] mt-0.5">
+<span>Sector 40:22:33</span>
+<span class="text-[#fabd00]">31%</span>
+</div>
+<div class="w-full bg-black h-1 mt-1 border border-[#333333]">
+<div class="bg-[#ff3f3f] h-full w-[31%]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Columna 2: Reclutamiento de Tropas -->
+<div class="cell-darker p-1.5 border border-[#333333] flex flex-col gap-1.5">
+<div class="crimson-th text-white px-2 py-0.5 flex justify-between items-center text-[10px] font-['Space_Grotesk'] font-bold uppercase">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-[#ff3f3f]">group_add</span>
+                  RECLUTAMIENTO
+                </span>
+<span class="bg-black/60 px-1 text-[#ff3f3f]">31/76</span>
+</div>
+<div class="flex flex-col gap-1 font-['Space_Mono'] text-[10px]">
+<div class="cell-dark p-1.5">
+<div class="flex justify-between font-bold text-[#ffdad4]">
+<span>19 Mercenarios</span>
+<span class="text-[#fabd00]">01:30:02</span>
+</div>
+<div class="flex justify-between text-[#888888] text-[9px] mt-0.5">
+<span>Destino: 40:23:75</span>
+<span class="text-[#00ff00]">Activo</span>
+</div>
+<div class="w-full bg-black h-1 mt-1 border border-[#333333]">
+<div class="bg-[#6C0000] h-full w-[45%]"></div>
+</div>
+</div>
+<div class="cell-dark p-1.5">
+<div class="flex justify-between font-bold text-[#ffdad4]">
+<span>17 Mercenarios</span>
+<span class="text-[#fabd00]">01:33:46</span>
+</div>
+<div class="flex justify-between text-[#888888] text-[9px] mt-0.5">
+<span>Destino: 40:23:117</span>
+<span class="text-[#00ff00]">Activo</span>
+</div>
+<div class="w-full bg-black h-1 mt-1 border border-[#333333]">
+<div class="bg-[#6C0000] h-full w-[40%]"></div>
+</div>
+</div>
+<div class="cell-dark p-1.5 flex items-center justify-between text-[#a0a0a0]">
+<span>+28 en cola de espera</span>
+<span class="text-[#dfdbc9] font-bold">140:12:00</span>
+</div>
+</div>
+</div>
+<!-- Columna 3: Entrenamiento / Investigaciones -->
+<div class="cell-darker p-1.5 border border-[#333333] flex flex-col gap-1.5">
+<div class="crimson-th text-white px-2 py-0.5 flex justify-between items-center text-[10px] font-['Space_Grotesk'] font-bold uppercase">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-[#00ff00]">psychology</span>
+                  ENTRENAMIENTO
+                </span>
+<span class="bg-black/60 px-1 text-[#00ff00]">5/16</span>
+</div>
+<div class="flex flex-col gap-1 font-['Space_Mono'] text-[10px]">
+<div class="cell-dark p-1.5">
+<div class="flex justify-between font-bold text-white">
+<span>Planificación encargos</span>
+<span class="text-[#00ff00]">07:25:30</span>
+</div>
+<div class="flex justify-between text-[#888888] text-[9px] mt-0.5">
+<span class="text-[#fabd00]">Nivel 108</span>
+<span>I+D Syndicate</span>
+</div>
+</div>
+<div class="cell-dark p-1.5">
+<div class="flex justify-between font-bold text-white">
+<span>Extorsión</span>
+<span class="text-[#dfdbc9]">1d 07:38:47</span>
+</div>
+<div class="flex justify-between text-[#888888] text-[9px] mt-0.5">
+<span class="text-[#fabd00]">Nivel 90</span>
+<span>I+D Syndicate</span>
+</div>
+</div>
+<div class="cell-dark p-1.5">
+<div class="flex justify-between font-bold text-white">
+<span>Espionaje</span>
+<span class="text-[#dfdbc9]">2d 01:37:38</span>
+</div>
+<div class="flex justify-between text-[#888888] text-[9px] mt-0.5">
+<span class="text-[#fabd00]">Nivel 220</span>
+<span>I+D Syndicate</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. GUARNICIÓN LOCAL DE TROPAS & PUNTUACIÓN IMPERIAL -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+<!-- Tropas & Defensas Locales -->
+<div class="cell-darker p-2 border border-[#333333] flex flex-col gap-1.5">
+<div class="crimson-th text-white px-2 py-0.5 flex justify-between items-center text-[10px] font-['Space_Grotesk'] font-bold uppercase">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-[#fabd00]">shield</span>
+                  GUARNICIÓN LOCAL [40:23:220]
+                </span>
+<span class="text-[#00ff00] font-['Space_Mono']">DEFENSA LISTA</span>
+</div>
+<div class="grid grid-cols-4 gap-1.5 mt-1">
+<div class="cell-dark p-1.5 text-center flex flex-col items-center">
+<span class="material-symbols-outlined text-[20px] text-[#dfdbc9]">person</span>
+<span class="font-['Space_Mono'] font-bold text-[13px] text-white mt-0.5">1</span>
+<span class="text-[9px] text-[#888888] uppercase">Matón</span>
+</div>
+<div class="cell-dark p-1.5 text-center flex flex-col items-center">
+<span class="material-symbols-outlined text-[20px] text-[#fabd00]">local_shipping</span>
+<span class="font-['Space_Mono'] font-bold text-[13px] text-[#fabd00] mt-0.5">261</span>
+<span class="text-[9px] text-[#888888] uppercase">Transportista</span>
+</div>
+<div class="cell-dark p-1.5 text-center flex flex-col items-center">
+<span class="material-symbols-outlined text-[20px] text-[#ff3f3f]">military_tech</span>
+<span class="font-['Space_Mono'] font-bold text-[13px] text-[#ff3f3f] mt-0.5">422</span>
+<span class="text-[9px] text-[#888888] uppercase">Mercenario</span>
+</div>
+<div class="cell-dark p-1.5 text-center flex flex-col items-center">
+<span class="material-symbols-outlined text-[20px] text-[#00ff00]">lock</span>
+<span class="font-['Space_Mono'] font-bold text-[13px] text-[#00ff00] mt-0.5">2</span>
+<span class="text-[9px] text-[#888888] uppercase">Def. Ilegal</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-1.5 mt-1 font-['Space_Grotesk'] text-[10px]">
+<button class="btn-tactical py-1 uppercase font-bold text-[#dfdbc9]">REASIGNAR GARRISÓN</button>
+<button class="btn-crimson py-1 uppercase font-bold text-white">ORDEN DE DESPLIEGUE</button>
+</div>
+</div>
+<!-- Puntuación & Lealtad Imperial -->
+<div class="cell-darker p-2 border border-[#333333] flex flex-col justify-between">
+<div>
+<div class="crimson-th text-white px-2 py-0.5 flex justify-between items-center text-[10px] font-['Space_Grotesk'] font-bold uppercase mb-1.5">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-[#fff400]">leaderboard</span>
+                    ESTADÍSTICAS &amp; LEALTAD
+                  </span>
+<span class="text-[#fabd00] font-['Space_Mono']">ACTUALIZADO</span>
+</div>
+<div class="flex flex-col gap-1 font-['Space_Mono'] text-[10px]">
+<div class="flex justify-between items-center cell-dark px-2 py-1">
+<span class="text-[#888888]">PUNTOS ENTRENAMIENTO:</span>
+<span class="text-white font-bold">141.222</span>
+</div>
+<div class="flex justify-between items-center cell-dark px-2 py-1">
+<span class="text-[#888888]">PUNTOS EDIFICIOS:</span>
+<span class="text-white font-bold">1.526.375</span>
+</div>
+<div class="flex justify-between items-center cell-dark px-2 py-1">
+<span class="text-[#888888]">PUNTOS TROPAS:</span>
+<span class="text-[#ff3f3f] font-bold">41.404.336</span>
+</div>
+<div class="flex justify-between items-center bg-[#1f1616] border border-[#6C0000] px-2 py-1">
+<span class="text-[#fabd00] font-bold font-['Space_Grotesk'] uppercase">TOTAL PUNTOS ACUMULADOS:</span>
+<span class="text-[#fff400] font-bold text-[12px]">43.071.934 pts</span>
+</div>
+</div>
+</div>
+<!-- Barras de progreso de lealtad y capacidad -->
+<div class="cell-dark p-1.5 mt-2 flex flex-col gap-1.5 text-[9px] font-['Space_Mono']">
+<div>
+<div class="flex justify-between text-[#888888]">
+<span>CAPACIDAD DE EDIFICIOS:</span>
+<span class="text-[#dfdbc9] font-bold">76 / 124 LIBRES</span>
+</div>
+<div class="w-full bg-black h-1 mt-0.5 border border-[#333333]">
+<div class="bg-[#fabd00] h-full w-[61%]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-[#888888]">
+<span>LEALTAD DE LA CIUDAD:</span>
+<span class="text-[#00ff00] font-bold">53% [ESTABLE]</span>
+</div>
+<div class="w-full bg-black h-1 mt-0.5 border border-[#333333]">
+<div class="bg-[#00ff00] h-full w-[53%]"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- PIE DE PÁGINA RETRO COMPACTO -->
+<footer class="w-full border-t border-[#333333] bg-[#0a0a0a] px-3 py-1.5 text-[10px] font-['Space_Mono'] text-[#777777] flex items-center justify-between">
+<span class="text-[#dfdbc9]">Vendetta2X Engine © 2004-2024 Syndicate Network</span>
+<span class="text-[#00ff00]">Servidor Activo • Ping: 18ms</span>
+</footer>
+</div>
+<!-- COLUMNA LATERAL DERECHA (55px texturizado original right_bg.jpg) -->
+<aside class="hidden lg:block w-[55px] shrink-0 bg-[#000000] border-l border-[#222222] relative overflow-hidden" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBKEAUukk0-vWYHlLS5mdL979rFY9vZgolWbRSB0pCV2Xy4huvuU-FIg0OLE6scme0JGbEz-KKTx9_340JFceUXbOM6BwJca2dI3R2I9ZCbN9kVUTSYJHuDOsSyJx-q-Bw2BPvGEZ0Yr48QJn_42jNIxlN4tr-g70HUzNaR5Aa_vB2ZO0INkPNPIpSvy7LO9vwi0fBfYfH8RgqpSVWgyoRcUnYhtra8JRUrbnnN7Xpb5t3GM6jUd2iImPB23j2kA17lPUg'); background-repeat: repeat-y; background-position: center top;">
+<div class="absolute inset-0 bg-black/40 pointer-events-none"></div>
+</aside>
+</div>
+<!-- SCRIPT PARA RELOJ EN TIEMPO REAL SINCRONIZADO -->
+<script>
+    function updateServerClock() {
+      const el = document.getElementById('live-server-clock');
+      if (!el) return;
+      const now = new Date();
+      const d = String(now.getDate()).padStart(2, '0');
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const y = now.getFullYear();
+      const h = String(now.getHours()).padStart(2, '0');
+      const min = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      el.textContent = `${d}-${m}-${y} ${h}:${min}:${s}`;
+    }
+    setInterval(updateServerClock, 1000);
+    updateServerClock();
+  </script>
+</body></html>
