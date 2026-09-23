@@ -6,34 +6,13 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import {
   SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
   SidebarGroup,
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarMenuSubButton,
   useSidebar,
 } from "@/components/ui/sidebar";
-import {
-  Home,
-  DoorOpen,
-  Users,
-  Shield,
-  Target,
-  Search,
-  FlaskConical,
-  Users2,
-  Package,
-  Map,
-  ClipboardList,
-  Calculator,
-  List,
-  Mail,
-  BarChart,
-  Trophy,
-  Settings,
-  ChevronDown,
-} from "lucide-react";
+import MaterialIcon from "@/components/ui/material-icon";
 import { PropertySelector } from "./property-selector";
 import type { UserWithProgress } from "@/lib/data";
 import { useProperty } from "@/contexts/property-context";
@@ -42,13 +21,13 @@ import { cn } from "@/lib/utils";
 interface NavItem {
   href: string;
   label: string;
-  icon: React.ReactNode;
+  iconName: string;
+  badge?: number | string;
 }
 
 interface NavSection {
   id: string;
   label: string;
-  icon: React.ReactNode;
   items: NavItem[];
 }
 
@@ -58,41 +37,38 @@ interface SidebarNavProps {
 
 const navSections: NavSection[] = [
   {
-    id: "operaciones",
-    label: "OPERACIONES",
-    icon: <Target className="h-3.5 w-3.5" />,
+    id: "principal",
+    label: "PRINCIPAL",
     items: [
-      { href: "/overview", label: "Visión General", icon: <Home /> },
-      { href: "/rooms", label: "Habitaciones", icon: <DoorOpen /> },
-      { href: "/recruitment", label: "Reclutamiento", icon: <Users /> },
-      { href: "/missions", label: "Misiones", icon: <ClipboardList /> },
-      { href: "/map", label: "Mapa", icon: <Map /> },
-      { href: "/security", label: "Seguridad", icon: <Shield /> },
+      { href: "/overview", label: "Visión General", iconName: "home" },
+      { href: "/rooms", label: "Habitaciones", iconName: "meeting_room" },
+      { href: "/recruitment", label: "Reclutamiento", iconName: "groups" },
+      { href: "/security", label: "Seguridad", iconName: "shield" },
+      { href: "/training", label: "Entrenamiento", iconName: "fitness_center" },
+      { href: "/search", label: "Buscar", iconName: "search" },
     ],
   },
   {
-    id: "imperio",
-    label: "IMPERIO",
-    icon: <Package className="h-3.5 w-3.5" />,
+    id: "tactico",
+    label: "TÁCTICO & FAMILIA",
     items: [
-      { href: "/training", label: "Entrenamiento", icon: <Target /> },
-      { href: "/technologies", label: "Tecnologías", icon: <FlaskConical /> },
-      { href: "/resources", label: "Recursos", icon: <Package /> },
-      { href: "/family", label: "Familia", icon: <Users2 /> },
-      { href: "/simulator", label: "Simulador", icon: <Calculator /> },
-      { href: "/farms", label: "Lista de granjas", icon: <List /> },
+      { href: "/technologies", label: "Tecnologías", iconName: "psychology" },
+      { href: "/family", label: "Familia", iconName: "shield" },
+      { href: "/resources", label: "Recursos", iconName: "inventory_2" },
+      { href: "/map", label: "Mapa", iconName: "public" },
+      { href: "/missions", label: "Misiones", iconName: "radar" },
+      { href: "/simulator", label: "Simulador", iconName: "calculate" },
+      { href: "/farms", label: "Lista de Granjas", iconName: "list_alt" },
+      { href: "/messages", label: "Mensajes", iconName: "mail", badge: 4 },
+      { href: "/statistics", label: "Estadísticas", iconName: "analytics" },
+      { href: "/rankings", label: "Clasificaciones", iconName: "leaderboard" },
     ],
   },
   {
-    id: "social",
-    label: "SOCIAL",
-    icon: <Users2 className="h-3.5 w-3.5" />,
+    id: "comunidad",
+    label: "COMUNIDAD",
     items: [
-      { href: "/messages", label: "Mensajes", icon: <Mail /> },
-      { href: "/rankings", label: "Clasificaciones", icon: <Trophy /> },
-      { href: "/statistics", label: "Estadísticas", icon: <BarChart /> },
-      { href: "/settings", label: "Ajustes", icon: <Settings /> },
-      { href: "/search", label: "Buscar", icon: <Search /> },
+      { href: "/settings", label: "Opciones", iconName: "settings" },
     ],
   },
 ];
@@ -103,21 +79,12 @@ export function SidebarNav({ user }: SidebarNavProps) {
   const { selectedProperty } = useProperty();
   const { setOpenMobile, isMobile } = useSidebar();
   const router = useRouter();
-  const [expandedSections, setExpandedSections] = useState<string[]>(["operaciones"]);
 
   const handleNavigate = (href: string) => {
     router.push(href);
     if (isMobile) {
       setOpenMobile(false);
     }
-  };
-
-  const toggleSection = (sectionId: string) => {
-    setExpandedSections(prev =>
-      prev.includes(sectionId)
-        ? prev.filter(id => id !== sectionId)
-        : [...prev, sectionId]
-    );
   };
 
   const buildHref = (item: NavItem) => {
@@ -134,81 +101,61 @@ export function SidebarNav({ user }: SidebarNavProps) {
     return `${item.href}?${params.toString()}`;
   };
 
-  const renderSection = (section: NavSection) => {
-    const isExpanded = expandedSections.includes(section.id);
-    const hasActiveItem = section.items.some(item => pathname.startsWith(item.href));
-
-    return (
-      <SidebarGroup key={section.id} className="w-full">
-        {/* Section header with chevron */}
-        <button
-          type="button"
-          onClick={() => toggleSection(section.id)}
-          className={cn(
-            "w-full flex items-center justify-between gap-2 px-2 py-2",
-            "text-[10px] font-mono font-semibold tracking-wider uppercase",
-            "text-muted-foreground hover:text-foreground transition-colors",
-            "rounded-md hover:bg-sidebar-accent"
-          )}
-          aria-expanded={isExpanded}
-        >
-          <div className="flex items-center gap-1.5">
-            <span className="text-muted-foreground/60">{section.icon}</span>
+  return (
+    <div className="flex flex-col gap-1 w-full text-[11px]">
+      {navSections.map((section) => (
+        <SidebarGroup key={section.id} className="w-full p-0">
+          <div className="crimson-th text-white font-['Space_Grotesk'] text-[10px] font-bold uppercase px-2 py-0.5 tracking-wider shadow-sm mb-0.5">
             {section.label}
-            {hasActiveItem && (
-              <span className="ml-1.5 px-1.5 py-0.5 text-[9px] font-mono bg-primary/20 text-primary rounded">
-                ACTIVO
-              </span>
-            )}
           </div>
-          <ChevronDown
-            className={cn(
-              "h-3.5 w-3.5 text-muted-foreground/60 transition-transform",
-              isExpanded && "rotate-180"
-            )}
-          />
-        </button>
-
-        {/* Collapsible menu items */}
-        <SidebarMenuSub className={cn("overflow-hidden transition-all duration-200", isExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0")}>
-          <SidebarMenu>
+          <SidebarMenu className="gap-[2px]">
             {section.items.map((item) => {
               const finalHref = buildHref(item);
               const isActive = pathname.startsWith(item.href);
 
               return (
-                <SidebarMenuSubItem key={item.href}>
-                  <SidebarMenuSubButton
-                    asChild
-                    isActive={isActive}
-                    tooltip={isMobile ? undefined : item.label}
-                    onClick={() => handleNavigate(finalHref)}
-                    size="default"
-                    className="w-full flex items-center gap-2 px-4"
+                <SidebarMenuSubItem key={item.href} className="m-0 p-0">
+                  <Link
+                    href={finalHref}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavigate(finalHref);
+                    }}
+                    className={cn(
+                      "w-full px-2 py-1 flex items-center justify-between text-[11px] font-medium transition-colors min-h-[36px] sm:min-h-[28px]",
+                      isActive
+                        ? "bg-[#6C0000] text-[#ffffff] font-bold border-l-2 border-[#fff400]"
+                        : "cell-dark text-[#dfdbc9] hover:bg-[#1f1f1f] hover:text-[#fff400]"
+                    )}
                   >
-                    <Link href={finalHref} className="w-full flex items-center gap-2">
-                      {item.icon}
+                    <div className="flex items-center gap-1.5 truncate">
+                      <MaterialIcon
+                        name={item.iconName}
+                        size={14}
+                        className={isActive ? "text-[#fff400]" : "text-[#888888]"}
+                      />
                       <span className="truncate">{item.label}</span>
-                    </Link>
-                  </SidebarMenuSubButton>
+                    </div>
+                    {item.badge ? (
+                      <span className="bg-[#ff0000] text-white text-[9px] font-bold px-1 rounded-sm font-['Space_Mono']">
+                        {item.badge}
+                      </span>
+                    ) : isActive ? (
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#fff400] shrink-0" />
+                    ) : null}
+                  </Link>
                 </SidebarMenuSubItem>
               );
             })}
           </SidebarMenu>
-        </SidebarMenuSub>
-      </SidebarGroup>
-    );
-  };
-
-  return (
-    <>
-      {navSections.map(renderSection)}
+        </SidebarGroup>
+      ))}
 
       {user && user.propiedades.length > 0 && (
-        <SidebarGroup className="pt-2">
+        <SidebarGroup className="pt-2 px-1">
           <PropertySelector properties={user.propiedades} />
         </SidebarGroup>
       )}
-    </>
+    </div>
   );
 }

@@ -1,33 +1,121 @@
 /**
- * Vendetta Syndicate Noir 2.0 - Core Design Tokens & Game Domain Utilities
- * Extends base Shadcn/Tailwind palette with Mafia RTS tactical layers and resource tokens.
+ * Vendetta Syndicate Operations Design Tokens & Tactical Utility Classes
+ * Pure 2004 RTS Syndicate aesthetic ported from docs/ejemplo.html and DESIGN.md
  */
 
 :root, .dark {
-  /* Extended Elevation Surface Tokens */
-  --surface-lowest: 0 0% 6.7%;   /* #111111 - Base background */
-  --surface-card: 0 0% 10%;      /* #1a1a1a - Primary card container */
-  --surface-elevated: 0 0% 14%;  /* #242424 - Hover states & active items */
-  --surface-overlay: 0 0% 17%;   /* #2b2b2b - Floating modals, dropdowns, sticky bars */
+  /* Layout Master Surfaces */
+  --canvas-bg: #080808;
+  --column-bg: #111111;
+  --nav-bg: #0d0d0d;
+  --resource-bg: #0a0a0a;
 
-  /* Dedicated Game Resource Tokens (RTS Economy) */
-  --resource-armas: 0 72% 51%;      /* #dc2626 - Weapons / Ballistics */
-  --resource-municion: 38 92% 50%;  /* #f59e0b - Ammunition / Gunpowder */
-  --resource-alcohol: 35 90% 44%;   /* #d97706 - Contraband / Alcohol */
-  --resource-dolares: 160 84% 39%;  /* #10b981 - Dirty Cash / Laundered Dollars */
+  /* Structural 1px Borders */
+  --border-primary: #333333;
+  --border-secondary: #282828;
+  --border-divider: #222222;
+
+  /* Typography Colors */
+  --text-primary: #dfdbc9;
+  --text-hot: #ffdad4;
+  --text-muted: #a0a0a0;
+  --text-meta: #888888;
+  --text-footer: #777777;
+
+  /* Game Domain Accents */
+  --accent-burgundy: #6C0000;
+  --accent-crimson: #ff3f3f;
+  --accent-gold: #fff400;
+  --accent-amber: #fabd00;
+  --accent-green: #00ff00;
+  --accent-orange: #ee7000;
+  --accent-alert-full: #93000a;
+
+  /* Extended Surface Tokens */
+  --surface-lowest: 0 0% 3.1%;    /* #080808 */
+  --surface-card: 0 0% 6.7%;      /* #111111 */
+  --surface-elevated: 0 0% 10%;   /* #1a1a1a */
+  --surface-overlay: 0 0% 14%;    /* #242424 */
+
+  /* Resource Tokens */
+  --resource-armas: 21 100% 47%;     /* #ee7000 - Weapons / Ballistics */
+  --resource-municion: 38 92% 50%;   /* #f59e0b - Ammunition */
+  --resource-alcohol: 0 85% 50%;     /* #ff3f3f - Alcohol / Contraband */
+  --resource-dolares: 120 100% 38%;  /* #00c000 - Dollars / Cash */
 
   /* Tactical Aura & Glow Effects */
   --glow-crimson: 0 72% 51%;
   --glow-gold: 45 93% 47%;
 }
 
-/* Domain Utility Classes for RTS Game HUD & Tactical Feedback */
+/* ==========================================================================
+   CANONICAL RETRO CLASSES (from docs/ejemplo.html)
+   ========================================================================== */
+
+.retro-border {
+  border: 1px solid #333333;
+}
+
+.crimson-th {
+  background: linear-gradient(180deg, #7a0000 0%, #4f0000 100%);
+  border: 1px solid #8e1515;
+  color: #ffdad4;
+}
+
+.cell-dark {
+  background-color: #111111;
+  border: 1px solid #282828;
+}
+
+.cell-darker {
+  background-color: #0d0d0d;
+  border: 1px solid #222222;
+}
+
+.btn-tactical {
+  background: linear-gradient(180deg, #262626 0%, #151515 100%);
+  border: 1px solid #3d3d3d;
+  color: #dfdbc9;
+  transition: all 0.15s ease;
+}
+
+.btn-tactical:hover {
+  background: linear-gradient(180deg, #363636 0%, #202020 100%);
+  color: #fff400;
+  border-color: #777777;
+}
+
 .btn-tactical-press {
   transition: transform 0.08s ease-in-out, filter 0.15s ease;
 }
+
 .btn-tactical-press:active {
   transform: scale(0.98) translateY(1px);
   filter: brightness(0.92);
+}
+
+.btn-crimson {
+  background: linear-gradient(180deg, #8a0c0c 0%, #520000 100%);
+  border: 1px solid #a81c1c;
+  color: #ffffff;
+  transition: all 0.15s ease;
+}
+
+.btn-crimson:hover {
+  background: linear-gradient(180deg, #a61212 0%, #680000 100%);
+  color: #ffffff;
+}
+
+/* Tactical Pills */
+.pill-red {
+  background-color: #ff0000;
+  color: #ffffff;
+}
+
+.pill-green {
+  background-color: #003800;
+  border: 1px solid #00c000;
+  color: #00ff00;
 }
 
 .resource-pill {
@@ -35,43 +123,43 @@
   align-items: center;
   gap: 0.375rem;
   padding: 0.25rem 0.5rem;
-  border-radius: 0.375rem;
-  font-family: var(--font-mono), monospace;
-  font-weight: 600;
+  border-radius: 0.25rem;
+  font-family: var(--font-space-mono), var(--font-mono), monospace;
+  font-weight: 700;
   font-size: 0.8125rem;
   font-variant-numeric: tabular-nums;
   border: 1px solid transparent;
 }
 
 .resource-pill-armas {
-  background-color: hsl(var(--resource-armas) / 0.12);
-  color: hsl(var(--resource-armas));
-  border-color: hsl(var(--resource-armas) / 0.25);
+  background-color: rgba(238, 112, 0, 0.12);
+  color: #ee7000;
+  border-color: rgba(238, 112, 0, 0.3);
 }
 
 .resource-pill-municion {
-  background-color: hsl(var(--resource-municion) / 0.12);
-  color: hsl(var(--resource-municion));
-  border-color: hsl(var(--resource-municion) / 0.25);
+  background-color: rgba(250, 189, 0, 0.12);
+  color: #fabd00;
+  border-color: rgba(250, 189, 0, 0.3);
 }
 
 .resource-pill-alcohol {
-  background-color: hsl(var(--resource-alcohol) / 0.12);
-  color: hsl(var(--resource-alcohol));
-  border-color: hsl(var(--resource-alcohol) / 0.25);
+  background-color: rgba(255, 63, 63, 0.12);
+  color: #ff3f3f;
+  border-color: rgba(255, 63, 63, 0.3);
 }
 
 .resource-pill-dolares {
-  background-color: hsl(var(--resource-dolares) / 0.12);
-  color: hsl(var(--resource-dolares));
-  border-color: hsl(var(--resource-dolares) / 0.25);
+  background-color: rgba(0, 255, 0, 0.12);
+  color: #00ff00;
+  border-color: rgba(0, 255, 0, 0.3);
 }
 
-/* Ambient subtle glow for high-tier crime operations */
+/* Ambient glow (rankings/trophies ONLY, never buttons) */
 .glow-border-crimson {
-  box-shadow: 0 0 15px -3px hsl(var(--glow-crimson) / 0.35);
+  box-shadow: 0 0 15px -3px rgba(220, 38, 38, 0.35);
 }
 
 .glow-border-gold {
-  box-shadow: 0 0 15px -3px hsl(var(--glow-gold) / 0.35);
+  box-shadow: 0 0 15px -3px rgba(234, 179, 8, 0.35);
 }

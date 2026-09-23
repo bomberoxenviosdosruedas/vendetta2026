@@ -28,10 +28,10 @@ const config: Config = {
         '17': 'repeat(17, minmax(0, 1fr))',
       },
       fontFamily: {
-        sans: ['Tahoma', 'Arial', 'Helvetica', 'sans-serif'],
+        sans: ['var(--font-work-sans)', 'Work Sans', 'Tahoma', 'Arial', 'Helvetica', 'sans-serif'],
+        heading: ['var(--font-space-grotesk)', 'Space Grotesk', 'Tahoma', 'sans-serif'],
+        mono: ['var(--font-space-mono)', 'Space Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
         tahoma: ['Tahoma', 'Arial', 'Helvetica', 'sans-serif'],
-        heading: ['var(--font-bebas-neue)', 'Tahoma', 'sans-serif'],
-        mono: ['var(--font-mono)', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
       },
       boxShadow: {
         'base': '0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px hsl(var(--border) / 0.3)',
@@ -101,10 +101,10 @@ const config: Config = {
           ring: 'hsl(var(--sidebar-ring))',
         },
         surface: {
-          lowest: 'hsl(var(--surface-lowest, 240 10% 4.5%))',
-          card: 'hsl(var(--surface-card, 240 8% 8.5%))',
-          elevated: 'hsl(var(--surface-elevated, 240 7% 12%))',
-          overlay: 'hsl(var(--surface-overlay, 240 7% 15%))',
+          lowest: 'hsl(var(--surface-lowest, 0 0% 3.1%))',
+          card: 'hsl(var(--surface-card, 0 0% 6.7%))',
+          elevated: 'hsl(var(--surface-elevated, 0 0% 10%))',
+          overlay: 'hsl(var(--surface-overlay, 0 0% 14%))',
         },
         resource: {
           armas: 'hsl(var(--resource-armas, 0 72% 51%))',

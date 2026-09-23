@@ -1,15 +1,11 @@
-
 'use client';
 
 import Image from 'next/image';
 import { DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from '@/components/ui/dialog';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { X } from 'lucide-react';
 import { ScrollArea } from '../ui/scroll-area';
 import { Button } from '../ui/button';
 import type { ConfiguracionTropa } from '@prisma/client';
 import type { UserWithProgress } from '@/lib/data';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 
 interface TroopDetailsModalProps {
   troop: ConfiguracionTropa;
@@ -21,112 +17,65 @@ interface TroopDetailsModalProps {
 }
 
 function formatNumber(num: number): string {
-    if (num === null || num === undefined) return "0";
-    return num.toLocaleString('de-DE');
+  if (num === null || num === undefined) return "0";
+  return num.toLocaleString('de-DE');
 }
 
 export function TroopDetailsModal({ troop, user, ataqueActual, defensaActual, capacidadActual, velocidadActual }: TroopDetailsModalProps) {
-    const stats = [
-        { label: 'Ataque', base: troop.ataque, actual: ataqueActual },
-        { label: 'Defensa', base: troop.defensa, actual: defensaActual },
-        { label: 'Capacidad', base: troop.capacidad, actual: capacidadActual },
-        { label: 'Velocidad', base: troop.velocidad, actual: velocidadActual },
-        { label: 'Salario', base: troop.salario, actual: troop.salario },
-        { label: 'Puntos', base: troop.puntos, actual: troop.puntos },
-    ];
-  return (
-    <DialogContent className="max-w-3xl w-full max-h-[90svh] flex flex-col p-0">
-        <DialogHeader className="p-6 pb-4">
-            <div className="flex flex-col sm:flex-row items-start gap-4">
-            <div className="w-24 h-20 relative rounded-md overflow-hidden border flex-shrink-0">
-                <Image src={troop.urlImagen} alt={troop.nombre} fill className="object-contain" data-ai-hint="mafia character icon" />
-            </div>
-            <div>
-                <DialogTitle className="text-2xl">{troop.nombre}</DialogTitle>
-                <DialogDescription className="text-sm text-muted-foreground mt-2">{troop.descripcion}</DialogDescription>
-            </div>
-            </div>
-        </DialogHeader>
-        <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground sm:hidden">
-            <X className="h-4 w-4" />
-            <span className="sr-only">Close</span>
-        </DialogClose>
+  const stats = [
+    { label: 'Ataque', base: troop.ataque, actual: ataqueActual, color: 'text-[#ff3f3f]' },
+    { label: 'Defensa', base: troop.defensa, actual: defensaActual, color: 'text-[#00ff00]' },
+    { label: 'Capacidad', base: troop.capacidad, actual: capacidadActual, color: 'text-[#fabd00]' },
+    { label: 'Velocidad', base: Number(troop.velocidad), actual: velocidadActual, color: 'text-[#ee7000]' },
+    { label: 'Salario', base: troop.salario, actual: troop.salario, color: 'text-[#fff400]' },
+    { label: 'Puntos', base: troop.puntos, actual: troop.puntos, color: 'text-white' },
+  ];
 
-        <ScrollArea className="flex-grow px-6">
-            <h3 className="font-semibold mb-2">Estadísticas de la Tropa</h3>
-            
-            {/* Vista de tabla para escritorio */}
-            <Table className="hidden sm:table">
-                <TableHeader>
-                    <TableRow>
-                        <TableHead className="w-[80px]">Valor</TableHead>
-                        <TableHead className="text-right">Ataque</TableHead>
-                        <TableHead className="text-right">Defensa</TableHead>
-                        <TableHead className="text-right">Capacidad</TableHead>
-                        <TableHead className="text-right">Velocidad</TableHead>
-                        <TableHead className="text-right">Salario</TableHead>
-                        <TableHead className="text-right">Puntos</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    <TableRow>
-                        <TableCell className="font-medium">Base</TableCell>
-                        <TableCell className="text-right font-mono">{formatNumber(troop.ataque)}</TableCell>
-                        <TableCell className="text-right font-mono">{formatNumber(troop.defensa)}</TableCell>
-                        <TableCell className="text-right font-mono">{formatNumber(troop.capacidad)}</TableCell>
-                        <TableCell className="text-right font-mono">{formatNumber(Number(troop.velocidad))}</TableCell>
-                        <TableCell className="text-right font-mono">{formatNumber(troop.salario)}</TableCell>
-                        <TableCell className="text-right font-mono">{formatNumber(troop.puntos)}</TableCell>
-                    </TableRow>
-                    <TableRow className="bg-muted/30">
-                        <TableCell className="font-medium text-primary">Actual</TableCell>
-                        <TableCell className="text-right font-mono text-primary font-bold">{formatNumber(ataqueActual)}</TableCell>
-                        <TableCell className="text-right font-mono text-primary font-bold">{formatNumber(defensaActual)}</TableCell>
-                        <TableCell className="text-right font-mono text-primary font-bold">{formatNumber(capacidadActual)}</TableCell>
-                        <TableCell className="text-right font-mono text-primary font-bold">{formatNumber(velocidadActual)}</TableCell>
-                        <TableCell className="text-right font-mono text-primary font-bold">{formatNumber(troop.salario)}</TableCell>
-                        <TableCell className="text-right font-mono text-primary font-bold">{formatNumber(troop.puntos)}</TableCell>
-                    </TableRow>
-                </TableBody>
-            </Table>
-            
-            {/* Vista de tarjetas para móvil */}
-            <div className='sm:hidden space-y-4'>
-                <Card>
-                    <CardHeader className='p-4'>
-                        <CardTitle className='text-base'>Estadísticas Base</CardTitle>
-                    </CardHeader>
-                    <CardContent className='p-4 pt-0 grid grid-cols-2 gap-x-4 gap-y-2 text-sm'>
-                        {stats.map(stat => (
-                            <div key={`base-${stat.label}`} className='flex justify-between items-baseline'>
-                                <span className='text-muted-foreground'>{stat.label}:</span>
-                                <span className='font-mono font-semibold'>{formatNumber(Number(stat.base))}</span>
-                            </div>
-                        ))}
-                    </CardContent>
-                </Card>
-                 <Card className='bg-muted/30'>
-                    <CardHeader className='p-4'>
-                        <CardTitle className='text-base text-primary'>Estadísticas Actuales</CardTitle>
-                    </CardHeader>
-                    <CardContent className='p-4 pt-0 grid grid-cols-2 gap-x-4 gap-y-2 text-sm'>
-                         {stats.map(stat => (
-                            <div key={`actual-${stat.label}`} className='flex justify-between items-baseline'>
-                                <span className='text-muted-foreground'>{stat.label}:</span>
-                                <span className='font-mono font-bold text-primary'>{formatNumber(stat.actual)}</span>
-                            </div>
-                        ))}
-                    </CardContent>
-                </Card>
-            </div>
-        </ScrollArea>
-        <div className="px-6 py-4 border-t mt-auto">
-             <DialogClose asChild>
-                <Button type="button" variant="secondary" className="w-full">
-                    Cerrar
-                </Button>
-            </DialogClose>
+  return (
+    <DialogContent className="max-w-2xl w-full max-h-[85vh] flex flex-col p-0 bg-[#0d0d0d] border-[#333333] text-[#dfdbc9]">
+      <DialogHeader className="p-3 crimson-th border-b border-[#8e1515] shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="w-16 h-12 relative rounded border border-[#333333] bg-black overflow-hidden shrink-0">
+            <Image src={troop.urlImagen} alt={troop.nombre} fill className="w-full h-auto object-cover" />
+          </div>
+          <div>
+            <DialogTitle className="text-base font-['Space_Grotesk'] text-white uppercase">{troop.nombre}</DialogTitle>
+            <DialogDescription className="text-xs text-[#ffdad4] font-['Space_Mono']">
+              Ficha Técnica de Combate
+            </DialogDescription>
+          </div>
         </div>
+      </DialogHeader>
+
+      <ScrollArea className="flex-1 p-3">
+        <div className="space-y-3">
+          <p className="text-xs text-[#a0a0a0]">{troop.descripcion}</p>
+
+          <div className="crimson-th px-2 py-0.5 text-[10px] font-['Space_Grotesk'] font-bold uppercase text-white">
+            MATRIZ DE ATRIBUTOS TÁCTICOS
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-['Space_Mono'] text-xs">
+            {stats.map((st) => (
+              <div key={st.label} className="cell-dark p-2 flex justify-between items-center">
+                <span className="text-[#888888]">{st.label.toUpperCase()}:</span>
+                <div className="flex items-center gap-2 tabular-nums">
+                  <span className="text-[#a0a0a0] line-through text-[10px]">{formatNumber(Number(st.base))}</span>
+                  <span className={`font-bold ${st.color}`}>{formatNumber(st.actual)}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </ScrollArea>
+
+      <div className="p-2 border-t border-[#333333] bg-[#0a0a0a] shrink-0">
+        <DialogClose asChild>
+          <Button type="button" className="btn-tactical w-full text-xs font-['Space_Grotesk'] font-bold h-11 min-h-[44px]">
+            CERRAR DETALLES
+          </Button>
+        </DialogClose>
+      </div>
     </DialogContent>
   );
 }
