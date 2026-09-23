@@ -13,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MailPlus, Loader2 } from "lucide-react";
+import { MaterialIcon } from "@/components/ui/material-icon";
 import { useState, useTransition } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { inviteUserToFamily } from "@/lib/actions/family.actions";
@@ -50,8 +50,8 @@ export function InviteMemberDialog({ familyId, allUsers }: InviteMemberDialogPro
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button size="sm">
-                    <MailPlus className="mr-2 h-4 w-4" />
+                <Button size="sm" className="btn-crimson">
+                    <MaterialIcon name="person_add" size={18} className="mr-2" />
                     Invitar Miembro
                 </Button>
             </DialogTrigger>
@@ -81,9 +81,9 @@ export function InviteMemberDialog({ familyId, allUsers }: InviteMemberDialogPro
                 </div>
                 <DialogFooter>
                     <Button variant="ghost" onClick={() => setIsOpen(false)}>Cancelar</Button>
-                    <Button onClick={handleInvite} disabled={isPending || !selectedUser}>
-                         {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                         Enviar Invitación
+                    <Button onClick={handleInvite} className="btn-crimson" disabled={isPending || !selectedUser}>
+                         {isPending && <MaterialIcon name="sync" size={18} className="mr-2 animate-pulse" />}
+                         {isPending ? 'PROCESANDO...' : 'Enviar Invitación'}
                     </Button>
                 </DialogFooter>
             </DialogContent>

@@ -130,7 +130,7 @@ function TroopForm({ troopId }: { troopId: string }) {
       >
         {isPending ? 'ENVIANDO...' : colaReclutamientoActiva ? 'EN COLA' : 'RECLUTAR'}
       </Button>
-      {error && <p className="text-[10px] text-[#ff3f3f] font-mono">{error}</p>}
+      {error && <p className="text-xs text-[#ff3f3f] font-mono">{error}</p>}
     </form>
   );
 }

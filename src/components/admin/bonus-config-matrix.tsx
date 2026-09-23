@@ -5,7 +5,7 @@ import { useState, useTransition } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../ui/card";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { Loader2 } from "lucide-react";
+import { MaterialIcon } from "@/components/ui/material-icon";
 import { useToast } from "@/hooks/use-toast";
 import { saveTroopBonusConfig } from "@/lib/actions/admin.actions";
 import { ConfiguracionTropa, TropaBonusContrincante } from "@prisma/client";
@@ -129,9 +129,9 @@ export function BonusConfigMatrix({ attackTroops, defenseTroops, initialBonusCon
                     </table>
                 </ScrollArea>
                 <div className="flex justify-end mt-4">
-                    <Button onClick={handleSubmit} disabled={isPending}>
-                        {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Guardar Cambios
+                    <Button onClick={handleSubmit} className="btn-crimson" disabled={isPending}>
+                        {isPending && <MaterialIcon name="sync" size={18} className="mr-2 animate-pulse" />}
+                        {isPending ? 'GUARDANDO...' : 'Guardar Cambios'}
                     </Button>
                 </div>
             </CardContent>

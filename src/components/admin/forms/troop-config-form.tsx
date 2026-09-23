@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { saveTroopConfig } from "@/lib/actions/admin.actions";
-import { Loader2 } from "lucide-react";
+import { MaterialIcon } from "@/components/ui/material-icon";
 import type { ConfiguracionTropa, TipoTropa } from "@prisma/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FullConfiguracionEntrenamiento, FullConfiguracionTropa } from "@/lib/data";
@@ -226,9 +226,9 @@ export function TroopConfigForm({ troop, allTroops, allTrainings, tiposTropa, on
             </ScrollArea>
             <div className="flex justify-end gap-2 pt-6 border-t mt-6 shrink-0">
                 <Button type="button" variant="ghost" onClick={onFinished}>Cancelar</Button>
-                <Button type="submit" disabled={isPending}>
-                    {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Guardar
+                <Button type="submit" className="btn-crimson" disabled={isPending}>
+                    {isPending && <MaterialIcon name="sync" size={18} className="mr-2 animate-pulse" />}
+                    {isPending ? 'GUARDANDO...' : 'Guardar'}
                 </Button>
             </div>
         </form>

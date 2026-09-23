@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useTransition } from "react";
 import { acceptRequest, rejectInvitation } from "@/lib/actions/family.actions";
 import { useToast } from "@/hooks/use-toast";
-import { Check, Loader2, X, ArrowLeft } from "lucide-react";
+import { MaterialIcon } from "@/components/ui/material-icon";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
@@ -51,7 +51,7 @@ export function FamilyRequestsView({ requests }: FamilyRequestsViewProps) {
                 </div>
                 <Button asChild variant="outline" size="sm">
                     <Link href="/family">
-                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        <MaterialIcon name="arrow_back" size={18} className="mr-2" />
                         Volver a la Familia
                     </Link>
                 </Button>
@@ -79,11 +79,11 @@ export function FamilyRequestsView({ requests }: FamilyRequestsViewProps) {
                                         <TableCell className="text-right font-mono">{formatPoints(req.user.puntuacion?.puntosTotales)}</TableCell>
                                         <TableCell className="text-right">{new Date(req.createdAt).toLocaleDateString()}</TableCell>
                                         <TableCell className="text-right space-x-2">
-                                            <Button size="icon" variant="outline" className="text-green-500 hover:text-green-500 hover:bg-green-500/10" onClick={() => handleAction('accept', req.id)} disabled={isPending}>
-                                                {isPending ? <Loader2 className="animate-spin" /> : <Check />}
+                                            <Button size="icon" variant="outline" className="h-9 w-9 min-h-[44px] min-w-[44px] text-green-500 hover:text-green-500 hover:bg-green-500/10" onClick={() => handleAction('accept', req.id)} disabled={isPending}>
+                                                {isPending ? <MaterialIcon name="sync" size={18} className="animate-pulse" /> : <MaterialIcon name="check" size={20} />}
                                             </Button>
-                                             <Button size="icon" variant="outline" className="text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => handleAction('reject', req.id)} disabled={isPending}>
-                                                {isPending ? <Loader2 className="animate-spin" /> : <X />}
+                                             <Button size="icon" variant="outline" className="h-9 w-9 min-h-[44px] min-w-[44px] text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => handleAction('reject', req.id)} disabled={isPending}>
+                                                {isPending ? <MaterialIcon name="sync" size={18} className="animate-pulse" /> : <MaterialIcon name="close" size={20} />}
                                             </Button>
                                         </TableCell>
                                     </TableRow>
@@ -112,11 +112,11 @@ export function FamilyRequestsView({ requests }: FamilyRequestsViewProps) {
                                     </div>
                                     <Separator className="my-3"/>
                                     <div className="flex justify-end gap-2">
-                                         <Button size="sm" variant="outline" className="flex-1 text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => handleAction('reject', req.id)} disabled={isPending}>
-                                            <X className="mr-2 h-4 w-4"/> Rechazar
+                                         <Button size="sm" variant="outline" className="flex-1 min-h-[44px] text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => handleAction('reject', req.id)} disabled={isPending}>
+                                            <MaterialIcon name="close" size={18} className="mr-2"/> Rechazar
                                         </Button>
-                                        <Button size="sm" className="flex-1" onClick={() => handleAction('accept', req.id)} disabled={isPending}>
-                                            <Check className="mr-2 h-4 w-4"/> Aceptar
+                                        <Button size="sm" className="flex-1 min-h-[44px]" onClick={() => handleAction('accept', req.id)} disabled={isPending}>
+                                            <MaterialIcon name="check" size={18} className="mr-2"/> Aceptar
                                         </Button>
                                     </div>
                                 </Card>

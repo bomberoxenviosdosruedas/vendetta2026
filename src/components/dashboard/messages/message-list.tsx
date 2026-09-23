@@ -3,7 +3,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FullMessage } from "@/lib/data";
-import { Inbox, Trash2 } from "lucide-react";
+import { MaterialIcon } from "@/components/ui/material-icon";
 import { MessageDetail } from "./message-detail";
 import { cn } from "@/lib/utils";
 import { deleteMessage, markMessageAsRead } from "@/lib/actions/message.actions";
@@ -59,7 +59,7 @@ export function MessageList({ messages, selectedMessage, setSelectedMessage, cat
             <CardContent className="flex-grow">
                 {messages.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
-                        <Inbox className="h-16 w-16" />
+                        <MaterialIcon name="inbox" size={64} />
                         <p className="mt-4 text-lg">No hay mensajes en esta carpeta</p>
                     </div>
                 ) : (
@@ -86,8 +86,8 @@ export function MessageList({ messages, selectedMessage, setSelectedMessage, cat
                                     <div className="text-xs text-muted-foreground flex-shrink-0">
                                         {new Date(message.createdAt).toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' })}
                                     </div>
-                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={(e) => {e.stopPropagation(); handleDelete(message.id)}} disabled={isPending}>
-                                        <Trash2 className="h-4 w-4" />
+                                    <Button variant="ghost" size="icon" className="h-8 w-8 min-h-[44px] min-w-[44px] text-muted-foreground hover:text-destructive" onClick={(e) => {e.stopPropagation(); handleDelete(message.id)}} disabled={isPending}>
+                                        <MaterialIcon name="delete" size={18} />
                                     </Button>
                                 </div>
                             ))}

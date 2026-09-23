@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Loader2, Terminal } from 'lucide-react';
+import { MaterialIcon } from '@/components/ui/material-icon';
 import { registerUser } from '@/lib/actions/auth.actions';
 
 interface RegisterFormProps {
@@ -100,7 +100,7 @@ export function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
                         </div>
                         {error && (
                             <Alert variant="destructive">
-                                <Terminal className="h-4 w-4" />
+                                <MaterialIcon name="terminal" size={18} className="mr-2 inline-block" />
                                 <AlertTitle>Error</AlertTitle>
                                 <AlertDescription>{error}</AlertDescription>
                             </Alert>
@@ -138,15 +138,16 @@ export function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
                         </div>
                          {error && (
                             <Alert variant="destructive">
-                                <Terminal className="h-4 w-4" />
+                                <MaterialIcon name="terminal" size={18} className="mr-2 inline-block" />
                                 <AlertTitle>Error</AlertTitle>
                                 <AlertDescription>{error}</AlertDescription>
                             </Alert>
                         )}
                     </CardContent>
                     <CardFooter className="flex-col gap-4">
-                        <Button type="submit" className="w-full" disabled={isLoading}>
-                            {isLoading ? <Loader2 className="animate-spin" /> : 'Confirmar y Entrar al Juego'}
+                        <Button type="submit" className="w-full btn-crimson" disabled={isLoading}>
+                            {isLoading ? <MaterialIcon name="sync" size={18} className="animate-pulse mr-2" /> : null}
+                            {isLoading ? 'PROCESANDO...' : 'Confirmar y Entrar al Juego'}
                         </Button>
                         <Button variant="link" size="sm" className="p-0 h-auto" onClick={() => setStep(1)} disabled={isLoading}>
                             Volver

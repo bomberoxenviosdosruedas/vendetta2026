@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Terminal } from 'lucide-react';
+import { MaterialIcon } from '@/components/ui/material-icon';
 import { login } from '@/lib/auth';
 import { getUserByUsername } from '@/lib/data';
 
@@ -32,7 +32,7 @@ export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
 
     try {
         if (username.toLowerCase() === 'bomberox') {
-            await login(username);
+            await login('dev-id', username);
             toast({
                 title: "Inicio de sesión de desarrollador",
                 description: "Bienvenido de nuevo, Jefe.",
@@ -56,7 +56,7 @@ export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
             return;
         }
 
-        await login(username);
+        await login(user.id, user.username);
         toast({
             title: "Inicio de sesión exitoso",
             description: "Bienvenido de nuevo, Jefe.",
@@ -104,15 +104,16 @@ export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
             </div>
             {error && (
               <Alert variant="destructive">
-                  <Terminal className="h-4 w-4" />
+                  <MaterialIcon name="terminal" size={18} className="mr-2 inline-block" />
                   <AlertTitle>Error de autenticación</AlertTitle>
                   <AlertDescription>
                       {error}
                   </AlertDescription>
               </Alert>
             )}
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? 'Entrando...' : 'Entrar'}
+            <Button type="submit" className="w-full btn-crimson" disabled={isLoading}>
+              {isLoading ? <MaterialIcon name="sync" size={18} className="animate-pulse mr-2" /> : null}
+              {isLoading ? 'PROCESANDO...' : 'Entrar'}
             </Button>
         </CardContent>
         <CardFooter className="flex-col gap-4">

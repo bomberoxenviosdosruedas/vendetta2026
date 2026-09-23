@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { UserProfileData } from "@/lib/data";
-import { Send } from "lucide-react";
+import { MaterialIcon } from "@/components/ui/material-icon";
 import { useRouter } from "next/navigation";
 
 interface ProfileViewProps {
@@ -87,8 +87,8 @@ export function ProfileView({ user }: ProfileViewProps) {
                                         <p className="font-semibold">{prop.nombre}</p>
                                         <p className="text-sm text-muted-foreground">[{prop.ciudad}:{prop.barrio}:{prop.edificio}]</p>
                                     </div>
-                                    <Button size="sm" variant="ghost" onClick={() => handleSendMission(prop.ciudad, prop.barrio, prop.edificio)}>
-                                        <Send className="mr-2 h-4 w-4" />
+                                    <Button size="sm" variant="ghost" className="min-h-[44px]" onClick={() => handleSendMission(prop.ciudad, prop.barrio, prop.edificio)}>
+                                        <MaterialIcon name="send" size={18} className="mr-2" />
                                         Misión
                                     </Button>
                                 </div>

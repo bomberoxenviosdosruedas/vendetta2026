@@ -199,7 +199,7 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
                       NIVEL {room.nivelProyectado}
                     </div>
                     {room.enConstruccion && (
-                      <div className="text-[10px] text-[#fabd00] font-['Space_Mono'] flex items-center gap-1">
+                      <div className="text-xs text-[#fabd00] font-['Space_Mono'] flex items-center gap-1">
                         <MaterialIcon name="hourglass_top" size={12} /> EN COLA
                       </div>
                     )}

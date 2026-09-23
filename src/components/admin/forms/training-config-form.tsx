@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { saveTrainingConfig } from "@/lib/actions/admin.actions";
-import { Loader2 } from "lucide-react";
+import { MaterialIcon } from "@/components/ui/material-icon";
 import type { FullConfiguracionEntrenamiento } from "@/lib/data";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -172,9 +172,9 @@ export function TrainingConfigForm({ training, allTrainings, onFinished }: Train
             </ScrollArea>
             <div className="flex justify-end gap-2 pt-4 border-t mt-4">
                 <Button type="button" variant="ghost" onClick={onFinished}>Cancelar</Button>
-                <Button type="submit" disabled={isPending}>
-                    {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Guardar
+                <Button type="submit" className="btn-crimson" disabled={isPending}>
+                    {isPending && <MaterialIcon name="sync" size={18} className="mr-2 animate-pulse" />}
+                    {isPending ? 'GUARDANDO...' : 'Guardar'}
                 </Button>
             </div>
         </form>

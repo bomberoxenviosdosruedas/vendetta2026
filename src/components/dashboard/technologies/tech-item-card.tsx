@@ -4,7 +4,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
-import { Lock, Unlock } from "lucide-react";
+import { MaterialIcon } from "@/components/ui/material-icon";
 
 interface Requirement {
     id: string;
@@ -43,7 +43,7 @@ export function TechItemCard({ name, description, imageUrl, requirements }: Tech
                 <Separator />
                 <div className="pt-4 flex-grow">
                     <h4 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                        {hasRequirements ? <Lock className="h-4 w-4 text-destructive" /> : <Unlock className="h-4 w-4 text-green-500" />}
+                        {hasRequirements ? <MaterialIcon name="lock" size={18} className="text-destructive" /> : <MaterialIcon name="lock_open" size={18} className="text-green-500" />}
                         {hasRequirements ? "Requisitos para Desbloquear" : "Disponible desde el Inicio"}
                     </h4>
                     {hasRequirements && (

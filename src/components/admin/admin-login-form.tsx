@@ -7,7 +7,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { loginAdmin } from "@/lib/auth-admin";
-import { Loader2 } from "lucide-react";
+import { MaterialIcon } from "@/components/ui/material-icon";
 import { useToast } from "@/hooks/use-toast";
 
 export function AdminLoginForm() {
@@ -49,9 +49,9 @@ export function AdminLoginForm() {
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <Button type="submit" className="w-full" disabled={isPending}>
-                        {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Entrar
+                    <Button type="submit" className="w-full btn-crimson" disabled={isPending}>
+                        {isPending && <MaterialIcon name="sync" size={18} className="mr-2 animate-pulse" />}
+                        {isPending ? 'VERIFICANDO...' : 'Entrar'}
                     </Button>
                 </CardFooter>
             </form>

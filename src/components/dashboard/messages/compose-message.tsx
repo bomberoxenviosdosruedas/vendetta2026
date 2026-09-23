@@ -15,10 +15,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus } from "lucide-react";
+import { MaterialIcon } from "@/components/ui/material-icon";
 import { useTransition, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
 import { sendMessage } from "@/lib/actions/message.actions";
 import { UserWithProgress } from "@/lib/data";
 
@@ -49,8 +48,8 @@ export function ComposeMessage({ allUsers, currentUser }: ComposeMessageProps) {
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button>
-                    <Plus className="mr-2 h-4 w-4" />
+                <Button className="btn-crimson">
+                    <MaterialIcon name="add" size={18} className="mr-2" />
                     Nuevo Mensaje
                 </Button>
             </DialogTrigger>
@@ -84,9 +83,9 @@ export function ComposeMessage({ allUsers, currentUser }: ComposeMessageProps) {
                         <Textarea id="content" name="content" placeholder="Escribe tu mensaje aquí..." required />
                     </div>
                     <DialogFooter>
-                        <Button type="submit" disabled={isPending}>
-                             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                             Enviar Mensaje
+                        <Button type="submit" className="btn-crimson" disabled={isPending}>
+                             {isPending && <MaterialIcon name="sync" size={18} className="mr-2 animate-pulse" />}
+                             {isPending ? 'PROCESANDO...' : 'Enviar Mensaje'}
                         </Button>
                     </DialogFooter>
                 </form>

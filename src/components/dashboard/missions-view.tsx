@@ -254,7 +254,7 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
       <div className="cell-darker p-2 border border-[#333333] space-y-2">
         <div className="crimson-th p-2 text-white font-['Space_Grotesk'] font-bold text-xs uppercase flex items-center justify-between">
           <span>TROPAS // {selectedProperty.nombre}</span>
-          <Button onClick={setAllMaxTroops} className="btn-tactical text-[10px] h-6 px-2">SELECCIONAR TODAS</Button>
+          <Button onClick={setAllMaxTroops} className="btn-tactical text-[10px] sm:text-xs h-auto min-h-[44px] px-2 py-1">SELECCIONAR TODAS</Button>
         </div>
 
         <div className="divide-y divide-[#222222] cell-dark border border-[#333333] max-h-[300px] overflow-y-auto">

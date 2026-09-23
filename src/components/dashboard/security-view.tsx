@@ -7,7 +7,7 @@ import {
   CardContent,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Clock, PlusCircle, Ban, Loader2, Info, Dumbbell, ShieldCheck } from "lucide-react"
+import { MaterialIcon } from "@/components/ui/material-icon"
 import { iniciarEntrenamientoSeguridad } from "@/lib/actions/troop.actions"
 import { useState, useTransition } from "react"
 import type { ConfiguracionTropa } from "@prisma/client"
@@ -90,9 +90,9 @@ function TroopForm({ troopId }: { troopId: string }) {
                 className="w-20 h-9"
                 disabled={colaReclutamientoActiva || isPending}
             />
-            <Button type="submit" variant="outline" size="sm" disabled={colaReclutamientoActiva || isPending}>
-                {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : (colaReclutamientoActiva ? <Ban className="mr-2 h-4 w-4" /> : <PlusCircle className="mr-2 h-4 w-4" />)}
-                {isPending ? 'Enviando...' : (colaReclutamientoActiva ? 'En cola' : 'Entrenar')}
+            <Button type="submit" variant="outline" size="sm" className="min-h-[44px]" disabled={colaReclutamientoActiva || isPending}>
+                {isPending ? <MaterialIcon name="sync" size={18} className="mr-2 animate-pulse"/> : (colaReclutamientoActiva ? <MaterialIcon name="block" size={18} className="mr-2" /> : <MaterialIcon name="add_circle" size={18} className="mr-2" />)}
+                {isPending ? 'ENVIANDO...' : (colaReclutamientoActiva ? 'En cola' : 'Entrenar')}
             </Button>
             {error && <p className="text-xs text-destructive">{error}</p>}
         </form>
@@ -167,8 +167,8 @@ export function SecurityView({ user, defenseTroops }: SecurityViewProps) {
                             <div className="flex flex-wrap gap-x-4 gap-y-2 items-center">
                                 <div className="flex flex-col gap-2 text-sm flex-grow">
                                 <div className="grid grid-cols-2 gap-1 text-xs">
-                                    <div className="flex items-center gap-2" title="Ataque"><Dumbbell className="h-3 w-3 text-red-500"/><span>{formatNumber(troop.ataqueActual)}</span></div>
-                                    <div className="flex items-center gap-2" title="Defensa"><ShieldCheck className="h-3 w-3 text-blue-500"/><span>{formatNumber(troop.defensaActual)}</span></div>
+                                    <div className="flex items-center gap-2" title="Ataque"><MaterialIcon name="swords" size={16} className="text-red-500"/><span>{formatNumber(troop.ataqueActual)}</span></div>
+                                    <div className="flex items-center gap-2" title="Defensa"><MaterialIcon name="shield" size={16} className="text-blue-500"/><span>{formatNumber(troop.defensaActual)}</span></div>
                                 </div>
                                     <div className="grid grid-cols-3 gap-x-3">
                                         {troop.costoArmas > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoArmas.toLocaleString('de-DE')} Armas`}><Image src="/img/recursos/armas.svg" alt="Armas" width={16} height={16} /><span>{formatNumber(troop.costoArmas)}</span></div>}
@@ -176,14 +176,14 @@ export function SecurityView({ user, defenseTroops }: SecurityViewProps) {
                                         {troop.costoDolares > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoDolares.toLocaleString('de-DE')} Dólares`}><Image src="/img/recursos/dolares.svg" alt="Dólares" width={16} height={16} /><span>{formatNumber(troop.costoDolares)}</span></div>}
                                     </div>
                                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
-                                        <Clock className="h-3 w-3" />
+                                        <MaterialIcon name="schedule" size={16} />
                                         <span>{formatDuration(troop.duracion)} por unidad</span>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-2">
                                      <DialogTrigger asChild>
-                                        <Button variant="ghost" size="icon" className="h-9 w-9">
-                                            <Info className="h-5 w-5" />
+                                        <Button variant="ghost" size="icon" className="h-9 w-9 min-h-[44px] min-w-[44px]">
+                                            <MaterialIcon name="info" size={20} />
                                             <span className="sr-only">Detalles</span>
                                         </Button>
                                     </DialogTrigger>

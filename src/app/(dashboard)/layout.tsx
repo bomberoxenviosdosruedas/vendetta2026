@@ -13,9 +13,9 @@ export const dynamic = 'force-dynamic';
 
 function ResourceBarFallback() {
     return (
-        <div className="w-full h-14 bg-background/95 backdrop-blur-sm border-b border-border/40 sticky top-0 z-10">
-            <div className="container mx-auto flex h-full items-center justify-center">
-                <Skeleton className="h-5 w-full max-w-7xl mx-auto px-3 md:px-6 bg-muted shimmer" />
+        <div className="w-full h-14 bg-[#0a0a0a] border-b border-[#333333] sticky top-0 z-10">
+            <div className="w-full max-w-[910px] mx-auto flex h-full items-center justify-center px-3 md:px-6">
+                <Skeleton className="h-5 w-full bg-[#1a1a1a] shimmer" />
             </div>
         </div>
     )
@@ -39,14 +39,12 @@ export default async function DashboardLayout({
   console.log('[DashboardLayout] Game tick complete');
 
   if (!finalUser.propiedades || finalUser.propiedades.length === 0) {
-      // Redirect to a page to create the first property if none exist
-      // For now, just show an error message or redirect to overview with a message
       return (
         <DashboardClientLayout user={finalUser}>
-            <main className="p-4 md:p-6 max-w-7xl mx-auto w-full">
+            <div className="p-4 w-full">
               <h2 className="text-2xl font-bold">Sin propiedades</h2>
               <p>No tienes ninguna propiedad. ¡Crea una para empezar!</p>
-            </main>
+            </div>
         </DashboardClientLayout>
       )
   }
@@ -66,10 +64,8 @@ export default async function DashboardLayout({
                 <Suspense fallback={<ResourceBarFallback />}>
                     <ResourceBar user={finalUser} />
                 </Suspense>
-                <div className="flex-1">
-                  <main className="p-4 md:p-6 max-w-7xl mx-auto w-full">
+                <div className="flex-1 flex flex-col min-w-0">
                     {children}
-                  </main>
                 </div>
             </DashboardClientLayout>
           </GameAnimationProvider>

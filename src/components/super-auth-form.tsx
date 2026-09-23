@@ -7,7 +7,7 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { loginSuperUser } from "@/lib/actions/super-auth.actions";
-import { Loader2, Eye, EyeOff } from "lucide-react";
+import { MaterialIcon } from "@/components/ui/material-icon";
 import { useToast } from "@/hooks/use-toast";
 import Image from "next/image";
 
@@ -78,18 +78,18 @@ export function SuperAuthForm() {
                                 aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                             >
                                 {showPassword ? (
-                                    <EyeOff className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                                    <MaterialIcon name="visibility_off" size={18} className="text-muted-foreground" />
                                 ) : (
-                                    <Eye className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                                    <MaterialIcon name="visibility" size={18} className="text-muted-foreground" />
                                 )}
                             </Button>
                         </div>
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <Button type="submit" className="w-full" disabled={isPending}>
-                        {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Verificar Acceso
+                    <Button type="submit" className="w-full btn-crimson" disabled={isPending}>
+                        {isPending && <MaterialIcon name="sync" size={18} className="mr-2 animate-pulse" />}
+                        {isPending ? 'PROCESANDO...' : 'Verificar Acceso'}
                     </Button>
                 </CardFooter>
             </form>

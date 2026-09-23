@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
+import { MaterialIcon } from "@/components/ui/material-icon";
 
 interface DeleteConfigButtonProps {
     id: string;
@@ -51,8 +51,8 @@ export function DeleteConfigButton({ id, action }: DeleteConfigButtonProps) {
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancelar</AlertDialogCancel>
                     <AlertDialogAction onClick={handleDelete} disabled={isPending}>
-                         {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Continuar
+                         {isPending && <MaterialIcon name="sync" size={18} className="mr-2 animate-pulse" />}
+                        {isPending ? 'ELIMINANDO...' : 'Continuar'}
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

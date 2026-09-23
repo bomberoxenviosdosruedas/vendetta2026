@@ -131,7 +131,7 @@ function MissionCountdown({ mission }: { mission: ColaMisiones }) {
         {mission.tipoMision !== 'REGRESO' && getTimestamp(mission.fechaLlegada) && new Date() < new Date(getTimestamp(mission.fechaLlegada)!) && (
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-6 w-6 text-[#ff3f3f] hover:text-white p-0" disabled={isPending}>
+              <Button variant="ghost" size="icon" className="h-6 w-6 min-h-[44px] min-w-[44px] text-[#ff3f3f] hover:text-white p-0" disabled={isPending}>
                 <MaterialIcon name="close" size={14} />
               </Button>
             </AlertDialogTrigger>

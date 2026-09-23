@@ -9,7 +9,7 @@ import { BonusConfigMatrix } from "@/components/admin/bonus-config-matrix";
 import { TipoTropa } from "@prisma/client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { MaterialIcon } from "@/components/ui/material-icon";
 
 function BonusLoading() {
     return (
@@ -44,7 +44,7 @@ export default async function BonusConfigPage() {
         <div className="space-y-4">
             <Button asChild variant="outline" size="sm">
                 <Link href="/admin/panel">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    <MaterialIcon name="arrow_back" className="mr-2" size={16} />
                     Volver al Panel Principal
                 </Link>
             </Button>

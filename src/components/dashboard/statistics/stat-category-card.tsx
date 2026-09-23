@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Trophy } from "lucide-react";
+import { MaterialIcon } from "@/components/ui/material-icon";
 
 export interface StatItem {
     id: string;
@@ -44,7 +44,7 @@ export function StatCategoryCard({ title, items }: StatCategoryCardProps) {
                                                 <TooltipProvider>
                                                     <Tooltip>
                                                         <TooltipTrigger>
-                                                            <Trophy className="h-4 w-4 text-amber-400 animate-pulse" />
+                                                            <MaterialIcon name="emoji_events" size={18} className="text-amber-400 animate-pulse" />
                                                         </TooltipTrigger>
                                                         <TooltipContent>
                                                             <p>Récord del Servidor</p>

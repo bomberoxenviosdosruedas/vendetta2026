@@ -33,7 +33,7 @@ function AuthLoading() {
 export default function LoginPage() {
 
   return (
-    <main className="relative flex min-h-screen w-full flex-col items-center justify-center p-4">
+    <main className="relative flex min-h-[100dvh] w-full flex-col items-center justify-center p-4 bg-[#080808]">
         <div className="absolute inset-0 z-0">
             <Image
                 src="/img/general/fondo.jpg"
