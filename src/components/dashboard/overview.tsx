@@ -1,4 +1,4 @@
-// This component is no longer used and can be removed. I will keep it for now to avoid breaking changes, but it can be deleted.
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import Image from "next/image"
 
