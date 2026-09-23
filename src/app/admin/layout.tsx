@@ -5,7 +5,7 @@ export default function AdminLayout({
     children: React.ReactNode
   }) {
     return (
-        <div className="min-h-screen bg-muted/20">
+        <div className="min-h-[100dvh] bg-[#080808] text-[#dfdbc9]">
             <main className="container mx-auto py-8">
                 {children}
             </main>

@@ -91,7 +91,7 @@ export async function OverviewView() {
             <MaterialIcon name="military_tech" size={15} className="text-[#fff400]" />
             <span>CUARTEL GENERAL // VISIÓN DE OPERACIONES</span>
           </div>
-          <Button asChild className="btn-tactical text-[#fff400] hover:text-white text-[10px] px-2 py-0.5 uppercase tracking-wider min-h-[36px] h-auto">
+          <Button asChild className="btn-tactical text-[#fff400] hover:text-white text-[10px] sm:text-xs px-2 py-1 uppercase tracking-wider min-h-[44px] h-auto">
             <Link href="/map" className="flex items-center gap-1">
               <MaterialIcon name="public" size={12} />
               <span className="hidden sm:inline">VISIÓN GLOBAL DEL IMPERIO</span>

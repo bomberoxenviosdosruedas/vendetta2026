@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { createFamily } from "@/lib/actions/family.actions";
 import { useToast } from "@/hooks/use-toast";
 import { useTransition } from "react";
-import { Loader2, Search, Users } from "lucide-react";
+import { MaterialIcon } from "@/components/ui/material-icon";
 import Link from "next/link";
 
 export function CreateOrJoinFamilyView() {
@@ -66,23 +66,23 @@ export function CreateOrJoinFamilyView() {
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Button type="submit" disabled={isPending}>
-                                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                Fundar Familia
+                            <Button type="submit" className="btn-crimson" disabled={isPending}>
+                                {isPending && <MaterialIcon name="sync" size={18} className="mr-2 animate-pulse" />}
+                                {isPending ? 'PROCESANDO...' : 'Fundar Familia'}
                             </Button>
                         </CardFooter>
                     </form>
                 </Card>
 
                  <div className="flex flex-col items-center justify-center gap-4 text-center p-8 border rounded-lg h-full">
-                    <Users className="h-16 w-16 text-muted-foreground" />
+                    <MaterialIcon name="groups" size={64} className="text-muted-foreground" />
                     <h3 className="text-xl font-bold">¿Prefieres Unirte a un Clan?</h3>
                     <p className="text-muted-foreground">
                         Busca entre las familias existentes, conoce a sus miembros y envía una solicitud para unirte a la que más te guste.
                     </p>
-                    <Button size="lg" asChild>
+                    <Button size="lg" asChild className="btn-tactical">
                         <Link href="/family/find">
-                            <Search className="mr-2 h-5 w-5" />
+                            <MaterialIcon name="search" size={20} className="mr-2" />
                             Buscar Familias Existentes
                         </Link>
                     </Button>

@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Loader2, Terminal, Eye, EyeOff } from 'lucide-react';
+import { MaterialIcon } from '@/components/ui/material-icon';
 import { login } from '@/lib/auth';
 import { registerUser } from '@/lib/actions/auth.actions';
 import { getUserByUsername } from '@/lib/data';
@@ -105,8 +105,8 @@ export function AuthForm() {
             <form onSubmit={handleSubmit}>
                 <CardContent className="space-y-4">
                     <div className="space-y-2">
-                        <Label htmlFor="username">Usuario</Label>
-                        <Input id="username" type="text" placeholder="Tu nombre de guerra" value={username} onChange={(e) => setUsername(e.target.value)} required disabled={isPending} />
+                        <Label htmlFor="username">Nombre de Usuario</Label>
+                        <Input id="username" type="text" placeholder="Tu nombre de usuario" value={username} onChange={(e) => setUsername(e.target.value)} required disabled={isPending} />
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="password">Contraseña</Label>
@@ -114,7 +114,7 @@ export function AuthForm() {
                             <Input
                                 id="password"
                                 type={showPassword ? "text" : "password"}
-                                placeholder="Tu código secreto"
+                                placeholder="Tu contraseña"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
@@ -129,9 +129,9 @@ export function AuthForm() {
                                 aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                             >
                                 {showPassword ? (
-                                    <EyeOff className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                                    <MaterialIcon name="visibility_off" size={18} className="text-muted-foreground" />
                                 ) : (
-                                    <Eye className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                                    <MaterialIcon name="visibility" size={18} className="text-muted-foreground" />
                                 )}
                             </Button>
                         </div>
@@ -139,21 +139,21 @@ export function AuthForm() {
                     {!isLoginView && (
                          <div className="space-y-2 animate-fade-in">
                             <Label htmlFor="confirm-password">Confirmar Contraseña</Label>
-                            <Input id="confirm-password" type="password" placeholder="Repite tu código secreto" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required disabled={isPending} />
+                            <Input id="confirm-password" type="password" placeholder="Repite tu contraseña" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required disabled={isPending} />
                         </div>
                     )}
                     {error && (
                         <Alert variant="destructive" className="bg-destructive/20 border-destructive/50 text-destructive-foreground">
-                            <Terminal className="h-4 w-4" />
+                            <MaterialIcon name="terminal" size={18} className="mr-2 inline-block" />
                             <AlertTitle>Error</AlertTitle>
                             <AlertDescription>{error}</AlertDescription>
                         </Alert>
                     )}
                 </CardContent>
                 <CardFooter className="flex-col gap-4">
-                    <Button type="submit" className="w-full" disabled={isPending}>
-                        {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        {isLoginView ? 'Entrar' : 'Registrarse'}
+                    <Button type="submit" className="w-full btn-crimson" disabled={isPending}>
+                        {isPending && <MaterialIcon name="sync" size={18} className="mr-2 animate-pulse" />}
+                        {isPending ? 'PROCESANDO...' : (isLoginView ? 'Entrar' : 'Registrarse')}
                     </Button>
                     <p className="text-xs text-center text-white/60">
                         {isLoginView ? '¿No tienes una cuenta?' : '¿Ya eres parte de la familia?'}

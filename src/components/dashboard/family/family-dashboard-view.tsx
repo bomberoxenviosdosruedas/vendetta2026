@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator";
 import type { FullFamily, UserWithProgress } from "@/lib/data";
 import { FamilyRole } from "@prisma/client";
-import { Crown, Shield, User, Users, Loader2, UserPlus, MailPlus, HandMetal } from "lucide-react";
+import { MaterialIcon } from "@/components/ui/material-icon";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -36,9 +36,9 @@ interface FamilyDashboardViewProps {
 }
 
 const roleIcons: Record<FamilyRole, React.ReactNode> = {
-    [FamilyRole.LEADER]: <Crown className="h-4 w-4 text-amber-400" />,
-    [FamilyRole.CO_LEADER]: <Shield className="h-4 w-4 text-blue-400" />,
-    [FamilyRole.MEMBER]: <User className="h-4 w-4 text-muted-foreground" />,
+    [FamilyRole.LEADER]: <MaterialIcon name="military_tech" size={18} className="text-amber-400" />,
+    [FamilyRole.CO_LEADER]: <MaterialIcon name="shield" size={18} className="text-blue-400" />,
+    [FamilyRole.MEMBER]: <MaterialIcon name="person" size={18} className="text-muted-foreground" />,
 }
 
 export function FamilyDashboardView({ family, currentUser, allUsers, pendingRequests }: FamilyDashboardViewProps) {
@@ -84,7 +84,7 @@ export function FamilyDashboardView({ family, currentUser, allUsers, pendingRequ
                         {canManage && (
                              <Button asChild size="sm" variant="outline">
                                 <Link href={`/family/requests`}>
-                                    <HandMetal className="mr-2 h-4 w-4" />
+                                    <MaterialIcon name="badge" size={18} className="mr-2" />
                                     Solicitudes
                                     {pendingRequests > 0 && <Badge variant="destructive" className="ml-2">{pendingRequests}</Badge>}
                                 </Link>
@@ -92,7 +92,7 @@ export function FamilyDashboardView({ family, currentUser, allUsers, pendingRequ
                         )}
                         <Button asChild size="sm" variant="outline">
                             <Link href={`/family/members?id=${family.id}`}>
-                                <Users className="mr-2 h-4 w-4" />
+                                <MaterialIcon name="group" size={18} className="mr-2" />
                                 Ver Lista de Miembros
                             </Link>
                         </Button>
@@ -111,7 +111,7 @@ export function FamilyDashboardView({ family, currentUser, allUsers, pendingRequ
                             <AlertDialogFooter>
                             <AlertDialogCancel>Cancelar</AlertDialogCancel>
                             <AlertDialogAction onClick={handleLeaveFamily} disabled={isPending}>
-                                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                {isPending && <MaterialIcon name="sync" size={18} className="mr-2 animate-pulse" />}
                                 Sí, abandonar familia
                             </AlertDialogAction>
                             </AlertDialogFooter>

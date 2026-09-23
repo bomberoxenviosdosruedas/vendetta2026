@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import MaterialIcon from '@/components/ui/material-icon';
+import { useProperty } from '@/contexts/property-context';
 import {
   Dialog,
   DialogContent,
@@ -51,6 +52,16 @@ const INITIAL_NEWS_ITEMS: NewsItem[] = [
 
 export function CityNewsCard() {
   const [selectedNewsDetail, setSelectedNewsDetail] = useState<NewsItem | null>(null);
+  const { selectedProperty } = useProperty();
+
+  const activeCoords = selectedProperty
+    ? `${selectedProperty.ciudad}:${selectedProperty.barrio}:${selectedProperty.edificio}`
+    : '40:23:220';
+
+  const newsItems = INITIAL_NEWS_ITEMS.map((item, idx) => ({
+    ...item,
+    coordinates: idx === 0 ? activeCoords : item.coordinates,
+  }));
 
   return (
     <section className="cell-darker p-2 border border-[#333333] space-y-2 text-[#dfdbc9]">
@@ -63,11 +74,11 @@ export function CityNewsCard() {
       </div>
 
       <div className="divide-y divide-[#222222] cell-dark border border-[#333333]">
-        {INITIAL_NEWS_ITEMS.map((item) => (
+        {newsItems.map((item) => (
           <div
             key={item.id}
             onClick={() => setSelectedNewsDetail(item)}
-            className="p-2 flex items-center justify-between gap-2 hover:bg-[#1a1a1a] cursor-pointer transition-colors text-xs font-['Space_Mono']"
+            className="p-2.5 flex items-center justify-between gap-2 hover:bg-[#1a1a1a] cursor-pointer transition-colors text-xs font-['Space_Mono'] min-h-[44px]"
           >
             <div className="flex items-center gap-2 truncate">
               <MaterialIcon name="campaign" size={15} className="text-[#ff3f3f] shrink-0" />

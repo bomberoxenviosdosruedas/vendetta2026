@@ -9,7 +9,7 @@ import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TipoTropa } from "@prisma/client";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { MaterialIcon } from "@/components/ui/material-icon";
 
 function TableSkeleton() {
     return (
@@ -41,7 +41,7 @@ export default async function AdminTroopsPage() {
         <div className="space-y-4">
              <Button asChild variant="outline" size="sm">
                 <Link href="/admin/panel">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    <MaterialIcon name="arrow_back" className="mr-2" size={16} />
                     Volver al Panel Principal
                 </Link>
             </Button>

@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Crown, Shield, User as UserIcon } from "lucide-react";
+import { MaterialIcon } from "@/components/ui/material-icon";
 import { Separator } from "@/components/ui/separator";
 
 interface FamilyMembersViewProps {
@@ -23,9 +23,9 @@ const roleTranslations: Record<FamilyRole, string> = {
 };
 
 const roleIcons: Record<FamilyRole, React.ReactNode> = {
-    [FamilyRole.LEADER]: <Crown className="h-4 w-4 text-amber-400" />,
-    [FamilyRole.CO_LEADER]: <Shield className="h-4 w-4 text-blue-400" />,
-    [FamilyRole.MEMBER]: <UserIcon className="h-4 w-4 text-muted-foreground" />,
+    [FamilyRole.LEADER]: <MaterialIcon name="military_tech" size={18} className="text-amber-400" />,
+    [FamilyRole.CO_LEADER]: <MaterialIcon name="shield" size={18} className="text-blue-400" />,
+    [FamilyRole.MEMBER]: <MaterialIcon name="person" size={18} className="text-muted-foreground" />,
 }
 
 function formatPoints(points: number | null | undefined): string {
@@ -74,7 +74,7 @@ export function FamilyMembersView({ family }: FamilyMembersViewProps) {
                 </div>
                 <Button asChild variant="outline" size="sm">
                     <Link href="/family">
-                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        <MaterialIcon name="arrow_back" size={18} className="mr-2" />
                         Volver a la Familia
                     </Link>
                 </Button>

@@ -3,14 +3,14 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Hammer, Settings, Shield, Users } from "lucide-react";
+import { MaterialIcon } from "@/components/ui/material-icon";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 const folders = [
-    { name: "Mensajes Jugadores", category: "JUGADOR", icon: <Users className="h-5 w-5" /> },
-    { name: "Informes de Batalla", category: "BATALLA", icon: <Shield className="h-5 w-5" /> },
-    { name: "Construcciones y Tropas", category: "CONSTRUCCION", icon: <Hammer className="h-5 w-5" /> },
-    { name: "Sistema", category: "SISTEMA", icon: <Settings className="h-5 w-5" /> },
+    { name: "Mensajes Jugadores", category: "JUGADOR", icon: <MaterialIcon name="group" size={20} /> },
+    { name: "Informes de Batalla", category: "BATALLA", icon: <MaterialIcon name="shield" size={20} /> },
+    { name: "Construcciones y Tropas", category: "CONSTRUCCION", icon: <MaterialIcon name="build" size={20} /> },
+    { name: "Sistema", category: "SISTEMA", icon: <MaterialIcon name="settings" size={20} /> },
 ];
 
 interface MessageFolderListProps {

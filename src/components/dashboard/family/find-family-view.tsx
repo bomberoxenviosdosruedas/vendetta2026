@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { applyToFamily, cancelInvitation, rejectInvitation } from "@/lib/actions/family.actions";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useTransition } from "react";
-import { Check, Hourglass, Loader2, Send, X, ArrowLeft } from "lucide-react";
+import { MaterialIcon } from "@/components/ui/material-icon";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -49,15 +49,15 @@ function ActionButton({ familyId, userInvitations }: { familyId: string, userInv
     if(existingRequest) {
         return (
              <Button size="sm" variant="secondary" disabled>
-                <Hourglass className="mr-2 h-4 w-4" />
+                <MaterialIcon name="hourglass_empty" size={18} className="mr-2" />
                 Pendiente
             </Button>
         )
     }
 
     return (
-        <Button size="sm" onClick={handleApply} disabled={isPending}>
-            {isPending ? <Loader2 className="animate-spin mr-2 h-4 w-4" /> : <Send className="mr-2 h-4 w-4" />}
+        <Button size="sm" className="btn-crimson" onClick={handleApply} disabled={isPending}>
+            {isPending ? <MaterialIcon name="sync" size={18} className="animate-pulse mr-2" /> : <MaterialIcon name="send" size={18} className="mr-2" />}
             Enviar Solicitud
         </Button>
     )
@@ -95,7 +95,7 @@ export function FindFamilyView({ families, userInvitations, currentUserId }: Fin
                 <div>
                      <Button asChild variant="outline" size="sm">
                         <Link href="/family">
-                            <ArrowLeft className="mr-2 h-4 w-4" />
+                            <MaterialIcon name="arrow_back" size={18} className="mr-2" />
                             Volver
                         </Link>
                     </Button>
@@ -170,11 +170,11 @@ export function FindFamilyView({ families, userInvitations, currentUserId }: Fin
                                                 </div>
                                             </div>
                                             <div className="flex gap-2 shrink-0">
-                                                <Button size="sm" className="bg-green-600 hover:bg-green-700" onClick={() => handleInvitationAction('accept', inv.id)} disabled={isPending}>
-                                                    <Check className="mr-2 h-4 w-4"/> Aceptar
+                                                <Button size="sm" className="bg-green-600 hover:bg-green-700 min-h-[44px]" onClick={() => handleInvitationAction('accept', inv.id)} disabled={isPending}>
+                                                    <MaterialIcon name="check" size={18} className="mr-2"/> Aceptar
                                                 </Button>
-                                                <Button size="sm" variant="destructive" onClick={() => handleInvitationAction('reject', inv.id)} disabled={isPending}>
-                                                    <X className="mr-2 h-4 w-4"/> Rechazar
+                                                <Button size="sm" variant="destructive" className="min-h-[44px]" onClick={() => handleInvitationAction('reject', inv.id)} disabled={isPending}>
+                                                    <MaterialIcon name="close" size={18} className="mr-2"/> Rechazar
                                                 </Button>
                                             </div>
                                         </div>

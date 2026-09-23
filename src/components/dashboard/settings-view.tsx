@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { updateUserSettings } from '@/lib/actions/user.actions';
 import type { UserWithProgress } from '@/lib/data';
-import { Loader2 } from 'lucide-react';
+import { MaterialIcon } from '@/components/ui/material-icon';
 
 interface SettingsViewProps {
     user: UserWithProgress;
@@ -97,9 +97,9 @@ export function SettingsView({ user }: SettingsViewProps) {
                         </div>
                     </CardContent>
                     <CardFooter>
-                        <Button type="submit" disabled={isPending || !hasChanges}>
-                            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Guardar Cambios
+                        <Button type="submit" className="btn-crimson" disabled={isPending || !hasChanges}>
+                            {isPending && <MaterialIcon name="sync" size={18} className="mr-2 animate-pulse" />}
+                            {isPending ? 'GUARDANDO...' : 'Guardar Cambios'}
                         </Button>
                     </CardFooter>
                 </form>

@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { BattleReport, runBattleSimulation, SimulationInput } from '@/lib/actions/simulation.actions';
 import type { ConfiguracionTropa, ConfiguracionEntrenamiento, ConfiguracionHabitacion } from '@prisma/client';
-import { Loader2, Trash2, Upload, Swords } from 'lucide-react';
+import { MaterialIcon } from '@/components/ui/material-icon';
 import {
     Dialog,
     DialogContent,
@@ -129,11 +129,11 @@ function SimulatorColumn({
                 <CardTitle>{title}</CardTitle>
                 <div className="flex items-center gap-2">
                      <Button variant="outline" size="sm" onClick={onLoadData}>
-                        <Upload className="mr-2 h-4 w-4" />
+                        <MaterialIcon name="upload" size={18} className="mr-2" />
                         Cargar mis datos
                     </Button>
-                    <Button variant="ghost" size="icon" onClick={handleClear} className="h-8 w-8">
-                        <Trash2 className="h-4 w-4" />
+                    <Button variant="ghost" size="icon" onClick={handleClear} className="h-8 w-8 min-h-[44px] min-w-[44px]">
+                        <MaterialIcon name="delete" size={18} />
                         <span className="sr-only">Limpiar {title}</span>
                     </Button>
                 </div>
@@ -274,7 +274,7 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
                     </p>
                 </div>
                  <Button onClick={handleResetAll} variant="outline">
-                    <Trash2 className="mr-2 h-4 w-4" />
+                    <MaterialIcon name="delete" size={18} className="mr-2" />
                     Reiniciar Simulador
                 </Button>
             </div>
@@ -300,9 +300,9 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
                 />
             </div>
             <div className="mt-6">
-                <Button onClick={handleSimulate} disabled={isPending} className="w-full">
-                    {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Simular Batalla
+                <Button onClick={handleSimulate} disabled={isPending} className="w-full btn-crimson">
+                    {isPending && <MaterialIcon name="sync" size={18} className="mr-2 animate-pulse" />}
+                    {isPending ? 'SIMULANDO...' : 'Simular Batalla'}
                 </Button>
             </div>
 

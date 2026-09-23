@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Building, Check, ChevronsUpDown } from 'lucide-react'
+import { MaterialIcon } from '@/components/ui/material-icon'
 import type { FullPropiedad } from '@/lib/data'
 import { useProperty } from '@/contexts/property-context'
 
@@ -36,10 +36,10 @@ export function PropertySelector({ properties }: PropertySelectorProps) {
             className="w-full justify-between h-10 min-h-[44px] text-sm sm:text-base"
           >
             <div className="flex items-center gap-2 truncate">
-              <Building className="h-4 w-4 sm:h-5 sm:w-5" />
+              <MaterialIcon name="domain" size={20} />
               <span className="truncate">{selectedProperty?.nombre || 'Seleccionar...'}</span>
             </div>
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            <MaterialIcon name="unfold_more" size={18} className="ml-2 shrink-0 opacity-50" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-full max-w-[320px] -translate-x-2">
@@ -51,8 +51,10 @@ export function PropertySelector({ properties }: PropertySelectorProps) {
               onSelect={() => setSelectedPropertyById(property.id)}
               className="min-h-[44px] flex items-center gap-2 px-2 py-2 text-sm sm:text-base"
             >
-              <Check
-                className={`mr-2 h-4 w-4 shrink-0 ${
+              <MaterialIcon
+                name="check"
+                size={18}
+                className={`mr-2 shrink-0 ${
                   selectedProperty?.id === property.id ? 'opacity-100' : 'opacity-0'
                 }`}
               />

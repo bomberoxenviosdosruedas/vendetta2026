@@ -12,7 +12,7 @@ export default async function GatePage() {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-background">
+        <div className="flex flex-col items-center justify-center min-h-[100dvh] bg-[#080808]">
             <SuperAuthForm />
         </div>
     );
