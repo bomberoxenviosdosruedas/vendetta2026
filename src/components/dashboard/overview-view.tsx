@@ -113,7 +113,7 @@ export async function OverviewView() {
             </div>
             <div className="min-w-0 flex-1">
               <div className="text-[9px] text-[#888888] font-['Space_Mono'] uppercase">
-                {user.title || "CAPORÉGIME"}
+                {user.title || "SIN RANGO"}
               </div>
               <div className="text-[14px] font-bold text-[#fff400] truncate font-['Space_Grotesk']">
                 {user.name}
@@ -138,10 +138,10 @@ export async function OverviewView() {
                 BASE MATRIZ
               </div>
               <div className="text-[14px] font-bold text-white truncate font-['Space_Grotesk']">
-                {mainProperty?.nombre || "Sector 09"}
+                {mainProperty?.nombre || "SIN PROPIEDAD"}
               </div>
               <div className="text-[10px] text-[#fabd00] font-['Space_Mono']">
-                COORD: {mainProperty ? `${mainProperty.ciudad}:${mainProperty.barrio}:${mainProperty.edificio}` : "40:23:220"}
+                COORD: {mainProperty ? `${mainProperty.ciudad}:${mainProperty.barrio}:${mainProperty.edificio}` : "-:-:-"}
               </div>
             </div>
           </div>
@@ -157,10 +157,10 @@ export async function OverviewView() {
                   FAMILIA SINDICATO
                 </div>
                 <div className="text-[14px] font-bold text-white truncate font-['Space_Grotesk']">
-                  {familyMember ? familyMember.family.name : "ArGenTeaM"}
+                  {familyMember ? familyMember.family.name : "SIN FAMILIA"}
                 </div>
                 <div className="text-[10px] text-[#ff3f3f] font-['Space_Mono'] font-bold">
-                  {familyMember ? `[${familyMember.family.tag}] • ${familyMember.role}` : "[ArGt] • Rango #3"}
+                  {familyMember ? `[${familyMember.family.tag}] • ${familyMember.role}` : "ÚNETE A UNA FAMILIA"}
                 </div>
               </div>
             </div>
@@ -175,17 +175,19 @@ export async function OverviewView() {
               <MaterialIcon name="mail" size={16} className="text-[#fabd00]" />
               <span className="text-[11px] font-bold uppercase tracking-wider">MENSAJES</span>
             </div>
-            <span className="bg-[#ff0000] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-sm font-['Space_Mono']">
-              {unreadMessages}
-            </span>
+            {unreadMessages > 0 && (
+              <span className="bg-[#ff0000] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-sm font-['Space_Mono'] animate-pulse">
+                {unreadMessages}
+              </span>
+            )}
           </Link>
           <Link href="/messages?categoria=INFORMES" className="btn-tactical p-2 flex items-center justify-between min-h-[44px]">
             <div className="flex items-center gap-1.5">
               <MaterialIcon name="description" size={16} className="text-[#dfdbc9]" />
               <span className="text-[11px] font-bold uppercase tracking-wider">INFORMES</span>
             </div>
-            <span className="bg-[#282828] border border-[#444444] text-[#fabd00] text-[9px] font-bold px-1.5 py-0.5 rounded-sm font-['Space_Mono']">
-              99+
+            <span className="bg-[#888888] text-black text-[9px] font-bold px-1.5 py-0.5 rounded-sm font-['Space_Mono']">
+              LOG
             </span>
           </Link>
           <Link href="/missions" className="btn-tactical p-2 flex items-center justify-between min-h-[44px]">
@@ -193,9 +195,11 @@ export async function OverviewView() {
               <MaterialIcon name="sync_alt" size={16} className="text-[#00ff00]" />
               <span className="text-[11px] font-bold uppercase tracking-wider">FLOTAS</span>
             </div>
-            <span className="bg-[#003800] border border-[#00c000] text-[#00ff00] text-[9px] font-bold px-1.5 py-0.5 rounded-sm font-['Space_Mono']">
-              12
-            </span>
+            {user.misiones.length > 0 && (
+              <span className="bg-[#003800] border border-[#00c000] text-[#00ff00] text-[9px] font-bold px-1.5 py-0.5 rounded-sm font-['Space_Mono']">
+                {user.misiones.length}
+              </span>
+            )}
           </Link>
           <Link href="/simulator" className="btn-tactical p-2 flex items-center justify-between min-h-[44px]">
             <div className="flex items-center gap-1.5">

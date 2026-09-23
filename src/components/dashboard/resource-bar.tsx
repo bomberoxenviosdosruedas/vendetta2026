@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import type { UserWithProgress } from '@/lib/data';
 import { useProperty } from '@/contexts/property-context';
-import { calculateStorageCapacity } from "@/lib/formulas/room-formulas";
+import { calculateStorageCapacity, calcularProduccionTotalPorSegundo } from "@/lib/formulas/room-formulas";
 import { cn } from "@/lib/utils";
 
 const resourceIcons: { [key: string]: string } = {
@@ -34,6 +34,13 @@ export function ResourceBar({ user }: ResourceBarProps) {
   }
 
   const capacity = calculateStorageCapacity(selectedProperty);
+  const production = calcularProduccionTotalPorSegundo(selectedProperty);
+  const prodPerHour = {
+    armas: Math.floor(production.armas * 3600),
+    municion: Math.floor(production.municion * 3600),
+    alcohol: Math.floor(production.alcohol * 3600),
+    dolares: Math.floor(production.dolares * 3600),
+  };
 
   const resources = [
     {
@@ -44,7 +51,7 @@ export function ResourceBar({ user }: ResourceBarProps) {
       capacity: capacity.armas,
       color: 'text-[#ee7000]',
       fillColor: 'bg-[#ee7000]',
-      prod: '+60.850/h',
+      prod: `+${formatNumber(prodPerHour.armas)}/h`,
     },
     {
       key: 'municion',
@@ -54,7 +61,7 @@ export function ResourceBar({ user }: ResourceBarProps) {
       capacity: capacity.municion,
       color: 'text-[#ee7000]',
       fillColor: 'bg-[#ee7000]',
-      prod: '+92.170/h',
+      prod: `+${formatNumber(prodPerHour.municion)}/h`,
     },
     {
       key: 'alcohol',
@@ -64,7 +71,7 @@ export function ResourceBar({ user }: ResourceBarProps) {
       capacity: capacity.alcohol,
       color: 'text-[#ff3f3f]',
       fillColor: 'bg-[#ff0000]',
-      prod: '+2.650/h',
+      prod: `+${formatNumber(prodPerHour.alcohol)}/h`,
     },
     {
       key: 'dolares',
@@ -74,7 +81,7 @@ export function ResourceBar({ user }: ResourceBarProps) {
       capacity: capacity.dolares,
       color: 'text-[#00ff00]',
       fillColor: 'bg-[#00c000]',
-      prod: '+27.791/h',
+      prod: `+${formatNumber(prodPerHour.dolares)}/h`,
     },
   ];
 

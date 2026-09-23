@@ -3,15 +3,6 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useState } from "react";
-import {
-  SidebarMenu,
-  SidebarGroup,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
-  SidebarMenuSubButton,
-  useSidebar,
-} from "@/components/ui/sidebar";
 import MaterialIcon from "@/components/ui/material-icon";
 import { PropertySelector } from "./property-selector";
 import type { UserWithProgress } from "@/lib/data";
@@ -59,7 +50,7 @@ const navSections: NavSection[] = [
       { href: "/missions", label: "Misiones", iconName: "radar" },
       { href: "/simulator", label: "Simulador", iconName: "calculate" },
       { href: "/farms", label: "Lista de Granjas", iconName: "list_alt" },
-      { href: "/messages", label: "Mensajes", iconName: "mail", badge: 4 },
+      { href: "/messages", label: "Mensajes", iconName: "mail" },
       { href: "/statistics", label: "Estadísticas", iconName: "analytics" },
       { href: "/rankings", label: "Clasificaciones", iconName: "leaderboard" },
     ],
@@ -77,14 +68,11 @@ export function SidebarNav({ user }: SidebarNavProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { selectedProperty } = useProperty();
-  const { setOpenMobile, isMobile } = useSidebar();
   const router = useRouter();
+  const unreadMessages = user?._count?.receivedMessages || 0;
 
   const handleNavigate = (href: string) => {
     router.push(href);
-    if (isMobile) {
-      setOpenMobile(false);
-    }
   };
 
   const buildHref = (item: NavItem) => {
@@ -104,17 +92,18 @@ export function SidebarNav({ user }: SidebarNavProps) {
   return (
     <div className="flex flex-col gap-1 w-full text-[11px]">
       {navSections.map((section) => (
-        <SidebarGroup key={section.id} className="w-full p-0">
+        <div key={section.id} className="w-full p-0">
           <div className="crimson-th text-white font-['Space_Grotesk'] text-[10px] font-bold uppercase px-2 py-0.5 tracking-wider shadow-sm mb-0.5">
             {section.label}
           </div>
-          <SidebarMenu className="gap-[2px]">
+          <div className="flex flex-col gap-[2px]">
             {section.items.map((item) => {
               const finalHref = buildHref(item);
               const isActive = pathname.startsWith(item.href);
+              const badge = item.href === "/messages" ? unreadMessages : item.badge;
 
               return (
-                <SidebarMenuSubItem key={item.href} className="m-0 p-0">
+                <div key={item.href} className="m-0 p-0">
                   <Link
                     href={finalHref}
                     onClick={(e) => {
@@ -136,25 +125,25 @@ export function SidebarNav({ user }: SidebarNavProps) {
                       />
                       <span className="truncate">{item.label}</span>
                     </div>
-                    {item.badge ? (
+                    {badge ? (
                       <span className="bg-[#ff0000] text-white text-[9px] font-bold px-1 rounded-sm font-['Space_Mono']">
-                        {item.badge}
+                        {badge}
                       </span>
                     ) : isActive ? (
                       <span className="w-1.5 h-1.5 rounded-full bg-[#fff400] shrink-0" />
                     ) : null}
                   </Link>
-                </SidebarMenuSubItem>
+                </div>
               );
             })}
-          </SidebarMenu>
-        </SidebarGroup>
+          </div>
+        </div>
       ))}
 
       {user && user.propiedades.length > 0 && (
-        <SidebarGroup className="pt-2 px-1">
+        <div className="pt-2 px-1">
           <PropertySelector properties={user.propiedades} />
-        </SidebarGroup>
+        </div>
       )}
     </div>
   );
