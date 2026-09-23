@@ -73,8 +73,8 @@ export async function OverviewView() {
   const simpleRoomConfigs = allRoomConfigs.map(r => ({ id: r.id, nombre: r.nombre }));
   const unreadMessages = user._count?.receivedMessages || 0;
 
-  const puntosTotales = (puntuacion?.puntosHabitaciones || 0) + 
-                        (puntuacion?.puntosTropas || 0) + 
+  const puntosTotales = (puntuacion?.puntosHabitaciones || 0) +
+                        (puntuacion?.puntosTropas || 0) +
                         (puntuacion?.puntosEntrenamientos || 0);
 
   const mainProperty = user.propiedades[0];
