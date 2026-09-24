@@ -44,6 +44,37 @@ export async function getSessionUser() {
   if (!username) {
     return null;
   }
+  
+  // Desarrollo: fallback mock user si no hay BD
+  if (process.env.NODE_ENV === 'development' && username === 'bomberox') {
+    try {
+      const user = await getUserWithProgressByUsername(username);
+      if (user) return user;
+    } catch (e) {
+      console.log('[Auth] DB no disponible, usando mock user para desarrollo');
+    }
+    
+    // Mock user bomberox para desarrollo sin BD
+    return {
+      id: 'cmd6rdx740003zi0w5d7c67xp',
+      name: 'bomberox',
+      username: 'bomberox',
+      password: '123456789',
+      title: 'Jefe de la Familia',
+      avatarUrl: '/img/bomberox.png',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      lastSeen: new Date(),
+      propiedades: [],
+      entrenamientos: [],
+      puntuacion: null,
+      misiones: [],
+      colaEntrenamientos: [],
+      familyMember: null,
+      _count: { receivedMessages: 0 },
+    } as any;
+  }
+  
   try {
     const user = await getUserWithProgressByUsername(username);
     return user;

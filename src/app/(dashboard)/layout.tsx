@@ -30,7 +30,7 @@ export default async function DashboardLayout({
   const sessionUser = await getSessionUser();
 
   if (!sessionUser) {
-    redirect('/login');
+    redirect('/overview');
   }
 
   // Run unified game tick - sequential with proper data flow
@@ -40,12 +40,16 @@ export default async function DashboardLayout({
 
   if (!finalUser.propiedades || finalUser.propiedades.length === 0) {
       return (
-        <DashboardClientLayout user={finalUser}>
-            <div className="p-4 w-full">
-              <h2 className="text-2xl font-bold">Sin propiedades</h2>
-              <p>No tienes ninguna propiedad. ¡Crea una para empezar!</p>
-            </div>
-        </DashboardClientLayout>
+        <Suspense>
+          <PropertyProvider initialProperties={[]}>
+            <DashboardClientLayout user={finalUser}>
+                <div className="p-4 w-full">
+                  <h2 className="text-2xl font-bold">Sin propiedades</h2>
+                  <p>No tienes ninguna propiedad. ¡Crea una para empezar!</p>
+                </div>
+            </DashboardClientLayout>
+          </PropertyProvider>
+        </Suspense>
       )
   }
 

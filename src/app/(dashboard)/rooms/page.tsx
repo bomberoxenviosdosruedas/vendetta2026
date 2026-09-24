@@ -36,7 +36,7 @@ function RoomsLoading() {
 export default async function RoomsPage() {
   const user = await getSessionUser();
   if (!user) {
-    redirect('/login');
+    redirect('/overview');
   }
 
   const allRoomConfigs = await getRoomConfigurations();
