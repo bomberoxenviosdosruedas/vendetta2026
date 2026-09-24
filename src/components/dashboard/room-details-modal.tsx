@@ -5,7 +5,6 @@ import { DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClos
 import { FullConfiguracionHabitacion } from '@/lib/data';
 import { calcularCostosNivel, calcularProduccionRecurso } from '@/lib/formulas/room-formulas';
 import { ScrollArea } from '../ui/scroll-area';
-import { Button } from '../ui/button';
 
 type RoomWithLevel = FullConfiguracionHabitacion & { nivel: number };
 
@@ -32,10 +31,10 @@ function getBenefitText(roomId: string, level: number): string {
 
 function CostList({ costos }: { costos: { armas: number, municion: number, dolares: number } }) {
   return (
-    <div className="flex flex-wrap gap-2 text-xs font-['JetBrains_Mono'] tabular-nums">
-      {costos.armas > 0 && <span className="text-[#ee7000]">ARMAS: {formatNumber(costos.armas)}</span>}
-      {costos.municion > 0 && <span className="text-[#fabd00]">MUN: {formatNumber(costos.municion)}</span>}
-      {costos.dolares > 0 && <span className="text-[#00ff00]">$ {formatNumber(costos.dolares)}</span>}
+    <div className="flex flex-wrap gap-2 text-xs font-['JetBrains_Mono'] tabular-nums font-bold">
+      {costos.armas > 0 && <span className="text-[#a84e00]">ARMAS: {formatNumber(costos.armas)}</span>}
+      {costos.municion > 0 && <span className="text-[#8f6d00]">MUN: {formatNumber(costos.municion)}</span>}
+      {costos.dolares > 0 && <span className="text-[#007000]">$ {formatNumber(costos.dolares)}</span>}
     </div>
   );
 }
@@ -44,30 +43,30 @@ export function RoomDetailsModal({ room }: RoomDetailsModalProps) {
   const projectionLevels = Array.from({ length: 5 }, (_, i) => room.nivel + i + 1);
 
   return (
-    <DialogContent className="max-w-2xl w-full max-h-[85vh] flex flex-col p-0 bg-[#0d0d0d] border-[#333333] text-[#dfdbc9]">
-      <DialogHeader className="p-3 crimson-th border-b border-[#8e1515] shrink-0">
+    <DialogContent className="max-w-2xl w-full max-h-[85vh] flex flex-col p-0 bg-[#161410] border-2 border-[#5a4b33] text-[#dfdbc9] overflow-hidden">
+      <DialogHeader className="p-3 crimson-th shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-16 h-12 relative rounded border border-[#333333] bg-black overflow-hidden shrink-0">
-            <Image src={room.urlImagen} alt={room.nombre} fill className="w-full h-auto object-cover" />
+          <div className="w-16 h-12 relative rounded border border-[#5a4f3d] bg-[#181410] overflow-hidden shrink-0">
+            <Image src={room.urlImagen} alt={room.nombre} fill className="object-cover" />
           </div>
           <div>
-            <DialogTitle className="text-base font-['Chivo'] text-white uppercase">{room.nombre}</DialogTitle>
-            <DialogDescription className="text-xs text-[#ffdad4] font-['JetBrains_Mono']">
-              Nivel actual: <span className="font-bold text-[#fff400]">{room.nivel}</span>
+            <DialogTitle className="text-sm font-['Chivo'] font-bold text-white uppercase">{room.nombre}</DialogTitle>
+            <DialogDescription className="text-xs text-[#ffe569] font-['JetBrains_Mono']">
+              Nivel actual: <span className="font-bold text-white">{room.nivel}</span>
             </DialogDescription>
           </div>
         </div>
       </DialogHeader>
 
-      <ScrollArea className="flex-1 p-3">
-        <div className="space-y-2">
-          <p className="text-xs text-[#a0a0a0]">{room.descripcion}</p>
+      <ScrollArea className="flex-1 p-3 bg-[#f1ebda] text-[#221c13]">
+        <div className="space-y-3">
+          <p className="text-xs text-[#4a4031]">{room.descripcion}</p>
 
-          <div className="crimson-th px-2 py-0.5 text-[10px] font-['Chivo'] font-bold uppercase text-white">
+          <div className="v-header-c text-[10px] font-['Chivo'] font-bold uppercase">
             PROYECCIÓN DE MEJORAS
           </div>
 
-          <div className="divide-y divide-[#222222] cell-dark border border-[#333333]">
+          <div className="divide-y divide-[#cbc4b0] border border-[#cbc4b0] bg-[#e5dfcb] rounded-sm">
             {projectionLevels.map((level) => {
               const costos = calcularCostosNivel(level, room);
               const produccion = room.produccionRecurso
@@ -77,12 +76,12 @@ export function RoomDetailsModal({ room }: RoomDetailsModalProps) {
               return (
                 <div key={level} className="p-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="font-['JetBrains_Mono'] font-bold text-[#00ff00] text-xs">
+                    <span className="font-['JetBrains_Mono'] font-bold text-[#008800] text-xs">
                       NVL {level}
                     </span>
                     <CostList costos={costos} />
                   </div>
-                  <span className="text-xs font-['JetBrains_Mono'] text-[#fff400] font-bold">
+                  <span className="text-xs font-['JetBrains_Mono'] text-[#801e00] font-bold">
                     {produccion > 0
                       ? `+${formatNumber(produccion)}/h`
                       : getBenefitText(room.id, level)
@@ -95,11 +94,11 @@ export function RoomDetailsModal({ room }: RoomDetailsModalProps) {
         </div>
       </ScrollArea>
 
-      <div className="p-2 border-t border-[#333333] bg-[#0a0a0a] shrink-0">
+      <div className="p-2 border-t border-[#cbc4b0] bg-[#dfdbc9] shrink-0">
         <DialogClose asChild>
-          <Button type="button" className="btn-tactical w-full text-xs font-['Chivo'] font-bold h-11 min-h-[44px]">
+          <button type="button" className="retro-btn-dark w-full text-xs font-['Chivo'] font-bold py-2 min-h-[44px]">
             CERRAR DETALLES
-          </Button>
+          </button>
         </DialogClose>
       </div>
     </DialogContent>

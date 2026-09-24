@@ -2,7 +2,6 @@
 
 import { useState, useTransition, useCallback, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import MaterialIcon from '@/components/ui/material-icon';
 import { getPropertyOwner, UserWithProgress } from '@/lib/data';
 import { debounce } from 'lodash';
@@ -197,7 +196,7 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
 
   if (!selectedProperty) {
     return (
-      <div className="cell-darker p-4 border border-[#333333] text-center font-mono text-[#a0a0a0]">
+      <div className="v-outer-frame p-4 text-center font-mono text-[#221c13]">
         Selecciona una propiedad para enviar misiones.
       </div>
     );
@@ -206,95 +205,128 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
   const availableTroops = selectedProperty.TropaUsuario.filter(t => t.cantidad > 0 && t.configuracion.tipo !== 'DEFENSA');
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 w-full text-[#dfdbc9]">
-      <div className="cell-darker p-2 border border-[#333333] space-y-2">
-        <div className="crimson-th p-2 text-white font-['Chivo'] font-bold text-xs uppercase">
-          CONFIGURACIÓN DE LA MISIÓN
-        </div>
-
-        <div className="grid grid-cols-3 gap-1.5 font-['JetBrains_Mono'] text-xs">
-          <div>
-            <label className="text-[10px] text-[#888888] uppercase block">CIUDAD</label>
-            <Input name="ciudad" value={coordinates.ciudad} onChange={handleCoordinateChange} className="bg-black border-[#333333] text-white font-bold" />
-          </div>
-          <div>
-            <label className="text-[10px] text-[#888888] uppercase block">BARRIO</label>
-            <Input name="barrio" value={coordinates.barrio} onChange={handleCoordinateChange} className="bg-black border-[#333333] text-white font-bold" />
-          </div>
-          <div>
-            <label className="text-[10px] text-[#888888] uppercase block">EDIFICIO</label>
-            <Input name="edificio" value={coordinates.edificio} onChange={handleCoordinateChange} className="bg-black border-[#333333] text-white font-bold" />
-          </div>
-        </div>
-
-        <div className="cell-dark p-2 flex items-center justify-between text-xs font-['JetBrains_Mono']">
-          <span className="text-[#888888]">OBJETIVO:</span>
-          <span className="text-[#fff400] font-bold">
-            {isLoadingTarget ? 'Buscando...' : targetOwner?.name || 'Nadie / Desocupado'}
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 w-full">
+      {/* Configuración */}
+      <section className="v-outer-frame space-y-2.5 p-0 bg-[#f1ebda]">
+        <div className="crimson-th p-2 flex items-center justify-between">
+          <span className="font-['Chivo'] font-bold text-xs uppercase tracking-wider">
+            CONFIGURACIÓN DE LA MISIÓN
           </span>
         </div>
 
-        <div className="space-y-1">
-          <label className="text-[10px] font-['JetBrains_Mono'] text-[#888888] uppercase block">TIPO DE MISIÓN</label>
-          <Select onValueChange={setMissionType} defaultValue={missionType}>
-            <SelectTrigger className="bg-black border-[#333333] text-[#dfdbc9] font-['Chivo'] text-xs">
-              <SelectValue placeholder="Selecciona tipo" />
-            </SelectTrigger>
-            <SelectContent className="bg-[#0d0d0d] border-[#333333] text-[#dfdbc9]">
-              <SelectItem value="ATAQUE">Ataque</SelectItem>
-              <SelectItem value="OCUPAR">Ocupar</SelectItem>
-              <SelectItem value="DEFENDER">Defender</SelectItem>
-              <SelectItem value="TRANSPORTE">Transporte</SelectItem>
-              <SelectItem value="ESPIONAJE">Espionaje</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      <div className="cell-darker p-2 border border-[#333333] space-y-2">
-        <div className="crimson-th p-2 text-white font-['Chivo'] font-bold text-xs uppercase flex items-center justify-between">
-          <span>TROPAS // {selectedProperty.nombre}</span>
-          <Button onClick={setAllMaxTroops} className="btn-tactical text-[10px] sm:text-xs h-auto min-h-[44px] px-2 py-1">SELECCIONAR TODAS</Button>
-        </div>
-
-        <div className="divide-y divide-[#222222] cell-dark border border-[#333333] max-h-[300px] overflow-y-auto">
-          {availableTroops.length > 0 ? availableTroops.map(tropa => (
-            <div key={tropa.configuracionTropaId} className="p-1.5 flex items-center justify-between text-xs font-['JetBrains_Mono'] gap-2">
-              <div className="flex items-center gap-2 truncate">
-                <Image src={tropa.configuracion.urlImagen} alt={tropa.configuracion.nombre} width={24} height={20} className="object-contain shrink-0" />
-                <span className="truncate text-white font-bold">{tropa.configuracion.nombre}</span>
-                <span className="text-[#888888] text-[10px]">({tropa.cantidad})</span>
-              </div>
-              <div className="flex items-center gap-1 shrink-0">
-                <Input
-                  type="number"
-                  min="0"
-                  max={tropa.cantidad}
-                  value={tropas.find(t => t.id === tropa.configuracionTropaId)?.cantidad || 0}
-                  onChange={(e) => handleTroopChange(tropa.configuracionTropaId, parseInt(e.target.value) || 0)}
-                  className="w-16 h-8 bg-black border-[#333333] text-center font-bold text-[#fff400]"
-                />
-                <Button onClick={() => setMaxTroops(tropa.configuracionTropaId)} className="btn-tactical h-8 px-2 text-[10px] min-h-[44px]">MÁX</Button>
-              </div>
+        <div className="p-2.5 space-y-3">
+          <div className="grid grid-cols-3 gap-2 font-['JetBrains_Mono'] text-xs">
+            <div>
+              <label className="text-[10px] text-[#695d48] uppercase font-bold block mb-1">CIUDAD</label>
+              <Input
+                name="ciudad"
+                value={coordinates.ciudad}
+                onChange={handleCoordinateChange}
+                className="bg-[#eee8d5] border border-[#4a3e29] text-[#111] font-bold text-center h-8"
+              />
             </div>
-          )) : (
-            <p className="p-3 text-center text-[#888888] text-xs font-mono">Sin tropas disponibles en esta propiedad.</p>
-          )}
+            <div>
+              <label className="text-[10px] text-[#695d48] uppercase font-bold block mb-1">BARRIO</label>
+              <Input
+                name="barrio"
+                value={coordinates.barrio}
+                onChange={handleCoordinateChange}
+                className="bg-[#eee8d5] border border-[#4a3e29] text-[#111] font-bold text-center h-8"
+              />
+            </div>
+            <div>
+              <label className="text-[10px] text-[#695d48] uppercase font-bold block mb-1">EDIFICIO</label>
+              <Input
+                name="edificio"
+                value={coordinates.edificio}
+                onChange={handleCoordinateChange}
+                className="bg-[#eee8d5] border border-[#4a3e29] text-[#111] font-bold text-center h-8"
+              />
+            </div>
+          </div>
+
+          <div className="p-2 bg-[#e5dfcb] border border-[#cbc4b0] rounded-sm flex items-center justify-between text-xs font-['JetBrains_Mono']">
+            <span className="text-[#554a37] font-bold">OBJETIVO:</span>
+            <span className="text-[#801e00] font-bold">
+              {isLoadingTarget ? 'Buscando...' : targetOwner?.name || 'Nadie / Desocupado'}
+            </span>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-[10px] font-['JetBrains_Mono'] text-[#695d48] uppercase font-bold block">
+              TIPO DE MISIÓN
+            </label>
+            <Select onValueChange={setMissionType} defaultValue={missionType}>
+              <SelectTrigger className="bg-[#eee8d5] border border-[#4a3e29] text-[#221c13] font-['Chivo'] font-bold text-xs h-9">
+                <SelectValue placeholder="Selecciona tipo" />
+              </SelectTrigger>
+              <SelectContent className="bg-[#1a1711] border-[#4a3e2b] text-[#dfdbc9]">
+                <SelectItem value="ATAQUE">Ataque</SelectItem>
+                <SelectItem value="OCUPAR">Ocupar</SelectItem>
+                <SelectItem value="DEFENDER">Defender</SelectItem>
+                <SelectItem value="TRANSPORTE">Transporte</SelectItem>
+                <SelectItem value="ESPIONAJE">Espionaje</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </section>
+
+      {/* Tropas & Despliegue */}
+      <section className="v-outer-frame bg-[#f1ebda] flex flex-col justify-between">
+        <div>
+          <div className="crimson-th p-2 flex items-center justify-between">
+            <span className="font-['Chivo'] font-bold text-xs uppercase tracking-wider">
+              TROPAS // {selectedProperty.nombre}
+            </span>
+            <button onClick={setAllMaxTroops} className="retro-btn text-[10px] px-2 py-1 font-bold">
+              SELECCIONAR TODAS
+            </button>
+          </div>
+
+          <div className="p-2.5">
+            <div className="divide-y divide-[#cbc4b0] border border-[#cbc4b0] bg-[#e5dfcb] max-h-[280px] overflow-y-auto rounded-sm">
+              {availableTroops.length > 0 ? availableTroops.map(tropa => (
+                <div key={tropa.configuracionTropaId} className="p-1.5 flex items-center justify-between text-xs font-['JetBrains_Mono'] gap-2">
+                  <div className="flex items-center gap-2 truncate">
+                    <Image src={tropa.configuracion.urlImagen} alt={tropa.configuracion.nombre} width={24} height={20} className="object-contain shrink-0" />
+                    <span className="truncate text-[#111] font-bold">{tropa.configuracion.nombre}</span>
+                    <span className="text-[#695d48] text-[10px]">({tropa.cantidad})</span>
+                  </div>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <Input
+                      type="number"
+                      min="0"
+                      max={tropa.cantidad}
+                      value={tropas.find(t => t.id === tropa.configuracionTropaId)?.cantidad || 0}
+                      onChange={(e) => handleTroopChange(tropa.configuracionTropaId, parseInt(e.target.value) || 0)}
+                      className="w-16 h-8 bg-[#eee8d5] border border-[#4a3e29] text-center font-bold text-[#111]"
+                    />
+                    <button onClick={() => setMaxTroops(tropa.configuracionTropaId)} className="retro-btn h-8 px-2 text-[10px] min-h-[44px]">MÁX</button>
+                  </div>
+                </div>
+              )) : (
+                <p className="p-3 text-center text-[#695d48] text-xs font-mono font-semibold">Sin tropas disponibles en esta propiedad.</p>
+              )}
+            </div>
+          </div>
         </div>
 
-        <div className="cell-dark p-2 flex items-center justify-between text-xs font-['JetBrains_Mono']">
-          <span className="text-[#888888]">TIEMPO ESTIMADO DE VIAJE:</span>
-          <span className="text-[#00ff00] font-bold tabular-nums">{formatDuration(travelTime)}</span>
-        </div>
+        <div className="p-2.5 space-y-2 border-t border-[#cbc4b0] bg-[#dfdbc9]">
+          <div className="flex items-center justify-between text-xs font-['JetBrains_Mono']">
+            <span className="text-[#554a37] font-bold">DURACIÓN ESTIMADA:</span>
+            <span className="timer-pill px-2 py-0.5 text-xs text-[#44dd55]">{formatDuration(travelTime)}</span>
+          </div>
 
-        <Button
-          onClick={handleSubmit}
-          disabled={isPending || tropas.length === 0}
-          className="btn-crimson w-full text-xs font-['Chivo'] font-bold h-11 min-h-[44px]"
-        >
-          {isPending ? 'DESPLEGANDO FLOTA...' : 'DESPLEGAR MISIÓN TÁCTICA'}
-        </Button>
-      </div>
+          <button
+            onClick={handleSubmit}
+            disabled={isPending || tropas.length === 0}
+            className="retro-btn w-full text-xs font-['Chivo'] font-bold h-11 min-h-[44px] disabled:opacity-50"
+          >
+            {isPending ? 'DESPLEGANDO FLOTA...' : 'DESPLEGAR MISIÓN TÁCTICA'}
+          </button>
+        </div>
+      </section>
     </div>
   );
 }

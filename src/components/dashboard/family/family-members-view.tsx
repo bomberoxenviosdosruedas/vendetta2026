@@ -1,16 +1,10 @@
+'use client';
 
-'use client'
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { FullFamily } from "@/lib/data";
 import { FamilyRole } from "@prisma/client";
 import { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { MaterialIcon } from "@/components/ui/material-icon";
-import { Separator } from "@/components/ui/separator";
+import MaterialIcon from "@/components/ui/material-icon";
 
 interface FamilyMembersViewProps {
     family: FullFamily;
@@ -22,12 +16,6 @@ const roleTranslations: Record<FamilyRole, string> = {
     [FamilyRole.MEMBER]: "Miembro",
 };
 
-const roleIcons: Record<FamilyRole, React.ReactNode> = {
-    [FamilyRole.LEADER]: <MaterialIcon name="military_tech" size={18} className="text-amber-400" />,
-    [FamilyRole.CO_LEADER]: <MaterialIcon name="shield" size={18} className="text-blue-400" />,
-    [FamilyRole.MEMBER]: <MaterialIcon name="person" size={18} className="text-muted-foreground" />,
-}
-
 function formatPoints(points: number | null | undefined): string {
     if (points === null || points === undefined) return "0";
     return Math.floor(points).toLocaleString('de-DE');
@@ -38,7 +26,7 @@ function formatLastSeen(lastSeen: Date | null): { text: string; isOnline: boolea
     const now = new Date();
     const diffSeconds = Math.floor((now.getTime() - new Date(lastSeen).getTime()) / 1000);
 
-    if (diffSeconds < 300) { // 5 minutes threshold for 'Online'
+    if (diffSeconds < 300) {
         return { text: "En Línea", isOnline: true };
     }
 
@@ -52,7 +40,6 @@ function formatLastSeen(lastSeen: Date | null): { text: string; isOnline: boolea
     return { text: "Hace un momento", isOnline: true };
 }
 
-
 export function FamilyMembersView({ family }: FamilyMembersViewProps) {
     const [, setTick] = useState(0);
 
@@ -64,90 +51,58 @@ export function FamilyMembersView({ family }: FamilyMembersViewProps) {
     }, []);
 
     return (
-        <div className="space-y-4">
-             <div className="flex items-center justify-between">
-                <div>
-                    <h2 className="text-3xl font-bold tracking-tight">Miembros de {family.name}</h2>
-                    <p className="text-muted-foreground">
-                        Lista de todos los jugadores de tu familia.
-                    </p>
-                </div>
-                <Button asChild variant="outline" size="sm">
-                    <Link href="/family">
-                        <MaterialIcon name="arrow_back" size={18} className="mr-2" />
-                        Volver a la Familia
+        <div className="w-full space-y-3">
+            <section className="v-outer-frame">
+                <div className="crimson-th p-2 flex items-center justify-between">
+                    <span className="font-['Chivo'] font-bold text-xs uppercase tracking-wider">
+                        MIEMBROS DE {family.name}
+                    </span>
+                    <Link href="/family" className="retro-btn text-xs px-2.5 py-1 font-bold flex items-center gap-1">
+                        <MaterialIcon name="arrow_back" size={14} />
+                        Volver
                     </Link>
-                </Button>
-            </div>
-            <Card>
-                <CardContent className="p-0">
-                     {/* Desktop Table */}
-                    <Table className="hidden md:table">
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="w-[80px]">#</TableHead>
-                                <TableHead>Jugador</TableHead>
-                                <TableHead>Posición</TableHead>
-                                <TableHead className="text-right">Puntos</TableHead>
-                                <TableHead className="text-right">Estado</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
+                </div>
+
+                {/* Table View */}
+                <div className="overflow-x-auto bg-[#f1ebda]">
+                    <table className="w-full border-collapse text-xs">
+                        <thead>
+                            <tr>
+                                <th className="crimson-th p-1.5 text-left w-10">#</th>
+                                <th className="crimson-th p-1.5 text-left">Jugador</th>
+                                <th className="crimson-th p-1.5 text-left">Posición</th>
+                                <th className="crimson-th p-1.5 text-right">Puntos</th>
+                                <th className="crimson-th p-1.5 text-right">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-[#cbc4b0]">
                             {family.members.map(({ user, role }, index) => {
                                 const status = formatLastSeen(user.lastSeen);
+                                const isAlt = index % 2 === 1;
                                 return (
-                                    <TableRow key={user.id}>
-                                        <TableCell className="font-medium text-muted-foreground">{index + 1}</TableCell>
-                                        <TableCell>
-                                            <Link href={`/profile/${user.id}`} className="font-semibold hover:underline">{user.name}</Link>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="flex items-center gap-2">
-                                                {roleIcons[role]}
-                                                <span>{roleTranslations[role]}</span>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell className="text-right font-mono">{formatPoints(user.puntuacion?.puntosTotales)}</TableCell>
-                                        <TableCell className={cn("text-right font-mono text-sm", status.isOnline ? "text-green-500" : "text-muted-foreground")}>
+                                    <tr key={user.id} className={`${isAlt ? 'bg-[#e5dfcb]' : 'bg-[#f1ebda]'} hover:bg-[#efeadd]`}>
+                                        <td className="p-2 font-mono text-[#554a37] font-bold">{index + 1}</td>
+                                        <td className="p-2 font-bold">
+                                            <Link href={`/profile/${user.id}`} className="text-[#174872] hover:text-[#8b0000] underline">
+                                                {user.name}
+                                            </Link>
+                                        </td>
+                                        <td className="p-2 text-[#221c13] font-bold">
+                                            {roleTranslations[role]}
+                                        </td>
+                                        <td className="p-2 text-right font-mono font-bold text-[#801e00]">
+                                            {formatPoints(user.puntuacion?.puntosTotales)}
+                                        </td>
+                                        <td className={`p-2 text-right font-mono font-bold ${status.isOnline ? 'text-[#008800]' : 'text-[#695d48]'}`}>
                                             {status.text}
-                                        </TableCell>
-                                    </TableRow>
-                                )
+                                        </td>
+                                    </tr>
+                                );
                             })}
-                        </TableBody>
-                    </Table>
-                     {/* Mobile Cards */}
-                    <div className="md:hidden p-2 space-y-2">
-                        {family.members.map(({user, role}, index) => {
-                             const status = formatLastSeen(user.lastSeen);
-                             return (
-                                <Card key={user.id} className="p-4">
-                                    <div className="flex items-start justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <span className="text-lg font-bold text-muted-foreground">#{index + 1}</span>
-                                            <div>
-                                                 <Link href={`/profile/${user.id}`} className="font-semibold hover:underline">{user.name}</Link>
-                                                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                                                    {roleIcons[role]}
-                                                    <span>{roleTranslations[role]}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                         <div className={cn("text-xs font-bold px-2 py-1 rounded-full", status.isOnline ? "bg-green-500/20 text-green-400" : "bg-red-500/10 text-red-400")}>
-                                            {status.text}
-                                        </div>
-                                    </div>
-                                    <Separator className="my-3"/>
-                                    <div className="text-center">
-                                        <p className="text-xl font-bold font-mono text-primary">{formatPoints(user.puntuacion?.puntosTotales)}</p>
-                                        <p className="text-xs text-muted-foreground">Puntos</p>
-                                    </div>
-                                </Card>
-                             )
-                        })}
-                    </div>
-                </CardContent>
-            </Card>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
         </div>
-    )
+    );
 }

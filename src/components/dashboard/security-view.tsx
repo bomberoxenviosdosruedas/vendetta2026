@@ -1,21 +1,15 @@
+'use client';
 
-'use client'
-
-import Image from "next/image"
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { MaterialIcon } from "@/components/ui/material-icon"
-import { iniciarEntrenamientoSeguridad } from "@/lib/actions/troop.actions"
-import { useState, useTransition } from "react"
-import type { ConfiguracionTropa } from "@prisma/client"
-import { Input } from "../ui/input"
-import type { UserWithProgress } from "@/lib/data"
-import { useProperty } from "@/contexts/property-context"
-import { Dialog, DialogTrigger } from "../ui/dialog"
-import { TroopDetailsModal } from "./troop-details-modal"
+import Image from "next/image";
+import MaterialIcon from "@/components/ui/material-icon";
+import { iniciarEntrenamientoSeguridad } from "@/lib/actions/troop.actions";
+import { useState, useTransition } from "react";
+import type { ConfiguracionTropa } from "@prisma/client";
+import { Input } from "../ui/input";
+import type { UserWithProgress } from "@/lib/data";
+import { useProperty } from "@/contexts/property-context";
+import { Dialog, DialogTrigger } from "../ui/dialog";
+import { TroopDetailsModal } from "./troop-details-modal";
 
 function formatNumber(num: number): string {
     return num.toLocaleString('de-DE');
@@ -52,12 +46,12 @@ type TroopWithStats = ConfiguracionTropa & {
     defensaActual: number;
     capacidadActual: number;
     velocidadActual: number;
-}
+};
 
 type SecurityViewProps = {
     defenseTroops: TroopWithStats[];
     user: UserWithProgress;
-}
+};
 
 function TroopForm({ troopId }: { troopId: string }) {
     const { selectedProperty } = useProperty();
@@ -81,22 +75,25 @@ function TroopForm({ troopId }: { troopId: string }) {
     }
     
     return (
-        <form onSubmit={handleSubmit} className="flex items-center gap-2">
+        <form onSubmit={handleSubmit} className="flex items-center gap-1.5">
             <Input 
                 type="number"
                 min="1"
                 value={cantidad}
                 onChange={(e) => setCantidad(Number(e.target.value))}
-                className="w-20 h-9"
+                className="w-16 h-11 bg-[#eee8d5] border-[#4a3e29] text-center font-['JetBrains_Mono'] text-xs font-bold text-[#111]"
                 disabled={colaReclutamientoActiva || isPending}
             />
-            <Button type="submit" variant="outline" size="sm" className="min-h-[44px]" disabled={colaReclutamientoActiva || isPending}>
-                {isPending ? <MaterialIcon name="sync" size={18} className="mr-2 animate-pulse"/> : (colaReclutamientoActiva ? <MaterialIcon name="block" size={18} className="mr-2" /> : <MaterialIcon name="add_circle" size={18} className="mr-2" />)}
-                {isPending ? 'ENVIANDO...' : (colaReclutamientoActiva ? 'En cola' : 'Entrenar')}
-            </Button>
-            {error && <p className="text-xs text-destructive">{error}</p>}
+            <button
+                type="submit"
+                disabled={colaReclutamientoActiva || isPending}
+                className="retro-btn h-11 px-3 text-xs font-['Chivo'] font-bold min-h-[44px] min-w-[44px] disabled:opacity-50"
+            >
+                {isPending ? 'ENVIANDO...' : colaReclutamientoActiva ? 'EN COLA' : 'ENTRENAR'}
+            </button>
+            {error && <p className="text-xs text-[#c00000] font-mono">{error}</p>}
         </form>
-    )
+    );
 }
 
 export function SecurityView({ user, defenseTroops }: SecurityViewProps) {
@@ -104,15 +101,10 @@ export function SecurityView({ user, defenseTroops }: SecurityViewProps) {
 
   if (!selectedProperty) {
     return (
-      <div className="main-view">
-        <h2 className="text-3xl font-bold tracking-tight">Seguridad</h2>
-        <Card>
-          <CardContent className="p-6">
-              <p>Por favor, selecciona una propiedad para gestionar tus defensas.</p>
-          </CardContent>
-        </Card>
+      <div className="v-outer-frame p-4 text-center font-mono text-[#221c13]">
+        Por favor, selecciona una propiedad para gestionar sus defensas.
       </div>
-    )
+    );
   }
   
   const userTroopsMap = new Map(selectedProperty.TropaUsuario.map(t => [t.configuracionTropaId, t]));
@@ -126,85 +118,76 @@ export function SecurityView({ user, defenseTroops }: SecurityViewProps) {
   });
 
   return (
-    <div className="space-y-4">
-       <div className="flex items-center justify-between">
-            <div>
-                <h2 className="text-3xl font-bold tracking-tight">Seguridad de la Propiedad</h2>
-                <p className="text-muted-foreground">
-                    Entrena unidades defensivas para: {selectedProperty.nombre}.
-                </p>
-            </div>
-       </div>
-      <Card>
-        <CardContent className="p-0">
-          <div className="divide-y divide-border">
-              {troopsWithCounts.map((troop) => (
-                <Dialog key={troop.id}>
-                    <div className="p-4 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-                        <div className="md:col-span-3 flex items-start gap-4">
-                            <div className="w-20 h-16 relative rounded-md overflow-hidden border flex-shrink-0">
-                                <Image
-                                    src={troop.urlImagen || "https://placehold.co/80x56.png"}
-                                    alt={troop.nombre}
-                                    fill
-                                    className="object-contain"
-                                    data-ai-hint="mafia character defense"
-                                />
-                            </div>
-                            <div>
-                                <div className="font-bold">{troop.nombre}</div>
-                                <div className="text-xs text-muted-foreground">
-                                    Posees: <span className="text-primary font-bold">{troop.count}</span>
-                                </div>
-                            </div>
-                        </div>
+    <div className="space-y-3 w-full">
+      <section className="v-outer-frame">
+        <div className="crimson-th p-2 flex items-center justify-between">
+          <span className="font-['Chivo'] font-bold text-xs uppercase tracking-wider">
+            SISTEMAS DE SEGURIDAD Y DEFENSA // {selectedProperty.nombre}
+          </span>
+        </div>
 
-                        <div className="md:col-span-4">
-                            <p className="text-sm text-muted-foreground">{troop.descripcion}</p>
-                        </div>
-                        
-                        <div className="md:col-span-5">
-                            <div className="flex flex-wrap gap-x-4 gap-y-2 items-center">
-                                <div className="flex flex-col gap-2 text-sm flex-grow">
-                                <div className="grid grid-cols-2 gap-1 text-xs">
-                                    <div className="flex items-center gap-2" title="Ataque"><MaterialIcon name="swords" size={16} className="text-red-500"/><span>{formatNumber(troop.ataqueActual)}</span></div>
-                                    <div className="flex items-center gap-2" title="Defensa"><MaterialIcon name="shield" size={16} className="text-blue-500"/><span>{formatNumber(troop.defensaActual)}</span></div>
-                                </div>
-                                    <div className="grid grid-cols-3 gap-x-3">
-                                        {troop.costoArmas > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoArmas.toLocaleString('de-DE')} Armas`}><Image src="/img/recursos/armas.svg" alt="Armas" width={16} height={16} /><span>{formatNumber(troop.costoArmas)}</span></div>}
-                                        {troop.costoMunicion > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoMunicion.toLocaleString('de-DE')} Munición`}><Image src="/img/recursos/municion.svg" alt="Munición" width={16} height={16} /><span>{formatNumber(troop.costoMunicion)}</span></div>}
-                                        {troop.costoDolares > 0 && <div className="flex items-center gap-1.5" title={`${troop.costoDolares.toLocaleString('de-DE')} Dólares`}><Image src="/img/recursos/dolares.svg" alt="Dólares" width={16} height={16} /><span>{formatNumber(troop.costoDolares)}</span></div>}
-                                    </div>
-                                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
-                                        <MaterialIcon name="schedule" size={16} />
-                                        <span>{formatDuration(troop.duracion)} por unidad</span>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                     <DialogTrigger asChild>
-                                        <Button variant="ghost" size="icon" className="h-9 w-9 min-h-[44px] min-w-[44px]">
-                                            <MaterialIcon name="info" size={20} />
-                                            <span className="sr-only">Detalles</span>
-                                        </Button>
-                                    </DialogTrigger>
-                                    <TroopForm troopId={troop.id} />
-                                </div>
-                            </div>
-                        </div>
+        <div className="divide-y divide-[#cbc4b0]">
+          {troopsWithCounts.map((troop, idx) => {
+            const isAlt = idx % 2 === 1;
+            return (
+              <Dialog key={troop.id}>
+                <div className={`p-2.5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-center ${isAlt ? 'bg-[#e5dfcb]' : 'bg-[#f1ebda]'} hover:bg-[#efeadd] transition-colors`}>
+                  <div className="lg:col-span-4 flex items-center gap-3 min-w-0">
+                    <div className="w-16 h-16 relative rounded border border-[#5a4f3d] bg-[#181410] overflow-hidden shrink-0 shadow-sm">
+                      <Image
+                        src={troop.urlImagen || "https://placehold.co/80x56.png"}
+                        alt={troop.nombre}
+                        fill
+                        className="object-cover"
+                      />
                     </div>
-                     <TroopDetailsModal 
-                        troop={troop}
-                        user={user}
-                        ataqueActual={troop.ataqueActual}
-                        defensaActual={troop.defensaActual}
-                        capacidadActual={troop.capacidadActual}
-                        velocidadActual={troop.velocidadActual}
-                     />
-                </Dialog>
-              ))}
-            </div>
-        </CardContent>
-      </Card>
+                    <div className="min-w-0">
+                      <div className="font-bold font-['Chivo'] text-[#801e00] text-sm uppercase truncate">
+                        {troop.nombre}
+                      </div>
+                      <div className="text-xs font-['JetBrains_Mono'] font-bold text-[#221c13]">
+                        INSTALADOS: <span className="text-[#008800] font-bold">( {troop.count} )</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="lg:col-span-4 min-w-0">
+                    <p className="text-xs text-[#4a4031] line-clamp-2 leading-tight">{troop.descripcion}</p>
+                  </div>
+
+                  <div className="lg:col-span-4 flex flex-col gap-1 sm:items-end">
+                    <div className="flex flex-wrap gap-2 text-xs font-['JetBrains_Mono'] tabular-nums font-bold">
+                      <span className="text-[#008800]">DEF: {formatNumber(troop.defensaActual)}</span>
+                      {troop.costoArmas > 0 && <span className="text-[#a84e00]">ARMAS: {formatNumber(troop.costoArmas)}</span>}
+                      {troop.costoMunicion > 0 && <span className="text-[#8f6d00]">MUN: {formatNumber(troop.costoMunicion)}</span>}
+                      {troop.costoDolares > 0 && <span className="text-[#007000]">$ {formatNumber(troop.costoDolares)}</span>}
+                    </div>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="timer-pill px-2 py-0.5 text-[11px]">
+                        {formatDuration(troop.duracion)}/u
+                      </span>
+                      <DialogTrigger asChild>
+                        <button className="retro-btn-dark p-2 rounded-sm min-h-[44px] min-w-[44px] flex items-center justify-center">
+                          <MaterialIcon name="info" size={16} />
+                        </button>
+                      </DialogTrigger>
+                      <TroopForm troopId={troop.id} />
+                    </div>
+                  </div>
+                </div>
+                <TroopDetailsModal
+                  troop={troop}
+                  user={user}
+                  ataqueActual={troop.ataqueActual}
+                  defensaActual={troop.defensaActual}
+                  capacidadActual={troop.capacidadActual}
+                  velocidadActual={troop.velocidadActual}
+                />
+              </Dialog>
+            );
+          })}
+        </div>
+      </section>
     </div>
-  )
+  );
 }
