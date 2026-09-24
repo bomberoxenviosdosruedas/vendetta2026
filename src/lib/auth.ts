@@ -45,16 +45,18 @@ export async function getSessionUser() {
     return null;
   }
   
-  // Desarrollo: fallback mock user si no hay BD
-  if (process.env.NODE_ENV === 'development' && username === 'bomberox') {
+  // Setup de prueba: fallback mock para bomberox (cualquier entorno).
+  // Si la BD responde se usa el usuario real; si no (BD caída o sin configurar en Vercel),
+  // se usa el mock para que el dashboard nunca entre en loop de redirección.
+  if (username === 'bomberox') {
     try {
       const user = await getUserWithProgressByUsername(username);
       if (user) return user;
     } catch (e) {
-      console.log('[Auth] DB no disponible, usando mock user para desarrollo');
+      console.log('[Auth] DB no disponible, usando mock user para bomberox');
     }
     
-    // Mock user bomberox para desarrollo sin BD
+    // Mock user bomberox (setup de prueba fijo)
     return {
       id: 'cmd6rdx740003zi0w5d7c67xp',
       name: 'bomberox',
