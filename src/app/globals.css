@@ -125,6 +125,11 @@
     --chart-3: 120 100% 50%;
     --chart-4: 21 100% 47%;
     --chart-5: 0 100% 62%;
+
+    /* Font variables - loaded via Google Fonts link tags */
+    --font-work-sans: 'Work Sans';
+    --font-space-grotesk: 'Space Grotesk';
+    --font-space-mono: 'Space Mono';
   }
 
   .dark {
@@ -155,6 +160,11 @@
     --sidebar-accent-foreground: 57 100% 50%;
     --sidebar-border: 0 0% 20%;
     --sidebar-ring: 0 100% 21%;
+
+    /* Font variables - loaded via Google Fonts link tags */
+    --font-work-sans: 'Work Sans';
+    --font-space-grotesk: 'Space Grotesk';
+    --font-space-mono: 'Space Mono';
   }
 }
 

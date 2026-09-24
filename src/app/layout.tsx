@@ -1,25 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
-import { Work_Sans as WorkSans, Space_Grotesk as SpaceGrotesk, Space_Mono as SpaceMono } from 'next/font/google';
-
-const workSans = WorkSans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-work-sans',
-});
-
-const spaceGrotesk = SpaceGrotesk({
-  subsets: ['latin'],
-  weight: ['500', '700'],
-  variable: '--font-space-grotesk',
-});
-
-const spaceMono = SpaceMono({
-  subsets: ['latin'],
-  weight: ['400', '700'],
-  variable: '--font-space-mono',
-});
 
 const APP_NAME = "Vendetta";
 const APP_DEFAULT_TITLE = "Vendetta tu familia Vendettera";
@@ -101,8 +82,21 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
         />
+        <link
+          rel="preconnect"
+          href="https://fonts.googleapis.com"
+        />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap"
+        />
       </head>
-      <body className={`${workSans.variable} ${spaceGrotesk.variable} ${spaceMono.variable} font-sans antialiased bg-background`}>
+      <body className="font-sans antialiased bg-background">
         {children}
         <Toaster />
       </body>
