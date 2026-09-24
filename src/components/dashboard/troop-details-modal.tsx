@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import { DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from '@/components/ui/dialog';
 import { ScrollArea } from '../ui/scroll-area';
-import { Button } from '../ui/button';
 import type { ConfiguracionTropa } from '@prisma/client';
 import type { UserWithProgress } from '@/lib/data';
 
@@ -23,44 +22,44 @@ function formatNumber(num: number): string {
 
 export function TroopDetailsModal({ troop, user, ataqueActual, defensaActual, capacidadActual, velocidadActual }: TroopDetailsModalProps) {
   const stats = [
-    { label: 'Ataque', base: troop.ataque, actual: ataqueActual, color: 'text-[#ff3f3f]' },
-    { label: 'Defensa', base: troop.defensa, actual: defensaActual, color: 'text-[#00ff00]' },
-    { label: 'Capacidad', base: troop.capacidad, actual: capacidadActual, color: 'text-[#fabd00]' },
-    { label: 'Velocidad', base: Number(troop.velocidad), actual: velocidadActual, color: 'text-[#ee7000]' },
-    { label: 'Salario', base: troop.salario, actual: troop.salario, color: 'text-[#fff400]' },
-    { label: 'Puntos', base: troop.puntos, actual: troop.puntos, color: 'text-white' },
+    { label: 'Ataque', base: troop.ataque, actual: ataqueActual, color: 'text-[#c00000]' },
+    { label: 'Defensa', base: troop.defensa, actual: defensaActual, color: 'text-[#008800]' },
+    { label: 'Capacidad', base: troop.capacidad, actual: capacidadActual, color: 'text-[#8f6d00]' },
+    { label: 'Velocidad', base: Number(troop.velocidad), actual: velocidadActual, color: 'text-[#a84e00]' },
+    { label: 'Salario', base: troop.salario, actual: troop.salario, color: 'text-[#ffe569]' },
+    { label: 'Puntos', base: troop.puntos, actual: troop.puntos, color: 'text-[#221c13]' },
   ];
 
   return (
-    <DialogContent className="max-w-2xl w-full max-h-[85vh] flex flex-col p-0 bg-[#0d0d0d] border-[#333333] text-[#dfdbc9]">
-      <DialogHeader className="p-3 crimson-th border-b border-[#8e1515] shrink-0">
+    <DialogContent className="max-w-2xl w-full max-h-[85vh] flex flex-col p-0 bg-[#161410] border-2 border-[#5a4b33] text-[#dfdbc9] overflow-hidden">
+      <DialogHeader className="p-3 crimson-th shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-16 h-12 relative rounded border border-[#333333] bg-black overflow-hidden shrink-0">
-            <Image src={troop.urlImagen} alt={troop.nombre} fill className="w-full h-auto object-cover" />
+          <div className="w-16 h-12 relative rounded border border-[#5a4f3d] bg-[#181410] overflow-hidden shrink-0">
+            <Image src={troop.urlImagen} alt={troop.nombre} fill className="object-cover" />
           </div>
           <div>
-            <DialogTitle className="text-base font-['Chivo'] text-white uppercase">{troop.nombre}</DialogTitle>
-            <DialogDescription className="text-xs text-[#ffdad4] font-['JetBrains_Mono']">
+            <DialogTitle className="text-sm font-['Chivo'] font-bold text-white uppercase">{troop.nombre}</DialogTitle>
+            <DialogDescription className="text-xs text-[#ffe569] font-['JetBrains_Mono']">
               Ficha Técnica de Combate
             </DialogDescription>
           </div>
         </div>
       </DialogHeader>
 
-      <ScrollArea className="flex-1 p-3">
+      <ScrollArea className="flex-1 p-3 bg-[#f1ebda] text-[#221c13]">
         <div className="space-y-3">
-          <p className="text-xs text-[#a0a0a0]">{troop.descripcion}</p>
+          <p className="text-xs text-[#4a4031]">{troop.descripcion}</p>
 
-          <div className="crimson-th px-2 py-0.5 text-[10px] font-['Chivo'] font-bold uppercase text-white">
+          <div className="v-header-c text-[10px] font-['Chivo'] font-bold uppercase">
             MATRIZ DE ATRIBUTOS TÁCTICOS
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-['JetBrains_Mono'] text-xs">
             {stats.map((st) => (
-              <div key={st.label} className="cell-dark p-2 flex justify-between items-center">
-                <span className="text-[#888888]">{st.label.toUpperCase()}:</span>
+              <div key={st.label} className="p-2 bg-[#e5dfcb] border border-[#cbc4b0] rounded-sm flex justify-between items-center">
+                <span className="text-[#554a37] font-bold">{st.label.toUpperCase()}:</span>
                 <div className="flex items-center gap-2 tabular-nums">
-                  <span className="text-[#a0a0a0] line-through text-[10px]">{formatNumber(Number(st.base))}</span>
+                  <span className="text-[#695d48] line-through text-[10px]">{formatNumber(Number(st.base))}</span>
                   <span className={`font-bold ${st.color}`}>{formatNumber(st.actual)}</span>
                 </div>
               </div>
@@ -69,11 +68,11 @@ export function TroopDetailsModal({ troop, user, ataqueActual, defensaActual, ca
         </div>
       </ScrollArea>
 
-      <div className="p-2 border-t border-[#333333] bg-[#0a0a0a] shrink-0">
+      <div className="p-2 border-t border-[#cbc4b0] bg-[#dfdbc9] shrink-0">
         <DialogClose asChild>
-          <Button type="button" className="btn-tactical w-full text-xs font-['Chivo'] font-bold h-11 min-h-[44px]">
+          <button type="button" className="retro-btn-dark w-full text-xs font-['Chivo'] font-bold py-2 min-h-[44px]">
             CERRAR DETALLES
-          </Button>
+          </button>
         </DialogClose>
       </div>
     </DialogContent>

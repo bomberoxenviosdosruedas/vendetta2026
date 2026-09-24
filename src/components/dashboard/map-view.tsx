@@ -2,12 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import Link from 'next/link';
 import MaterialIcon from '@/components/ui/material-icon';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
   DialogContent,
@@ -15,9 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogClose,
 } from "@/components/ui/dialog";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { getPropertiesForMap, PropertyWithOwner } from '@/lib/actions/map.actions';
 import type { UserWithProgress } from '@/lib/data';
 
@@ -50,8 +44,6 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [onlyOccupied, setOnlyOccupied] = useState<boolean>(false);
-  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
-
   const [selectedEdificio, setSelectedEdificio] = useState<number | null>(null);
   const [copiedCoords, setCopiedCoords] = useState<boolean>(false);
 
@@ -61,11 +53,6 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
   const [zoom, setZoom] = useState<number>(1);
   const [pan, setPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [hoveredEdificio, setHoveredEdificio] = useState<number | null>(null);
-  const [isDragging, setIsDragging] = useState<boolean>(false);
-
-  const dragStartRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const lastPanRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const dragDistanceRef = useRef<number>(0);
 
   const propertiesMap = useMemo(() => {
     const map = new Map<number, PropertyWithOwner>();
@@ -126,10 +113,10 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
     ctx.translate(pan.x, pan.y);
     ctx.scale(zoom, zoom);
 
-    ctx.fillStyle = '#0d0d0d';
+    ctx.fillStyle = '#161410';
     ctx.fillRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
 
-    ctx.strokeStyle = '#222222';
+    ctx.strokeStyle = '#332d20';
     ctx.lineWidth = 1;
     for (let x = 0; x < WORLD_WIDTH; x += 40) {
       ctx.beginPath();
@@ -144,7 +131,7 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
       ctx.stroke();
     }
 
-    ctx.strokeStyle = '#8e1515';
+    ctx.strokeStyle = '#5a4b33';
     ctx.lineWidth = 2;
     ctx.strokeRect(PADDING - 12, PADDING - 12, WORLD_WIDTH - PADDING * 2 + 24, WORLD_HEIGHT - PADDING * 2 + 24);
 
@@ -161,7 +148,7 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
       const isSelected = selectedEdificio === edificio;
 
       if (onlyOccupied && !hasOwner && !isHovered && !isSelected) {
-        ctx.fillStyle = '#111111';
+        ctx.fillStyle = '#221c13';
         ctx.fillRect(x, y, CELL_WIDTH, CELL_HEIGHT);
         continue;
       }
@@ -169,13 +156,13 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
       if (isMine) {
         ctx.fillStyle = '#6C0000';
       } else if (hasOwner) {
-        ctx.fillStyle = '#3a0000';
+        ctx.fillStyle = '#3a2e20';
       } else {
-        ctx.fillStyle = isHovered ? '#262626' : '#111111';
+        ctx.fillStyle = isHovered ? '#dfdbc9' : '#2b251a';
       }
       ctx.fillRect(x, y, CELL_WIDTH, CELL_HEIGHT);
 
-      ctx.strokeStyle = isMine ? '#fff400' : hasOwner ? '#ff3f3f' : '#333333';
+      ctx.strokeStyle = isMine ? '#ffe569' : hasOwner ? '#e53935' : '#5a4b33';
       ctx.lineWidth = isSelected ? 2 : 1;
       ctx.strokeRect(x, y, CELL_WIDTH, CELL_HEIGHT);
 
@@ -184,22 +171,22 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
 
       if (isMine) {
         ctx.font = 'bold 12px "JetBrains Mono", monospace';
-        ctx.fillStyle = '#fff400';
+        ctx.fillStyle = '#ffe569';
         ctx.fillText(`${edificio}`, x + CELL_WIDTH / 2, y + 16);
         ctx.font = 'bold 8px "Chivo", sans-serif';
         ctx.fillStyle = '#ffffff';
         ctx.fillText('MÍA', x + CELL_WIDTH / 2, y + 36);
       } else if (hasOwner) {
         ctx.font = 'bold 11px "JetBrains Mono", monospace';
-        ctx.fillStyle = '#ffdad4';
+        ctx.fillStyle = '#f7e6c4';
         ctx.fillText(`${edificio}`, x + CELL_WIDTH / 2, y + 15);
         const tag = prop.user?.familyMember?.family.tag;
         ctx.font = '8px sans-serif';
-        ctx.fillStyle = '#fabd00';
+        ctx.fillStyle = '#ffe569';
         ctx.fillText(tag ? `[${tag}]` : 'Rival', x + CELL_WIDTH / 2, y + 35);
       } else {
         ctx.font = '10px "JetBrains Mono", monospace';
-        ctx.fillStyle = isHovered ? '#fff400' : '#888888';
+        ctx.fillStyle = isHovered ? '#1a160f' : '#a0a0a0';
         ctx.fillText(`${edificio}`, x + CELL_WIDTH / 2, y + CELL_HEIGHT / 2);
       }
     }
@@ -244,95 +231,104 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
   };
 
   return (
-    <div className="space-y-2 w-full text-[#dfdbc9]">
-      <div className="cell-darker p-2 border border-[#333333] flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-1">
-          <span className="text-[10px] font-['JetBrains_Mono'] text-[#888888]">COORDENADAS:</span>
-          <Input
-            type="number"
-            value={ciudad}
-            onChange={(e) => setCiudad(parseInt(e.target.value, 10) || 1)}
-            className="w-14 h-8 bg-black border-[#333333] text-center font-['JetBrains_Mono'] text-xs font-bold text-[#fff400]"
-          />
-          <span className="text-xs font-mono">:</span>
-          <Input
-            type="number"
-            value={barrio}
-            onChange={(e) => setBarrio(parseInt(e.target.value, 10) || 1)}
-            className="w-14 h-8 bg-black border-[#333333] text-center font-['JetBrains_Mono'] text-xs font-bold text-[#fff400]"
-          />
-          <Button
-            onClick={() => navigateLocation(ciudad, barrio)}
-            disabled={isLoading}
-            className="btn-tactical h-8 px-3 text-xs font-['Chivo'] font-bold min-h-[44px]"
+    <div className="space-y-3 w-full">
+      <section className="v-outer-frame">
+        <div className="crimson-th p-2 flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5 font-['Chivo'] font-bold text-xs">
+            <MaterialIcon name="map" size={16} />
+            <span>MAPA TÁCTICO // CIUDAD {ciudad} : BARRIO {barrio}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setOnlyOccupied(!onlyOccupied)}
+              className="retro-btn text-xs px-2.5 py-1 font-bold"
+            >
+              {onlyOccupied ? "VER TODOS" : "SOLO OCUPADAS"}
+            </button>
+          </div>
+        </div>
+
+        <div className="p-2.5 bg-[#f1ebda] flex flex-wrap items-center justify-between gap-2 border-b border-[#cbc4b0]">
+          <div className="flex items-center gap-1">
+            <span className="text-xs font-['JetBrains_Mono'] text-[#554a37] font-bold">COORDENADAS:</span>
+            <Input
+              type="number"
+              value={ciudad}
+              onChange={(e) => setCiudad(parseInt(e.target.value, 10) || 1)}
+              className="w-14 h-8 bg-[#eee8d5] border border-[#4a3e29] text-center font-['JetBrains_Mono'] text-xs font-bold text-[#111]"
+            />
+            <span className="text-xs font-bold text-[#221c13]">:</span>
+            <Input
+              type="number"
+              value={barrio}
+              onChange={(e) => setBarrio(parseInt(e.target.value, 10) || 1)}
+              className="w-14 h-8 bg-[#eee8d5] border border-[#4a3e29] text-center font-['JetBrains_Mono'] text-xs font-bold text-[#111]"
+            />
+            <button
+              onClick={() => navigateLocation(ciudad, barrio)}
+              disabled={isLoading}
+              className="retro-btn h-8 px-3 text-xs font-['Chivo'] font-bold min-h-[44px]"
+            >
+              {isLoading ? "CARGANDO..." : "EXPLORAR"}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile view (<640px): Grid of solar buttons */}
+        <div className="block sm:hidden p-2.5 bg-[#dfdbc9]">
+          <div className="v-header-c text-[10px] font-['Chivo'] font-bold uppercase mb-2">
+            SOLARES CERCANOS [{ciudad}:{barrio}:1..255]
+          </div>
+          <div className="grid grid-cols-5 gap-1.5 max-h-[350px] overflow-y-auto p-1 bg-[#f1ebda] border border-[#cbc4b0] rounded-sm">
+            {Array.from({ length: 255 }, (_, i) => i + 1).map((edificioNum) => {
+              const prop = propertiesMap.get(edificioNum);
+              const isMine = prop?.userId === currentUser.id;
+              const hasOwner = !!prop;
+
+              if (onlyOccupied && !hasOwner) return null;
+
+              return (
+                <button
+                  key={edificioNum}
+                  type="button"
+                  onClick={() => setSelectedEdificio(edificioNum)}
+                  className={`h-11 min-h-[44px] min-w-[44px] flex flex-col items-center justify-center border font-['JetBrains_Mono'] text-[11px] ${
+                    isMine
+                      ? 'bg-[#6C0000] border-[#ffe569] text-[#ffe569] font-bold'
+                      : hasOwner
+                      ? 'bg-[#3a2e20] border-[#e53935] text-[#f7e6c4]'
+                      : 'retro-btn text-[#221c13]'
+                  }`}
+                >
+                  <span className="text-[#174872] underline font-bold">#{edificioNum}</span>
+                  {isMine && <span className="text-[8px] text-white">MÍA</span>}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Desktop view (≥640px): Canvas */}
+        <div className="hidden sm:block p-2.5 bg-[#161410]">
+          <div
+            ref={containerRef}
+            className="relative w-full aspect-[17/14] min-h-[420px] bg-[#0d0d0d] overflow-hidden select-none border border-[#4a3e29]"
           >
-            {isLoading ? "Cargando..." : "Explorar"}
-          </Button>
+            <canvas ref={canvasRef} className="w-full h-full block" />
+          </div>
         </div>
-
-        <div className="flex items-center gap-2">
-          <Button
-            onClick={() => setOnlyOccupied(!onlyOccupied)}
-            className="btn-tactical h-8 px-2 text-[11px] font-['JetBrains_Mono'] min-h-[44px]"
-          >
-            {onlyOccupied ? "Ver Libres" : "Solo Ocupadas"}
-          </Button>
-        </div>
-      </div>
-
-      {/* Mobile view (<640px): Grid of solar buttons */}
-      <div className="block sm:hidden cell-darker p-2 border border-[#333333]">
-        <div className="crimson-th text-white px-2 py-1 text-[10px] font-['Chivo'] font-bold uppercase mb-2">
-          SOLARES CERCANOS [{ciudad}:{barrio}:1..255]
-        </div>
-        <div className="grid grid-cols-5 gap-1.5 max-h-[350px] overflow-y-auto p-1">
-          {Array.from({ length: 255 }, (_, i) => i + 1).map((edificioNum) => {
-            const prop = propertiesMap.get(edificioNum);
-            const isMine = prop?.userId === currentUser.id;
-            const hasOwner = !!prop;
-
-            if (onlyOccupied && !hasOwner) return null;
-
-            return (
-              <button
-                key={edificioNum}
-                type="button"
-                onClick={() => setSelectedEdificio(edificioNum)}
-                className={`h-11 min-h-[44px] min-w-[44px] flex flex-col items-center justify-center border font-['JetBrains_Mono'] text-[11px] ${
-                  isMine
-                    ? 'bg-[#6C0000] border-[#fff400] text-[#fff400] font-bold'
-                    : hasOwner
-                    ? 'bg-[#3a0000] border-[#ff3f3f] text-[#ffdad4]'
-                    : 'btn-tactical text-[#888888]'
-                }`}
-              >
-                <span>#{edificioNum}</span>
-                {isMine && <span className="text-[8px] text-white">MÍA</span>}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Desktop view (≥640px): Radar Canvas */}
-      <div className="hidden sm:block cell-darker p-2 border border-[#333333]">
-        <div
-          ref={containerRef}
-          className="relative w-full aspect-[17/14] min-h-[420px] bg-[#0d0d0d] overflow-hidden select-none border border-[#333333]"
-        >
-          <canvas ref={canvasRef} className="w-full h-full block" />
-        </div>
-      </div>
+      </section>
 
       {/* Modal Inspector */}
       <Dialog open={selectedEdificio !== null} onOpenChange={(open) => !open && setSelectedEdificio(null)}>
         {selectedEdificio && (
-          <DialogContent className="bg-[#0d0d0d] border-[#333333] text-[#dfdbc9] max-w-md">
-            <DialogHeader>
-              <DialogTitle className="crimson-th text-white p-2 font-['Chivo'] uppercase text-sm">
-                SOLAR [{ciudad}:{barrio}:{selectedEdificio}]
-              </DialogTitle>
-              <DialogDescription className="text-[#a0a0a0] text-xs font-['JetBrains_Mono'] pt-2">
+          <DialogContent className="bg-[#161410] border-2 border-[#5a4b33] text-[#dfdbc9] max-w-md p-0 overflow-hidden">
+            <div className="crimson-th p-2 text-white font-['Chivo'] font-bold text-sm uppercase">
+              SOLAR [{ciudad}:{barrio}:{selectedEdificio}]
+            </div>
+
+            <div className="p-3 bg-[#f1ebda] text-[#221c13] space-y-2 text-xs font-['JetBrains_Mono']">
+              <p className="text-[#4a4031]">
                 {selectedProperty ? (
                   isSelectedMine
                     ? `Esta base te pertenece ("${selectedProperty.nombre}").`
@@ -340,39 +336,39 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
                 ) : (
                   "Solar desocupado listo para colonizar u ocupar."
                 )}
-              </DialogDescription>
-            </DialogHeader>
+              </p>
 
-            <div className="flex flex-col gap-2 py-2 text-xs font-['JetBrains_Mono']">
-              <div className="cell-dark p-2 flex justify-between">
-                <span className="text-[#888888]">PROPIETARIO:</span>
-                <span className="text-white font-bold">{selectedProperty?.user?.name || 'Desocupado'}</span>
-              </div>
-              <div className="cell-dark p-2 flex justify-between">
-                <span className="text-[#888888]">FAMILIA:</span>
-                <span className="text-[#fabd00] font-bold">
-                  {selectedProperty?.user?.familyMember?.family.tag
-                    ? `[${selectedProperty.user.familyMember.family.tag}] ${selectedProperty.user.familyMember.family.name}`
-                    : 'Sin Alianza'}
-                </span>
+              <div className="p-2 bg-[#e5dfcb] border border-[#cbc4b0] rounded-sm space-y-1">
+                <div className="flex justify-between">
+                  <span className="text-[#554a37] font-bold">PROPIETARIO:</span>
+                  <span className="text-[#801e00] font-bold">{selectedProperty?.user?.name || 'Desocupado'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#554a37] font-bold">FAMILIA:</span>
+                  <span className="text-[#174872] font-bold">
+                    {selectedProperty?.user?.familyMember?.family.tag
+                      ? `[${selectedProperty.user.familyMember.family.tag}] ${selectedProperty.user.familyMember.family.name}`
+                      : 'Sin Alianza'}
+                  </span>
+                </div>
               </div>
             </div>
 
-            <DialogFooter className="flex gap-2 sm:justify-between items-center pt-2">
-              <Button
+            <DialogFooter className="p-2.5 bg-[#dfdbc9] border-t border-[#cbc4b0] flex justify-between items-center">
+              <button
                 type="button"
                 onClick={() => handleCopyCoords(selectedEdificio)}
-                className="btn-tactical text-xs min-h-[44px]"
+                className="retro-btn text-xs px-3 py-1.5 font-bold min-h-[44px]"
               >
-                {copiedCoords ? "¡Copiado!" : "Copiar Coords"}
-              </Button>
-              <Button
+                {copiedCoords ? "¡COPIADO!" : "COPIAR COORDS"}
+              </button>
+              <button
                 type="button"
                 onClick={() => handleSendMission(selectedEdificio)}
-                className="btn-crimson text-xs min-h-[44px]"
+                className="retro-btn-dark text-xs px-3 py-1.5 font-bold min-h-[44px]"
               >
-                Enviar Misión
-              </Button>
+                ENVIAR MISIÓN
+              </button>
             </DialogFooter>
           </DialogContent>
         )}

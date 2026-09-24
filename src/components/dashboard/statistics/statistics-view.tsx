@@ -1,4 +1,3 @@
-
 'use client';
 
 import { ConfiguracionHabitacion, ConfiguracionTropa, ConfiguracionEntrenamiento, HabitacionUsuario, EntrenamientoUsuario } from "@prisma/client";
@@ -38,7 +37,6 @@ export function StatisticsView({
     resourceStats
 }: StatisticsViewProps) {
 
-    // Process room stats
     const maxRoomLevels = new Map<string, number>();
     roomStats.forEach(stat => {
         const currentMax = maxRoomLevels.get(stat.configuracionHabitacionId) || 0;
@@ -63,7 +61,6 @@ export function StatisticsView({
         maxRoomLevels.get(config.id) || 0,
     ]));
 
-    // Process training stats
     const maxTrainingLevels = new Map<string, number>();
     trainingStats.forEach(stat => {
         const currentMax = maxTrainingLevels.get(stat.configuracionEntrenamientoId) || 0;
@@ -79,7 +76,6 @@ export function StatisticsView({
         maxTrainingLevels.get(config.id) || 0,
     ]));
 
-    // Process troop stats
     const maxTroopCounts = new Map<string, number>();
     troopStats.forEach(stat => {
         const currentMax = maxTroopCounts.get(stat.configuracionTropaId) || 0;
@@ -105,22 +101,21 @@ export function StatisticsView({
     ]));
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h2 className="text-3xl font-bold tracking-tight">Estadísticas Globales</h2>
-                    <p className="text-muted-foreground">
-                        Compara tu progreso con los mejores jugadores del servidor.
-                    </p>
+        <div className="w-full space-y-3">
+            <section className="v-outer-frame">
+                <div className="crimson-th p-2 flex items-center justify-between">
+                    <span className="font-['Chivo'] font-bold text-xs uppercase tracking-wider">
+                        ESTADÍSTICAS GLOBALES DEL SERVIDOR
+                    </span>
                 </div>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <StatTableCard title="ESTADÍSTICAS DE RECURSOS" headers={['Recurso', 'Máximo por edificio']} data={resourceStatData} />
-                <StatTableCard title="ESTADÍSTICAS DE HABITACIONES" headers={['Habitación', 'Mi Nivel', 'Nivel Máximo']} data={roomStatData} />
-                <StatTableCard title="ESTADÍSTICAS DE ENTRENAMIENTOS" headers={['Entrenamiento', 'Mi Nivel', 'Nivel Máximo']} data={trainingStatData} />
-                <StatTableCard title="ESTADÍSTICAS DE TROPAS" headers={['Tropa', 'Mis Unidades', 'Unidades Máximas']} data={troopStatData} />
-            </div>
+                <div className="p-3 bg-[#dfdbc9] grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <StatTableCard title="RECURSOS MÁXIMOS" headers={['Recurso', 'Máximo por Edificio']} data={resourceStatData} />
+                    <StatTableCard title="HABITACIONES" headers={['Habitación', 'Mi Nivel', 'Nivel Máximo']} data={roomStatData} />
+                    <StatTableCard title="ENTRENAMIENTOS" headers={['Entrenamiento', 'Mi Nivel', 'Nivel Máximo']} data={trainingStatData} />
+                    <StatTableCard title="TROPAS" headers={['Tropa', 'Mis Unidades', 'Unidades Máximas']} data={troopStatData} />
+                </div>
+            </section>
         </div>
     );
 }

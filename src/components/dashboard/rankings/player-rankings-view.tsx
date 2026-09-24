@@ -1,15 +1,4 @@
-
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
-import { Card, CardContent } from "@/components/ui/card"
 import type { UserForRanking } from "@/lib/data";
-import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 
 interface PlayerRankingsViewProps {
@@ -23,82 +12,61 @@ function formatPoints(points: number | null | undefined): string {
 
 export function PlayerRankingsView({ users }: PlayerRankingsViewProps) {
     return (
-        <Card>
-            <CardContent className="p-0">
-                {/* Vista de Tabla para Escritorio */}
-                <Table className="hidden md:table">
-                    <TableHeader>
-                        <TableRow className="bg-primary/80 hover:bg-primary/90">
-                            <TableHead className="w-[50px] text-primary-foreground font-bold">#</TableHead>
-                            <TableHead className="text-primary-foreground font-bold">NOMBRE</TableHead>
-                            <TableHead className="text-right text-primary-foreground font-bold">PUNTOS (ENTRÉN.)</TableHead>
-                            <TableHead className="text-right text-primary-foreground font-bold">PUNTOS (EDIFICIOS)</TableHead>
-                            <TableHead className="text-right text-primary-foreground font-bold">PUNTOS (TROPAS)</TableHead>
-                            <TableHead className="text-right text-primary-foreground font-bold">SUMA</TableHead>
-                            <TableHead className="text-right text-primary-foreground font-bold">PROPIEDADES</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {users.map((user, index) => (
-                            <TableRow key={user.id}>
-                                <TableCell className="font-medium">{index + 1}</TableCell>
-                                <TableCell className="font-bold">
-                                    <Link href={`/profile/${user.id}`} className="hover:underline">
-                                        {user.name}
-                                    </Link>
-                                </TableCell>
-                                <TableCell className="text-right">{formatPoints(user.puntuacion?.puntosEntrenamientos)}</TableCell>
-                                <TableCell className="text-right">{formatPoints(user.puntuacion?.puntosHabitaciones)}</TableCell>
-                                <TableCell className="text-right">{formatPoints(user.puntuacion?.puntosTropas)}</TableCell>
-                                <TableCell className="text-right font-bold text-primary">{formatPoints(user.puntuacion?.puntosTotales)}</TableCell>
-                                <TableCell className="text-right">{user._count.propiedades}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+        <section className="v-outer-frame w-full">
+            <div className="crimson-th p-2 flex items-center justify-between">
+                <span className="font-['Chivo'] font-bold text-xs uppercase tracking-wider">
+                    CLASIFICACIÓN GLOBAL DE JUGADORES
+                </span>
+            </div>
 
-                {/* Vista de Tarjetas para Móvil */}
-                <div className="md:hidden">
-                    <div className="p-4 bg-primary/80 text-primary-foreground font-bold text-center">Clasificaciones</div>
-                    <div className="space-y-2 p-2">
-                        {users.map((user, index) => (
-                            <Card key={user.id} className="p-4">
-                                <div className="flex justify-between items-center">
-                                    <div className="flex items-center gap-4">
-                                        <span className="text-lg font-bold text-muted-foreground w-6">#{index + 1}</span>
-                                        <Link href={`/profile/${user.id}`} className="hover:underline">
-                                            <span className="font-bold text-lg">{user.name}</span>
+            <div className="overflow-x-auto bg-[#f1ebda]">
+                <table className="w-full border-collapse text-xs">
+                    <thead>
+                        <tr>
+                            <th className="crimson-th p-1.5 text-left w-10">#</th>
+                            <th className="crimson-th p-1.5 text-left">Jugador</th>
+                            <th className="crimson-th p-1.5 text-right">Entrenamiento</th>
+                            <th className="crimson-th p-1.5 text-right">Edificios</th>
+                            <th className="crimson-th p-1.5 text-right">Tropas</th>
+                            <th className="crimson-th p-1.5 text-right">Puntos Totales</th>
+                            <th className="crimson-th p-1.5 text-right">Bases</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#cbc4b0]">
+                        {users.map((user, index) => {
+                            const isAlt = index % 2 === 1;
+                            const isTop3 = index < 3;
+                            return (
+                                <tr key={user.id} className={`${isAlt ? 'bg-[#e5dfcb]' : 'bg-[#f1ebda]'} ${isTop3 ? (index === 0 ? 'glow-border-gold' : 'glow-border-crimson') : ''} hover:bg-[#efeadd]`}>
+                                    <td className="p-2 font-mono text-[#554a37] font-bold">
+                                        {index === 0 ? '👑 1' : index === 1 ? '🥈 2' : index === 2 ? '🥉 3' : index + 1}
+                                    </td>
+                                    <td className="p-2 font-bold">
+                                        <Link href={`/profile/${user.id}`} className="text-[#174872] hover:text-[#8b0000] underline">
+                                            {user.name}
                                         </Link>
-                                    </div>
-                                    <div className="text-right">
-                                        <div className="font-bold text-primary text-lg">{formatPoints(user.puntuacion?.puntosTotales)}</div>
-                                        <div className="text-xs text-muted-foreground">Puntos Totales</div>
-                                    </div>
-                                </div>
-                                <Separator className="my-3" />
-                                <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                                    <div className="flex justify-between">
-                                        <span className="text-muted-foreground">Entrenamiento:</span>
-                                        <span className="font-semibold">{formatPoints(user.puntuacion?.puntosEntrenamientos)}</span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span className="text-muted-foreground">Edificios:</span>
-                                        <span className="font-semibold">{formatPoints(user.puntuacion?.puntosHabitaciones)}</span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span className="text-muted-foreground">Tropas:</span>
-                                        <span className="font-semibold">{formatPoints(user.puntuacion?.puntosTropas)}</span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span className="text-muted-foreground">Propiedades:</span>
-                                        <span className="font-semibold">{user._count.propiedades}</span>
-                                    </div>
-                                </div>
-                            </Card>
-                        ))}
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
-    )
+                                    </td>
+                                    <td className="p-2 text-right font-mono text-[#4a4031]">
+                                        {formatPoints(user.puntuacion?.puntosEntrenamientos)}
+                                    </td>
+                                    <td className="p-2 text-right font-mono text-[#4a4031]">
+                                        {formatPoints(user.puntuacion?.puntosHabitaciones)}
+                                    </td>
+                                    <td className="p-2 text-right font-mono text-[#4a4031]">
+                                        {formatPoints(user.puntuacion?.puntosTropas)}
+                                    </td>
+                                    <td className="p-2 text-right font-mono font-bold text-[#801e00]">
+                                        {formatPoints(user.puntuacion?.puntosTotales)}
+                                    </td>
+                                    <td className="p-2 text-right font-mono text-[#111]">
+                                        {user._count.propiedades}
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    );
 }

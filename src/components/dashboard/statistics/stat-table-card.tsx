@@ -1,8 +1,4 @@
-
 'use client';
-
-import { Card } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 interface StatTableCardProps {
     title: string;
@@ -19,34 +15,35 @@ function formatNumber(value: string | number) {
 
 export function StatTableCard({ title, headers, data }: StatTableCardProps) {
     return (
-        <Card className="overflow-hidden">
-            <div className="bg-primary text-primary-foreground p-4">
-                <h3 className="font-heading text-xl tracking-wider">{title}</h3>
-            </div>
-            <div className="bg-card">
-                 <Table>
-                    <TableHeader>
-                        <TableRow className="border-b-white/10 hover:bg-white/5">
+        <div className="v-outer-frame overflow-hidden bg-[#f1ebda]">
+            <div className="v-header-c">{title}</div>
+            <div className="overflow-x-auto">
+                <table className="w-full border-collapse text-xs">
+                    <thead>
+                        <tr>
                             {headers.map((header, index) => (
-                                <TableHead key={index} className={`font-bold text-white/90 ${index > 0 ? 'text-right' : ''}`}>
+                                <th key={index} className={`crimson-th p-1.5 ${index > 0 ? 'text-right' : 'text-left'}`}>
                                     {header}
-                                </TableHead>
+                                </th>
                             ))}
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {data.map((row, rowIndex) => (
-                             <TableRow key={rowIndex} className="border-b-white/10 hover:bg-white/5">
-                                {row.map((cell, cellIndex) => (
-                                    <TableCell key={cellIndex} className={`${cellIndex > 0 ? 'text-right' : 'font-medium'}`}>
-                                        {formatNumber(cell)}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#cbc4b0]">
+                        {data.map((row, rowIndex) => {
+                            const isAlt = rowIndex % 2 === 1;
+                            return (
+                                <tr key={rowIndex} className={`${isAlt ? 'bg-[#e5dfcb]' : 'bg-[#f1ebda]'}`}>
+                                    {row.map((cell, cellIndex) => (
+                                        <td key={cellIndex} className={`p-2 font-mono ${cellIndex > 0 ? 'text-right font-bold text-[#801e00]' : 'text-left font-bold text-[#221c13]'}`}>
+                                            {formatNumber(cell)}
+                                        </td>
+                                    ))}
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
             </div>
-        </Card>
+        </div>
     );
 }

@@ -1,24 +1,19 @@
-
 'use client';
 
 import { useState, useTransition } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { BattleReport, runBattleSimulation, SimulationInput } from '@/lib/actions/simulation.actions';
 import type { ConfiguracionTropa, ConfiguracionEntrenamiento, ConfiguracionHabitacion } from '@prisma/client';
-import { MaterialIcon } from '@/components/ui/material-icon';
+import MaterialIcon from '@/components/ui/material-icon';
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogFooter,
     DialogClose,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import { ScrollArea } from '../ui/scroll-area';
 import { UserWithProgress } from '@/lib/data';
 import { useProperty } from '@/contexts/property-context';
@@ -48,9 +43,9 @@ const initialColumnState: SimulatorColumnState = {
 };
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
-    <div>
-        <h3 className="text-lg font-semibold mb-2 text-primary">{title}</h3>
-        <div className="space-y-2">{children}</div>
+    <div className="space-y-1.5">
+        <h3 className="text-xs font-bold font-['Chivo'] uppercase text-[#801e00] border-b border-[#cbc4b0] pb-0.5">{title}</h3>
+        <div className="space-y-1.5">{children}</div>
     </div>
 );
 
@@ -61,8 +56,8 @@ const InputRow = ({ label, value, onChange }: { label: string; value: number; on
     };
 
     return (
-        <div className="flex items-center justify-between">
-            <Label htmlFor={label} className="text-sm truncate pr-2">{label}</Label>
+        <div className="flex items-center justify-between text-xs font-['JetBrains_Mono']">
+            <Label htmlFor={label} className="text-xs truncate pr-2 text-[#221c13] font-bold">{label}</Label>
             <Input
                 id={label}
                 type="number"
@@ -70,7 +65,7 @@ const InputRow = ({ label, value, onChange }: { label: string; value: number; on
                 value={value || ''}
                 onChange={handleInputChange}
                 placeholder="0"
-                className="w-24 h-8 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                className="w-24 h-7 bg-[#eee8d5] border border-[#4a3e29] text-[#111] font-bold text-center text-xs"
             />
         </div>
     );
@@ -124,23 +119,23 @@ function SimulatorColumn({
     }
 
     return (
-        <Card>
-            <CardHeader className="flex-row items-center justify-between">
-                <CardTitle>{title}</CardTitle>
-                <div className="flex items-center gap-2">
-                     <Button variant="outline" size="sm" onClick={onLoadData}>
-                        <MaterialIcon name="upload" size={18} className="mr-2" />
-                        Cargar mis datos
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={handleClear} className="h-8 w-8 min-h-[44px] min-w-[44px]">
-                        <MaterialIcon name="delete" size={18} />
-                        <span className="sr-only">Limpiar {title}</span>
-                    </Button>
+        <div className="v-outer-frame flex flex-col h-full bg-[#f1ebda]">
+            <div className="crimson-th p-2 flex items-center justify-between">
+                <span className="font-['Chivo'] font-bold text-xs uppercase tracking-wider">{title}</span>
+                <div className="flex items-center gap-1">
+                    <button onClick={onLoadData} className="retro-btn text-[10px] px-2 py-1 font-bold flex items-center gap-1">
+                        <MaterialIcon name="upload" size={14} />
+                        Cargar Datos
+                    </button>
+                    <button onClick={handleClear} className="retro-btn-dark p-1 rounded-sm text-xs" title={`Limpiar ${title}`}>
+                        <MaterialIcon name="delete" size={14} />
+                    </button>
                 </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-                 <ScrollArea className="h-96 pr-4">
-                    <div className="space-y-4">
+            </div>
+
+            <div className="p-3 flex-grow">
+                <ScrollArea className="h-96 pr-2">
+                    <div className="space-y-3">
                         <Section title="Tropas">
                             {troopConfigs.map(t => (
                                 <InputRow
@@ -151,21 +146,20 @@ function SimulatorColumn({
                                 />
                             ))}
                         </Section>
-                        <Separator />
+
                         {isDefender && (
-                            <>
-                                <Section title="Defensas">
-                                    {defenseConfigs.map(d => (
-                                        <InputRow
-                                            key={`${title}-defense-${d.id}`}
-                                            label={d.nombre}
-                                            value={state.defenses[d.id] || 0}
-                                            onChange={(val) => handleStateChange('defenses', d.id, val)}
-                                        />
-                                    ))}</Section>
-                                <Separator />
-                            </>
+                            <Section title="Defensas">
+                                {defenseConfigs.map(d => (
+                                    <InputRow
+                                        key={`${title}-defense-${d.id}`}
+                                        label={d.nombre}
+                                        value={state.defenses[d.id] || 0}
+                                        onChange={(val) => handleStateChange('defenses', d.id, val)}
+                                    />
+                                ))}
+                            </Section>
                         )}
+
                         <Section title="Entrenamientos">
                             {trainingConfigs.map(t => (
                                 <InputRow
@@ -176,10 +170,9 @@ function SimulatorColumn({
                                 />
                             ))}
                         </Section>
-                        
-                        <Separator />
+
                         <Section title="General">
-                             <InputRow
+                            <InputRow
                                 label="Nº Propiedades"
                                 value={state.propertyCount}
                                 onChange={(val) => handleGeneralValueChange('propertyCount', val)}
@@ -194,8 +187,8 @@ function SimulatorColumn({
                         </Section>
                     </div>
                 </ScrollArea>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     )
 }
 
@@ -236,7 +229,7 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
             troops,
             trainings,
             defenses: column === 'defender' ? defenses : {},
-            buildingsLevel: 1, // You might want to calculate an average level or set a default
+            buildingsLevel: 1,
             propertyCount: user.propiedades.length || 1,
         };
 
@@ -246,7 +239,6 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
             setDefenderState(newState);
         }
     }
-
 
     const handleSimulate = () => {
         const attackerInput = formatSimulationInput(attackerState);
@@ -265,146 +257,120 @@ export function SimulatorView({ user, troopConfigs, trainingConfigs, defenseConf
     }
 
     return (
-        <div>
-            <div className="flex flex-wrap items-center justify-between mb-4 gap-4">
-                <div>
-                    <h2 className="text-3xl font-bold tracking-tight">Simulador de Batalla</h2>
-                    <p className="text-muted-foreground">
-                        Calcula los resultados de posibles enfrentamientos.
-                    </p>
+        <div className="space-y-3 w-full">
+            <section className="v-outer-frame">
+                <div className="crimson-th p-2 flex items-center justify-between">
+                    <span className="font-['Chivo'] font-bold text-xs uppercase tracking-wider">
+                        SIMULADOR TÁCTICO DE COMBATE
+                    </span>
+                    <button onClick={handleResetAll} className="retro-btn text-xs px-2.5 py-1 font-bold flex items-center gap-1">
+                        <MaterialIcon name="delete" size={14} />
+                        Reiniciar
+                    </button>
                 </div>
-                 <Button onClick={handleResetAll} variant="outline">
-                    <MaterialIcon name="delete" size={18} className="mr-2" />
-                    Reiniciar Simulador
-                </Button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <SimulatorColumn 
-                    title="Atacante"
-                    state={attackerState}
-                    setState={setAttackerState}
-                    troopConfigs={troopConfigs}
-                    trainingConfigs={trainingConfigs}
-                    defenseConfigs={defenseConfigs}
-                    onLoadData={() => handleLoadUserData('attacker')}
-                />
-                <SimulatorColumn 
-                    title="Defensor"
-                    state={defenderState}
-                    setState={setDefenderState}
-                    troopConfigs={troopConfigs}
-                    trainingConfigs={trainingConfigs}
-                    defenseConfigs={defenseConfigs}
-                    isDefender
-                    onLoadData={() => handleLoadUserData('defender')}
-                />
-            </div>
-            <div className="mt-6">
-                <Button onClick={handleSimulate} disabled={isPending} className="w-full btn-crimson">
-                    {isPending && <MaterialIcon name="sync" size={18} className="mr-2 animate-pulse" />}
-                    {isPending ? 'SIMULANDO...' : 'Simular Batalla'}
-                </Button>
-            </div>
+
+                <div className="p-3 bg-[#dfdbc9] grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <SimulatorColumn
+                        title="Atacante"
+                        state={attackerState}
+                        setState={setAttackerState}
+                        troopConfigs={troopConfigs}
+                        trainingConfigs={trainingConfigs}
+                        defenseConfigs={defenseConfigs}
+                        onLoadData={() => handleLoadUserData('attacker')}
+                    />
+                    <SimulatorColumn
+                        title="Defensor"
+                        state={defenderState}
+                        setState={setDefenderState}
+                        troopConfigs={troopConfigs}
+                        trainingConfigs={trainingConfigs}
+                        defenseConfigs={defenseConfigs}
+                        isDefender
+                        onLoadData={() => handleLoadUserData('defender')}
+                    />
+                </div>
+
+                <div className="p-3 bg-[#e5dfcb] border-t border-[#cbc4b0]">
+                    <button
+                        onClick={handleSimulate}
+                        disabled={isPending}
+                        className="retro-btn w-full text-xs font-['Chivo'] font-bold py-2.5 min-h-[44px] flex items-center justify-center gap-2"
+                    >
+                        {isPending ? 'SIMULANDO ENFRENTAMIENTO...' : 'SIMULAR ENFRENTAMIENTO TÁCTICO'}
+                    </button>
+                </div>
+            </section>
 
             {battleReport && (
                  <Dialog open={!!battleReport} onOpenChange={(isOpen) => !isOpen && setBattleReport(null)}>
-                    <DialogContent className="max-w-4xl bg-black/80 border-primary text-white">
+                    <DialogContent className="max-w-4xl bg-[#161410] border-2 border-[#5a4b33] text-[#dfdbc9]">
                         <DialogHeader>
-                            <DialogTitle className="text-2xl text-center text-primary tracking-widest font-heading">
-                                INFORME DE BATALLA
+                            <DialogTitle className="crimson-th p-2 text-center text-sm uppercase tracking-wider font-['Chivo'] font-bold">
+                                INFORME TÁCTICO DE BATALLA
                             </DialogTitle>
                         </DialogHeader>
                         <ScrollArea className="h-[70vh]">
-                            <div className="space-y-4 pr-4">
+                            <div className="space-y-4 p-2">
                                 {battleReport.rounds.map(round => (
-                                    <div key={round.round} className="space-y-2">
-                                        <div className="bg-primary/80 text-primary-foreground text-center font-bold font-heading py-1">
+                                    <div key={round.round} className="v-outer-frame overflow-hidden">
+                                        <div className="v-header-c text-center font-bold font-['Chivo'] py-1">
                                             RONDA DE BATALLA {round.round}
                                         </div>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            {/* Columna Atacante */}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 p-2 bg-[#f1ebda]">
                                             <div>
-                                                <h4 className='font-bold text-center mb-1 font-heading'>Atacante</h4>
-                                                <Table>
+                                                <h4 className='font-bold text-center text-xs mb-1 text-[#801e00]'>Atacante</h4>
+                                                <Table className="text-xs font-['JetBrains_Mono']">
                                                     <TableHeader>
-                                                        <TableRow className="border-b-primary/50">
-                                                            <TableHead className="text-white">Tropa</TableHead>
-                                                            <TableHead className="text-right text-white">Cant.</TableHead>
-                                                            <TableHead className="text-right text-red-500">Pérdidas</TableHead>
+                                                        <TableRow className="border-b-[#cbc4b0]">
+                                                            <TableHead className="text-[#221c13]">Tropa</TableHead>
+                                                            <TableHead className="text-right text-[#221c13]">Cant.</TableHead>
+                                                            <TableHead className="text-right text-[#c00000]">Pérdidas</TableHead>
                                                         </TableRow>
                                                     </TableHeader>
                                                     <TableBody>
                                                         {round.attacker.troops.map(t => (
-                                                            <TableRow key={t.id} className="border-b-primary/20">
-                                                                <TableCell>{t.nombre}</TableCell>
-                                                                <TableCell className="text-right">{formatNumber(t.initialQuantity)}</TableCell>
-                                                                <TableCell className="text-right text-red-500">{formatNumber(t.lostQuantity)}</TableCell>
+                                                            <TableRow key={t.id} className="border-b-[#cbc4b0]">
+                                                                <TableCell className="text-[#221c13] font-bold">{t.nombre}</TableCell>
+                                                                <TableCell className="text-right text-[#221c13]">{formatNumber(t.initialQuantity)}</TableCell>
+                                                                <TableCell className="text-right text-[#c00000] font-bold">{formatNumber(t.lostQuantity)}</TableCell>
                                                             </TableRow>
                                                         ))}
                                                     </TableBody>
                                                 </Table>
                                             </div>
-                                             {/* Columna Defensor */}
+
                                             <div>
-                                                 <h4 className='font-bold text-center mb-1 font-heading'>Defensor</h4>
-                                                <Table>
+                                                <h4 className='font-bold text-center text-xs mb-1 text-[#801e00]'>Defensor</h4>
+                                                <Table className="text-xs font-['JetBrains_Mono']">
                                                     <TableHeader>
-                                                        <TableRow className="border-b-primary/50">
-                                                            <TableHead className="text-white">Tropa</TableHead>
-                                                            <TableHead className="text-right text-white">Cant.</TableHead>
-                                                            <TableHead className="text-right text-red-500">Pérdidas</TableHead>
+                                                        <TableRow className="border-b-[#cbc4b0]">
+                                                            <TableHead className="text-[#221c13]">Tropa</TableHead>
+                                                            <TableHead className="text-right text-[#221c13]">Cant.</TableHead>
+                                                            <TableHead className="text-right text-[#c00000]">Pérdidas</TableHead>
                                                         </TableRow>
                                                     </TableHeader>
                                                     <TableBody>
                                                         {round.defender.troops.map(t => (
-                                                            <TableRow key={t.id} className="border-b-primary/20">
-                                                                <TableCell>{t.nombre}</TableCell>
-                                                                <TableCell className="text-right">{formatNumber(t.initialQuantity)}</TableCell>
-                                                                <TableCell className="text-right text-red-500">{formatNumber(t.lostQuantity)}</TableCell>
+                                                            <TableRow key={t.id} className="border-b-[#cbc4b0]">
+                                                                <TableCell className="text-[#221c13] font-bold">{t.nombre}</TableCell>
+                                                                <TableCell className="text-right text-[#221c13]">{formatNumber(t.initialQuantity)}</TableCell>
+                                                                <TableCell className="text-right text-[#c00000] font-bold">{formatNumber(t.lostQuantity)}</TableCell>
                                                             </TableRow>
                                                         ))}
                                                     </TableBody>
                                                 </Table>
                                             </div>
                                         </div>
-                                        
-                                        <div className="bg-primary/80 text-primary-foreground text-center font-bold font-heading py-1 mt-2">
-                                            ESTADO RONDA {round.round}
-                                        </div>
-                                        <div className="grid grid-cols-2 gap-x-4 p-2 text-sm font-mono">
-                                             <div><span className="font-bold">Ataque Atacante:</span> {formatNumber(round.attacker.totalAttack)}</div>
-                                             <div className="text-right"><span className="font-bold">Defensa Defensor:</span> {formatNumber(round.defender.totalDefense)}</div>
-                                             <div><span className="font-bold">Ataque Defensor:</span> {formatNumber(round.defender.totalAttack)}</div>
-                                             <div className="text-right"><span className="font-bold">Defensa Atacante:</span> {formatNumber(round.attacker.totalDefense)}</div>
-                                        </div>
                                     </div>
                                 ))}
 
-                                {battleReport.finalMessage && <p className="text-center font-bold text-lg pt-4">{battleReport.finalMessage}</p>}
-
-                                <div className="bg-primary/80 text-primary-foreground text-center font-bold font-heading py-1 mt-4">
-                                    ESTADÍSTICAS FINALES
-                                </div>
-                                <div className="grid grid-cols-1 md:grid-cols-3 text-center text-sm p-2">
-                                    <div className='font-bold'>-</div>
-                                    <div className='font-bold'>Atacante</div>
-                                    <div className='font-bold'>Defensor</div>
-                                </div>
-                                <Table>
-                                    <TableBody>
-                                        <TableRow className="border-none"><TableCell>Tropas perdidas</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.attacker.troopsLost)}</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.defender.troopsLost)}</TableCell></TableRow>
-                                        <TableRow className="border-none"><TableCell>Puntos perdidos</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.attacker.pointsLost)}</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.defender.pointsLost)}</TableCell></TableRow>
-                                        <TableRow className="border-none"><TableCell>Armas perdido</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.attacker.resourcesLost.armas)}</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.defender.resourcesLost.armas)}</TableCell></TableRow>
-                                        <TableRow className="border-none"><TableCell>Municion perdido</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.attacker.resourcesLost.municion)}</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.defender.resourcesLost.municion)}</TableCell></TableRow>
-                                        <TableRow className="border-none"><TableCell>Dolares perdido</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.attacker.resourcesLost.dolares)}</TableCell><TableCell className="text-right text-red-400">{formatNumber(battleReport.finalStats.defender.resourcesLost.dolares)}</TableCell></TableRow>
-                                    </TableBody>
-                                </Table>
-
+                                {battleReport.finalMessage && <p className="text-center font-bold text-sm text-[#ffe569] py-2">{battleReport.finalMessage}</p>}
                             </div>
                         </ScrollArea>
                         <DialogFooter>
                             <DialogClose asChild>
-                                <Button className="w-full bg-red-800 hover:bg-red-700 text-white">Cerrar</Button>
+                                <button className="retro-btn-dark w-full py-2 text-xs font-bold min-h-[44px]">CERRAR INFORME</button>
                             </DialogClose>
                         </DialogFooter>
                     </DialogContent>

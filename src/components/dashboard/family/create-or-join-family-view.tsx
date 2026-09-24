@@ -1,15 +1,12 @@
+'use client';
 
-'use client'
-
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { createFamily } from "@/lib/actions/family.actions";
 import { useToast } from "@/hooks/use-toast";
 import { useTransition } from "react";
-import { MaterialIcon } from "@/components/ui/material-icon";
+import MaterialIcon from "@/components/ui/material-icon";
 import Link from "next/link";
 
 export function CreateOrJoinFamilyView() {
@@ -28,66 +25,53 @@ export function CreateOrJoinFamilyView() {
     };
 
     return (
-        <div className="main-view">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h2 className="text-3xl font-bold tracking-tight">Únete a la Familia</h2>
-                    <p className="text-muted-foreground">
-                        Crea tu propio clan o únete a uno existente para dominar la ciudad.
-                    </p>
+        <div className="w-full space-y-3">
+            <section className="v-outer-frame">
+                <div className="crimson-th p-2 flex items-center justify-between">
+                    <span className="font-['Chivo'] font-bold text-xs uppercase tracking-wider">
+                        ÚNETE O FUNDA UNA FAMILIA
+                    </span>
                 </div>
-            </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-                 <Card>
-                    <form action={handleCreateFamily}>
-                        <CardHeader>
-                            <CardTitle>Funda tu Propia Familia</CardTitle>
-                            <CardDescription>Define el nombre, el tag y los símbolos de tu nuevo imperio.</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                <div className="space-y-2 sm:col-span-2">
-                                    <Label htmlFor="name">Nombre de la Familia</Label>
-                                    <Input id="name" name="name" placeholder="Los Corleone" required disabled={isPending} />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="tag">Tag (3-4 letras)</Label>
-                                    <Input id="tag" name="tag" placeholder="CRL" required minLength={3} maxLength={4} disabled={isPending} />
-                                </div>
+                <div className="p-3 bg-[#dfdbc9] grid grid-cols-1 lg:grid-cols-2 gap-3 items-start">
+                    <form action={handleCreateFamily} className="v-outer-frame p-3 bg-[#f1ebda] space-y-3">
+                        <div className="v-header-c -mx-3 -mt-3 mb-2">Funda tu Propia Familia</div>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            <div className="space-y-1 sm:col-span-2">
+                                <Label htmlFor="name" className="text-xs font-bold text-[#221c13]">Nombre de la Familia</Label>
+                                <Input id="name" name="name" placeholder="Los Corleone" required disabled={isPending} className="bg-[#eee8d5] border-[#4a3e29] text-[#111]" />
                             </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="description">Descripción Pública</Label>
-                                <Textarea id="description" name="description" placeholder="Una oferta que no podrán rechazar..." disabled={isPending} />
+                            <div className="space-y-1">
+                                <Label htmlFor="tag" className="text-xs font-bold text-[#221c13]">Tag (3-4 letras)</Label>
+                                <Input id="tag" name="tag" placeholder="CRL" required minLength={3} maxLength={4} disabled={isPending} className="bg-[#eee8d5] border-[#4a3e29] text-[#111] uppercase" />
                             </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="avatarUrl">URL del Emblema</Label>
-                                <Input id="avatarUrl" name="avatarUrl" placeholder="https://..." disabled={isPending} />
-                            </div>
-                        </CardContent>
-                        <CardFooter>
-                            <Button type="submit" className="btn-crimson" disabled={isPending}>
-                                {isPending && <MaterialIcon name="sync" size={18} className="mr-2 animate-pulse" />}
-                                {isPending ? 'PROCESANDO...' : 'Fundar Familia'}
-                            </Button>
-                        </CardFooter>
+                        </div>
+                        <div className="space-y-1">
+                            <Label htmlFor="description" className="text-xs font-bold text-[#221c13]">Descripción Pública</Label>
+                            <Textarea id="description" name="description" placeholder="Una oferta que no podrán rechazar..." disabled={isPending} className="bg-[#eee8d5] border-[#4a3e29] text-[#111]" />
+                        </div>
+                        <div className="space-y-1">
+                            <Label htmlFor="avatarUrl" className="text-xs font-bold text-[#221c13]">URL del Emblema</Label>
+                            <Input id="avatarUrl" name="avatarUrl" placeholder="https://..." disabled={isPending} className="bg-[#eee8d5] border-[#4a3e29] text-[#111]" />
+                        </div>
+                        <button type="submit" className="retro-btn w-full py-2 text-xs font-bold min-h-[44px]" disabled={isPending}>
+                            {isPending ? 'PROCESANDO...' : 'FUNDAR FAMILIA'}
+                        </button>
                     </form>
-                </Card>
 
-                 <div className="flex flex-col items-center justify-center gap-4 text-center p-8 border rounded-lg h-full">
-                    <MaterialIcon name="groups" size={64} className="text-muted-foreground" />
-                    <h3 className="text-xl font-bold">¿Prefieres Unirte a un Clan?</h3>
-                    <p className="text-muted-foreground">
-                        Busca entre las familias existentes, conoce a sus miembros y envía una solicitud para unirte a la que más te guste.
-                    </p>
-                    <Button size="lg" asChild className="btn-tactical">
-                        <Link href="/family/find">
-                            <MaterialIcon name="search" size={20} className="mr-2" />
+                    <div className="v-outer-frame p-6 bg-[#f1ebda] flex flex-col items-center justify-center text-center gap-3 h-full">
+                        <MaterialIcon name="groups" size={48} className="text-[#801e00]" />
+                        <h3 className="text-sm font-bold font-['Chivo'] uppercase text-[#221c13]">¿Prefieres Unirte a un Clan?</h3>
+                        <p className="text-xs text-[#4a4031]">
+                            Busca entre las familias existentes, conoce a sus miembros y envía una solicitud para unirte.
+                        </p>
+                        <Link href="/family/find" className="retro-btn px-4 py-2 text-xs font-bold flex items-center gap-2 min-h-[44px]">
+                            <MaterialIcon name="search" size={18} />
                             Buscar Familias Existentes
                         </Link>
-                    </Button>
-                 </div>
-            </div>
+                    </div>
+                </div>
+            </section>
         </div>
-    )
+    );
 }

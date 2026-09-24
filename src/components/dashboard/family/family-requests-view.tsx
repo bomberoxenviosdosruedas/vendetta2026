@@ -1,18 +1,11 @@
+'use client';
 
-'use client'
-
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { FullFamilyInvitation } from "@/lib/data";
-import { Button } from "@/components/ui/button";
 import { useTransition } from "react";
 import { acceptRequest, rejectInvitation } from "@/lib/actions/family.actions";
 import { useToast } from "@/hooks/use-toast";
-import { MaterialIcon } from "@/components/ui/material-icon";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
+import MaterialIcon from "@/components/ui/material-icon";
 import Link from "next/link";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-
 
 interface FamilyRequestsViewProps {
     requests: FullFamilyInvitation[];
@@ -38,94 +31,61 @@ export function FamilyRequestsView({ requests }: FamilyRequestsViewProps) {
             } else {
                 toast({ title: 'Éxito', description: result.success });
             }
-        })
-    }
+        });
+    };
+
     return (
-        <div className="space-y-4">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h2 className="text-3xl font-bold tracking-tight">Solicitudes para Unirse</h2>
-                    <p className="text-muted-foreground">
-                       Gestiona las solicitudes pendientes de los jugadores que quieren unirse a tu familia.
-                    </p>
-                </div>
-                <Button asChild variant="outline" size="sm">
-                    <Link href="/family">
-                        <MaterialIcon name="arrow_back" size={18} className="mr-2" />
-                        Volver a la Familia
+        <div className="w-full space-y-3">
+            <section className="v-outer-frame">
+                <div className="crimson-th p-2 flex items-center justify-between">
+                    <span className="font-['Chivo'] font-bold text-xs uppercase tracking-wider">
+                        SOLICITUDES PARA UNIRSE
+                    </span>
+                    <Link href="/family" className="retro-btn text-xs px-2.5 py-1 font-bold flex items-center gap-1">
+                        <MaterialIcon name="arrow_back" size={14} />
+                        Volver
                     </Link>
-                </Button>
-            </div>
-            <Card>
-                <CardContent className="p-0">
+                </div>
+
+                <div className="p-3 bg-[#f1ebda]">
                     {requests.length === 0 ? (
-                        <p className="p-6 text-center text-muted-foreground">No hay solicitudes pendientes.</p>
+                        <p className="text-center text-[#695d48] font-mono font-bold text-xs py-6">No hay solicitudes pendientes.</p>
                     ) : (
-                        <>
-                        {/* Desktop Table */}
-                        <Table className="hidden md:table">
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Jugador</TableHead>
-                                    <TableHead className="text-right">Puntos</TableHead>
-                                    <TableHead className="text-right">Fecha Solicitud</TableHead>
-                                    <TableHead className="text-right">Acciones</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                             <TableBody>
-                                {requests.map(req => (
-                                    <TableRow key={req.id}>
-                                        <TableCell className="font-semibold">{req.user.name}</TableCell>
-                                        <TableCell className="text-right font-mono">{formatPoints(req.user.puntuacion?.puntosTotales)}</TableCell>
-                                        <TableCell className="text-right">{new Date(req.createdAt).toLocaleDateString()}</TableCell>
-                                        <TableCell className="text-right space-x-2">
-                                            <Button size="icon" variant="outline" className="h-9 w-9 min-h-[44px] min-w-[44px] text-green-500 hover:text-green-500 hover:bg-green-500/10" onClick={() => handleAction('accept', req.id)} disabled={isPending}>
-                                                {isPending ? <MaterialIcon name="sync" size={18} className="animate-pulse" /> : <MaterialIcon name="check" size={20} />}
-                                            </Button>
-                                             <Button size="icon" variant="outline" className="h-9 w-9 min-h-[44px] min-w-[44px] text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => handleAction('reject', req.id)} disabled={isPending}>
-                                                {isPending ? <MaterialIcon name="sync" size={18} className="animate-pulse" /> : <MaterialIcon name="close" size={20} />}
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                         {/* Mobile Cards */}
-                         <div className="md:hidden p-2 space-y-2">
-                            {requests.map(req => (
-                                <Card key={req.id} className="p-4">
-                                     <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-3">
-                                             <Avatar>
-                                                <AvatarImage src={req.user.avatarUrl || ''} />
-                                                <AvatarFallback>{req.user.name.charAt(0)}</AvatarFallback>
-                                            </Avatar>
-                                            <div>
-                                                 <p className="font-semibold">{req.user.name}</p>
-                                                <p className="text-xs text-muted-foreground">{new Date(req.createdAt).toLocaleDateString()}</p>
-                                            </div>
-                                        </div>
-                                         <div className="text-right">
-                                            <p className="font-bold text-primary">{formatPoints(req.user.puntuacion?.puntosTotales)}</p>
-                                            <p className="text-xs text-muted-foreground">Puntos</p>
-                                        </div>
-                                    </div>
-                                    <Separator className="my-3"/>
-                                    <div className="flex justify-end gap-2">
-                                         <Button size="sm" variant="outline" className="flex-1 min-h-[44px] text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => handleAction('reject', req.id)} disabled={isPending}>
-                                            <MaterialIcon name="close" size={18} className="mr-2"/> Rechazar
-                                        </Button>
-                                        <Button size="sm" className="flex-1 min-h-[44px]" onClick={() => handleAction('accept', req.id)} disabled={isPending}>
-                                            <MaterialIcon name="check" size={18} className="mr-2"/> Aceptar
-                                        </Button>
-                                    </div>
-                                </Card>
-                            ))}
-                         </div>
-                        </>
+                        <div className="overflow-x-auto">
+                            <table className="w-full border-collapse text-xs">
+                                <thead>
+                                    <tr>
+                                        <th className="crimson-th p-1.5 text-left">Jugador</th>
+                                        <th className="crimson-th p-1.5 text-right">Puntos</th>
+                                        <th className="crimson-th p-1.5 text-right">Fecha Solicitud</th>
+                                        <th className="crimson-th p-1.5 text-right">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-[#cbc4b0]">
+                                    {requests.map((req, idx) => {
+                                        const isAlt = idx % 2 === 1;
+                                        return (
+                                            <tr key={req.id} className={`${isAlt ? 'bg-[#e5dfcb]' : 'bg-[#f1ebda]'}`}>
+                                                <td className="p-2 font-bold text-[#801e00]">{req.user.name}</td>
+                                                <td className="p-2 text-right font-mono font-bold text-[#111]">{formatPoints(req.user.puntuacion?.puntosTotales)}</td>
+                                                <td className="p-2 text-right font-mono text-[#554a37]">{new Date(req.createdAt).toLocaleDateString('es-ES')}</td>
+                                                <td className="p-2 text-right space-x-1">
+                                                    <button onClick={() => handleAction('accept', req.id)} disabled={isPending} className="retro-btn px-2 py-1 text-xs font-bold min-h-[44px]">
+                                                        ACEPTAR
+                                                    </button>
+                                                    <button onClick={() => handleAction('reject', req.id)} disabled={isPending} className="retro-btn-dark px-2 py-1 text-xs font-bold min-h-[44px]">
+                                                        RECHAZAR
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
                     )}
-                </CardContent>
-            </Card>
+                </div>
+            </section>
         </div>
-    )
+    );
 }

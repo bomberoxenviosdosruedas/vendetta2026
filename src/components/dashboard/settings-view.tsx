@@ -1,15 +1,11 @@
-
 'use client';
 
 import { useState, useTransition, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { updateUserSettings } from '@/lib/actions/user.actions';
 import type { UserWithProgress } from '@/lib/data';
-import { MaterialIcon } from '@/components/ui/material-icon';
 
 interface SettingsViewProps {
     user: UserWithProgress;
@@ -28,7 +24,6 @@ export function SettingsView({ user }: SettingsViewProps) {
         const changesMade = name !== user.name || title !== (user.title || '') || avatarUrl !== (user.avatarUrl || '');
         setHasChanges(changesMade);
     }, [name, title, avatarUrl, user]);
-
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -55,55 +50,61 @@ export function SettingsView({ user }: SettingsViewProps) {
     };
 
     return (
-        <div>
-            <h2 className="text-3xl font-bold tracking-tight mb-4">Ajustes de Perfil</h2>
-            <Card>
-                <form onSubmit={handleSubmit}>
-                    <CardHeader>
-                        <CardTitle>Tu Perfil</CardTitle>
-                        <CardDescription>
-                            Personaliza cómo te ven los demás en el mundo de Vendetta.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="name">Nombre de Jugador</Label>
-                            <Input
-                                id="name"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                disabled={isPending}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="title">Título</Label>
-                            <Input
-                                id="title"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                placeholder="Ej: 'El Padrino', 'Capo'"
-                                disabled={isPending}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="avatarUrl">URL del Avatar</Label>
-                            <Input
-                                id="avatarUrl"
-                                value={avatarUrl}
-                                onChange={(e) => setAvatarUrl(e.target.value)}
-                                placeholder="https://..."
-                                disabled={isPending}
-                            />
-                        </div>
-                    </CardContent>
-                    <CardFooter>
-                        <Button type="submit" className="btn-crimson" disabled={isPending || !hasChanges}>
-                            {isPending && <MaterialIcon name="sync" size={18} className="mr-2 animate-pulse" />}
-                            {isPending ? 'GUARDANDO...' : 'Guardar Cambios'}
-                        </Button>
-                    </CardFooter>
+        <div className="w-full space-y-3">
+            <section className="v-outer-frame">
+                <div className="crimson-th p-2 flex items-center justify-between">
+                    <span className="font-['Chivo'] font-bold text-xs uppercase tracking-wider">
+                        CONFIGURACIÓN Y AJUSTES DE PERFIL
+                    </span>
+                </div>
+
+                <form onSubmit={handleSubmit} className="p-3 bg-[#f1ebda] text-[#221c13] space-y-3">
+                    <div className="space-y-1">
+                        <Label htmlFor="name" className="text-xs font-bold">Nombre de Jugador</Label>
+                        <Input
+                            id="name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            disabled={isPending}
+                            className="bg-[#eee8d5] border-[#4a3e29] text-[#111] font-bold text-xs"
+                        />
+                    </div>
+
+                    <div className="space-y-1">
+                        <Label htmlFor="title" className="text-xs font-bold">Título o Rango</Label>
+                        <Input
+                            id="title"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            placeholder="Ej: 'El Padrino', 'Capo'"
+                            disabled={isPending}
+                            className="bg-[#eee8d5] border-[#4a3e29] text-[#111] text-xs"
+                        />
+                    </div>
+
+                    <div className="space-y-1">
+                        <Label htmlFor="avatarUrl" className="text-xs font-bold">URL de Avatar</Label>
+                        <Input
+                            id="avatarUrl"
+                            value={avatarUrl}
+                            onChange={(e) => setAvatarUrl(e.target.value)}
+                            placeholder="https://..."
+                            disabled={isPending}
+                            className="bg-[#eee8d5] border-[#4a3e29] text-[#111] text-xs"
+                        />
+                    </div>
+
+                    <div className="pt-2 border-t border-[#cbc4b0] flex justify-end">
+                        <button
+                            type="submit"
+                            disabled={isPending || !hasChanges}
+                            className="retro-btn text-xs font-bold px-4 py-2 min-h-[44px] disabled:opacity-50"
+                        >
+                            {isPending ? 'GUARDANDO...' : 'GUARDAR CAMBIOS'}
+                        </button>
+                    </div>
                 </form>
-            </Card>
+            </section>
         </div>
     );
 }

@@ -1,16 +1,13 @@
-
 'use client';
 
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { MaterialIcon } from "@/components/ui/material-icon";
+import MaterialIcon from "@/components/ui/material-icon";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 const folders = [
-    { name: "Mensajes Jugadores", category: "JUGADOR", icon: <MaterialIcon name="group" size={20} /> },
-    { name: "Informes de Batalla", category: "BATALLA", icon: <MaterialIcon name="shield" size={20} /> },
-    { name: "Construcciones y Tropas", category: "CONSTRUCCION", icon: <MaterialIcon name="build" size={20} /> },
-    { name: "Sistema", category: "SISTEMA", icon: <MaterialIcon name="settings" size={20} /> },
+    { name: "Mensajes Jugadores", category: "JUGADOR", icon: <MaterialIcon name="group" size={16} /> },
+    { name: "Informes de Batalla", category: "BATALLA", icon: <MaterialIcon name="shield" size={16} /> },
+    { name: "Construcciones y Tropas", category: "CONSTRUCCION", icon: <MaterialIcon name="build" size={16} /> },
+    { name: "Sistema", category: "SISTEMA", icon: <MaterialIcon name="settings" size={16} /> },
 ];
 
 interface MessageFolderListProps {
@@ -31,20 +28,24 @@ export function MessageFolderList({ selectedCategory, setSelectedCategory }: Mes
     };
 
     return (
-        <div className="space-y-2">
-            <h3 className="text-lg font-semibold px-2">Carpetas</h3>
+        <div className="v-outer-frame p-2 bg-[#f1ebda] space-y-2">
+            <div className="v-header-c -mx-2 -mt-2 mb-2">Carpetas</div>
             <div className="flex flex-col gap-1">
-                {folders.map(folder => (
-                    <Button
-                        key={folder.category}
-                        variant={selectedCategory === folder.category ? "default" : "ghost"}
-                        className="w-full justify-start gap-3 px-4 py-6 text-base"
-                        onClick={() => handleClick(folder.category)}
-                    >
-                        {folder.icon}
-                        <span>{folder.name}</span>
-                    </Button>
-                ))}
+                {folders.map(folder => {
+                    const isSelected = selectedCategory === folder.category;
+                    return (
+                        <button
+                            key={folder.category}
+                            className={`w-full text-left px-2.5 py-2 text-xs font-bold font-['Chivo'] flex items-center gap-2 rounded-sm transition-colors ${
+                                isSelected ? 'bg-[#3a3224] text-[#f7e6c4]' : 'retro-btn text-[#1a160f]'
+                            }`}
+                            onClick={() => handleClick(folder.category)}
+                        >
+                            {folder.icon}
+                            <span className="truncate">{folder.name}</span>
+                        </button>
+                    );
+                })}
             </div>
         </div>
     );

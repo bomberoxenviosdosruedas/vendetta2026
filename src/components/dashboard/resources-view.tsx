@@ -1,10 +1,6 @@
-
 import { getSessionUser } from "@/lib/auth";
 import { calcularProduccionTotalPorSegundo } from "@/lib/formulas/room-formulas";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import Image from "next/image";
-import { Separator } from "../ui/separator";
 
 const resourceIcons: { [key: string]: string } = {
     armas: '/img/recursos/armas.svg',
@@ -20,6 +16,13 @@ const resourceNames: { [key: string]: string } = {
     dolares: "Dólares",
 };
 
+const resourceColors: { [key: string]: string } = {
+    armas: "text-[#ee7000]",
+    municion: "text-[#fabd00]",
+    alcohol: "text-[#ff3f3f]",
+    dolares: "text-[#008800]",
+};
+
 function formatProduction(num: number): string {
     return `+${Math.floor(num).toLocaleString('de-DE')}`;
 }
@@ -28,10 +31,10 @@ export async function ResourcesView() {
     const user = await getSessionUser();
 
     if (!user) {
-        return <div>Usuario no encontrado</div>
+        return <div className="v-outer-frame p-4 text-center font-mono">Usuario no encontrado</div>;
     }
 
-    const produccionPorSegundo = user.propiedades.reduce((acc, propiedad) => {
+    const produccionPorSegundo = user.propiedades.reduce((acc: { armas: number; municion: number; alcohol: number; dolares: number }, propiedad: any) => {
         const prod = calcularProduccionTotalPorSegundo(propiedad);
         acc.armas += prod.armas;
         acc.municion += prod.municion;
@@ -45,78 +48,66 @@ export async function ResourcesView() {
         const porDia = porHora * 24;
         const porSemana = porDia * 7;
         return {
+            key,
             name: resourceNames[key],
             icon: resourceIcons[key],
+            color: resourceColors[key],
             porHora,
             porDia,
             porSemana,
-        }
+        };
     });
 
     return (
-        <div className="space-y-4">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Producción de Recursos</CardTitle>
-                    <CardDescription>
-                        Esta es la producción total de tus edificios por hora, día y semana en todas tus propiedades.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    {/* Vista para Escritorio */}
-                    <Table className="hidden md:table">
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Recurso</TableHead>
-                                <TableHead className="text-right">Por Hora</TableHead>
-                                <TableHead className="text-right">Por Día</TableHead>
-                                <TableHead className="text-right">Por Semana</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {productionData.map(res => (
-                                <TableRow key={res.name}>
-                                    <TableCell className="font-medium flex items-center gap-2">
-                                        <Image src={res.icon} alt={res.name} width={20} height={20} />
-                                        {res.name}
-                                    </TableCell>
-                                    <TableCell className="text-right text-green-400 font-mono">{formatProduction(res.porHora)}</TableCell>
-                                    <TableCell className="text-right text-green-400 font-mono">{formatProduction(res.porDia)}</TableCell>
-                                    <TableCell className="text-right text-green-400 font-mono">{formatProduction(res.porSemana)}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+        <div className="w-full space-y-3">
+            <section className="v-outer-frame">
+                <div className="crimson-th p-2 flex items-center justify-between">
+                    <span className="font-['Chivo'] font-bold text-xs uppercase tracking-wider">
+                        PRODUCCIÓN TOTAL DE RECURSOS (TODAS LAS PROPIEDADES)
+                    </span>
+                </div>
 
-                    {/* Vista para Móvil */}
-                    <div className="md:hidden space-y-4">
-                        {productionData.map((res) => (
-                            <div key={res.name} className="p-4 border rounded-lg">
-                                <div className="flex items-center gap-3 mb-3">
-                                    <Image src={res.icon} alt={res.name} width={24} height={24} />
-                                    <h3 className="font-semibold text-lg">{res.name}</h3>
-                                </div>
-                                <Separator />
-                                <div className="mt-3 space-y-2 text-sm">
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-muted-foreground">Por Hora:</span>
-                                        <span className="font-mono font-semibold text-green-400">{formatProduction(res.porHora)}</span>
-                                    </div>
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-muted-foreground">Por Día:</span>
-                                        <span className="font-mono font-semibold text-green-400">{formatProduction(res.porDia)}</span>
-                                    </div>
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-muted-foreground">Por Semana:</span>
-                                        <span className="font-mono font-semibold text-green-400">{formatProduction(res.porSemana)}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+                <div className="p-3 bg-[#f1ebda] space-y-3">
+                    <p className="text-xs text-[#4a4031]">
+                        Métrica de rendimiento operativo generado por hora, día y semana en todas tus instalaciones.
+                    </p>
+
+                    <div className="overflow-x-auto border border-[#cbc4b0] rounded-sm">
+                        <table className="w-full border-collapse text-xs">
+                            <thead>
+                                <tr>
+                                    <th className="crimson-th p-1.5 text-left">Recurso</th>
+                                    <th className="crimson-th p-1.5 text-right">Por Hora</th>
+                                    <th className="crimson-th p-1.5 text-right">Por Día</th>
+                                    <th className="crimson-th p-1.5 text-right">Por Semana</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-[#cbc4b0]">
+                                {productionData.map((res, idx) => {
+                                    const isAlt = idx % 2 === 1;
+                                    return (
+                                        <tr key={res.name} className={`${isAlt ? 'bg-[#e5dfcb]' : 'bg-[#f1ebda]'}`}>
+                                            <td className="p-2 font-bold flex items-center gap-2 text-[#221c13]">
+                                                <Image src={res.icon} alt={res.name} width={18} height={18} />
+                                                <span>{res.name}</span>
+                                            </td>
+                                            <td className={`p-2 text-right font-mono font-bold ${res.color}`}>
+                                                {formatProduction(res.porHora)}
+                                            </td>
+                                            <td className={`p-2 text-right font-mono font-bold ${res.color}`}>
+                                                {formatProduction(res.porDia)}
+                                            </td>
+                                            <td className={`p-2 text-right font-mono font-bold ${res.color}`}>
+                                                {formatProduction(res.porSemana)}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
                     </div>
-
-                </CardContent>
-            </Card>
+                </div>
+            </section>
         </div>
     );
 }
