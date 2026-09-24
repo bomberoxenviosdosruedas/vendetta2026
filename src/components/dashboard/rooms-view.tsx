@@ -160,9 +160,9 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
     <div className="space-y-2 w-full text-[#dfdbc9]">
       <ConstructionQueue propiedad={selectedProperty} allRooms={simpleRoomConfigs} />
 
-      <div className="crimson-th p-2 text-white font-['Space_Grotesk'] font-bold text-sm uppercase flex items-center justify-between">
+      <div className="crimson-th p-2 text-white font-['Chivo'] font-bold text-sm uppercase flex items-center justify-between">
         <span>HABITACIONES // {selectedProperty.nombre}</span>
-        <span className="font-['Space_Mono'] text-xs text-[#fff400]">
+        <span className="font-['JetBrains_Mono'] text-xs text-[#fff400]">
           COLA: {construccionEnCola.length}/5
         </span>
       </div>
@@ -173,7 +173,7 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
             <Button
               type="submit"
               disabled={isQueueFull || isSubmitting === room.id || !room.meetsRequirements}
-              className="btn-crimson text-xs font-['Space_Grotesk'] font-bold px-3 min-h-[44px] min-w-[44px]"
+              className="btn-crimson text-xs font-['Chivo'] font-bold px-3 min-h-[44px] min-w-[44px]"
             >
               {isSubmitting === room.id ? 'AMPLIANDO...' : isQueueFull ? 'COLA LLENA' : 'AMPLIAR'}
             </Button>
@@ -192,14 +192,14 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
                     />
                   </div>
                   <div className="min-w-0">
-                    <div className="font-bold font-['Space_Grotesk'] text-white text-sm uppercase truncate">
+                    <div className="font-bold font-['Chivo'] text-white text-sm uppercase truncate">
                       {room.nombre}
                     </div>
-                    <div className="text-xs font-['Space_Mono'] text-[#00ff00]">
+                    <div className="text-xs font-['JetBrains_Mono'] text-[#00ff00]">
                       NIVEL {room.nivelProyectado}
                     </div>
                     {room.enConstruccion && (
-                      <div className="text-xs text-[#fabd00] font-['Space_Mono'] flex items-center gap-1">
+                      <div className="text-xs text-[#fabd00] font-['JetBrains_Mono'] flex items-center gap-1">
                         <MaterialIcon name="hourglass_top" size={12} /> EN COLA
                       </div>
                     )}
@@ -211,16 +211,16 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
                 </div>
 
                 <div className="xl:col-span-4 flex flex-col gap-1 sm:items-end">
-                  <div className="text-xs font-['Space_Grotesk'] text-[#ffdad4] uppercase font-bold">
+                  <div className="text-xs font-['Chivo'] text-[#ffdad4] uppercase font-bold">
                     SIGUIENTE: NIVEL {room.nivelSiguiente}
                   </div>
-                  <div className="flex flex-wrap gap-2 text-xs font-['Space_Mono'] tabular-nums text-white">
+                  <div className="flex flex-wrap gap-2 text-xs font-['JetBrains_Mono'] tabular-nums text-white">
                     {room.costos.armas > 0 && <span className="text-[#ee7000]">ARMAS: {formatNumber(room.costos.armas)}</span>}
                     {room.costos.municion > 0 && <span className="text-[#fabd00]">MUN: {formatNumber(room.costos.municion)}</span>}
                     {room.costos.dolares > 0 && <span className="text-[#00ff00]">$ {formatNumber(room.costos.dolares)}</span>}
                   </div>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-[11px] font-['Space_Mono'] text-[#888888]">
+                    <span className="text-[11px] font-['JetBrains_Mono'] text-[#888888]">
                       {formatDuration(room.tiempo)}
                     </span>
                     <DialogTrigger asChild>

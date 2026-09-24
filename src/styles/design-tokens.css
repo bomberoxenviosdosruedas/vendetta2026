@@ -1,35 +1,66 @@
 /**
- * Vendetta Syndicate Operations Design Tokens & Tactical Utility Classes
- * Pure 2004 RTS Syndicate aesthetic ported from docs/ejemplo.html and DESIGN.md
+ * Vendetta 2006 — Design Tokens & Tactical Utility Classes
+ * Retro Syndicate Cockpit (Bronce & Pergamino) ported from docs/mockup/overview_design.md
+ * + overview_escritorio.html + overview_movil.html. See DESIGN.md.
+ *
+ * LEGACY NOTE:
+ * - `.crimson-th` is now a GLOBAL alias of the bronze table-header bar (`.bronze-th`),
+ *   so it percolates to every page using it. This is the only intentional global change.
+ * - `btn-tactical`/`btn-crimson`/`cell-dark`/`cell-darker`/`resource-pill-*` are kept
+ *   verbatim for unmigrated views. New UI uses the classes below.
  */
 
 :root, .dark {
   /* Layout Master Surfaces */
-  --canvas-bg: #080808;
+  --canvas-bg: #0b0b0b;
   --column-bg: #111111;
-  --nav-bg: #0d0d0d;
+  --nav-bg: #050505;
   --resource-bg: #0a0a0a;
+  --viewport-radial-top: #161410;
+  --viewport-radial-bot: #080808;
 
   /* Structural 1px Borders */
   --border-primary: #333333;
   --border-secondary: #282828;
   --border-divider: #222222;
 
+  /* Bronze & Parchment Palette (Vendetta 2006) */
+  --bronze-top: #443c2c;
+  --bronze-mid: #2a2418;
+  --bronze-bot: #16120b;
+  --header-top: #5c523d;
+  --header-mid: #3a3224;
+  --header-bot: #201a11;
+  --parchment: #dfdbc9;
+  --parchment-hover: #efeadd;
+  --parchment-cell: #f1ebda;
+  --parchment-cell-alt: #e5dfcb;
+  --parchment-row: #e9e3d2;
+  --border-bronze: #5a4b33;
+  --border-dark-bronze: #332d20;
+  --border-table: #4a3e29;
+
   /* Typography Colors */
   --text-primary: #dfdbc9;
-  --text-hot: #ffdad4;
+  --text-hot: #f7e6c4;
   --text-muted: #a0a0a0;
   --text-meta: #888888;
   --text-footer: #777777;
+  --text-on-parchment: #221c13;
 
   /* Game Domain Accents */
   --accent-burgundy: #6C0000;
   --accent-crimson: #ff3f3f;
-  --accent-gold: #fff400;
+  --accent-gold: #ffe569;
+  --accent-gold-pure: #fff400;
   --accent-amber: #fabd00;
-  --accent-green: #00ff00;
-  --accent-orange: #ee7000;
-  --accent-alert-full: #93000a;
+  --accent-green: #4caf50;
+  --accent-green-deep: #008800;
+  --accent-orange: #ff9800;
+  --accent-orange-deep: #ee7000;
+  --accent-danger: #e53935;
+  --accent-link-blue: #174872;
+  --accent-link-hover: #8b0000;
 
   /* Extended Surface Tokens */
   --surface-lowest: 0 0% 3.1%;    /* #080808 */
@@ -49,18 +80,268 @@
 }
 
 /* ==========================================================================
-   CANONICAL RETRO CLASSES (from docs/ejemplo.html)
+   VENDETTA 2006 CANONICAL CLASSES (from docs/mockup/)
    ========================================================================== */
 
 .retro-border {
   border: 1px solid #333333;
 }
 
+/* --------------------------------------------------------------------------
+   Table Header Bar (bronze). `.crimson-th` is a global legacy alias.
+   -------------------------------------------------------------------------- */
+.bronze-th,
 .crimson-th {
-  background: linear-gradient(180deg, #7a0000 0%, #4f0000 100%);
-  border: 1px solid #8e1515;
-  color: #ffdad4;
+  background: linear-gradient(180deg, #5c523d 0%, #3a3224 50%, #201a11 100%);
+  border: 1px solid #4a3e29;
+  color: #ffffff;
+  text-shadow: 1px 1px 1px #000000;
 }
+
+/* Cabecera de sección móvil (bronce de 4 tonos) */
+.v-header-c {
+  background: linear-gradient(180deg, #534533 0%, #3a2e20 48%, #271e13 52%, #423524 100%);
+  color: #f7e6c4;
+  font-size: 11px;
+  font-weight: bold;
+  text-shadow: 1px 1px 0px #000;
+  padding: 5px 8px;
+  border-bottom: 1px solid #231b11;
+  border-top: 1px solid #74634c;
+}
+
+/* Sub-cabecera pergamino claro */
+.v-sub-header {
+  background: linear-gradient(180deg, #c9c3ad 0%, #b2ab95 100%);
+  color: #201a11;
+  font-weight: bold;
+  font-size: 10px;
+  border-bottom: 1px solid #8e8671;
+  border-top: 1px solid #dfdbc9;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Marco pergamino de sección */
+.v-outer-frame {
+  background-color: #dfdbc9;
+  border: 1px solid #5a4f3d;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Celdas / filas pergamino */
+.cell-parchment {
+  background-color: #f1ebda;
+  border: 1px solid #cbc4b0;
+  color: #221c13;
+}
+
+.cell-parchment-alt {
+  background-color: #e5dfcb;
+  border: 1px solid #c4bdab;
+  color: #221c13;
+}
+
+/* Filas alternadas (overview móvil) */
+.cell-parchment-row {
+  background-color: #f1ebda;
+  border-bottom: 1px solid #cfc9b5;
+  color: #221c13;
+}
+
+.cell-parchment-row-alt {
+  background-color: #e9e3d2;
+  border-bottom: 1px solid #cfc9b5;
+  color: #221c13;
+}
+
+/* Botones beveled pergamino (nuevo estilo 2006) */
+.retro-btn {
+  background: linear-gradient(180deg, #ece6d2 0%, #cfc8b0 50%, #aba187 100%);
+  border: 1px solid #635742;
+  box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #8b7d65;
+  color: #1a160f;
+  font-weight: bold;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+
+.retro-btn:hover {
+  filter: brightness(1.04);
+}
+
+.retro-btn:active {
+  background: linear-gradient(180deg, #aba187 0%, #cfc8b0 100%);
+  box-shadow: inset 1px 1px 2px #443a29;
+}
+
+.retro-btn-dark {
+  background: linear-gradient(180deg, #4d3f2e 0%, #2f2518 50%, #1f180f 100%);
+  border: 1px solid #6b5a43;
+  box-shadow: inset 1px 1px 0 #6e5e48, inset -1px -1px 0 #110d08;
+  color: #e2cca2;
+  text-shadow: 1px 1px 0 #000;
+  cursor: pointer;
+}
+
+.retro-btn-dark:active {
+  background: #19130c;
+}
+
+/* Pill de timer/cuenta atrás */
+.timer-pill {
+  background: #1a1711;
+  color: #44dd55;
+  font-family: var(--font-space-mono), var(--font-mono), monospace;
+  font-weight: bold;
+  border: 1px solid #4a3e2b;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.8);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Tile de acción rápida (Mensajes/Informes/Misiones/Combates) */
+.quick-action-badge {
+  background: linear-gradient(180deg, #382c1b 0%, #20170c 100%);
+  border: 1px solid #57462c;
+  color: #dfcaa2;
+  transition: filter 0.15s;
+}
+
+.quick-action-badge:hover {
+  filter: brightness(1.15);
+}
+
+/* Chip de recurso (topbar) */
+.res-chip {
+  background: #252017;
+  border: 1px solid #4a3e29;
+  border-radius: 2px;
+  padding: 3px 8px;
+  white-space: nowrap;
+  color: #ffe569;
+  font-size: 9px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.res-chip:hover {
+  background: #352e20;
+  border-color: #ffe569;
+}
+
+/* Botón de navegación ▲▼ (selector base) */
+.nav-btn {
+  height: 22px;
+  font-weight: bold;
+  background: #c8c3b0;
+  border: 1px solid #444;
+  cursor: pointer;
+  width: 34px;
+  font-size: 11px;
+  color: #1a160f;
+}
+
+.nav-btn:hover {
+  background: #dfdbc9;
+}
+
+/* Selector de base recessed */
+.nav-select {
+  background: #eee8d5;
+  font-family: var(--font-work-sans), 'Arimo', Tahoma, Arial, sans-serif;
+  font-size: 9pt;
+  border: 1px solid #333;
+  width: 100%;
+  padding: 2px;
+  text-align: center;
+  color: #221c13;
+}
+
+/* Tile de mensajes (columna de accesos del overview desktop) */
+.msg-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  background: #c7c2b0;
+  border-bottom: 1px solid #555;
+  border-top: 1px solid #fff;
+  cursor: pointer;
+  font-size: 13px;
+  color: #111;
+  transition: background 0.15s;
+  width: 100%;
+}
+
+.msg-btn:hover {
+  background: #ded9c6;
+}
+
+/* Badge de unidad (tropas disponibles) */
+.badge-unit {
+  width: 100%;
+  max-width: 120px;
+  height: 84px;
+  background: #25221c;
+  border: 1px solid #5a503a;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #dfdbc9;
+  font-size: 10px;
+  margin: 0 auto;
+  gap: 3px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.8);
+}
+
+/* Caja de avatar (Jugador / Base / Familia) */
+.avatar-box {
+  width: 100%;
+  max-width: 130px;
+  height: 115px;
+  background: #242018;
+  border: 2px solid #5e5138;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #dfdbc9;
+  font-size: 11px;
+  text-align: center;
+  border-radius: 3px;
+  margin: 0 auto;
+  padding: 4px;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.9);
+}
+
+/* Pie de nota dentro de badge-unit */
+.footna {
+  font-size: 8.5pt;
+  color: #222;
+  font-weight: bold;
+}
+
+/* Positive / Negative (Verdana retro) */
+.positive {
+  font-family: Verdana, sans-serif;
+  font-weight: bold;
+  color: #008800;
+}
+
+.negative {
+  font-family: Verdana, sans-serif;
+  font-weight: bold;
+  color: #c00000;
+}
+
+/* ==========================================================================
+   LEGACY RETRO CLASSES (unmigrated views) — kept verbatim
+   ========================================================================== */
 
 .cell-dark {
   background-color: #111111;

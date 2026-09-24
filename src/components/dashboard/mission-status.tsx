@@ -18,6 +18,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { cn } from "@/lib/utils";
 
 type MissionStatusProps = {
   missions: ColaMisiones[];
@@ -30,6 +31,15 @@ const missionIconNames: { [key: string]: string } = {
   ESPIONAJE: 'visibility',
   OCUPAR: 'flag',
   REGRESO: 'undo',
+};
+
+const missionTitleLabels: { [key: string]: string } = {
+  ATAQUE: 'Ataque',
+  DEFENDER: 'Defensa',
+  TRANSPORTE: 'Transporte',
+  ESPIONAJE: 'Espionaje',
+  OCUPAR: 'Ocupación',
+  REGRESO: 'Retorno',
 };
 
 function formatTime(totalSeconds: number): string {
@@ -48,7 +58,7 @@ function getTimestamp(dateValue: Date | string | null | undefined): number | nul
   return isNaN(timestamp) ? null : timestamp;
 }
 
-function MissionCountdown({ mission }: { mission: ColaMisiones }) {
+function MissionCountdown({ mission, index }: { mission: ColaMisiones; index: number }) {
   const router = useRouter();
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
@@ -116,69 +126,101 @@ function MissionCountdown({ mission }: { mission: ColaMisiones }) {
   if (!status.endDate && mission.tipoMision !== 'REGRESO') return null;
 
   const iconName = missionIconNames[mission.tipoMision] || 'radar';
+  const title = missionTitleLabels[mission.tipoMision] || mission.tipoMision;
+  const isReturn = mission.tipoMision === 'REGRESO';
+  const originCoords = `${mission.origenCiudad}:${mission.origenBarrio}:${mission.origenEdificio}`;
+  const destCoords = `${mission.destinoCiudad}:${mission.destinoBarrio}:${mission.destinoEdificio}`;
+  const cancellable = !isReturn && !!getTimestamp(mission.fechaLlegada) && new Date() < new Date(getTimestamp(mission.fechaLlegada)!);
 
   return (
-    <div className="cell-dark p-1.5 flex justify-between items-center text-[11px] font-['Space_Mono']">
-      <div className="flex items-center gap-1.5 min-w-0">
-        <MaterialIcon name={iconName} size={15} className="text-[#fabd00]" />
-        <span className="truncate text-white font-bold">
-          {mission.tipoMision} a {mission.destinoCiudad}:{mission.destinoBarrio}:{mission.destinoEdificio}
-        </span>
+    <div
+      className={cn(
+        "px-2 py-1.5 flex items-center justify-between gap-2 text-[11px] border-b border-[#cfc9b5] last:border-b-0",
+        index % 2 === 0 ? "bg-[#f1ebda]" : "bg-[#e9e3d2]"
+      )}
+    >
+      {/* Timer pill */}
+      <span className="timer-pill text-[11px] px-1.5 py-0.5 rounded text-center min-w-[62px] shrink-0 text-[#44dd55]">
+        {status.timeLeft || "00:00:00"}
+      </span>
+
+      {/* Tipo / título */}
+      <div className="flex items-center gap-1.5 min-w-0 flex-1">
+        <MaterialIcon name={iconName} size={14} className="text-[#7d2000] shrink-0" />
+        <div className="min-w-0">
+          <div className="font-bold text-[#0c7017] leading-tight truncate">{title}</div>
+          <div className="text-[9px] text-[#695d48] truncate">
+            {isReturn ? "Tropas regresando a la base" : `En ruta hacia ${destCoords}`}
+          </div>
+        </div>
       </div>
-      <div className="flex items-center gap-2 shrink-0">
-        <span className="text-[10px] text-[#888888] hidden sm:inline">{status.label}</span>
-        <span className="text-[#fff400] font-bold text-[12px] tabular-nums">{status.timeLeft}</span>
-        {mission.tipoMision !== 'REGRESO' && getTimestamp(mission.fechaLlegada) && new Date() < new Date(getTimestamp(mission.fechaLlegada)!) && (
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-6 w-6 min-h-[44px] min-w-[44px] text-[#ff3f3f] hover:text-white p-0" disabled={isPending}>
-                <MaterialIcon name="close" size={14} />
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent className="bg-[#0d0d0d] border-[#333333] text-[#dfdbc9]">
-              <AlertDialogHeader>
-                <AlertDialogTitle className="text-[#ffdad4] font-['Space_Grotesk'] uppercase">¿Cancelar Misión?</AlertDialogTitle>
-                <AlertDialogDescription className="text-[#a0a0a0]">
-                  La flota regresará a su propiedad de origen. El viaje de vuelta tardará el mismo tiempo que ha tardado en llegar.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel className="btn-tactical text-xs">Continuar Misión</AlertDialogCancel>
-                <AlertDialogAction onClick={handleCancel} disabled={isPending} className="btn-crimson text-xs">
-                  {isPending ? 'Cancelando...' : 'Sí, Cancelar'}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )}
+
+      {/* Ruta origen >> destino */}
+      <div className="text-right shrink-0 hidden sm:block">
+        <div className="text-[10px] font-mono font-bold text-[#7d2000]">{originCoords}</div>
+        <div className="text-[9px] text-[#42392b] font-mono flex items-center justify-end gap-0.5">
+          <span>&gt;&gt;</span>
+          <span className="text-[#174872] font-bold">{destCoords}</span>
+        </div>
       </div>
+
+      {cancellable && (
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6 min-h-[36px] min-w-[36px] text-[#b32400] hover:text-[#8b0000] hover:bg-[#e4ddc8] p-0 shrink-0"
+              disabled={isPending}
+              aria-label="Cancelar misión"
+            >
+              <MaterialIcon name="close" size={14} />
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent className="bg-[#0d0d0d] border-[#333333] text-[#dfdbc9]">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-[#ffdad4] font-['Chivo'] uppercase">¿Cancelar Misión?</AlertDialogTitle>
+              <AlertDialogDescription className="text-[#a0a0a0]">
+                La flota regresará a su propiedad de origen. El viaje de vuelta tardará el mismo tiempo que ha tardado en llegar.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="btn-tactical text-xs">Continuar Misión</AlertDialogCancel>
+              <AlertDialogAction onClick={handleCancel} disabled={isPending} className="btn-crimson text-xs">
+                {isPending ? 'Cancelando...' : 'Sí, Cancelar'}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </div>
   );
 }
 
 export function MissionStatus({ missions }: MissionStatusProps) {
   return (
-    <div className="cell-darker p-1.5 border border-[#333333] flex flex-col gap-1.5">
-      <div className="crimson-th text-white px-2 py-0.5 flex justify-between items-center text-[10px] font-['Space_Grotesk'] font-bold uppercase">
-        <span className="flex items-center gap-1">
-          <MaterialIcon name="radar" size={13} className="text-[#00ff00]" />
-          MONITOREO DE MISIONES
-        </span>
-        <span className="bg-black/60 px-1 text-[#00ff00] font-['Space_Mono']">
-          {missions.length}/12
+    <div className="v-outer-frame">
+      <div className="v-header-c flex items-center justify-between px-2.5 py-2">
+        <div className="flex items-center gap-1.5">
+          <MaterialIcon name="sync_alt" size={13} className="text-[#e2ca92]" />
+          <span className="font-bold text-[11px] tracking-wide">MISIONES ACTIVAS</span>
+          <span className="text-[#e2ca92] text-[10px] font-mono">({missions.length})</span>
+        </div>
+        <span className="text-[9px] bg-[#231b11] border border-[#5d4d33] text-[#4caf50] px-1.5 py-0.5 rounded font-mono font-bold">
+          {missions.length > 0 ? `${missions.length} EN RUTA` : 'SIN FLOTAS'}
         </span>
       </div>
-      <div className="flex flex-col gap-1">
-        {missions.length > 0 ? (
-          missions.map(mission => (
-            <MissionCountdown key={mission.id} mission={mission} />
-          ))
-        ) : (
-          <p className="text-[#888888] text-center text-[10px] font-['Space_Mono'] py-1">
-            Sin flotas ni misiones activas
-          </p>
-        )}
-      </div>
+      {missions.length > 0 ? (
+        <div className="divide-y divide-[#cec8b5] border-t border-[#a89e87]">
+          {missions.map((mission, index) => (
+            <MissionCountdown key={mission.id} mission={mission} index={index} />
+          ))}
+        </div>
+      ) : (
+        <p className="p-3 text-center text-[11px] text-[#6d6148] font-mono bg-[#f1ebda] border-t border-[#a89e87]">
+          Sin flotas ni misiones activas
+        </p>
+      )}
     </div>
   );
 }

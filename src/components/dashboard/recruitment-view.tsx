@@ -80,7 +80,7 @@ function RecruitmentQueueAlert() {
   if (!selectedProperty || !colaReclutamiento) return null;
 
   return (
-    <div className="cell-dark border-[#ff3f3f] p-2 flex items-center justify-between text-xs font-['Space_Mono']">
+    <div className="cell-dark border-[#ff3f3f] p-2 flex items-center justify-between text-xs font-['JetBrains_Mono']">
       <div className="flex items-center gap-1.5 text-[#ffdad4]">
         <MaterialIcon name="group_add" size={16} className="text-[#ff3f3f]" />
         <span>
@@ -120,13 +120,13 @@ function TroopForm({ troopId }: { troopId: string }) {
         min="1"
         value={cantidad}
         onChange={(e) => setCantidad(Number(e.target.value))}
-        className="w-16 h-11 min-h-[44px] bg-black border-[#333333] text-center font-['Space_Mono'] text-xs font-bold text-[#fff400]"
+        className="w-16 h-11 min-h-[44px] bg-black border-[#333333] text-center font-['JetBrains_Mono'] text-xs font-bold text-[#fff400]"
         disabled={colaReclutamientoActiva || isPending}
       />
       <Button
         type="submit"
         disabled={colaReclutamientoActiva || isPending}
-        className="btn-crimson h-11 px-3 text-xs font-['Space_Grotesk'] font-bold min-h-[44px] min-w-[44px]"
+        className="btn-crimson h-11 px-3 text-xs font-['Chivo'] font-bold min-h-[44px] min-w-[44px]"
       >
         {isPending ? 'ENVIANDO...' : colaReclutamientoActiva ? 'EN COLA' : 'RECLUTAR'}
       </Button>
@@ -158,7 +158,7 @@ export function RecruitmentView({ user, troopConfigsWithStats }: RecruitmentView
 
   return (
     <div className="space-y-2 w-full text-[#dfdbc9]">
-      <div className="crimson-th p-2 text-white font-['Space_Grotesk'] font-bold text-sm uppercase flex items-center justify-between">
+      <div className="crimson-th p-2 text-white font-['Chivo'] font-bold text-sm uppercase flex items-center justify-between">
         <span>RECLUTAMIENTO // {selectedProperty.nombre}</span>
       </div>
 
@@ -178,10 +178,10 @@ export function RecruitmentView({ user, troopConfigsWithStats }: RecruitmentView
                   />
                 </div>
                 <div className="min-w-0">
-                  <div className="font-bold font-['Space_Grotesk'] text-white text-sm uppercase truncate">
+                  <div className="font-bold font-['Chivo'] text-white text-sm uppercase truncate">
                     {troop.nombre}
                   </div>
-                  <div className="text-xs font-['Space_Mono'] text-[#fff400]">
+                  <div className="text-xs font-['JetBrains_Mono'] text-[#fff400]">
                     EN PROPIEDAD: {troop.count}
                   </div>
                 </div>
@@ -192,13 +192,13 @@ export function RecruitmentView({ user, troopConfigsWithStats }: RecruitmentView
               </div>
 
               <div className="xl:col-span-4 flex flex-col gap-1 sm:items-end">
-                <div className="flex flex-wrap gap-2 text-xs font-['Space_Mono'] tabular-nums text-white">
+                <div className="flex flex-wrap gap-2 text-xs font-['JetBrains_Mono'] tabular-nums text-white">
                   <span className="text-[#ff3f3f]">ATQ: {formatNumber(troop.ataqueActual)}</span>
                   <span className="text-[#00ff00]">DEF: {formatNumber(troop.defensaActual)}</span>
                   <span className="text-[#fabd00]">CAP: {formatNumber(troop.capacidadActual)}</span>
                 </div>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="text-[11px] font-['Space_Mono'] text-[#888888]">
+                  <span className="text-[11px] font-['JetBrains_Mono'] text-[#888888]">
                     {formatDuration(troop.duracion)}/u
                   </span>
                   <DialogTrigger asChild>

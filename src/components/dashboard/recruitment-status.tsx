@@ -1,12 +1,14 @@
 'use client';
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { FullColaReclutamiento } from "@/lib/data";
 import MaterialIcon from "@/components/ui/material-icon";
+import { cn } from "@/lib/utils";
 
 type RecruitmentStatusProps = {
-  recruitments: (FullColaReclutamiento & { propiedadNombre: string })[];
+  recruitments: (FullColaReclutamiento & { propiedadNombre: string; coords: string })[];
   totalSlots: number;
 };
 
@@ -20,7 +22,7 @@ function formatTime(totalSeconds: number): string {
     .join(':');
 }
 
-function CountdownTimer({ label, endDate, onFinish }: { label: string, endDate: string, onFinish: () => void }) {
+function CountdownTimer({ endDate, onFinish }: { endDate: string, onFinish: () => void }) {
   const [timeLeft, setTimeLeft] = useState('');
 
   useEffect(() => {
@@ -50,10 +52,9 @@ function CountdownTimer({ label, endDate, onFinish }: { label: string, endDate: 
   }, [endDate, onFinish]);
 
   return (
-    <div className="cell-dark p-1.5 flex justify-between items-center text-[10px] font-['Space_Mono']">
-      <span className="font-bold text-[#ffdad4] truncate">{label}</span>
-      <span className="text-[#fabd00] font-bold tabular-nums ml-1">{timeLeft}</span>
-    </div>
+    <span className="timer-pill text-[10px] px-1.5 py-0.5 rounded text-[#44dd55] shrink-0">
+      {timeLeft}
+    </span>
   );
 }
 
@@ -65,33 +66,60 @@ export function RecruitmentStatus({ recruitments, totalSlots }: RecruitmentStatu
   };
 
   return (
-    <div className="cell-darker p-1.5 border border-[#333333] flex flex-col gap-1.5">
-      <div className="crimson-th text-white px-2 py-0.5 flex justify-between items-center text-[10px] font-['Space_Grotesk'] font-bold uppercase">
-        <span className="flex items-center gap-1">
-          <MaterialIcon name="group_add" size={13} className="text-[#ff3f3f]" />
-          RECLUTAMIENTO
-        </span>
-        <span className="bg-black/60 px-1 text-[#ff3f3f] font-['Space_Mono']">
-          {recruitments.length}/{totalSlots}
+    <div className="v-outer-frame">
+      <div className="v-header-c flex items-center justify-between px-2.5 py-2">
+        <Link href="/recruitment" className="flex items-center gap-1.5 hover:underline">
+          <MaterialIcon name="groups" size={13} className="text-[#e2ca92]" />
+          <span className="font-bold text-[11px] tracking-wide">RECLUTAMIENTO DE MATONES</span>
+          <span className="text-[#e2ca92] text-[10px] font-mono">({recruitments.length}/{totalSlots})</span>
+        </Link>
+        <span className="text-[9px] bg-[#231b11] border border-[#5d4d33] text-[#ffe569] px-1.5 py-0.5 rounded font-mono font-bold">
+          EN PROCESO
         </span>
       </div>
-      <div className="flex flex-col gap-1">
+      <div className="border-t border-[#a89e87]">
         {recruitments.length > 0 ? (
-          recruitments.map(queueItem => {
-            const endDate = typeof queueItem.fechaFinalizacion === 'string'
-              ? queueItem.fechaFinalizacion
-              : new Date(queueItem.fechaFinalizacion).toISOString();
-            return (
-              <CountdownTimer
-                key={queueItem.id}
-                label={`${queueItem.cantidad} ${queueItem.tropaConfig.nombre}`}
-                endDate={endDate}
-                onFinish={handleRefresh}
-              />
-            );
-          })
+          <>
+            <div className="divide-y divide-[#cec8b5]">
+              {recruitments.map((queueItem, index) => {
+                const endDate = typeof queueItem.fechaFinalizacion === 'string'
+                  ? queueItem.fechaFinalizacion
+                  : new Date(queueItem.fechaFinalizacion).toISOString();
+                return (
+                  <div
+                    key={queueItem.id}
+                    className={cn(
+                      "p-2 flex items-center justify-between gap-1",
+                      index % 2 === 0 ? "bg-[#f1ebda]" : "bg-[#e8e2d1]"
+                    )}
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-bold text-[#1f190e] text-[11px] truncate">
+                          {queueItem.cantidad} {queueItem.tropaConfig.nombre}
+                        </span>
+                        <span className="text-[9px] text-[#78694d]">• En Cuartel</span>
+                      </div>
+                      <div className="text-[9px] text-[#665b46] mt-0.5">
+                        Base: <span className="font-mono text-[#1f486b] underline">{queueItem.coords}</span>
+                      </div>
+                    </div>
+                    <CountdownTimer endDate={endDate} onFinish={handleRefresh} />
+                  </div>
+                );
+              })}
+            </div>
+            <div className="bg-[#ded7c3] border-t border-[#a89d84] p-1.5 text-center">
+              <Link
+                href="/recruitment"
+                className="underline text-[#731f00] font-bold text-[10px] hover:text-[#a00000]"
+              >
+                Mostrar todo el reclutamiento activo ►
+              </Link>
+            </div>
+          </>
         ) : (
-          <p className="text-[#888888] text-center text-[10px] font-['Space_Mono'] py-1">
+          <p className="p-3 text-center text-[11px] text-[#6d6148] font-mono bg-[#f1ebda]">
             Sin reclutamientos en cola
           </p>
         )}

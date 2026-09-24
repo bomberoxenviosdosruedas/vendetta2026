@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Vendetta - Página Principal</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #0b0b0b;
+            color: #DFDBC9;
+            font-family: Tahoma, Arial, Helvetica, sans-serif;
+            font-size: 10pt;
+        }
+
+        /* Barra Superior de Recursos Fija */
+        .top-res-header {
+            width: 100%;
+            height: 48px;
+            min-height: 48px;
+            z-index: 50;
+            background: linear-gradient(180deg, #443c2c 0%, #2a2418 50%, #16120b 100%);
+            border-bottom: 2px solid #5a4b33;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            gap: 16px;
+        }
+
+        .res-items-table {
+            border-collapse: collapse;
+            margin-bottom: 0;
+        }
+
+        .res-bar-container {
+            width: 100%;
+            height: 3px;
+            background-color: #2b2b2b;
+        }
+
+        .res-chip {
+            background: #252017;
+            border: 1px solid #4a3e29;
+            border-radius: 2px;
+            padding: 3px 8px;
+            white-space: nowrap;
+            color: #ffe569;
+            font-size: 9px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .res-chip:hover {
+            background: #352e20;
+        }
+
+        /* Estructura Fullscreen */
+        .main-viewport {
+            display: flex;
+            flex-direction: row;
+            width: 100vw;
+            height: calc(100vh - 48px);
+            overflow: hidden;
+            background-color: #0d0d0d;
+        }
+
+        /* Columna Menú de Navegación docked a la izquierda */
+        .sidebar-nav-container {
+            width: 215px;
+            min-width: 215px;
+            height: 100%;
+            background-color: #050505;
+            border-right: 2px solid #332d20;
+            padding: 10px 8px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Scrollbar Retro */
+        .sidebar-nav-container::-webkit-scrollbar,
+        .main-content-scroll::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .sidebar-nav-container::-webkit-scrollbar-track,
+        .main-content-scroll::-webkit-scrollbar-track {
+            background: #111111;
+        }
+
+        .sidebar-nav-container::-webkit-scrollbar-thumb,
+        .main-content-scroll::-webkit-scrollbar-thumb {
+            background: #3a3224;
+            border: 1px solid #5a4b33;
+        }
+
+        .sidebar-nav-container::-webkit-scrollbar-thumb:hover,
+        .main-content-scroll::-webkit-scrollbar-thumb:hover {
+            background: #504532;
+        }
+
+        /* Área central de juego / overview */
+        .main-content-scroll {
+            flex: 1;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 16px 24px 30px;
+            background: radial-gradient(circle at 50% 10%, #161410 0%, #080808 80%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .content-constraint {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Estilos de tablas Vendetta 2006 */
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        td.c {
+            font-weight: bold;
+            text-align: center;
+            color: #FFFFFF;
+            font-family: Tahoma, Arial, Helvetica, sans-serif;
+            font-size: 10pt;
+            height: 24px;
+            background: linear-gradient(180deg, #5c523d 0%, #3a3224 50%, #201a11 100%);
+            border: 1px solid #4a3e29;
+            padding: 3px 6px;
+            text-shadow: 1px 1px 1px #000000;
+        }
+
+        th {
+            text-align: center;
+            font-weight: normal;
+            color: #000000;
+            font-family: Tahoma, Arial, Helvetica, sans-serif;
+            font-size: 9.5pt;
+            background: #DFDBC9;
+            border: 1px solid #000000;
+            padding: 4px 6px;
+        }
+
+        td.th {
+            text-align: center;
+            font-weight: normal;
+            color: #000000;
+            background: #DFDBC9;
+            border: 1px solid #000000;
+            font-size: 9pt;
+            padding: 2px 5px;
+        }
+
+        a {
+            color: #000000;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 9.5pt;
+            font-family: Tahoma, Arial, Helvetica, sans-serif;
+        }
+
+        a:hover {
+            color: #8b0000;
+            text-decoration: underline;
+        }
+
+        td.c a {
+            color: #FFFFFF;
+            text-decoration: none;
+        }
+
+        td.c a:hover {
+            color: #FFE569;
+        }
+
+        /* Menú lateral styling */
+        .nav-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .nav-table th {
+            background: #DFDBC9;
+            padding: 3px 4px;
+            border: 1px solid #1a1712;
+            height: 22px;
+        }
+
+        .nav-table a.l1 {
+            color: #111111;
+            font-size: 9pt;
+            display: block;
+            width: 100%;
+            transition: background 0.1s;
+        }
+
+        .nav-table a.l1:hover {
+            color: #8b0000;
+            text-decoration: none;
+            background-color: #efeadd;
+        }
+
+        .nav-btn {
+            height: 22px;
+            font-weight: bold;
+            background: #c8c3b0;
+            border: 1px solid #444;
+            cursor: pointer;
+            width: 34px;
+            font-size: 11px;
+        }
+
+        .nav-btn:hover {
+            background: #dfdbc9;
+        }
+
+        .nav-select {
+            background: #eee8d5;
+            font-family: Tahoma, Arial, sans-serif;
+            font-size: 9pt;
+            border: 1px solid #333;
+            width: 100%;
+            padding: 2px;
+            text-align: center;
+        }
+
+        /* Botones de acción / mensajes */
+        .msg-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            height: 32px;
+            background: #c7c2b0;
+            border-bottom: 1px solid #555;
+            border-top: 1px solid #fff;
+            cursor: pointer;
+            font-size: 13px;
+            color: #111;
+            transition: background 0.15s;
+        }
+
+        .msg-btn:hover {
+            background: #ded9c6;
+        }
+
+        .positive {
+            font-family: Verdana, sans-serif;
+            font-weight: bold;
+            color: #008800;
+        }
+
+        .negative {
+            font-family: Verdana, sans-serif;
+            font-weight: bold;
+            color: #C00000;
+        }
+
+        .badge-unit {
+            width: 100%;
+            max-width: 120px;
+            height: 84px;
+            background: #25221c;
+            border: 1px solid #5a503a;
+            border-radius: 3px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #dfdbc9;
+            font-size: 10px;
+            margin: 0 auto;
+            gap: 3px;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.8);
+        }
+
+        .avatar-box {
+            width: 100%;
+            max-width: 130px;
+            height: 115px;
+            background: #242018;
+            border: 2px solid #5e5138;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #dfdbc9;
+            font-size: 11px;
+            text-align: center;
+            border-radius: 3px;
+            margin: 0 auto;
+            padding: 4px;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.9);
+        }
+
+        .footna {
+            font-size: 8.5pt;
+            color: #222;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body class="w-screen h-screen overflow-hidden flex flex-col">
+    <!-- CABECERA SUPERIOR DE RECURSOS (100% Pantalla) -->
+    <header class="top-res-header">
+        <!-- Logotipo y Nombre Oficial -->
+        <a class="flex items-center gap-3 shrink-0 decoration-transparent hover:opacity-95 transition-opacity" href="#">
+            <img alt="Vendetta Latino Logo" class="h-8 md:h-9 object-contain drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyUezB8ElG0Y_UVdRmFsO8OgVC2a2amkKUPgROdA3zEJGtqcAvszVAgVqFboykdow7jmAWk7kzzbMK4OmVJnPSYygEM_b7Q78YS-02VBig2PY3ytFKKZBJ6dAqES-Tu3Yedn15Q-7NRdURBpVFdMGdFA3T1d5A9pgnF3astBFpZhJnBchy7IxjHFCRg_mzvPdjZ5lZgos4ChzWQmFgBSXKiVsmd5pkOkML0G1DvHA4ejWz2sZGIKqoEScwIYel-Ey7v4w" />
+            <div class="hidden xl:flex flex-col">
+                <span class="text-xs font-bold text-[#f1ebd8] tracking-wider uppercase drop-shadow">Vendetta
+                    Latino</span>
+                <span class="text-[9px] text-[#a39a82] -mt-0.5">MMORPG Mafia Clásico</span>
+            </div>
+        </a>
+        <!-- Tabla Centrada de Recursos en Vivo -->
+        <div class="flex-1 max-w-4xl mx-auto px-2">
+            <table class="res-items-table w-full shadow-md">
+                <tbody>
+                    <tr>
+                        <td align="center" class="c text-[8.5pt] !h-5 !py-0.5" width="20%">Armas</td>
+                        <td align="center" class="c text-[8.5pt] !h-5 !py-0.5" width="20%">Munición</td>
+                        <td align="center" class="c text-[8.5pt] !h-5 !py-0.5" width="20%">Alcohol</td>
+                        <td align="center" class="c text-[8.5pt] !h-5 !py-0.5" width="20%">Dólares</td>
+                        <td align="center" class="c text-[8.5pt] !h-5 !py-0.5 hidden sm:table-cell" width="20%">Hora
+                            (servidor)</td>
+                    </tr>
+                    <tr>
+                        <td class="th !p-0">
+                            <div class="res-bar-container">
+                                <div style="width:93.7%; height:3px; background-color:#ff9800;"></div>
+                            </div>
+                        </td>
+                        <td class="th !p-0">
+                            <div class="res-bar-container">
+                                <div style="width:82.9%; height:3px; background-color:#ff9800;"></div>
+                            </div>
+                        </td>
+                        <td class="th !p-0">
+                            <div class="res-bar-container">
+                                <div style="width:100%; height:3px; background-color:#e53935;"></div>
+                            </div>
+                        </td>
+                        <td class="th !p-0">
+                            <div class="res-bar-container">
+                                <div style="width:65.2%; height:3px; background-color:#4caf50;"></div>
+                            </div>
+                        </td>
+                        <td class="c !p-0 hidden sm:table-cell" style="height: 3px;"></td>
+                    </tr>
+                    <tr>
+                        <td class="th text-[8.5pt] !py-0.5 px-1.5 whitespace-nowrap"><b>7.462.002</b> <span
+                                class="text-xs ml-0.5">🔫</span></td>
+                        <td class="th text-[8.5pt] !py-0.5 px-1.5 whitespace-nowrap"><b>15.429.615</b> <span
+                                class="text-xs ml-0.5">💣</span></td>
+                        <td class="th text-[8.5pt] !py-0.5 px-1.5 whitespace-nowrap text-red-700"><b>3.010.000</b> <span
+                                class="text-xs ml-0.5">🍾</span></td>
+                        <td class="th text-[8.5pt] !py-0.5 px-1.5 whitespace-nowrap text-emerald-800"><b>2.356.277</b>
+                            <span class="text-xs ml-0.5">💵</span></td>
+                        <td class="c text-[8pt] !py-0.5 px-2 hidden sm:table-cell text-white font-mono"><b>31-08-2024
+                                04:51:38</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Indicador de Estado y Acceso Rápido -->
+        <div class="flex items-center gap-2 shrink-0">
+            <button class="res-chip hover:border-[#ffe569] transition-colors"
+                title="Detalles de producción y capacidad de almacenes">
+                <span>▼</span> Producción
+            </button>
+            <div
+                class="hidden lg:flex items-center gap-1.5 px-2 py-1 bg-[#1a160f] border border-[#3e3523] rounded text-[10px] text-[#c9c3b2]">
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                <span>En Línea (542)</span>
+            </div>
+        </div>
+    </header>
+    <!-- CONTENEDOR PRINCIPAL: SIDEBAR DOCKED A LA IZQUIERDA + OVERVIEW AL CENTRO -->
+    <div class="main-viewport">
+        <!-- MARCO DE NAVEGACIÓN IZQUIERDO DOCKED (Full Height h-full) -->
+        <aside class="sidebar-nav-container">
+            <table class="nav-table mb-2">
+                <tbody>
+                    <tr>
+                        <td class="c"><a class="l1 text-white hover:text-amber-200" href="#menu">Menú Principal</a></td>
+                    </tr>
+                    <tr>
+                        <th align="center" style="padding: 3px 2px;" valign="top">
+                            <table class="nav-table">
+                                <tbody>
+                                    <tr>
+                                        <th><a class="l1 font-bold text-amber-950 bg-[#ebe5d3]" href="#overview">Visión
+                                                General</a></th>
+                                    </tr>
+                                    <tr>
+                                        <th><a class="l1" href="#building">Habitaciones</a></th>
+                                    </tr>
+                                    <tr>
+                                        <th><a class="l1" href="#prod">Reclutamiento</a></th>
+                                    </tr>
+                                    <tr>
+                                        <th><a class="l1" href="#defence">Seguridad</a></th>
+                                    </tr>
+                                    <tr>
+                                        <th><a class="l1" href="#research">Entrenamiento</a></th>
+                                    </tr>
+                                    <tr>
+                                        <th><a class="l1" href="#planets">Edificios</a></th>
+                                    </tr>
+                                    <tr>
+                                        <th><a class="l1" href="#search">Buscar</a></th>
+                                    </tr>
+                                    <!-- Selector de Base / Coordenadas -->
+                                    <tr>
+                                        <th style="padding: 5px 2px; background: #c5c0ad;">
+                                            <div class="mb-1">
+                                                <input class="nav-btn" title="Anterior" type="button" value="˄" />
+                                            </div>
+                                            <div class="px-0.5">
+                                                <select class="nav-select" size="1">
+                                                    <option selected="" value="507840">09 (40:23:220)</option>
+                                                    <option value="502736">08 (40:23:114)</option>
+                                                    <option value="505289">07 (40:23:168)</option>
+                                                    <option value="505288">06 (40:23:167)</option>
+                                                    <option value="504428">05 (40:23:140)</option>
+                                                    <option value="501877">04 (40:23:88)</option>
+                                                    <option value="500189">03 (40:23:66)</option>
+                                                    <option value="25441">Principal (2:47:247)</option>
+                                                </select>
+                                            </div>
+                                            <div class="mt-1">
+                                                <input class="nav-btn" title="Siguiente" type="button" value="˅" />
+                                            </div>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th><a class="l1" href="#tech">Tecnologías</a></th>
+                                    </tr>
+                                    <tr>
+                                        <th><a class="l1" href="#ally">Familia</a></th>
+                                    </tr>
+                                    <tr>
+                                        <th><a class="l1" href="#res">Recursos</a></th>
+                                    </tr>
+                                    <tr>
+                                        <th><a class="l1" href="#map">Mapa</a></th>
+                                    </tr>
+                                    <tr>
+                                        <th><a class="l1" href="#fleet">Misiones</a></th>
+                                    </tr>
+                                    <tr>
+                                        <th><a class="l1" href="#sim">Simulador</a></th>
+                                    </tr>
+                                    <tr>
+                                        <th><a class="l1" href="#farmlist">Lista de granjas</a></th>
+                                    </tr>
+                                    <tr>
+                                        <th><a class="l1" href="#msg">Mensajes</a></th>
+                                    </tr>
+                                    <tr>
+                                        <th><a class="l1" href="#stat">Estadísticas</a></th>
+                                    </tr>
+                                    <tr>
+                                        <th><a class="l1" href="#highscore">Clasificaciones</a></th>
+                                    </tr>
+                                    <tr>
+                                        <td class="c" style="height: 5px; padding: 0;"></td>
+                                    </tr>
+                                    <tr>
+                                        <th><a class="l1" href="#chat">Chat</a></th>
+                                    </tr>
+                                    <tr>
+                                        <th><a class="l1" href="#foro">Foro</a></th>
+                                    </tr>
+                                    <tr>
+                                        <th><a class="l1" href="#rules">Reglas</a></th>
+                                    </tr>
+                                    <tr>
+                                        <th><a class="l1" href="#options">Opciones</a></th>
+                                    </tr>
+                                    <tr>
+                                        <td class="c" style="height: 5px; padding: 0;"></td>
+                                    </tr>
+                                    <tr>
+                                        <th><a class="l1 text-red-700 hover:text-red-900 font-bold"
+                                                href="#logout">Logout</a></th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- Mini banner lateral retro -->
+            <div class="mt-auto pt-3 border-t border-[#332d20] flex flex-col items-center text-center">
+                <img alt="VL Emblem"
+                    class="w-10 h-10 object-contain mb-1 opacity-80 hover:opacity-100 transition-opacity"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKAo1Rr7-WIIr3XeXEDDNpl5hV5OFPAwSe6OSCye7R-y_GjjzzN2mDFPiGR7SvvIGy52NvH73GFlL2nNLbl2qoFJdKvY0D7WGe77W8HWw7pd-erhJqRTTvNaqsnarh4zA1abBiXYTY1VErI-LYHhIn7jGh3n29thoayWQv2XVqr-d7_uajSGRRTtJ1GtKCaIrnIq8twMWdNVcTz53aedWSf1oqNDzx7s2cAjCZOVNxJOIp0Jm5duEB9iVY5AE8z2_ifX0" />
+                <span class="text-[9px] text-[#786c52] font-semibold tracking-widest uppercase">Vendetta 2006</span>
+                <span class="text-[8px] text-[#554d3a]">Servidor Latino v1.4</span>
+            </div>
+        </aside>
+        <!-- MARCO CENTRAL DE CONTENIDO (overview.html) STRETCH RESPONSIVO -->
+        <main class="main-content-scroll">
+            <div class="content-constraint">
+                <!-- Panel de Perfil / Edificio / Familia -->
+                <table cellspacing="1" class="w-full shadow-lg">
+                    <tbody>
+                        <tr>
+                            <td class="c" colspan="4">Visión General</td>
+                        </tr>
+                        <tr>
+                            <td class="c" width="28%">Jugador</td>
+                            <td class="c" width="28%">Edificio</td>
+                            <td class="c" width="28%">Familia</td>
+                            <td class="c" rowspan="2" style="font-size: 20px;" width="16%">
+                                <a class="text-amber-300 hover:text-white transition-colors" href="#empire"
+                                    title="Visión Global">👁</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="c" style="background: #2a251d;"><a class="text-amber-300"
+                                    href="#player">Bomberox</a></td>
+                            <td class="c" style="background: #2a251d;"><a class="text-white" href="#planinfo">09
+                                    (40:23:220)</a></td>
+                            <td class="c" style="background: #2a251d;"><a class="text-white" href="#ally">ArGenTeaM
+                                    [ArGt]</a></td>
+                        </tr>
+                        <tr>
+                            <th style="padding: 10px 6px;">
+                                <div class="avatar-box">
+                                    <span class="text-3xl mb-1">👤</span>
+                                    <strong class="text-xs text-[#ece6d5]">Bomberox</strong>
+                                    <span class="text-[9px] text-[#a49a83] mt-0.5">Caporegime</span>
+                                </div>
+                            </th>
+                            <th style="padding: 10px 6px;">
+                                <div class="avatar-box">
+                                    <span class="text-3xl mb-1">🏢</span>
+                                    <strong class="text-xs text-[#ece6d5]">Mansión 09</strong>
+                                    <span class="text-[9px] text-[#a49a83] mt-0.5">40:23:220</span>
+                                </div>
+                            </th>
+                            <th style="padding: 10px 6px;">
+                                <div class="avatar-box">
+                                    <span class="text-3xl mb-1">🛡️</span>
+                                    <strong class="text-xs text-[#ece6d5]">ArGenTeaM</strong>
+                                    <span class="text-[9px] text-[#a49a83] mt-0.5">Rango #1</span>
+                                </div>
+                            </th>
+                            <th style="padding: 0; background: #1a1712;">
+                                <div class="msg-btn" onclick="location.href='#msg0'" title="Mensajes sin leer">
+                                    <span>✉</span> <b>4</b>
+                                </div>
+                                <div class="msg-btn" onclick="location.href='#msg1'" title="Informes de espionaje">
+                                    <span>🗎</span> <b>99+</b>
+                                </div>
+                                <div class="msg-btn" onclick="location.href='#msg2'" title="Movimientos">
+                                    <span>⇄</span> <b>99+</b>
+                                </div>
+                                <div class="msg-btn" onclick="location.href='#msg3'" title="Combates">
+                                    <span>⚔</span> <b>99+</b>
+                                </div>
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- Misiones / Movimientos en curso -->
+                <table cellspacing="1" class="w-full shadow-lg">
+                    <tbody>
+                        <tr>
+                            <td class="c" colspan="3">
+                                <div class="flex justify-between items-center px-2">
+                                    <span>Misiones Activas (12)</span>
+                                    <span class="text-green-400 font-bold text-xs tracking-wider">⇄ 12 en ruta</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th width="20%"><b>00:00:00</b></th>
+                            <th class="text-green-800 font-bold" width="40%">Retorno (13.000)</th>
+                            <th width="40%"><a href="#p1">40:23:220</a> &gt;&gt;&gt; <a href="#p2">40:22:169</a></th>
+                        </tr>
+                        <tr>
+                            <th><b>00:00:00</b></th>
+                            <th class="text-green-800 font-bold">Retorno (13.000)</th>
+                            <th><a href="#p1">40:23:220</a> &gt;&gt;&gt; <a href="#p3">40:22:135</a></th>
+                        </tr>
+                        <tr>
+                            <th><b>00:00:07</b></th>
+                            <th class="text-green-800 font-bold">Retorno (13.000)</th>
+                            <th><a href="#p1">40:23:220</a> &gt;&gt;&gt; <a href="#p4">40:22:84</a></th>
+                        </tr>
+                        <tr>
+                            <th><b>00:00:31</b></th>
+                            <th class="text-green-800 font-bold">Retorno (3)</th>
+                            <th><a href="#p5">27:27:111</a> &gt;&gt;&gt; <a href="#p6">40:23:168</a></th>
+                        </tr>
+                        <tr>
+                            <th><b>00:00:40</b></th>
+                            <th class="text-green-800 font-bold">Retorno (13.000)</th>
+                            <th><a href="#p1">40:23:220</a> &gt;&gt;&gt; <a href="#p7">40:22:33</a></th>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- Habitaciones en construcción -->
+                <table cellspacing="1" class="w-full shadow-lg">
+                    <tbody>
+                        <tr>
+                            <td class="c" colspan="3"><a href="#building">Habitaciones en construcción (74/76)</a></td>
+                        </tr>
+                        <tr>
+                            <th width="20%">00:02:46</th>
+                            <th width="50%">Contrabando (Nivel 52)</th>
+                            <th width="30%">40:23:162</th>
+                        </tr>
+                        <tr>
+                            <th>00:06:21</th>
+                            <th>Contrabando (Nivel 52)</th>
+                            <th>40:23:63</th>
+                        </tr>
+                        <tr>
+                            <th>00:07:07</th>
+                            <th>Contrabando (Nivel 51)</th>
+                            <th>40:23:86</th>
+                        </tr>
+                        <tr>
+                            <th>00:12:29</th>
+                            <th>Contrabando (Nivel 50)</th>
+                            <th>40:23:255</th>
+                        </tr>
+                        <tr>
+                            <th>00:12:59</th>
+                            <th>Campo de entrenamiento (Nivel 43)</th>
+                            <th>40:22:33</th>
+                        </tr>
+                        <tr>
+                            <th class="bg-[#e2dec9]" colspan="3"><a class="underline hover:text-amber-900"
+                                    href="#all_buildings">Mostrar todo el imperio</a></th>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- Reclutamiento -->
+                <table cellspacing="1" class="w-full shadow-lg">
+                    <tbody>
+                        <tr>
+                            <td class="c" colspan="3"><a href="#prod">Reclutamiento de Matones (31/76)</a></td>
+                        </tr>
+                        <tr>
+                            <th width="20%">01:30:02</th>
+                            <th width="50%">19 Mercenario</th>
+                            <th width="30%">40:23:75</th>
+                        </tr>
+                        <tr>
+                            <th>01:33:46</th>
+                            <th>17 Mercenario</th>
+                            <th>40:23:117</th>
+                        </tr>
+                        <tr>
+                            <th>01:49:04</th>
+                            <th>18 Mercenario</th>
+                            <th>40:23:88</th>
+                        </tr>
+                        <tr>
+                            <th class="bg-[#e2dec9]" colspan="3"><a class="underline hover:text-amber-900"
+                                    href="#all_prod">Mostrar todo el reclutamiento</a></th>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- Tropas y Defensas -->
+                <table cellspacing="1" class="w-full shadow-lg">
+                    <tbody>
+                        <tr>
+                            <td class="c" colspan="4"><a href="#fleet">Tropas Disponibles en la Base</a></td>
+                        </tr>
+                        <tr>
+                            <th style="padding: 10px 4px;" width="25%">
+                                <div class="badge-unit">
+                                    <span class="text-2xl">🥷</span>
+                                    <b class="text-xs">Matón</b>
+                                    <span class="footna text-amber-300 font-mono">( 1 )</span>
+                                </div>
+                            </th>
+                            <th style="padding: 10px 4px;" width="25%">
+                                <div class="badge-unit">
+                                    <span class="text-2xl">🚚</span>
+                                    <b class="text-xs">Transportista</b>
+                                    <span class="footna text-amber-300 font-mono">( 261 )</span>
+                                </div>
+                            </th>
+                            <th style="padding: 10px 4px;" width="25%">
+                                <div class="badge-unit">
+                                    <span class="text-2xl">🔫</span>
+                                    <b class="text-xs">Mercenario</b>
+                                    <span class="footna text-amber-300 font-mono">( 422 )</span>
+                                </div>
+                            </th>
+                            <th style="padding: 10px 4px;" width="25%">
+                                <div class="badge-unit">
+                                    <span class="text-2xl">🛡️</span>
+                                    <b class="text-xs">Trabajador Ilegal</b>
+                                    <span class="footna text-amber-300 font-mono">( 2 )</span>
+                                </div>
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- Puntos y Estadísticas -->
+                <table cellspacing="1" class="w-full shadow-lg mb-4">
+                    <tbody>
+                        <tr>
+                            <td class="c" colspan="6"><a href="#highscore">Puntos del Jugador</a></td>
+                        </tr>
+                        <tr>
+                            <th width="16%">Puntos<br />(Entrenamiento)</th>
+                            <th width="16%">Puntos<br />(Edificios)</th>
+                            <th width="18%">Puntos<br />(Tropas)</th>
+                            <th width="20%">Total</th>
+                            <th width="15%">Edificios</th>
+                            <th width="15%">Lealtad</th>
+                        </tr>
+                        <tr>
+                            <th class="font-mono">141.222</th>
+                            <th class="font-mono">1.526.375</th>
+                            <th class="font-mono">41.404.336</th>
+                            <th class="font-mono text-stone-900" style="background: #ffe569; font-weight: bold;">
+                                43.071.934</th>
+                            <th class="font-mono">76 / 124</th>
+                            <th><a class="text-green-800 font-bold hover:text-green-950 font-mono"
+                                    href="#battle">53%</a></th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

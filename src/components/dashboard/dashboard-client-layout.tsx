@@ -1,21 +1,12 @@
-"use client";
+'use client';
 
-import Link from "next/link";
+import { useState } from "react";
 import { SidebarNav } from "@/components/dashboard/sidebar-nav";
-import { Button } from "@/components/ui/button";
+import { ResourceBar } from "@/components/dashboard/resource-bar";
+import { MobileNavDrawer } from "@/components/dashboard/mobile-nav-drawer";
 import MaterialIcon from "@/components/ui/material-icon";
 import type { UserWithProgress, FullPropiedad } from "@/lib/data";
-import { logout } from "@/lib/auth";
-import { useRouter } from "next/navigation";
 import { useProperty } from "@/contexts/property-context";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
-import { LiveClock } from "@/components/dashboard/live-clock";
 
 interface PropertySelectorHeaderProps {
   properties: FullPropiedad[];
@@ -26,53 +17,57 @@ interface PropertySelectorHeaderProps {
 function PropertySelectorHeader({ properties, selectedProperty, onSelectProperty }: PropertySelectorHeaderProps) {
   if (!selectedProperty) return null;
 
+  const currentIndex = properties.findIndex(p => p.id === selectedProperty.id);
+  const hasMultiple = properties.length > 1;
+
+  const cycle = (direction: 1 | -1) => {
+    const target = properties[(currentIndex + direction + properties.length) % properties.length];
+    if (target) onSelectProperty(target.id);
+  };
+
   return (
-    <div className="cell-dark p-1 text-center w-full mb-2">
-      <div className="text-[9px] text-[#888888] font-['Space_Mono'] uppercase tracking-widest">
-        COORDENADAS
+    <div className="mb-2 px-1 py-1.5 bg-[#c5c0ad] border border-[#5a4f3d] shadow-[inset_0_1px_3px_rgba(0,0,0,0.35)]">
+      <div className="text-center text-[8px] font-bold text-[#554b3c] tracking-[0.2em] uppercase mb-1">
+        Base Actual
       </div>
-      <div className="flex items-center justify-between mt-0.5 gap-1">
-        {properties.length > 1 ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                type="button"
-                className="btn-tactical w-full px-1 py-0.5 font-['Space_Mono'] text-[11px] font-bold text-[#fff400] flex items-center justify-between min-h-[36px]"
-              >
-                <span>{selectedProperty.ciudad}:{selectedProperty.barrio}:{selectedProperty.edificio}</span>
-                <MaterialIcon name="arrow_drop_down" size={16} />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56 bg-[#0d0d0d] border-[#333333] text-[#dfdbc9]" align="start">
-              <div className="px-2 py-1 text-[9px] font-mono text-[#888888] uppercase tracking-wider border-b border-[#222222]">
-                TUS PROPIEDADES
-              </div>
-              {properties.map((prop) => (
-                <DropdownMenuItem
-                  key={prop.id}
-                  onSelect={() => onSelectProperty(prop.id)}
-                  className={cn(
-                    "flex items-center justify-between px-2 py-1.5 text-[11px] cursor-pointer hover:bg-[#1f1f1f]",
-                    selectedProperty.id === prop.id && "bg-[#6C0000] text-white font-bold"
-                  )}
-                >
-                  <span className="truncate">{prop.nombre}</span>
-                  <span className="font-mono text-[#fff400]">
-                    [{prop.ciudad}:{prop.barrio}:{prop.edificio}]
-                  </span>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : (
-          <div className="font-['Space_Mono'] text-[11px] font-bold text-[#fff400] w-full py-0.5">
-            {selectedProperty.ciudad}:{selectedProperty.barrio}:{selectedProperty.edificio}
-          </div>
-        )}
-      </div>
-      <div className="text-[10px] text-[#dfdbc9] mt-0.5 truncate font-['Space_Grotesk']">
-        [{selectedProperty.nombre}]
-      </div>
+      {hasMultiple && (
+        <div className="flex justify-center mb-1">
+          <button
+            type="button"
+            className="nav-btn flex items-center justify-center"
+            onClick={() => cycle(-1)}
+            title="Anterior"
+            aria-label="Base anterior"
+          >
+            <MaterialIcon name="expand_less" size={16} />
+          </button>
+        </div>
+      )}
+      <select
+        className="nav-select"
+        value={selectedProperty.id}
+        onChange={(e) => onSelectProperty(e.target.value)}
+        aria-label="Seleccionar base"
+      >
+        {properties.map(p => (
+          <option key={p.id} value={p.id}>
+            {p.nombre} ({p.ciudad}:{p.barrio}:{p.edificio})
+          </option>
+        ))}
+      </select>
+      {hasMultiple && (
+        <div className="flex justify-center mt-1">
+          <button
+            type="button"
+            className="nav-btn flex items-center justify-center"
+            onClick={() => cycle(1)}
+            title="Siguiente"
+            aria-label="Base siguiente"
+          >
+            <MaterialIcon name="expand_more" size={16} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -84,92 +79,47 @@ export function DashboardClientLayout({
   user: UserWithProgress | null;
   children: React.ReactNode;
 }) {
-  const router = useRouter();
   const { selectedProperty, setSelectedPropertyById } = useProperty();
-
-  const handleLogout = async () => {
-    await logout();
-    router.push("/");
-    router.refresh();
-  };
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-[100dvh] flex justify-center bg-[#080808] text-[#dfdbc9] text-[12px] antialiased">
-      {/* Side Rail Left (53px) */}
-      <aside className="hidden lg:block w-[53px] shrink-0 bg-[#000000] border-r border-[#222222] relative overflow-hidden pointer-events-none">
-        <div className="absolute inset-0 bg-black/40" />
-      </aside>
-
-      {/* Main Game Column (Max 910px) */}
-      <div className="w-full max-w-[910px] bg-[#111111] border-x border-[#333333] flex flex-col shadow-2xl min-h-[100dvh]">
-        {/* Tactical Header */}
-        <header className="w-full h-11 border-b border-[#333333] flex items-center justify-between px-3 shrink-0 relative bg-[#0d0d0d] text-white">
-          <div className="flex items-center gap-2">
-            <Link href="/overview" className="flex items-center gap-1.5">
-              <span className="font-['Space_Grotesk'] font-bold text-[16px] sm:text-[18px] tracking-wider text-[#ffdad4]">
-                VENDETTA <span className="text-[#ff3f3f]">2X</span>
-              </span>
-            </Link>
-            <span className="hidden md:inline-block px-1.5 py-0.5 text-[9px] font-['Space_Mono'] bg-black/70 text-[#fabd00] border border-[#ffc107]/40 uppercase tracking-widest">
-              SYNDICATE WARS
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2 sm:gap-4 text-[10px] sm:text-[11px] font-['Space_Mono']">
-            <div className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-[#00ff00] animate-pulse" />
-              <span className="text-[#00ff00] font-bold">x2 TICK</span>
-            </div>
-            <div className="hidden sm:flex items-center gap-1">
-              <span className="text-[#a0a0a0]">RELOJ:</span>
-              <LiveClock />
-            </div>
-            <div className="flex items-center gap-1 bg-black/60 px-2 py-0.5 border border-[#333333]">
-              <span className="text-[#a0a0a0] hidden sm:inline">CAPO:</span>
-              <span className="text-[#dfdbc9] font-bold truncate max-w-[80px] sm:max-w-none">
-                {user?.name || "Bomberox"}
-              </span>
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="ml-1 text-[#ff3f3f] hover:text-white"
-                title="Cerrar Sesión"
-              >
-                <MaterialIcon name="logout" size={14} />
-              </button>
-            </div>
-          </div>
-        </header>
-
-        {/* Game Body Frame */}
-        <div className="flex flex-1 flex-col sm:flex-row relative min-h-0">
-          {/* Command Left Nav (165px) */}
-          <aside className="w-full sm:w-[165px] shrink-0 bg-[#0d0d0d] border-r border-[#333333] p-1.5 flex flex-col gap-1.5">
-            <PropertySelectorHeader
-              properties={user?.propiedades || []}
-              selectedProperty={selectedProperty}
-              onSelectProperty={setSelectedPropertyById}
-            />
-            <SidebarNav user={user} />
-          </aside>
-
-          {/* Main View Area */}
-          <main className="flex-1 bg-[#111111] p-1.5 sm:p-2 flex flex-col gap-2 overflow-x-hidden min-w-0">
-            {children}
-          </main>
-        </div>
-
-        {/* Footer */}
-        <footer className="w-full border-t border-[#333333] bg-[#0a0a0a] px-3 py-1.5 text-[10px] font-['Space_Mono'] text-[#777777] flex items-center justify-between">
-          <span className="text-[#dfdbc9]">Vendetta2X Engine © 2004-2026 Syndicate Network</span>
-          <span className="text-[#00ff00]">Servidor Activo • Ping: 18ms</span>
-        </footer>
+    <div className="min-h-[100dvh] flex flex-col bg-[#080808] text-[#dfdbc9] text-[12px] antialiased lg:h-[100dvh] lg:overflow-hidden">
+      {/* Barra de Recursos Desktop (docked, estática) */}
+      <div className="hidden md:block shrink-0">
+        <ResourceBar user={user} variant="desktop" />
       </div>
 
-      {/* Side Rail Right (53px) */}
-      <aside className="hidden lg:block w-[53px] shrink-0 bg-[#000000] border-l border-[#222222] relative overflow-hidden pointer-events-none">
-        <div className="absolute inset-0 bg-black/40" />
-      </aside>
+      {/* Cabecera Recursos Móvil (sticky) */}
+      <div className="md:hidden">
+        <ResourceBar user={user} variant="mobile" onOpenMenu={() => setMenuOpen(true)} />
+      </div>
+
+      {/* Viewport: sidebar docked + lienzo central scrollable */}
+      <div className="flex flex-1 min-h-0">
+        {/* Menú de Navegación docked a la izquierda */}
+        <aside className="hidden lg:flex w-[215px] shrink-0 flex-col bg-[#050505] border-r-2 border-[#332d20] overflow-y-auto p-2 shadow-[2px_0_10px_rgba(0,0,0,0.8)]">
+          <PropertySelectorHeader
+            properties={user?.propiedades || []}
+            selectedProperty={selectedProperty}
+            onSelectProperty={setSelectedPropertyById}
+          />
+          <SidebarNav user={user} />
+          <div className="mt-auto pt-3 border-t border-[#332d20] flex flex-col items-center text-center">
+            <span className="text-[9px] text-[#786c52] font-semibold tracking-widest uppercase">Vendetta 2006</span>
+            <span className="text-[8px] text-[#554d3a] mt-0.5">Servidor Latino v1.4</span>
+          </div>
+        </aside>
+
+        {/* Área central de juego */}
+        <main className="flex-1 min-w-0 bg-[radial-gradient(circle_at_50%_10%,#161410_0%,#080808_80%)] lg:overflow-y-auto">
+          <div className="w-full max-w-[440px] md:max-w-[900px] mx-auto px-2 md:px-6 py-3 md:py-4 space-y-2.5">
+            {children}
+          </div>
+        </main>
+      </div>
+
+      {/* Drawer de navegación móvil */}
+      <MobileNavDrawer user={user} open={menuOpen} onClose={() => setMenuOpen(false)} />
     </div>
   );
 }

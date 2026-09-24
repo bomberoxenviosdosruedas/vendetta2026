@@ -32,7 +32,7 @@ function getBenefitText(roomId: string, level: number): string {
 
 function CostList({ costos }: { costos: { armas: number, municion: number, dolares: number } }) {
   return (
-    <div className="flex flex-wrap gap-2 text-xs font-['Space_Mono'] tabular-nums">
+    <div className="flex flex-wrap gap-2 text-xs font-['JetBrains_Mono'] tabular-nums">
       {costos.armas > 0 && <span className="text-[#ee7000]">ARMAS: {formatNumber(costos.armas)}</span>}
       {costos.municion > 0 && <span className="text-[#fabd00]">MUN: {formatNumber(costos.municion)}</span>}
       {costos.dolares > 0 && <span className="text-[#00ff00]">$ {formatNumber(costos.dolares)}</span>}
@@ -51,8 +51,8 @@ export function RoomDetailsModal({ room }: RoomDetailsModalProps) {
             <Image src={room.urlImagen} alt={room.nombre} fill className="w-full h-auto object-cover" />
           </div>
           <div>
-            <DialogTitle className="text-base font-['Space_Grotesk'] text-white uppercase">{room.nombre}</DialogTitle>
-            <DialogDescription className="text-xs text-[#ffdad4] font-['Space_Mono']">
+            <DialogTitle className="text-base font-['Chivo'] text-white uppercase">{room.nombre}</DialogTitle>
+            <DialogDescription className="text-xs text-[#ffdad4] font-['JetBrains_Mono']">
               Nivel actual: <span className="font-bold text-[#fff400]">{room.nivel}</span>
             </DialogDescription>
           </div>
@@ -63,7 +63,7 @@ export function RoomDetailsModal({ room }: RoomDetailsModalProps) {
         <div className="space-y-2">
           <p className="text-xs text-[#a0a0a0]">{room.descripcion}</p>
 
-          <div className="crimson-th px-2 py-0.5 text-[10px] font-['Space_Grotesk'] font-bold uppercase text-white">
+          <div className="crimson-th px-2 py-0.5 text-[10px] font-['Chivo'] font-bold uppercase text-white">
             PROYECCIÓN DE MEJORAS
           </div>
 
@@ -77,12 +77,12 @@ export function RoomDetailsModal({ room }: RoomDetailsModalProps) {
               return (
                 <div key={level} className="p-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="font-['Space_Mono'] font-bold text-[#00ff00] text-xs">
+                    <span className="font-['JetBrains_Mono'] font-bold text-[#00ff00] text-xs">
                       NVL {level}
                     </span>
                     <CostList costos={costos} />
                   </div>
-                  <span className="text-xs font-['Space_Mono'] text-[#fff400] font-bold">
+                  <span className="text-xs font-['JetBrains_Mono'] text-[#fff400] font-bold">
                     {produccion > 0
                       ? `+${formatNumber(produccion)}/h`
                       : getBenefitText(room.id, level)
@@ -97,7 +97,7 @@ export function RoomDetailsModal({ room }: RoomDetailsModalProps) {
 
       <div className="p-2 border-t border-[#333333] bg-[#0a0a0a] shrink-0">
         <DialogClose asChild>
-          <Button type="button" className="btn-tactical w-full text-xs font-['Space_Grotesk'] font-bold h-11 min-h-[44px]">
+          <Button type="button" className="btn-tactical w-full text-xs font-['Chivo'] font-bold h-11 min-h-[44px]">
             CERRAR DETALLES
           </Button>
         </DialogClose>

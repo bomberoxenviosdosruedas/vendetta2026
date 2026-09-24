@@ -65,12 +65,12 @@ export function CityNewsCard() {
 
   return (
     <section className="cell-darker p-2 border border-[#333333] space-y-2 text-[#dfdbc9]">
-      <div className="crimson-th px-2 py-1 flex items-center justify-between font-['Space_Grotesk'] font-bold text-[11px] uppercase tracking-wider">
+      <div className="crimson-th px-2 py-1 flex items-center justify-between font-['Chivo'] font-bold text-[11px] uppercase tracking-wider">
         <div className="flex items-center gap-1.5">
           <MaterialIcon name="newspaper" size={15} className="text-[#fff400]" />
           <span>TELETIPO DE LA CIUDAD // GAZZETTA DI VENDETTA</span>
         </div>
-        <span className="text-[#00ff00] font-['Space_Mono'] font-normal">EN VIVO</span>
+        <span className="text-[#00ff00] font-['JetBrains_Mono'] font-normal">EN VIVO</span>
       </div>
 
       <div className="divide-y divide-[#222222] cell-dark border border-[#333333]">
@@ -78,7 +78,7 @@ export function CityNewsCard() {
           <div
             key={item.id}
             onClick={() => setSelectedNewsDetail(item)}
-            className="p-2.5 flex items-center justify-between gap-2 hover:bg-[#1a1a1a] cursor-pointer transition-colors text-xs font-['Space_Mono'] min-h-[44px]"
+            className="p-2.5 flex items-center justify-between gap-2 hover:bg-[#1a1a1a] cursor-pointer transition-colors text-xs font-['JetBrains_Mono'] min-h-[44px]"
           >
             <div className="flex items-center gap-2 truncate">
               <MaterialIcon name="campaign" size={15} className="text-[#ff3f3f] shrink-0" />
@@ -96,15 +96,15 @@ export function CityNewsCard() {
         {selectedNewsDetail && (
           <DialogContent className="bg-[#0d0d0d] border-[#333333] text-[#dfdbc9] max-w-md">
             <DialogHeader>
-              <DialogTitle className="crimson-th text-white p-2 font-['Space_Grotesk'] uppercase text-sm">
+              <DialogTitle className="crimson-th text-white p-2 font-['Chivo'] uppercase text-sm">
                 {selectedNewsDetail.headline}
               </DialogTitle>
-              <DialogDescription className="text-[#a0a0a0] text-xs font-['Space_Mono'] pt-2">
+              <DialogDescription className="text-[#a0a0a0] text-xs font-['JetBrains_Mono'] pt-2">
                 {selectedNewsDetail.source} • {selectedNewsDetail.district}
               </DialogDescription>
             </DialogHeader>
 
-            <div className="space-y-2 py-2 text-xs font-['Space_Mono']">
+            <div className="space-y-2 py-2 text-xs font-['JetBrains_Mono']">
               <div className="cell-dark p-2 text-white">
                 {selectedNewsDetail.summary}
               </div>

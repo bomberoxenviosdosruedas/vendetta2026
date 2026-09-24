@@ -28,9 +28,9 @@ const config: Config = {
         '17': 'repeat(17, minmax(0, 1fr))',
       },
       fontFamily: {
-        sans: ['var(--font-work-sans)', 'Work Sans', 'Tahoma', 'Arial', 'Helvetica', 'sans-serif'],
-        heading: ['var(--font-space-grotesk)', 'Space Grotesk', 'Tahoma', 'sans-serif'],
-        mono: ['var(--font-space-mono)', 'Space Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+        sans: ['var(--font-work-sans)', 'Arimo', 'Tahoma', 'Arial', 'Helvetica', 'sans-serif'],
+        heading: ['var(--font-space-grotesk)', 'Chivo', 'Tahoma', 'sans-serif'],
+        mono: ['var(--font-space-mono)', 'JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
         tahoma: ['Tahoma', 'Arial', 'Helvetica', 'sans-serif'],
       },
       boxShadow: {

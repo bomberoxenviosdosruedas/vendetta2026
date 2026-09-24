@@ -1,53 +1,11 @@
 import { getSessionUser } from "@/lib/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import MaterialIcon from "@/components/ui/material-icon";
 import { QueueStatusCard } from "./queue-status-card";
-import { ActivityHistoryCard } from "./activity-history";
-import { CityNewsCard } from "./city-news-ticker";
-import { ResourceBar } from "./resource-bar";
-import { getRoomConfigurations, getUserActivityHistory } from "@/lib/data";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
-import Link from "next/link";
+import { BaseTroopsSection } from "./base-troops-section";
+import { getRoomConfigurations } from "@/lib/data";
 import { ErrorBoundary, DashboardSectionErrorFallback } from "./error-boundary";
-
-function ActionIcons({ unreadMessages }: { unreadMessages: number }) {
-  const actions = [
-    { href: "/messages?categoria=SISTEMA", iconName: "notifications", notification: 0, label: "Notificaciones" },
-    { href: "/messages", iconName: "mail", notification: unreadMessages, label: "Mensajes" },
-    { href: "/settings", iconName: "settings", notification: 0, label: "Opciones" },
-  ];
-
-  return (
-    <div className="flex items-center gap-1.5">
-      {actions.map((action, index) => (
-        <TooltipProvider key={index} delayDuration={100}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                asChild
-                className="btn-tactical h-11 w-11 min-h-[44px] min-w-[44px] p-0 relative"
-              >
-                <Link href={action.href} className="flex items-center justify-center">
-                  <MaterialIcon name={action.iconName} size={18} />
-                  <span className="sr-only">{action.label}</span>
-                  {action.notification > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-[#ff0000] text-white text-[9px] font-bold px-1 rounded-sm font-['Space_Mono'] animate-pulse">
-                      {action.notification}
-                    </span>
-                  )}
-                </Link>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom" className="bg-[#0d0d0d] border-[#333333] text-[#dfdbc9] text-xs">
-              <p>{action.label}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      ))}
-    </div>
-  );
-}
+import Link from "next/link";
 
 function formatPoints(points: number | null | undefined): string {
   if (points === null || points === undefined) return "0";
@@ -66,193 +24,259 @@ export async function OverviewView() {
   }
 
   const { puntuacion, familyMember } = user;
-  const [allRoomConfigs, activities] = await Promise.all([
-    getRoomConfigurations(),
-    getUserActivityHistory(user.id)
-  ]);
+  const allRoomConfigs = await getRoomConfigurations();
   const simpleRoomConfigs = allRoomConfigs.map(r => ({ id: r.id, nombre: r.nombre }));
   const unreadMessages = user._count?.receivedMessages || 0;
 
-  const puntosTotales = (puntuacion?.puntosHabitaciones || 0) +
-                        (puntuacion?.puntosTropas || 0) +
-                        (puntuacion?.puntosEntrenamientos || 0);
+  const puntosTotales =
+    (puntuacion?.puntosHabitaciones || 0) +
+    (puntuacion?.puntosTropas || 0) +
+    (puntuacion?.puntosEntrenamientos || 0);
 
   const mainProperty = user.propiedades[0];
+  const roomsBuilt = user.propiedades.reduce((sum, p) => sum + p.habitaciones.length, 0);
+  const roomsTotal = user.propiedades.length * 5;
+  const mainCoords = mainProperty
+    ? `${mainProperty.ciudad}:${mainProperty.barrio}:${mainProperty.edificio}`
+    : "-:-:-";
+
+  const familyName = familyMember ? familyMember.family.name : "SIN FAMILIA";
+  const familySub = familyMember
+    ? `[${familyMember.family.tag}] · ${familyMember.role}`
+    : "ÚNETE A UNA FAMILIA";
 
   return (
-    <div className="flex-grow space-y-2 w-full">
-      {/* Sticky Resource Bar */}
-      <ResourceBar user={user} />
-
-      {/* 1. CUARTEL GENERAL / COMMAND CABIN */}
-      <section className="cell-darker p-2 border border-[#333333]">
-        <div className="crimson-th text-white px-2 py-1 flex items-center justify-between font-['Space_Grotesk'] font-bold text-[11px] uppercase tracking-wider mb-2">
-          <div className="flex items-center gap-1.5">
-            <MaterialIcon name="military_tech" size={15} className="text-[#fff400]" />
-            <span>CUARTEL GENERAL // VISIÓN DE OPERACIONES</span>
-          </div>
-          <Button asChild className="btn-tactical text-[#fff400] hover:text-white text-[10px] sm:text-xs px-2 py-1 uppercase tracking-wider min-h-[44px] h-auto">
-            <Link href="/map" className="flex items-center gap-1">
-              <MaterialIcon name="public" size={12} />
-              <span className="hidden sm:inline">VISIÓN GLOBAL DEL IMPERIO</span>
-            </Link>
-          </Button>
+    <div className="w-full space-y-2.5">
+      {/* 1. VISIÓN GENERAL DEL IMPERIO */}
+      <section className="v-outer-frame">
+        <div className="v-header-c flex items-center justify-between px-2.5 py-2">
+          <span className="font-bold text-[11px] tracking-wide">VISIÓN GENERAL DEL IMPERIO</span>
+          <Link href="/map" className="text-[#ffe569] text-[10px] underline hover:text-white flex items-center gap-1">
+            <MaterialIcon name="visibility" size={12} />
+            [Todo el Imperio]
+          </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-          {/* Jugador & Rango */}
-          <div className="cell-dark p-2 flex items-center gap-2.5">
-            <div className="relative w-12 h-12 shrink-0 border border-[#444444] bg-black overflow-hidden shadow-inner">
-              <Avatar className="w-full h-full rounded-none">
+        {/* Desktop: avatar-box + columna de accesos */}
+        <div className="hidden md:grid md:grid-cols-[1fr_1fr_1fr_86px] divide-x divide-[#c4bdab] border-b border-[#a89e87] bg-[#f1ebda]">
+          {/* Jugador */}
+          <div className="p-2">
+            <div className="text-[9px] text-[#695d48] font-bold uppercase text-center mb-1">Jugador</div>
+            <div className="avatar-box">
+              <Avatar className="w-10 h-10 rounded-sm border border-[#5e5138] bg-[#181410] mb-1">
                 <AvatarImage src={user.avatarUrl || ''} alt={user.name} className="object-cover" />
-                <AvatarFallback className="bg-black text-[#fff400] font-['Space_Grotesk'] text-lg font-bold rounded-none">
+                <AvatarFallback className="bg-[#181410] text-[#ffe569] font-['Chivo'] font-bold rounded-sm">
                   {user.name?.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#00ff00] border border-black" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="text-[9px] text-[#888888] font-['Space_Mono'] uppercase">
-                {user.title || "SIN RANGO"}
-              </div>
-              <div className="text-[14px] font-bold text-[#fff400] truncate font-['Space_Grotesk']">
-                {user.name}
-              </div>
-              <div className="text-[10px] text-[#00ff00] font-['Space_Mono'] truncate">
-                ID: #{user.id.slice(0, 6)} • ACTIVO
-              </div>
+              <strong className="text-xs text-[#ece6d5] truncate w-full px-1">{user.name}</strong>
+              <span className="text-[9px] text-[#a49a83] mt-0.5 truncate w-full px-1">
+                {user.title || "Capo"}
+              </span>
             </div>
           </div>
 
-          {/* Base Matriz */}
-          <div className="cell-dark p-2 flex items-center gap-2.5">
-            <div className="relative w-12 h-12 shrink-0 border border-[#444444] bg-black overflow-hidden shadow-inner">
-              <img
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3NA-NDL9KcSmY0sNt8GJ_SpKcPFCC2ARvkyhs0dCEn8wzdqP2Koba6gTHFnxsdXg-6Jp3m8C7szE6-5A45UXMcmqIZv9sgBOMXg1uxPN4KMkkRIcDu450di2uIt4umbq41RTokQgT53G07BYn3XzfG2aCnlgHg0zjrCaR_u4vLOnypYs0XaYNfkqatwjrrmazJG3B6Y4hldnYltODccQO6GkivB1mZ5GZJCSIdYEhN2-Jv5O0F9rGmyKSGPmcYgtR2zw"
-                alt="Base Matriz"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="text-[9px] text-[#888888] font-['Space_Mono'] uppercase">
-                BASE MATRIZ
-              </div>
-              <div className="text-[14px] font-bold text-white truncate font-['Space_Grotesk']">
+          {/* Base */}
+          <div className="p-2">
+            <div className="text-[9px] text-[#695d48] font-bold uppercase text-center mb-1">Base Actual</div>
+            <div className="avatar-box">
+              <MaterialIcon name="home" size={26} className="text-[#e2cca2] mb-1" />
+              <strong className="text-xs text-[#ece6d5] truncate w-full px-1">
                 {mainProperty?.nombre || "SIN PROPIEDAD"}
-              </div>
-              <div className="text-[10px] text-[#fabd00] font-['Space_Mono']">
-                COORD: {mainProperty ? `${mainProperty.ciudad}:${mainProperty.barrio}:${mainProperty.edificio}` : "-:-:-"}
-              </div>
+              </strong>
+              <span className="text-[9px] text-[#a49a83] mt-0.5 font-['JetBrains_Mono']">{mainCoords}</span>
             </div>
           </div>
 
-          {/* Familia Sindicato */}
-          <div className="cell-dark p-2 flex items-center justify-between gap-2.5 sm:col-span-2 lg:col-span-1">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-12 h-12 shrink-0 border border-[#444444] bg-[#0c1424] flex items-center justify-center text-[#fabd00]">
-                <MaterialIcon name="shield" size={26} />
-              </div>
-              <div className="min-w-0">
-                <div className="text-[9px] text-[#888888] font-['Space_Mono'] uppercase">
-                  FAMILIA SINDICATO
-                </div>
-                <div className="text-[14px] font-bold text-white truncate font-['Space_Grotesk']">
-                  {familyMember ? familyMember.family.name : "SIN FAMILIA"}
-                </div>
-                <div className="text-[10px] text-[#ff3f3f] font-['Space_Mono'] font-bold">
-                  {familyMember ? `[${familyMember.family.tag}] • ${familyMember.role}` : "ÚNETE A UNA FAMILIA"}
-                </div>
-              </div>
+          {/* Familia */}
+          <div className="p-2">
+            <div className="text-[9px] text-[#695d48] font-bold uppercase text-center mb-1">Familia</div>
+            <div className="avatar-box">
+              <MaterialIcon name="shield" size={26} className="text-[#e2cca2] mb-1" />
+              <strong className="text-xs text-[#ece6d5] truncate w-full px-1">{familyName}</strong>
+              <span className="text-[9px] text-[#a49a83] mt-0.5 truncate w-full px-1">{familySub}</span>
             </div>
-            <ActionIcons unreadMessages={unreadMessages} />
+          </div>
+
+          {/* Columna de botones de mensajes */}
+          <div className="p-1.5 bg-[#1a1712] flex flex-col justify-center gap-1">
+            <Link href="/messages" className="msg-btn" title="Mensajes sin leer">
+              <MaterialIcon name="mail" size={13} />
+              <b>{unreadMessages}</b>
+            </Link>
+            <Link href="/messages?categoria=INFORMES" className="msg-btn" title="Informes de espionaje">
+              <MaterialIcon name="description" size={13} />
+              <b>LOG</b>
+            </Link>
+            <Link href="/missions" className="msg-btn" title="Movimientos">
+              <MaterialIcon name="sync_alt" size={13} />
+              <b>{user.misiones.length}</b>
+            </Link>
+            <Link href="/simulator" className="msg-btn" title="Combates">
+              <MaterialIcon name="swords" size={13} />
+              <b>SIM</b>
+            </Link>
           </div>
         </div>
 
-        {/* Accesos rápidos tácticos */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 mt-2">
-          <Link href="/messages" className="btn-tactical p-2 flex items-center justify-between min-h-[44px]">
-            <div className="flex items-center gap-1.5">
-              <MaterialIcon name="mail" size={16} className="text-[#fabd00]" />
-              <span className="text-[11px] font-bold uppercase tracking-wider">MENSAJES</span>
+        {/* Mobile: bloque 3 columnas compacto + accesos rápidos */}
+        <div className="md:hidden">
+          <div className="grid grid-cols-3 divide-x divide-[#c4bdab] border-b border-[#a89e87] bg-[#f1ebda]">
+            <div className="p-2 text-center flex flex-col items-center justify-between">
+              <div className="text-[10px] font-bold text-[#72644e] uppercase mb-0.5">Jugador</div>
+              <div className="w-10 h-10 rounded border border-[#695d47] bg-[#ded8c4] flex items-center justify-center shadow-inner my-1 overflow-hidden">
+                <Avatar className="w-full h-full rounded-none">
+                  <AvatarImage src={user.avatarUrl || ''} alt={user.name} className="object-cover" />
+                  <AvatarFallback className="bg-[#ded8c4] text-[#801e00] font-['Chivo'] font-bold text-sm rounded-none">
+                    {user.name?.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+              <div className="text-[12px] font-bold text-[#801e00] leading-tight truncate w-full">{user.name}</div>
+              <span className="text-[9px] text-[#4b4334] font-semibold">{user.title || "Capo"}</span>
             </div>
-            {unreadMessages > 0 && (
-              <span className="bg-[#ff0000] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-sm font-['Space_Mono'] animate-pulse">
-                {unreadMessages}
+            <div className="p-2 text-center flex flex-col items-center justify-between">
+              <div className="text-[10px] font-bold text-[#72644e] uppercase mb-0.5">Base Actual</div>
+              <div className="w-10 h-10 rounded border border-[#695d47] bg-[#ded8c4] flex items-center justify-center shadow-inner my-1">
+                <MaterialIcon name="home" size={20} className="text-[#4b4334]" />
+              </div>
+              <div className="text-[12px] font-bold text-[#1e1911] leading-tight truncate w-full">
+                {mainProperty?.nombre || "SIN PROPIEDAD"}
+              </div>
+              <span className="text-[10px] text-[#912d00] font-['JetBrains_Mono'] font-bold">{mainCoords}</span>
+            </div>
+            <div className="p-2 text-center flex flex-col items-center justify-between">
+              <div className="text-[10px] font-bold text-[#72644e] uppercase mb-0.5">Familia</div>
+              <div className="w-10 h-10 rounded border border-[#695d47] bg-[#ded8c4] flex items-center justify-center shadow-inner my-1">
+                <MaterialIcon name="shield" size={20} className="text-[#4b4334]" />
+              </div>
+              <div className="text-[11px] font-bold text-[#144766] leading-tight truncate w-full">{familyName}</div>
+              <span className="text-[9px] bg-[#d5cfbe] border border-[#a29881] text-[#701e00] font-bold px-1 rounded mt-0.5">
+                {familyMember ? familyMember.family.tag : "SIN TAG"}
               </span>
-            )}
-          </Link>
-          <Link href="/messages?categoria=INFORMES" className="btn-tactical p-2 flex items-center justify-between min-h-[44px]">
-            <div className="flex items-center gap-1.5">
-              <MaterialIcon name="description" size={16} className="text-[#dfdbc9]" />
-              <span className="text-[11px] font-bold uppercase tracking-wider">INFORMES</span>
             </div>
-            <span className="bg-[#888888] text-black text-[9px] font-bold px-1.5 py-0.5 rounded-sm font-['Space_Mono']">
-              LOG
-            </span>
-          </Link>
-          <Link href="/missions" className="btn-tactical p-2 flex items-center justify-between min-h-[44px]">
-            <div className="flex items-center gap-1.5">
-              <MaterialIcon name="sync_alt" size={16} className="text-[#00ff00]" />
-              <span className="text-[11px] font-bold uppercase tracking-wider">FLOTAS</span>
-            </div>
-            {user.misiones.length > 0 && (
-              <span className="bg-[#003800] border border-[#00c000] text-[#00ff00] text-[9px] font-bold px-1.5 py-0.5 rounded-sm font-['Space_Mono']">
-                {user.misiones.length}
-              </span>
-            )}
-          </Link>
-          <Link href="/simulator" className="btn-tactical p-2 flex items-center justify-between min-h-[44px]">
-            <div className="flex items-center gap-1.5">
-              <MaterialIcon name="swords" size={16} className="text-[#ff3f3f]" />
-              <span className="text-[11px] font-bold uppercase tracking-wider">COMBATES</span>
-            </div>
-            <span className="bg-[#4d0000] border border-[#ff3f3f] text-[#ffdad4] text-[9px] font-bold px-1.5 py-0.5 rounded-sm font-['Space_Mono']">
-              SIM
-            </span>
-          </Link>
+          </div>
+          <div className="grid grid-cols-4 gap-1 p-1.5 bg-[#dfdbc9]">
+            <Link href="/messages" className="quick-action-badge py-1.5 px-1 rounded flex flex-col items-center justify-center text-center shadow-sm">
+              <MaterialIcon name="mail" size={14} className="text-[#e0d6c1]" />
+              <div className="text-[9px] text-[#e0d6c1] font-bold">Mensajes</div>
+              <span className="text-[10px] font-bold text-[#ffe569] font-mono">{unreadMessages}</span>
+            </Link>
+            <Link href="/messages?categoria=INFORMES" className="quick-action-badge py-1.5 px-1 rounded flex flex-col items-center justify-center text-center shadow-sm">
+              <MaterialIcon name="description" size={14} className="text-[#e0d6c1]" />
+              <div className="text-[9px] text-[#e0d6c1] font-bold">Informes</div>
+              <span className="text-[10px] font-bold text-[#ffb68c] font-mono">LOG</span>
+            </Link>
+            <Link href="/missions" className="quick-action-badge py-1.5 px-1 rounded flex flex-col items-center justify-center text-center shadow-sm">
+              <MaterialIcon name="sync_alt" size={14} className="text-[#e0d6c1]" />
+              <div className="text-[9px] text-[#e0d6c1] font-bold">Misiones</div>
+              <span className="text-[10px] font-bold text-[#44dd55] font-mono">{user.misiones.length}</span>
+            </Link>
+            <Link href="/simulator" className="quick-action-badge py-1.5 px-1 rounded flex flex-col items-center justify-center text-center shadow-sm">
+              <MaterialIcon name="swords" size={14} className="text-[#e0d6c1]" />
+              <div className="text-[9px] text-[#e0d6c1] font-bold">Combates</div>
+              <span className="text-[10px] font-bold text-[#ff5959] font-mono">SIM</span>
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* City News Ticker */}
-      <ErrorBoundary fallback={<DashboardSectionErrorFallback title="Teletipo de la Ciudad" />}>
-        <CityNewsCard />
-      </ErrorBoundary>
-
-      {/* Live Operational Queues */}
+      {/* 2-4. MISIONES / CONSTRUCCIÓN / RECLUTAMIENTO / ENTRENAMIENTO */}
       <ErrorBoundary fallback={<DashboardSectionErrorFallback title="Colas Operativas" />}>
         <QueueStatusCard user={user} allRooms={simpleRoomConfigs} />
       </ErrorBoundary>
 
-      {/* Recent Activity Ledger */}
-      <ErrorBoundary fallback={<DashboardSectionErrorFallback title="Historial de Actividad" />}>
-        <ActivityHistoryCard activities={activities} />
+      {/* 5. TROPAS DISPONIBLES EN LA BASE */}
+      <ErrorBoundary fallback={<DashboardSectionErrorFallback title="Tropas Disponibles" />}>
+        <BaseTroopsSection />
       </ErrorBoundary>
 
-      {/* Estadísticas de Puntuación */}
-      <section className="cell-darker p-2 border border-[#333333]">
-        <div className="crimson-th text-white px-2 py-0.5 flex justify-between items-center text-[10px] font-['Space_Grotesk'] font-bold uppercase mb-1.5">
-          <span className="flex items-center gap-1">
-            <MaterialIcon name="leaderboard" size={13} className="text-[#fff400]" />
-            ESTADÍSTICAS & LEALTAD
-          </span>
-          <span className="text-[#fabd00] font-['Space_Mono']">ACTUALIZADO</span>
+      {/* 6. PUNTOS DEL JUGADOR */}
+      <section className="v-outer-frame">
+        <div className="v-header-c flex items-center justify-between px-2.5 py-2">
+          <div className="flex items-center gap-1.5">
+            <MaterialIcon name="leaderboard" size={13} className="text-[#e2ca92]" />
+            <span className="font-bold text-[11px] tracking-wide">PUNTOS DEL JUGADOR</span>
+          </div>
+          <span className="text-[10px] text-[#e0cfab]">Clasificación Global</span>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1.5 font-['Space_Mono'] text-[10px]">
-          <div className="flex justify-between items-center cell-dark px-2 py-1.5">
-            <span className="text-[#888888]">HABITACIONES:</span>
-            <span className="text-white font-bold tabular-nums">{formatPoints(puntuacion?.puntosHabitaciones)}</span>
+
+        {/* Desktop: tabla clásica 6 columnas */}
+        <div className="hidden md:block overflow-x-auto">
+          <table className="w-full border-collapse">
+            <tbody>
+              <tr>
+                <th className="bg-[#dfdbc9] border border-black text-[#201a11] text-[10px] font-bold uppercase px-2 py-1">
+                  Puntos (Entrenamiento)
+                </th>
+                <th className="bg-[#dfdbc9] border border-black text-[#201a11] text-[10px] font-bold uppercase px-2 py-1">
+                  Puntos (Edificios)
+                </th>
+                <th className="bg-[#dfdbc9] border border-black text-[#201a11] text-[10px] font-bold uppercase px-2 py-1">
+                  Puntos (Tropas)
+                </th>
+                <th className="bg-[#dfdbc9] border border-black text-[#201a11] text-[10px] font-bold uppercase px-2 py-1">
+                  Total
+                </th>
+                <th className="bg-[#dfdbc9] border border-black text-[#201a11] text-[10px] font-bold uppercase px-2 py-1">
+                  Edificios
+                </th>
+                <th className="bg-[#dfdbc9] border border-black text-[#201a11] text-[10px] font-bold uppercase px-2 py-1">
+                  Lealtad
+                </th>
+              </tr>
+              <tr>
+                <td className="bg-[#f1ebda] border border-black font-['JetBrains_Mono'] text-[11px] text-center py-1.5">
+                  {formatPoints(puntuacion?.puntosEntrenamientos)}
+                </td>
+                <td className="bg-[#e9e3d2] border border-black font-['JetBrains_Mono'] text-[11px] text-center py-1.5">
+                  {formatPoints(puntuacion?.puntosHabitaciones)}
+                </td>
+                <td className="bg-[#f1ebda] border border-black font-['JetBrains_Mono'] text-[11px] text-center py-1.5">
+                  {formatPoints(puntuacion?.puntosTropas)}
+                </td>
+                <td className="bg-[#ffe569] border border-black font-['JetBrains_Mono'] text-[11px] text-center py-1.5 font-bold text-stone-900">
+                  {formatPoints(puntosTotales)}
+                </td>
+                <td className="bg-[#e9e3d2] border border-black font-['JetBrains_Mono'] text-[11px] text-center py-1.5">
+                  {roomsBuilt} / {roomsTotal}
+                </td>
+                <td className="bg-[#f1ebda] border border-black font-['JetBrains_Mono'] text-[11px] text-center py-1.5">
+                  [--]
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {/* Mobile: tarjetas 3 columnas + pie de familia */}
+        <div className="md:hidden">
+          <div className="grid grid-cols-3 divide-x divide-[#c4bdab] bg-[#f1ebda] text-center border-b border-[#a89e87]">
+            <div className="p-2">
+              <div className="text-[9px] text-[#695d48] font-bold uppercase mb-0.5">Total Puntos</div>
+              <div className="text-[12px] font-mono font-bold text-[#14120f] bg-[#ffe569] border border-[#d2bc4a] py-0.5 px-1 rounded shadow-sm">
+                {formatPoints(puntosTotales)}
+              </div>
+            </div>
+            <div className="p-2">
+              <div className="text-[9px] text-[#695d48] font-bold uppercase mb-0.5">Edificios</div>
+              <div className="text-[12px] font-mono font-bold text-[#231e15] py-0.5">
+                {roomsBuilt} / {roomsTotal}
+              </div>
+            </div>
+            <div className="p-2">
+              <div className="text-[9px] text-[#695d48] font-bold uppercase mb-0.5">Lealtad Base</div>
+              <div className="text-[12px] font-mono font-bold text-[#0c7017] py-0.5">[--]</div>
+            </div>
           </div>
-          <div className="flex justify-between items-center cell-dark px-2 py-1.5">
-            <span className="text-[#888888]">TROPAS:</span>
-            <span className="text-[#ff3f3f] font-bold tabular-nums">{formatPoints(puntuacion?.puntosTropas)}</span>
-          </div>
-          <div className="flex justify-between items-center cell-dark px-2 py-1.5">
-            <span className="text-[#888888]">ENTRENAMIENTO:</span>
-            <span className="text-white font-bold tabular-nums">{formatPoints(puntuacion?.puntosEntrenamientos)}</span>
-          </div>
-          <div className="flex justify-between items-center bg-[#1f1616] border border-[#6C0000] px-2 py-1.5">
-            <span className="text-[#fabd00] font-bold font-['Space_Grotesk'] uppercase">TOTAL:</span>
-            <span className="text-[#fff400] font-bold text-[12px] tabular-nums">{formatPoints(puntosTotales)} pts</span>
+          <div className="p-2 bg-[#e5dfcc] flex items-center justify-between text-[11px]">
+            <div>
+              <span className="text-[#554a37]">Familia Aliada: </span>
+              <span className="font-bold text-[#7d2000]">{familyName}</span>
+            </div>
+            <span className="bg-[#1f4363] text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
+              {familyMember ? `[${familyMember.family.tag}]` : "SIN TAG"}
+            </span>
           </div>
         </div>
       </section>

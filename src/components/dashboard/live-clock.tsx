@@ -23,11 +23,11 @@ export function LiveClock() {
   }, []);
 
   if (!currentTime) {
-    return <span className="text-[#fff400] font-bold font-['Space_Mono']">--:--:--</span>;
+    return <span className="text-[#fff400] font-bold font-['JetBrains_Mono']">--:--:--</span>;
   }
 
   return (
-    <span className="text-[#fff400] font-bold font-['Space_Mono'] tabular-nums">
+    <span className="text-[#fff400] font-bold font-['JetBrains_Mono'] tabular-nums">
       {currentTime}
     </span>
   );

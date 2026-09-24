@@ -93,7 +93,7 @@ export default function RootLayout({
         />
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700;900&family=Arimo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
         />
       </head>
       <body className="font-sans antialiased bg-background">

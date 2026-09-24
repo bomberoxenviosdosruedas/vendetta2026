@@ -61,7 +61,7 @@ function TrainingQueueAlert({ user }: { user: UserWithProgress }) {
   if (!selectedProperty || !colaEntrenamiento) return null;
 
   return (
-    <div className="cell-dark border-[#00ff00] p-2 flex items-center justify-between text-xs font-['Space_Mono']">
+    <div className="cell-dark border-[#00ff00] p-2 flex items-center justify-between text-xs font-['JetBrains_Mono']">
       <div className="flex items-center gap-1.5 text-white">
         <MaterialIcon name="psychology" size={16} className="text-[#00ff00]" />
         <span>
@@ -108,7 +108,7 @@ function TrainingForm({
     <Button
       type="submit"
       disabled={isDisabled}
-      className="btn-crimson h-11 px-3 text-xs font-['Space_Grotesk'] font-bold min-h-[44px] min-w-[44px]"
+      className="btn-crimson h-11 px-3 text-xs font-['Chivo'] font-bold min-h-[44px] min-w-[44px]"
     >
       {isPending ? 'ENVIANDO...' : isTrainingInQueue ? 'EN COLA' : isPropertyBusy ? 'OCUPADO' : 'ENTRENAR'}
     </Button>
@@ -165,7 +165,7 @@ export function TrainingView({ user, trainingsData }: TrainingViewProps) {
 
   return (
     <div className="space-y-2 w-full text-[#dfdbc9]">
-      <div className="crimson-th p-2 text-white font-['Space_Grotesk'] font-bold text-sm uppercase flex items-center justify-between">
+      <div className="crimson-th p-2 text-white font-['Chivo'] font-bold text-sm uppercase flex items-center justify-between">
         <span>CENTRO DE ENTRENAMIENTO // {selectedProperty.nombre}</span>
       </div>
 
@@ -186,14 +186,14 @@ export function TrainingView({ user, trainingsData }: TrainingViewProps) {
                   />
                 </div>
                 <div className="min-w-0">
-                  <div className="font-bold font-['Space_Grotesk'] text-white text-sm uppercase truncate">
+                  <div className="font-bold font-['Chivo'] text-white text-sm uppercase truncate">
                     {training.nombre}
                   </div>
-                  <div className="text-xs font-['Space_Mono'] text-[#00ff00]">
+                  <div className="text-xs font-['JetBrains_Mono'] text-[#00ff00]">
                     NIVEL {training.nivel}
                   </div>
                   {isTrainingInQueue && (
-                    <div className="text-[10px] text-[#fabd00] font-['Space_Mono'] flex items-center gap-1">
+                    <div className="text-[10px] text-[#fabd00] font-['JetBrains_Mono'] flex items-center gap-1">
                       <MaterialIcon name="hourglass_top" size={12} /> EN COLA
                     </div>
                   )}
@@ -207,16 +207,16 @@ export function TrainingView({ user, trainingsData }: TrainingViewProps) {
               </div>
 
               <div className="xl:col-span-4 flex flex-col gap-1 sm:items-end">
-                <div className="text-xs font-['Space_Grotesk'] text-[#ffdad4] uppercase font-bold">
+                <div className="text-xs font-['Chivo'] text-[#ffdad4] uppercase font-bold">
                   SIGUIENTE: NIVEL {training.nivel + 1}
                 </div>
-                <div className="flex flex-wrap gap-2 text-xs font-['Space_Mono'] tabular-nums text-white">
+                <div className="flex flex-wrap gap-2 text-xs font-['JetBrains_Mono'] tabular-nums text-white">
                   {training.costos.armas > 0 && <span className="text-[#ee7000]">ARMAS: {formatNumber(training.costos.armas)}</span>}
                   {training.costos.municion > 0 && <span className="text-[#fabd00]">MUN: {formatNumber(training.costos.municion)}</span>}
                   {training.costos.dolares > 0 && <span className="text-[#00ff00]">$ {formatNumber(training.costos.dolares)}</span>}
                 </div>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="text-[11px] font-['Space_Mono'] text-[#888888]">
+                  <span className="text-[11px] font-['JetBrains_Mono'] text-[#888888]">
                     {formatDuration(training.tiempo)}
                   </span>
                   <TrainingForm

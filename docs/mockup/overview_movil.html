@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <title>Vendetta 2006 - Mobile Mafia MMORPG</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- BEGIN: Custom Retro Styles -->
+    <style data-purpose="retro-theme">
+        body {
+            font-family: Tahoma, Verdana, Arial, sans-serif;
+            font-size: 11px;
+            background-color: #12100d;
+            color: #2b251a;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Tablas con estética Vendetta 2006 (paleta Pergamino / Clásica) */
+        .v-outer-frame {
+            background-color: #dfdbc9;
+            border: 1px solid #5a4f3d;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Cabecera clásica metálica/bronce estilo navigation_bg.gif */
+        .v-header-c {
+            background: linear-gradient(180deg, #534533 0%, #3a2e20 48%, #271e13 52%, #423524 100%);
+            color: #f7e6c4;
+            font-size: 11px;
+            font-weight: bold;
+            text-shadow: 1px 1px 0px #000;
+            padding: 5px 8px;
+            border-bottom: 1px solid #231b11;
+            border-top: 1px solid #74634c;
+        }
+
+        .v-sub-header {
+            background: linear-gradient(180deg, #c9c3ad 0%, #b2ab95 100%);
+            color: #201a11;
+            font-weight: bold;
+            font-size: 10px;
+            border-bottom: 1px solid #8e8671;
+            border-top: 1px solid #dfdbc9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Celdas estilo pergamino / table row */
+        .v-cell-parchment {
+            background-color: #f1ebda;
+            border: 1px solid #cbc4b0;
+            color: #221c13;
+        }
+
+        .v-cell-parchment-alt {
+            background-color: #e5dfcb;
+            border: 1px solid #c4bdab;
+            color: #221c13;
+        }
+
+        .retro-btn {
+            background: linear-gradient(180deg, #ece6d2 0%, #cfc8b0 50%, #aba187 100%);
+            border: 1px solid #635742;
+            box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #8b7d65;
+            color: #1a160f;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .retro-btn:active {
+            background: linear-gradient(180deg, #aba187 0%, #cfc8b0 100%);
+            box-shadow: inset 1px 1px 2px #443a29;
+        }
+
+        .retro-btn-dark {
+            background: linear-gradient(180deg, #4d3f2e 0%, #2f2518 50%, #1f180f 100%);
+            border: 1px solid #6b5a43;
+            box-shadow: inset 1px 1px 0 #6e5e48, inset -1px -1px 0 #110d08;
+            color: #e2cca2;
+            text-shadow: 1px 1px 0 #000;
+            cursor: pointer;
+        }
+
+        .retro-btn-dark:active {
+            background: #19130c;
+        }
+
+        .timer-active {
+            color: #00aa22;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            text-shadow: 0 0 1px rgba(0, 180, 0, 0.4);
+        }
+
+        .timer-pill {
+            background: #1a1711;
+            color: #44dd55;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            border: 1px solid #4a3e2b;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.8);
+        }
+
+        .quick-action-badge {
+            background: linear-gradient(180deg, #382c1b 0%, #20170c 100%);
+            border: 1px solid #57462c;
+            color: #dfcaa2;
+            transition: filter 0.15s;
+        }
+
+        .quick-action-badge:hover {
+            filter: brightness(1.15);
+        }
+
+        /* Scrollbar clásica */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1b1610;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #5e4c34;
+            border-radius: 2px;
+        }
+    </style>
+    <!-- END: Custom Retro Styles -->
+</head>
+
+<body class="bg-[#0e0c09] text-[#2c261c] pb-8 select-none">
+    <!-- BEGIN: Mobile Drawer Menu (Sidebar) -->
+    <aside
+        class="fixed inset-y-0 left-0 w-[275px] bg-[#dfdbc9] border-r-2 border-[#54432a] z-50 transform -translate-x-full transition-transform duration-300 ease-in-out shadow-2xl overflow-y-auto flex flex-col justify-between"
+        data-purpose="mobile-nav-drawer" id="retroSidebar">
+        <div>
+            <!-- Cabecera del Drawer -->
+            <div class="v-header-c flex items-center justify-between !py-2 !px-2.5">
+                <div class="flex items-center gap-2">
+                    <span class="text-sm">⚔️</span>
+                    <span class="text-[#e2ca92] font-bold text-xs tracking-wider">MENÚ PRINCIPAL</span>
+                </div>
+                <button class="retro-btn px-2 py-0.5 text-xs text-black font-bold" id="closeMenuBtn">✕</button>
+            </div>
+            <!-- Selector de Base Móvil -->
+            <div class="p-2 bg-[#d2cca] border-b border-[#a89f88]">
+                <div class="text-[10px] text-[#5c523f] uppercase font-bold text-center mb-1">Base Actual Seleccionada:
+                </div>
+                <div
+                    class="flex items-center justify-between bg-[#f1ebda] border border-[#7d725b] px-2 py-1 shadow-inner">
+                    <button class="retro-btn px-2 py-0.5 text-[10px]">▲</button>
+                    <span class="text-[#872000] font-bold text-[12px] font-mono">09 (40:23:220)</span>
+                    <button class="retro-btn px-2 py-0.5 text-[10px]">▼</button>
+                </div>
+            </div>
+            <!-- Enlaces del Menú Clásico -->
+            <nav class="p-2 space-y-[3px]">
+                <div class="text-[9px] uppercase tracking-wider font-bold text-[#6d6148] px-1 pt-1 pb-0.5">Operaciones
+                </div>
+                <a class="block py-1.5 px-2.5 retro-btn text-[11px] flex justify-between items-center" href="#overview">
+                    <span>Visión General</span>
+                    <span class="text-[10px] text-[#70644e]">►</span>
+                </a>
+                <a class="block py-1.5 px-2.5 retro-btn text-[11px] flex justify-between items-center" href="#rooms">
+                    <span>Habitaciones</span>
+                    <span class="text-[9px] bg-[#615135] text-[#ffe6a3] px-1 rounded font-mono">74/76</span>
+                </a>
+                <a class="block py-1.5 px-2.5 retro-btn text-[11px] flex justify-between items-center"
+                    href="#recruitment">
+                    <span>Reclutamiento</span>
+                    <span class="text-[9px] bg-[#615135] text-[#ffe6a3] px-1 rounded font-mono">31/76</span>
+                </a>
+                <a class="block py-1.5 px-2.5 retro-btn text-[11px] flex justify-between items-center" href="#security">
+                    <span>Seguridad</span>
+                </a>
+                <a class="block py-1.5 px-2.5 retro-btn text-[11px] flex justify-between items-center" href="#training">
+                    <span>Entrenamiento</span>
+                </a>
+                <a class="block py-1.5 px-2.5 retro-btn text-[11px] flex justify-between items-center"
+                    href="#buildings">
+                    <span>Edificios</span>
+                </a>
+                <a class="block py-1.5 px-2.5 retro-btn text-[11px] flex justify-between items-center" href="#search">
+                    <span>Buscar Coordenadas</span>
+                </a>
+                <div class="text-[9px] uppercase tracking-wider font-bold text-[#6d6148] px-1 pt-2 pb-0.5">Imperio &amp;
+                    Alianzas</div>
+                <a class="block py-1.5 px-2.5 retro-btn text-[11px]" href="#tech">Tecnologías</a>
+                <a class="block py-1.5 px-2.5 retro-btn text-[11px]" href="#family">Familia [ArGt]</a>
+                <a class="block py-1.5 px-2.5 retro-btn text-[11px]" href="#resources">Recursos &amp; Finanzas</a>
+                <a class="block py-1.5 px-2.5 retro-btn text-[11px]" href="#map">Mapa del Distrito</a>
+                <a class="block py-1.5 px-2.5 retro-btn text-[11px] flex justify-between items-center" href="#missions">
+                    <span>Misiones Activas</span>
+                    <span class="text-[9px] bg-[#1a7e28] text-white px-1.5 rounded-full font-bold">12</span>
+                </a>
+                <a class="block py-1.5 px-2.5 retro-btn text-[11px]" href="#simulator">Simulador de Combate</a>
+                <a class="block py-1.5 px-2.5 retro-btn text-[11px]" href="#farmlist">Lista de Granjas</a>
+                <div class="text-[9px] uppercase tracking-wider font-bold text-[#6d6148] px-1 pt-2 pb-0.5">
+                    Comunicaciones &amp; Ajustes</div>
+                <a class="block py-1.5 px-2.5 retro-btn text-[11px] flex justify-between items-center" href="#messages">
+                    <span>Mensajes</span>
+                    <span class="text-[9px] bg-[#b32400] text-white px-1.5 rounded-full font-bold">4</span>
+                </a>
+                <a class="block py-1.5 px-2.5 retro-btn text-[11px]" href="#stats">Estadísticas &amp; Ranking</a>
+                <a class="block py-1.5 px-2.5 retro-btn text-[11px]" href="#chat">Chat de Sindicato</a>
+                <a class="block py-1.5 px-2.5 retro-btn text-[11px]" href="#rules">Reglas &amp; Foro</a>
+                <a class="block py-1.5 px-2.5 retro-btn text-[11px]" href="#options">Opciones</a>
+                <a class="block py-1.5 px-2.5 text-center font-bold text-[11px] text-white bg-[#8b1a10] border border-[#4d0c07] shadow-sm rounded-sm mt-2"
+                    href="#logout">Cerrar Sesión (Logout)</a>
+            </nav>
+        </div>
+        <div class="p-2.5 text-center border-t border-[#9c927c] bg-[#cec7b2]">
+            <div class="text-[10px] font-bold text-[#443725]">VENDETTA 2006 RETRO MOBILE</div>
+            <div class="text-[9px] text-[#635742]">Servidor Latino v1.4 • En línea: 542 capos</div>
+        </div>
+    </aside>
+    <!-- Overlay para cerrar menú -->
+    <div class="fixed inset-0 bg-black/75 z-40 hidden backdrop-blur-[1px]" data-purpose="backdrop-modal" id="overlay">
+    </div>
+    <!-- END: Mobile Drawer Menu -->
+    <!-- BEGIN: Mobile Fixed Header & Retro Navigation -->
+    <header class="sticky top-0 z-30 shadow-md">
+        <!-- Topmost Compact Identity Bar -->
+        <div class="bg-[#1b150d] border-b border-[#4d3c26] px-2.5 py-1.5 flex items-center justify-between">
+            <button class="retro-btn px-2.5 py-1 text-[11px] flex items-center gap-1 active:scale-95 shadow font-bold"
+                id="openMenuBtn">
+                <span class="text-xs">☰</span> Menú
+            </button>
+            <div class="flex items-center justify-center flex-1 px-2">
+                <img alt="Vendetta Latino" class="h-6 max-w-[175px] object-contain drop-shadow"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2E8I74D7mSq9aWaS2enARHCd-nZ4ENohiKUpPsAbKo8od02-47Ug_z8fKm7D2bcdjG0QeN2bj5gRVheX5QyN-Zz-N1kqZ2yQhpXwA0KIJI4dCCTK3xjQYdFBle63JFRNYgmce-JNmOtjxYeK1tWSlhLhP18oZ87PnJxq_zs1WsUNN662WiHKILOyBfZvQcaZF4848IMPsid-yz-LAOWmLD_Sp68q-I3v7s-RiPs1c43w24En9O5PQt6g1m6onby0sc8k" />
+            </div>
+            <div class="flex items-center gap-1 px-2 py-0.5 bg-[#2a2215] border border-[#524128] rounded text-[10px]">
+                <span class="inline-block w-2 h-2 rounded-full bg-[#00ff00] animate-pulse"></span>
+                <span class="text-[#e8dec8] font-bold font-mono">542</span>
+            </div>
+        </div>
+        <!-- Realtime Server Status Strip -->
+        <div
+            class="flex items-center justify-between bg-[#2d2417] text-[#c9bea5] px-2.5 py-0.5 text-[9px] border-b border-[#4a3a22]">
+            <div class="flex items-center gap-1">
+                <span class="text-[#96866b]">🕒 Servidor:</span>
+                <span class="font-mono text-white font-bold" id="serverClock">31-08-2024 04:51:38</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-[#dfcca0] font-bold">Base: 40:23:220</span>
+                <a class="text-[#ffd777] underline hover:text-white" href="#prod-view">Producción</a>
+            </div>
+        </div>
+        <!-- Adaptación Móvil de Recursos: Cuadrícula Limpia 2x2 en Auténtico Pergamino -->
+        <div class="bg-[#dfdbc9] border-b border-[#63553f] px-2 py-1.5 shadow-sm">
+            <div class="grid grid-cols-2 gap-1.5">
+                <!-- Armas -->
+                <div class="bg-[#f1ebda] border border-[#a89e87] rounded-sm p-1 shadow-inner">
+                    <div class="flex items-center justify-between text-[10px] font-bold text-[#443825] mb-0.5">
+                        <span class="flex items-center gap-1"><span>🔫</span> Armas</span>
+                        <span class="text-[9px] text-[#695d48] font-mono">93.7%</span>
+                    </div>
+                    <div class="w-full h-1.5 bg-[#231e16] rounded-sm overflow-hidden mb-1 border border-[#645945]">
+                        <div class="h-full bg-[#ee7000]" style="width: 93.7%;"></div>
+                    </div>
+                    <div class="text-right text-[11px] font-bold text-[#1f1a12] font-mono leading-none">
+                        7.462.002
+                    </div>
+                </div>
+                <!-- Munición -->
+                <div class="bg-[#f1ebda] border border-[#a89e87] rounded-sm p-1 shadow-inner">
+                    <div class="flex items-center justify-between text-[10px] font-bold text-[#443825] mb-0.5">
+                        <span class="flex items-center gap-1"><span>💣</span> Munición</span>
+                        <span class="text-[9px] text-[#695d48] font-mono">82.9%</span>
+                    </div>
+                    <div class="w-full h-1.5 bg-[#231e16] rounded-sm overflow-hidden mb-1 border border-[#645945]">
+                        <div class="h-full bg-[#ee7000]" style="width: 82.9%;"></div>
+                    </div>
+                    <div class="text-right text-[11px] font-bold text-[#1f1a12] font-mono leading-none">
+                        15.429.615
+                    </div>
+                </div>
+                <!-- Alcohol (Lleno / Alerta Roja #FF0000) -->
+                <div class="bg-[#f1ebda] border border-[#a89e87] rounded-sm p-1 shadow-inner">
+                    <div class="flex items-center justify-between text-[10px] font-bold text-[#8f1900] mb-0.5">
+                        <span class="flex items-center gap-1"><span>🍾</span> Alcohol</span>
+                        <span class="text-[9px] text-[#ff0000] font-mono font-bold animate-pulse">100% MAX</span>
+                    </div>
+                    <div class="w-full h-1.5 bg-[#231e16] rounded-sm overflow-hidden mb-1 border border-[#645945]">
+                        <div class="h-full bg-[#ff0000]" style="width: 100%;"></div>
+                    </div>
+                    <div class="text-right text-[11px] font-bold text-[#ff0000] font-mono leading-none">
+                        3.010.000
+                    </div>
+                </div>
+                <!-- Dólares (Verde #00FF00 / Seguro) -->
+                <div class="bg-[#f1ebda] border border-[#a89e87] rounded-sm p-1 shadow-inner">
+                    <div class="flex items-center justify-between text-[10px] font-bold text-[#0c6b16] mb-0.5">
+                        <span class="flex items-center gap-1"><span>💵</span> Dólares</span>
+                        <span class="text-[9px] text-[#1b7e28] font-mono">65.2%</span>
+                    </div>
+                    <div class="w-full h-1.5 bg-[#231e16] rounded-sm overflow-hidden mb-1 border border-[#645945]">
+                        <div class="h-full bg-[#00bb22]" style="width: 65.2%;"></div>
+                    </div>
+                    <div class="text-right text-[11px] font-bold text-[#0a6614] font-mono leading-none">
+                        2.356.277
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- END: Mobile Fixed Header & Retro Navigation -->
+    <!-- BEGIN: Main View Content -->
+    <main class="max-w-[440px] mx-auto px-2 pt-2 space-y-2.5">
+        <!-- 1. Perfil de Jugador / Edificio / Familia reformulado ergonómicamente con botones de acceso rápido -->
+        <section class="v-outer-frame" data-purpose="overview-summary">
+            <div class="v-header-c flex items-center justify-between">
+                <span class="tracking-wide">VISIÓN GENERAL DEL IMPERIO</span>
+                <a class="text-[#ffe569] text-xs hover:text-white flex items-center gap-1 font-normal"
+                    href="#empire-view">
+                    <span>[👁 Todo el Imperio]</span>
+                </a>
+            </div>
+            <!-- Bloque 3 Columnas Compacto con Avatares e Info Clásica -->
+            <div class="grid grid-cols-3 divide-x divide-[#c4bdab] border-b border-[#a89e87] bg-[#f1ebda]">
+                <!-- Jugador -->
+                <div class="p-2 text-center flex flex-col items-center justify-between">
+                    <div class="text-[10px] font-bold text-[#72644e] uppercase mb-0.5">Jugador</div>
+                    <div
+                        class="w-10 h-10 rounded border border-[#695d47] bg-[#ded8c4] flex items-center justify-center text-xl shadow-inner my-1">
+                        👤
+                    </div>
+                    <div class="text-[12px] font-bold text-[#801e00] leading-tight truncate w-full">Bomberox</div>
+                    <span class="text-[9px] text-[#4b4334] font-semibold">Caporegime</span>
+                </div>
+                <!-- Edificio / Coordenadas -->
+                <div class="p-2 text-center flex flex-col items-center justify-between">
+                    <div class="text-[10px] font-bold text-[#72644e] uppercase mb-0.5">Base Actual</div>
+                    <div
+                        class="w-10 h-10 rounded border border-[#695d47] bg-[#ded8c4] flex items-center justify-center text-xl shadow-inner my-1">
+                        🏢
+                    </div>
+                    <div class="text-[12px] font-bold text-[#1e1911] leading-tight truncate w-full">Mansión 09</div>
+                    <span class="text-[10px] text-[#912d00] font-mono font-bold">40:23:220</span>
+                </div>
+                <!-- Familia -->
+                <div class="p-2 text-center flex flex-col items-center justify-between">
+                    <div class="text-[10px] font-bold text-[#72644e] uppercase mb-0.5">Familia</div>
+                    <div
+                        class="w-10 h-10 rounded border border-[#695d47] bg-[#ded8c4] flex items-center justify-center text-xl shadow-inner my-1">
+                        🛡️
+                    </div>
+                    <div class="text-[11px] font-bold text-[#144766] leading-tight truncate w-full">ArGenTeaM</div>
+                    <span
+                        class="text-[9px] bg-[#d5cfbe] border border-[#a29881] text-[#701e00] font-bold px-1 rounded">Rango
+                        #1</span>
+                </div>
+            </div>
+            <!-- Botones Táctiles de Acceso Rápido (Mensajes, Informes, Movimientos, Combates) -->
+            <div class="grid grid-cols-4 gap-1 p-1.5 bg-[#dfdbc9]">
+                <a class="quick-action-badge py-1.5 px-1 rounded flex flex-col items-center justify-center text-center shadow-sm"
+                    href="#messages">
+                    <div class="text-xs">✉</div>
+                    <div class="text-[9px] text-[#e0d6c1] font-bold">Mensajes</div>
+                    <span class="text-[10px] font-bold text-[#ffe569] font-mono">4</span>
+                </a>
+                <a class="quick-action-badge py-1.5 px-1 rounded flex flex-col items-center justify-center text-center shadow-sm"
+                    href="#reports">
+                    <div class="text-xs">🗎</div>
+                    <div class="text-[9px] text-[#e0d6c1] font-bold">Informes</div>
+                    <span class="text-[10px] font-bold text-[#ffb68c] font-mono">99+</span>
+                </a>
+                <a class="quick-action-badge py-1.5 px-1 rounded flex flex-col items-center justify-center text-center shadow-sm"
+                    href="#missions">
+                    <div class="text-xs">⇄</div>
+                    <div class="text-[9px] text-[#e0d6c1] font-bold">Misiones</div>
+                    <span class="text-[10px] font-bold text-[#44dd55] font-mono">12</span>
+                </a>
+                <a class="quick-action-badge py-1.5 px-1 rounded flex flex-col items-center justify-center text-center shadow-sm"
+                    href="#combats">
+                    <div class="text-xs">⚔</div>
+                    <div class="text-[9px] text-[#e0d6c1] font-bold">Combates</div>
+                    <span class="text-[10px] font-bold text-[#ff5959] font-mono">99+</span>
+                </a>
+            </div>
+        </section>
+        <!-- 2. Misiones Activas (12): Formato tarjeta/lista limpia móvil sin solapamientos -->
+        <section class="v-outer-frame" data-purpose="missions-active">
+            <div class="v-header-c flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                    <span>⇄</span>
+                    <span>MISIONES ACTIVAS (12 EN RUTA)</span>
+                </div>
+                <a class="text-[#ffe569] text-[10px] font-normal underline hover:text-white" href="#all-missions">Ver
+                    todas</a>
+            </div>
+            <div class="v-sub-header px-2 py-0.5 flex justify-between items-center">
+                <span>Tiempo / Tipo</span>
+                <span>Ruta de Tropas</span>
+            </div>
+            <!-- Lista adaptada para móvil: nunca se cortan coordenadas ni números -->
+            <div class="divide-y divide-[#cfc9b5]">
+                <!-- Item 1 -->
+                <div class="p-2 bg-[#f1ebda] flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                        <span
+                            class="timer-pill text-[11px] px-1.5 py-0.5 rounded text-center min-w-[62px]">00:00:00</span>
+                        <div>
+                            <div class="text-[11px] font-bold text-[#0c7017] leading-tight">Retorno <span
+                                    class="text-[#201a11] font-mono text-[10px]">(13.000)</span></div>
+                            <div class="text-[9px] text-[#695d48]">Tropas regresando a la base</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[10px] font-mono font-bold text-[#7d2000]">40:23:220</div>
+                        <div class="text-[9px] text-[#42392b] font-mono flex items-center justify-end gap-0.5">
+                            <span>&gt;&gt;</span> <a class="underline text-[#174872]" href="#c1">40:22:169</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Item 2 -->
+                <div class="p-2 bg-[#e9e3d2] flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                        <span
+                            class="timer-pill text-[11px] px-1.5 py-0.5 rounded text-center min-w-[62px]">00:00:00</span>
+                        <div>
+                            <div class="text-[11px] font-bold text-[#0c7017] leading-tight">Retorno <span
+                                    class="text-[#201a11] font-mono text-[10px]">(13.000)</span></div>
+                            <div class="text-[9px] text-[#695d48]">Tropas regresando a la base</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[10px] font-mono font-bold text-[#7d2000]">40:23:220</div>
+                        <div class="text-[9px] text-[#42392b] font-mono flex items-center justify-end gap-0.5">
+                            <span>&gt;&gt;</span> <a class="underline text-[#174872]" href="#c2">40:22:135</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Item 3 -->
+                <div class="p-2 bg-[#f1ebda] flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                        <span
+                            class="timer-pill text-[11px] px-1.5 py-0.5 rounded text-center min-w-[62px]">00:00:07</span>
+                        <div>
+                            <div class="text-[11px] font-bold text-[#0c7017] leading-tight">Retorno <span
+                                    class="text-[#201a11] font-mono text-[10px]">(13.000)</span></div>
+                            <div class="text-[9px] text-[#695d48]">Llegada inminente</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[10px] font-mono font-bold text-[#7d2000]">40:23:220</div>
+                        <div class="text-[9px] text-[#42392b] font-mono flex items-center justify-end gap-0.5">
+                            <span>&gt;&gt;</span> <a class="underline text-[#174872]" href="#c3">40:22:84</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Item 4 -->
+                <div class="p-2 bg-[#e9e3d2] flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                        <span
+                            class="timer-pill text-[11px] px-1.5 py-0.5 rounded text-center min-w-[62px]">00:00:31</span>
+                        <div>
+                            <div class="text-[11px] font-bold text-[#0c7017] leading-tight">Retorno <span
+                                    class="text-[#201a11] font-mono text-[10px]">(3)</span></div>
+                            <div class="text-[9px] text-[#695d48]">Espionaje completado</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[10px] font-mono font-bold text-[#7d2000]">27:27:111</div>
+                        <div class="text-[9px] text-[#42392b] font-mono flex items-center justify-end gap-0.5">
+                            <span>&gt;&gt;</span> <a class="underline text-[#174872]" href="#c4">40:23:168</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Item 5 -->
+                <div class="p-2 bg-[#f1ebda] flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                        <span
+                            class="timer-pill text-[11px] px-1.5 py-0.5 rounded text-center min-w-[62px]">00:00:40</span>
+                        <div>
+                            <div class="text-[11px] font-bold text-[#0c7017] leading-tight">Retorno <span
+                                    class="text-[#201a11] font-mono text-[10px]">(13.000)</span></div>
+                            <div class="text-[9px] text-[#695d48]">Tropas regresando a la base</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[10px] font-mono font-bold text-[#7d2000]">40:23:220</div>
+                        <div class="text-[9px] text-[#42392b] font-mono flex items-center justify-end gap-0.5">
+                            <span>&gt;&gt;</span> <a class="underline text-[#174872]" href="#c5">40:22:33</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- 3. Habitaciones en Construcción (74/76) adaptado a móvil -->
+        <section class="v-outer-frame" data-purpose="rooms-construction">
+            <div class="v-header-c flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                    <span>🏗️</span>
+                    <a class="text-white hover:underline" href="#building">HABITACIONES EN CONSTRUCCIÓN (74/76)</a>
+                </div>
+                <span class="text-[9px] bg-[#231b11] border border-[#5d4d33] text-[#ffe569] px-1.5 py-0.5 rounded">Cola
+                    Activa</span>
+            </div>
+            <div class="divide-y divide-[#cec8b5]">
+                <!-- Obra 1 -->
+                <div class="p-2 bg-[#f1ebda] flex items-center justify-between gap-1">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-bold text-[#1f190e] text-[11px]">Contrabando</span>
+                            <span
+                                class="bg-[#d7d0bc] border border-[#9b9077] text-[#632000] text-[9px] font-bold px-1 rounded">Nivel
+                                52</span>
+                        </div>
+                        <div class="text-[9px] text-[#665b46] flex items-center gap-1">
+                            <span>Base:</span> <a class="font-mono text-[#1f486b] underline" href="#b1">40:23:162</a>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="timer-pill text-[10px] px-1.5 py-0.5 rounded">00:02:46</span>
+                    </div>
+                </div>
+                <!-- Obra 2 -->
+                <div class="p-2 bg-[#e8e2d1] flex items-center justify-between gap-1">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-bold text-[#1f190e] text-[11px]">Contrabando</span>
+                            <span
+                                class="bg-[#d7d0bc] border border-[#9b9077] text-[#632000] text-[9px] font-bold px-1 rounded">Nivel
+                                52</span>
+                        </div>
+                        <div class="text-[9px] text-[#665b46] flex items-center gap-1">
+                            <span>Base:</span> <a class="font-mono text-[#1f486b] underline" href="#b2">40:23:63</a>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="timer-pill text-[10px] px-1.5 py-0.5 rounded">00:06:21</span>
+                    </div>
+                </div>
+                <!-- Obra 3 -->
+                <div class="p-2 bg-[#f1ebda] flex items-center justify-between gap-1">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-bold text-[#1f190e] text-[11px]">Contrabando</span>
+                            <span
+                                class="bg-[#d7d0bc] border border-[#9b9077] text-[#632000] text-[9px] font-bold px-1 rounded">Nivel
+                                51</span>
+                        </div>
+                        <div class="text-[9px] text-[#665b46] flex items-center gap-1">
+                            <span>Base:</span> <a class="font-mono text-[#1f486b] underline" href="#b3">40:23:86</a>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="timer-pill text-[10px] px-1.5 py-0.5 rounded">00:07:07</span>
+                    </div>
+                </div>
+                <!-- Obra 4 -->
+                <div class="p-2 bg-[#e8e2d1] flex items-center justify-between gap-1">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-bold text-[#1f190e] text-[11px]">Campo de entrenamiento</span>
+                            <span
+                                class="bg-[#d7d0bc] border border-[#9b9077] text-[#632000] text-[9px] font-bold px-1 rounded">Nivel
+                                43</span>
+                        </div>
+                        <div class="text-[9px] text-[#665b46] flex items-center gap-1">
+                            <span>Base:</span> <a class="font-mono text-[#1f486b] underline" href="#b4">40:22:33</a>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="timer-pill text-[10px] px-1.5 py-0.5 rounded">00:12:59</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Enlace inferior estilo Vendetta -->
+            <div class="bg-[#ded7c3] border-t border-[#a89d84] p-1.5 text-center">
+                <a class="underline text-[#731f00] font-bold text-[10px] hover:text-[#a00000]" href="#all_buildings">
+                    Mostrar todo el imperio (74 obras en cola) ►
+                </a>
+            </div>
+        </section>
+        <!-- 4. Reclutamiento de Matones (31/76) adaptado a móvil -->
+        <section class="v-outer-frame" data-purpose="recruitment-production">
+            <div class="v-header-c flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                    <span>🔫</span>
+                    <a class="text-white hover:underline" href="#prod">RECLUTAMIENTO DE MATONES (31/76)</a>
+                </div>
+                <span class="text-[9px] bg-[#231b11] border border-[#5d4d33] text-[#ffe569] px-1.5 py-0.5 rounded">En
+                    Proceso</span>
+            </div>
+            <div class="divide-y divide-[#cec8b5]">
+                <!-- Recluta 1 -->
+                <div class="p-2 bg-[#f1ebda] flex items-center justify-between gap-1">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-bold text-[#1f190e] text-[11px]">19 Mercenario</span>
+                            <span class="text-[9px] text-[#78694d]">• En Cuartel</span>
+                        </div>
+                        <div class="text-[9px] text-[#665b46]">
+                            Base: <a class="font-mono text-[#1f486b] underline" href="#r1">40:23:75</a>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="timer-pill text-[10px] px-1.5 py-0.5 rounded">01:30:02</span>
+                    </div>
+                </div>
+                <!-- Recluta 2 -->
+                <div class="p-2 bg-[#e8e2d1] flex items-center justify-between gap-1">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-bold text-[#1f190e] text-[11px]">17 Mercenario</span>
+                            <span class="text-[9px] text-[#78694d]">• En Cuartel</span>
+                        </div>
+                        <div class="text-[9px] text-[#665b46]">
+                            Base: <a class="font-mono text-[#1f486b] underline" href="#r2">40:23:117</a>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="timer-pill text-[10px] px-1.5 py-0.5 rounded">01:33:46</span>
+                    </div>
+                </div>
+                <!-- Recluta 3 -->
+                <div class="p-2 bg-[#f1ebda] flex items-center justify-between gap-1">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-bold text-[#1f190e] text-[11px]">18 Mercenario</span>
+                            <span class="text-[9px] text-[#78694d]">• En Cuartel</span>
+                        </div>
+                        <div class="text-[9px] text-[#665b46]">
+                            Base: <a class="font-mono text-[#1f486b] underline" href="#r3">40:23:88</a>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="timer-pill text-[10px] px-1.5 py-0.5 rounded">01:49:04</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-[#ded7c3] border-t border-[#a89d84] p-1.5 text-center">
+                <a class="underline text-[#731f00] font-bold text-[10px] hover:text-[#a00000]" href="#all_prod">
+                    Mostrar todo el reclutamiento activo ►
+                </a>
+            </div>
+        </section>
+        <!-- 5. Tropas Disponibles en la Base: Cuadrícula Táctil Ergonómica con Avatares -->
+        <section class="v-outer-frame" data-purpose="base-units">
+            <div class="v-header-c flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                    <span>🛡️</span>
+                    <a class="text-white hover:underline" href="#fleet">TROPAS DISPONIBLES EN LA BASE</a>
+                </div>
+                <a class="text-[#ffe569] text-[10px] underline hover:text-white" href="#hangar">Cuartel</a>
+            </div>
+            <div class="p-2 bg-[#f1ebda]">
+                <div class="grid grid-cols-2 gap-2">
+                    <!-- Unidad: Matón -->
+                    <div class="bg-[#e4ddc8] border border-[#a69c84] rounded p-2 flex items-center gap-2 shadow-sm">
+                        <div
+                            class="w-9 h-9 rounded bg-[#d0c7af] border border-[#7e735d] flex items-center justify-center text-xl shrink-0">
+                            🥷
+                        </div>
+                        <div class="overflow-hidden">
+                            <div class="font-bold text-[#1b1710] text-[11px] truncate">Matón</div>
+                            <div class="text-[12px] font-mono font-bold text-[#8f2100]">1 <span
+                                    class="text-[9px] text-[#554b3c] font-normal">disp.</span></div>
+                        </div>
+                    </div>
+                    <!-- Unidad: Transportista -->
+                    <div class="bg-[#e4ddc8] border border-[#a69c84] rounded p-2 flex items-center gap-2 shadow-sm">
+                        <div
+                            class="w-9 h-9 rounded bg-[#d0c7af] border border-[#7e735d] flex items-center justify-center text-xl shrink-0">
+                            🚚
+                        </div>
+                        <div class="overflow-hidden">
+                            <div class="font-bold text-[#1b1710] text-[11px] truncate">Transportista</div>
+                            <div class="text-[12px] font-mono font-bold text-[#8f2100]">261 <span
+                                    class="text-[9px] text-[#554b3c] font-normal">disp.</span></div>
+                        </div>
+                    </div>
+                    <!-- Unidad: Mercenario -->
+                    <div class="bg-[#e4ddc8] border border-[#a69c84] rounded p-2 flex items-center gap-2 shadow-sm">
+                        <div
+                            class="w-9 h-9 rounded bg-[#d0c7af] border border-[#7e735d] flex items-center justify-center text-xl shrink-0">
+                            🔫
+                        </div>
+                        <div class="overflow-hidden">
+                            <div class="font-bold text-[#1b1710] text-[11px] truncate">Mercenario</div>
+                            <div class="text-[12px] font-mono font-bold text-[#8f2100]">422 <span
+                                    class="text-[9px] text-[#554b3c] font-normal">disp.</span></div>
+                        </div>
+                    </div>
+                    <!-- Unidad: Trabajador Ilegal -->
+                    <div class="bg-[#e4ddc8] border border-[#a69c84] rounded p-2 flex items-center gap-2 shadow-sm">
+                        <div
+                            class="w-9 h-9 rounded bg-[#d0c7af] border border-[#7e735d] flex items-center justify-center text-xl shrink-0">
+                            🛡️
+                        </div>
+                        <div class="overflow-hidden">
+                            <div class="font-bold text-[#1b1710] text-[11px] truncate">Trabajador Ilegal</div>
+                            <div class="text-[12px] font-mono font-bold text-[#8f2100]">2 <span
+                                    class="text-[9px] text-[#554b3c] font-normal">disp.</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 pt-1 border-t border-[#c5bca5] flex justify-between items-center text-[10px]">
+                    <span class="text-[#594d39]">Capacidad de Carga Base: <b>5.220.000</b></span>
+                    <a class="retro-btn px-2 py-0.5 text-[9px] rounded font-bold" href="#send-troops">Desplegar
+                        Tropas</a>
+                </div>
+            </div>
+        </section>
+        <!-- 6. Puntos y Estadísticas del Jugador -->
+        <section class="v-outer-frame" data-purpose="player-stats">
+            <div class="v-header-c flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                    <span>⭐</span>
+                    <a class="text-white hover:underline" href="#highscore">PUNTOS DEL JUGADOR</a>
+                </div>
+                <span class="text-[10px] text-[#e0cfab]">Clasificación Global</span>
+            </div>
+            <div class="grid grid-cols-3 divide-x divide-[#c4bdab] bg-[#f1ebda] text-center border-b border-[#a89e87]">
+                <div class="p-2">
+                    <div class="text-[9px] text-[#695d48] font-bold uppercase mb-0.5">Total Puntos</div>
+                    <div
+                        class="text-[12px] font-mono font-bold text-[#14120f] bg-[#ffe569] border border-[#d2bc4a] py-0.5 px-1 rounded shadow-sm">
+                        43.071.934
+                    </div>
+                </div>
+                <div class="p-2">
+                    <div class="text-[9px] text-[#695d48] font-bold uppercase mb-0.5">Edificios</div>
+                    <div class="text-[12px] font-mono font-bold text-[#231e15] py-0.5">
+                        76 / 124
+                    </div>
+                </div>
+                <div class="p-2">
+                    <div class="text-[9px] text-[#695d48] font-bold uppercase mb-0.5">Lealtad Base</div>
+                    <div class="text-[12px] font-mono font-bold text-[#0c7017] py-0.5">
+                        53%
+                    </div>
+                </div>
+            </div>
+            <div class="p-2 bg-[#e5dfcc] flex items-center justify-between text-[11px]">
+                <div>
+                    <span class="text-[#554a37]">Familia Aliada: </span>
+                    <a class="font-bold text-[#7d2000] underline hover:text-black" href="#ally">ArGenTeaM [ArGt]</a>
+                </div>
+                <span class="bg-[#1f4363] text-white text-[9px] font-bold px-1.5 py-0.5 rounded">Rango #1</span>
+            </div>
+        </section>
+        <!-- Footer Clásico Retro -->
+        <footer class="text-center py-4 text-[10px] text-[#82745a] space-y-1.5 border-t border-[#312718] mt-3"
+            data-purpose="retro-footer">
+            <div class="flex justify-center items-center gap-1.5">
+                <img alt="VL mini logo" class="w-4 h-4 object-contain opacity-80"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUnYbAmvdM4pekW3nMhoVUE7H9EA5bqy33DCaz9zdRiear88j-W62f-Xexvj1ffkT2Ty6Rc3rwLtOYtwPjKCiUaH1Mgkq2cb1er8KgYiDhNJBC9XcV22XvyaVouhMP_lolCm9LZ5ffS9nWIwR6XzIw6y_TQwSWCdTf3jc-8CVGB_Q60fzZAhAL7STTFm-n16xaDe6fbi6cGAlru9oH9ah7jdhaUp_C7YbxCJBkFUO8RCTi9RB5LL8nNyKy1T7mfPgP2FE" />
+                <span class="font-bold text-[#a69476] tracking-widest uppercase">VENDETTA 2006</span>
+            </div>
+            <p class="text-[9px] text-[#6a5e47]">© 2006-2024 Vendetta Latino • Versión Móvil Adaptada</p>
+            <div class="flex justify-center gap-3 text-[9px] text-[#918166] pt-1">
+                <a class="underline hover:text-white" href="#forum">Foro</a>
+                <span>•</span>
+                <a class="underline hover:text-white" href="#rules">Reglas</a>
+                <span>•</span>
+                <a class="underline hover:text-white" href="#support">Soporte Ticket</a>
+                <span>•</span>
+                <a class="underline hover:text-white" href="#irc">Chat IRC</a>
+            </div>
+        </footer>
+    </main>
+    <!-- END: Main View Content -->
+    <!-- BEGIN: Interactivity Script -->
+    <script data-purpose="drawer-interactivity">
+        const openMenuBtn = document.getElementById('openMenuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const sidebar = document.getElementById('retroSidebar');
+        const overlay = document.getElementById('overlay');
+        const serverClockEl = document.getElementById('serverClock');
+
+        function openMenu() {
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeMenu() {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        openMenuBtn.addEventListener('click', openMenu);
+        closeMenuBtn.addEventListener('click', closeMenu);
+        overlay.addEventListener('click', closeMenu);
+
+        // Reloj de servidor simulado en tiempo real (mantiene fidelidad 2006)
+        let currentTime = new Date('2024-08-31T04:51:38');
+        setInterval(() => {
+            currentTime.setSeconds(currentTime.getSeconds() + 1);
+            const day = String(currentTime.getDate()).padStart(2, '0');
+            const month = String(currentTime.getMonth() + 1).padStart(2, '0');
+            const year = currentTime.getFullYear();
+            const hours = String(currentTime.getHours()).padStart(2, '0');
+            const minutes = String(currentTime.getMinutes()).padStart(2, '0');
+            const seconds = String(currentTime.getSeconds()).padStart(2, '0');
+            if (serverClockEl) {
+                serverClockEl.textContent = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+            }
+        }, 1000);
+    </script>
+    <!-- END: Interactivity Script -->
+</body>
+
+</html>

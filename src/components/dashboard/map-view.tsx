@@ -183,14 +183,14 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
       ctx.textBaseline = 'middle';
 
       if (isMine) {
-        ctx.font = 'bold 12px "Space Mono", monospace';
+        ctx.font = 'bold 12px "JetBrains Mono", monospace';
         ctx.fillStyle = '#fff400';
         ctx.fillText(`${edificio}`, x + CELL_WIDTH / 2, y + 16);
-        ctx.font = 'bold 8px "Space Grotesk", sans-serif';
+        ctx.font = 'bold 8px "Chivo", sans-serif';
         ctx.fillStyle = '#ffffff';
         ctx.fillText('MÍA', x + CELL_WIDTH / 2, y + 36);
       } else if (hasOwner) {
-        ctx.font = 'bold 11px "Space Mono", monospace';
+        ctx.font = 'bold 11px "JetBrains Mono", monospace';
         ctx.fillStyle = '#ffdad4';
         ctx.fillText(`${edificio}`, x + CELL_WIDTH / 2, y + 15);
         const tag = prop.user?.familyMember?.family.tag;
@@ -198,7 +198,7 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
         ctx.fillStyle = '#fabd00';
         ctx.fillText(tag ? `[${tag}]` : 'Rival', x + CELL_WIDTH / 2, y + 35);
       } else {
-        ctx.font = '10px "Space Mono", monospace';
+        ctx.font = '10px "JetBrains Mono", monospace';
         ctx.fillStyle = isHovered ? '#fff400' : '#888888';
         ctx.fillText(`${edificio}`, x + CELL_WIDTH / 2, y + CELL_HEIGHT / 2);
       }
@@ -247,24 +247,24 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
     <div className="space-y-2 w-full text-[#dfdbc9]">
       <div className="cell-darker p-2 border border-[#333333] flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-1">
-          <span className="text-[10px] font-['Space_Mono'] text-[#888888]">COORDENADAS:</span>
+          <span className="text-[10px] font-['JetBrains_Mono'] text-[#888888]">COORDENADAS:</span>
           <Input
             type="number"
             value={ciudad}
             onChange={(e) => setCiudad(parseInt(e.target.value, 10) || 1)}
-            className="w-14 h-8 bg-black border-[#333333] text-center font-['Space_Mono'] text-xs font-bold text-[#fff400]"
+            className="w-14 h-8 bg-black border-[#333333] text-center font-['JetBrains_Mono'] text-xs font-bold text-[#fff400]"
           />
           <span className="text-xs font-mono">:</span>
           <Input
             type="number"
             value={barrio}
             onChange={(e) => setBarrio(parseInt(e.target.value, 10) || 1)}
-            className="w-14 h-8 bg-black border-[#333333] text-center font-['Space_Mono'] text-xs font-bold text-[#fff400]"
+            className="w-14 h-8 bg-black border-[#333333] text-center font-['JetBrains_Mono'] text-xs font-bold text-[#fff400]"
           />
           <Button
             onClick={() => navigateLocation(ciudad, barrio)}
             disabled={isLoading}
-            className="btn-tactical h-8 px-3 text-xs font-['Space_Grotesk'] font-bold min-h-[44px]"
+            className="btn-tactical h-8 px-3 text-xs font-['Chivo'] font-bold min-h-[44px]"
           >
             {isLoading ? "Cargando..." : "Explorar"}
           </Button>
@@ -273,7 +273,7 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
         <div className="flex items-center gap-2">
           <Button
             onClick={() => setOnlyOccupied(!onlyOccupied)}
-            className="btn-tactical h-8 px-2 text-[11px] font-['Space_Mono'] min-h-[44px]"
+            className="btn-tactical h-8 px-2 text-[11px] font-['JetBrains_Mono'] min-h-[44px]"
           >
             {onlyOccupied ? "Ver Libres" : "Solo Ocupadas"}
           </Button>
@@ -282,7 +282,7 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
 
       {/* Mobile view (<640px): Grid of solar buttons */}
       <div className="block sm:hidden cell-darker p-2 border border-[#333333]">
-        <div className="crimson-th text-white px-2 py-1 text-[10px] font-['Space_Grotesk'] font-bold uppercase mb-2">
+        <div className="crimson-th text-white px-2 py-1 text-[10px] font-['Chivo'] font-bold uppercase mb-2">
           SOLARES CERCANOS [{ciudad}:{barrio}:1..255]
         </div>
         <div className="grid grid-cols-5 gap-1.5 max-h-[350px] overflow-y-auto p-1">
@@ -298,7 +298,7 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
                 key={edificioNum}
                 type="button"
                 onClick={() => setSelectedEdificio(edificioNum)}
-                className={`h-11 min-h-[44px] min-w-[44px] flex flex-col items-center justify-center border font-['Space_Mono'] text-[11px] ${
+                className={`h-11 min-h-[44px] min-w-[44px] flex flex-col items-center justify-center border font-['JetBrains_Mono'] text-[11px] ${
                   isMine
                     ? 'bg-[#6C0000] border-[#fff400] text-[#fff400] font-bold'
                     : hasOwner
@@ -329,10 +329,10 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
         {selectedEdificio && (
           <DialogContent className="bg-[#0d0d0d] border-[#333333] text-[#dfdbc9] max-w-md">
             <DialogHeader>
-              <DialogTitle className="crimson-th text-white p-2 font-['Space_Grotesk'] uppercase text-sm">
+              <DialogTitle className="crimson-th text-white p-2 font-['Chivo'] uppercase text-sm">
                 SOLAR [{ciudad}:{barrio}:{selectedEdificio}]
               </DialogTitle>
-              <DialogDescription className="text-[#a0a0a0] text-xs font-['Space_Mono'] pt-2">
+              <DialogDescription className="text-[#a0a0a0] text-xs font-['JetBrains_Mono'] pt-2">
                 {selectedProperty ? (
                   isSelectedMine
                     ? `Esta base te pertenece ("${selectedProperty.nombre}").`
@@ -343,7 +343,7 @@ export function MapView({ initialCiudad, initialBarrio, initialProperties, curre
               </DialogDescription>
             </DialogHeader>
 
-            <div className="flex flex-col gap-2 py-2 text-xs font-['Space_Mono']">
+            <div className="flex flex-col gap-2 py-2 text-xs font-['JetBrains_Mono']">
               <div className="cell-dark p-2 flex justify-between">
                 <span className="text-[#888888]">PROPIETARIO:</span>
                 <span className="text-white font-bold">{selectedProperty?.user?.name || 'Desocupado'}</span>

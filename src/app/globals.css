@@ -58,9 +58,9 @@
   --color-vendetta-dark: #111111;
   --color-vendetta-black: #080808;
 
-  --font-sans: var(--font-work-sans), 'Work Sans', Tahoma, Arial, Helvetica, sans-serif;
-  --font-heading: var(--font-space-grotesk), 'Space Grotesk', Tahoma, sans-serif;
-  --font-mono: var(--font-space-mono), 'Space Mono', ui-monospace, monospace;
+  --font-sans: var(--font-work-sans), 'Arimo', Tahoma, Arial, Helvetica, sans-serif;
+  --font-heading: var(--font-space-grotesk), 'Chivo', Tahoma, sans-serif;
+  --font-mono: var(--font-space-mono), 'JetBrains Mono', ui-monospace, monospace;
 
   /* Standardized radius scale: base=8px (0.5rem) */
   --radius-base: 0.5rem;       /* 8px - cards, main containers */
@@ -127,9 +127,9 @@
     --chart-5: 0 100% 62%;
 
     /* Font variables - loaded via Google Fonts link tags */
-    --font-work-sans: 'Work Sans';
-    --font-space-grotesk: 'Space Grotesk';
-    --font-space-mono: 'Space Mono';
+    --font-work-sans: 'Arimo';
+    --font-space-grotesk: 'Chivo';
+    --font-space-mono: 'JetBrains Mono';
   }
 
   .dark {
@@ -162,9 +162,9 @@
     --sidebar-ring: 0 100% 21%;
 
     /* Font variables - loaded via Google Fonts link tags */
-    --font-work-sans: 'Work Sans';
-    --font-space-grotesk: 'Space Grotesk';
-    --font-space-mono: 'Space Mono';
+    --font-work-sans: 'Arimo';
+    --font-space-grotesk: 'Chivo';
+    --font-space-mono: 'JetBrains Mono';
   }
 }
 
@@ -174,7 +174,7 @@
   }
 
   html {
-    font-family: var(--font-work-sans), 'Work Sans', Tahoma, Arial, Helvetica, sans-serif;
+    font-family: var(--font-work-sans), 'Arimo', Tahoma, Arial, Helvetica, sans-serif;
     font-size: 14px;
     color-scheme: dark;
   }
@@ -184,26 +184,31 @@
     padding: 0;
     background-color: #080808;
     color: #dfdbc9;
-    font-family: var(--font-work-sans), 'Work Sans', Tahoma, Arial, Helvetica, sans-serif;
+    font-family: var(--font-work-sans), 'Arimo', Tahoma, Arial, Helvetica, sans-serif;
     font-size: 14px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Custom Retro & Tactical Scrollbar */
+  /* Custom Retro & Tactical Scrollbar (Vendetta 2006 bronze) */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
   }
   ::-webkit-scrollbar-track {
-    background: #0d0d0d;
+    background: #1b1610;
   }
   ::-webkit-scrollbar-thumb {
-    background: #333333;
-    border-radius: 4px;
+    background: #5e4c34;
+    border: 1px solid #5a4b33;
+    border-radius: 2px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #555555;
+    background: #504532;
+  }
+  * {
+    scrollbar-color: #5e4c34 #1b1610;
+    scrollbar-width: thin;
   }
 
   .scrollbar-hide {
@@ -215,7 +220,7 @@
   }
 
   h1, h2, h3, h4 {
-    font-family: var(--font-space-grotesk), 'Space Grotesk', Tahoma, sans-serif;
+    font-family: var(--font-space-grotesk), 'Chivo', Tahoma, sans-serif;
     letter-spacing: 0.05em;
     text-transform: uppercase;
   }
@@ -224,7 +229,7 @@
   [class*="CardTitle"],
   [class*="DialogTitle"],
   [class*="SidebarMenuButton"] {
-    font-family: var(--font-space-grotesk), 'Space Grotesk', Tahoma, sans-serif !important;
+    font-family: var(--font-space-grotesk), 'Chivo', Tahoma, sans-serif !important;
     letter-spacing: 0.05em;
   }
 

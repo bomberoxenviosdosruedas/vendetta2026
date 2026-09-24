@@ -4,25 +4,22 @@ import { Suspense } from "react";
 
 function OverviewLoading() {
     return (
-        <div className="flex-grow space-y-4">
-            {/* Top 3 Balanced Dossier Cards Skeleton */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Skeleton className="h-[250px] w-full rounded-lg border border-border/40" />
-                <Skeleton className="h-[250px] w-full rounded-lg border border-border/40" />
-                <Skeleton className="h-[250px] w-full rounded-lg border border-border/40" />
+        <div className="space-y-3">
+            {/* Visión General del Imperio Skeleton */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <Skeleton className="h-[140px] w-full rounded-none border border-[#332d20] bg-[#16130e]" />
+                <Skeleton className="h-[140px] w-full rounded-none border border-[#332d20] bg-[#16130e]" />
+                <Skeleton className="h-[140px] w-full rounded-none border border-[#332d20] bg-[#16130e]" />
             </div>
 
-            {/* City News Card Skeleton */}
-            <Skeleton className="h-[180px] w-full rounded-lg border border-border/40" />
+            {/* Colas Operativas Skeleton */}
+            <Skeleton className="h-[180px] w-full rounded-none border border-[#332d20] bg-[#16130e]" />
 
-            {/* Live Queues Skeleton */}
-            <Skeleton className="h-[160px] w-full rounded-lg border border-border/40" />
+            {/* Base de Tropas Skeleton */}
+            <Skeleton className="h-[240px] w-full rounded-none border border-[#332d20] bg-[#16130e]" />
 
-            {/* Activity History Skeleton */}
-            <Skeleton className="h-[220px] w-full rounded-lg border border-border/40" />
-
-            {/* Bottom Stats Bar Skeleton */}
-            <Skeleton className="h-[68px] w-full rounded-lg border border-border/40" />
+            {/* Puntos del Jugador Skeleton */}
+            <Skeleton className="h-[120px] w-full rounded-none border border-[#332d20] bg-[#16130e]" />
         </div>
     );
 }

@@ -208,11 +208,11 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 w-full text-[#dfdbc9]">
       <div className="cell-darker p-2 border border-[#333333] space-y-2">
-        <div className="crimson-th p-2 text-white font-['Space_Grotesk'] font-bold text-xs uppercase">
+        <div className="crimson-th p-2 text-white font-['Chivo'] font-bold text-xs uppercase">
           CONFIGURACIÓN DE LA MISIÓN
         </div>
 
-        <div className="grid grid-cols-3 gap-1.5 font-['Space_Mono'] text-xs">
+        <div className="grid grid-cols-3 gap-1.5 font-['JetBrains_Mono'] text-xs">
           <div>
             <label className="text-[10px] text-[#888888] uppercase block">CIUDAD</label>
             <Input name="ciudad" value={coordinates.ciudad} onChange={handleCoordinateChange} className="bg-black border-[#333333] text-white font-bold" />
@@ -227,7 +227,7 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
           </div>
         </div>
 
-        <div className="cell-dark p-2 flex items-center justify-between text-xs font-['Space_Mono']">
+        <div className="cell-dark p-2 flex items-center justify-between text-xs font-['JetBrains_Mono']">
           <span className="text-[#888888]">OBJETIVO:</span>
           <span className="text-[#fff400] font-bold">
             {isLoadingTarget ? 'Buscando...' : targetOwner?.name || 'Nadie / Desocupado'}
@@ -235,9 +235,9 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
         </div>
 
         <div className="space-y-1">
-          <label className="text-[10px] font-['Space_Mono'] text-[#888888] uppercase block">TIPO DE MISIÓN</label>
+          <label className="text-[10px] font-['JetBrains_Mono'] text-[#888888] uppercase block">TIPO DE MISIÓN</label>
           <Select onValueChange={setMissionType} defaultValue={missionType}>
-            <SelectTrigger className="bg-black border-[#333333] text-[#dfdbc9] font-['Space_Grotesk'] text-xs">
+            <SelectTrigger className="bg-black border-[#333333] text-[#dfdbc9] font-['Chivo'] text-xs">
               <SelectValue placeholder="Selecciona tipo" />
             </SelectTrigger>
             <SelectContent className="bg-[#0d0d0d] border-[#333333] text-[#dfdbc9]">
@@ -252,14 +252,14 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
       </div>
 
       <div className="cell-darker p-2 border border-[#333333] space-y-2">
-        <div className="crimson-th p-2 text-white font-['Space_Grotesk'] font-bold text-xs uppercase flex items-center justify-between">
+        <div className="crimson-th p-2 text-white font-['Chivo'] font-bold text-xs uppercase flex items-center justify-between">
           <span>TROPAS // {selectedProperty.nombre}</span>
           <Button onClick={setAllMaxTroops} className="btn-tactical text-[10px] sm:text-xs h-auto min-h-[44px] px-2 py-1">SELECCIONAR TODAS</Button>
         </div>
 
         <div className="divide-y divide-[#222222] cell-dark border border-[#333333] max-h-[300px] overflow-y-auto">
           {availableTroops.length > 0 ? availableTroops.map(tropa => (
-            <div key={tropa.configuracionTropaId} className="p-1.5 flex items-center justify-between text-xs font-['Space_Mono'] gap-2">
+            <div key={tropa.configuracionTropaId} className="p-1.5 flex items-center justify-between text-xs font-['JetBrains_Mono'] gap-2">
               <div className="flex items-center gap-2 truncate">
                 <Image src={tropa.configuracion.urlImagen} alt={tropa.configuracion.nombre} width={24} height={20} className="object-contain shrink-0" />
                 <span className="truncate text-white font-bold">{tropa.configuracion.nombre}</span>
@@ -282,7 +282,7 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
           )}
         </div>
 
-        <div className="cell-dark p-2 flex items-center justify-between text-xs font-['Space_Mono']">
+        <div className="cell-dark p-2 flex items-center justify-between text-xs font-['JetBrains_Mono']">
           <span className="text-[#888888]">TIEMPO ESTIMADO DE VIAJE:</span>
           <span className="text-[#00ff00] font-bold tabular-nums">{formatDuration(travelTime)}</span>
         </div>
@@ -290,7 +290,7 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
         <Button
           onClick={handleSubmit}
           disabled={isPending || tropas.length === 0}
-          className="btn-crimson w-full text-xs font-['Space_Grotesk'] font-bold h-11 min-h-[44px]"
+          className="btn-crimson w-full text-xs font-['Chivo'] font-bold h-11 min-h-[44px]"
         >
           {isPending ? 'DESPLEGANDO FLOTA...' : 'DESPLEGAR MISIÓN TÁCTICA'}
         </Button>

@@ -39,8 +39,8 @@ export function TroopDetailsModal({ troop, user, ataqueActual, defensaActual, ca
             <Image src={troop.urlImagen} alt={troop.nombre} fill className="w-full h-auto object-cover" />
           </div>
           <div>
-            <DialogTitle className="text-base font-['Space_Grotesk'] text-white uppercase">{troop.nombre}</DialogTitle>
-            <DialogDescription className="text-xs text-[#ffdad4] font-['Space_Mono']">
+            <DialogTitle className="text-base font-['Chivo'] text-white uppercase">{troop.nombre}</DialogTitle>
+            <DialogDescription className="text-xs text-[#ffdad4] font-['JetBrains_Mono']">
               Ficha Técnica de Combate
             </DialogDescription>
           </div>
@@ -51,11 +51,11 @@ export function TroopDetailsModal({ troop, user, ataqueActual, defensaActual, ca
         <div className="space-y-3">
           <p className="text-xs text-[#a0a0a0]">{troop.descripcion}</p>
 
-          <div className="crimson-th px-2 py-0.5 text-[10px] font-['Space_Grotesk'] font-bold uppercase text-white">
+          <div className="crimson-th px-2 py-0.5 text-[10px] font-['Chivo'] font-bold uppercase text-white">
             MATRIZ DE ATRIBUTOS TÁCTICOS
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-['Space_Mono'] text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-['JetBrains_Mono'] text-xs">
             {stats.map((st) => (
               <div key={st.label} className="cell-dark p-2 flex justify-between items-center">
                 <span className="text-[#888888]">{st.label.toUpperCase()}:</span>
@@ -71,7 +71,7 @@ export function TroopDetailsModal({ troop, user, ataqueActual, defensaActual, ca
 
       <div className="p-2 border-t border-[#333333] bg-[#0a0a0a] shrink-0">
         <DialogClose asChild>
-          <Button type="button" className="btn-tactical w-full text-xs font-['Space_Grotesk'] font-bold h-11 min-h-[44px]">
+          <Button type="button" className="btn-tactical w-full text-xs font-['Chivo'] font-bold h-11 min-h-[44px]">
             CERRAR DETALLES
           </Button>
         </DialogClose>

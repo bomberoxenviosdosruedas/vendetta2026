@@ -98,7 +98,7 @@ export function ActivityHistoryCard({ activities }: ActivityHistoryProps) {
 
     return (
         <section className="cell-darker p-2 border border-[#333333] space-y-2 text-[#dfdbc9]">
-            <div className="crimson-th px-2 py-1 flex items-center justify-between font-['Space_Grotesk'] font-bold text-[11px] uppercase tracking-wider">
+            <div className="crimson-th px-2 py-1 flex items-center justify-between font-['Chivo'] font-bold text-[11px] uppercase tracking-wider">
                 <div className="flex items-center gap-1.5">
                     <MaterialIcon name="history" size={15} className="text-[#fff400]" />
                     <span>HISTORIAL DE OPERACIONES ({activities.length})</span>
@@ -109,7 +109,7 @@ export function ActivityHistoryCard({ activities }: ActivityHistoryProps) {
                             key={tab}
                             type="button"
                             onClick={() => setSelectedTab(tab)}
-                            className={`px-2 py-0.5 text-[9px] font-['Space_Mono'] uppercase transition-colors min-h-[36px] ${
+                            className={`px-2 py-0.5 text-[9px] font-['JetBrains_Mono'] uppercase transition-colors min-h-[36px] ${
                                 selectedTab === tab
                                     ? 'bg-[#6C0000] text-white font-bold border border-[#fff400]'
                                     : 'btn-tactical text-[#888888]'
@@ -133,7 +133,7 @@ export function ActivityHistoryCard({ activities }: ActivityHistoryProps) {
                             <div
                                 key={activity.id}
                                 onClick={() => setSelectedActivity(activity)}
-                                className="p-2 flex items-center justify-between gap-2 hover:bg-[#1a1a1a] cursor-pointer transition-colors text-xs font-['Space_Mono']"
+                                className="p-2 flex items-center justify-between gap-2 hover:bg-[#1a1a1a] cursor-pointer transition-colors text-xs font-['JetBrains_Mono']"
                             >
                                 <div className="flex items-center gap-2 truncate">
                                     <MaterialIcon name={config.iconName} size={15} className="text-[#fabd00] shrink-0" />
@@ -153,15 +153,15 @@ export function ActivityHistoryCard({ activities }: ActivityHistoryProps) {
                 {selectedActivity && activeConfig && (
                     <DialogContent className="bg-[#0d0d0d] border-[#333333] text-[#dfdbc9] max-w-md">
                         <DialogHeader>
-                            <DialogTitle className="crimson-th text-white p-2 font-['Space_Grotesk'] uppercase text-sm">
+                            <DialogTitle className="crimson-th text-white p-2 font-['Chivo'] uppercase text-sm">
                                 DETALLE DE OPERACIÓN
                             </DialogTitle>
-                            <DialogDescription className="text-[#a0a0a0] text-xs font-['Space_Mono'] pt-2">
+                            <DialogDescription className="text-[#a0a0a0] text-xs font-['JetBrains_Mono'] pt-2">
                                 {formatExactDateTime(selectedActivity.timestamp)}
                             </DialogDescription>
                         </DialogHeader>
 
-                        <div className="space-y-2 py-2 text-xs font-['Space_Mono']">
+                        <div className="space-y-2 py-2 text-xs font-['JetBrains_Mono']">
                             <div className="cell-dark p-2 text-white font-bold">
                                 {selectedActivity.title}
                             </div>
