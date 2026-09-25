@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { resolveConfigImageUrl } from '@/lib/config-images';
 import { DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from '@/components/ui/dialog';
 import { ScrollArea } from '../ui/scroll-area';
 import type { ConfiguracionTropa } from '@prisma/client';
@@ -35,7 +36,7 @@ export function TroopDetailsModal({ troop, user, ataqueActual, defensaActual, ca
       <DialogHeader className="p-3 crimson-th shrink-0">
         <div className="flex items-center gap-3">
           <div className="w-16 h-12 relative rounded border border-[#5a4f3d] bg-[#181410] overflow-hidden shrink-0">
-            <Image src={troop.urlImagen} alt={troop.nombre} fill className="object-cover" />
+            <Image src={resolveConfigImageUrl(troop.urlImagen)} alt={troop.nombre} fill className="object-cover" />
           </div>
           <div>
             <DialogTitle className="text-sm font-['Chivo'] font-bold text-white uppercase">{troop.nombre}</DialogTitle>

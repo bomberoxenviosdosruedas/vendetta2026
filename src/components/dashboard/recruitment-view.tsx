@@ -1,6 +1,7 @@
 'use client';
 
 import Image from "next/image";
+import { resolveConfigImageUrl } from "@/lib/config-images";
 import MaterialIcon from "@/components/ui/material-icon";
 import { iniciarReclutamiento } from "@/lib/actions/troop.actions";
 import { useEffect, useState, useTransition } from "react";
@@ -177,7 +178,7 @@ export function RecruitmentView({ user, troopConfigsWithStats }: RecruitmentView
                   <div className="lg:col-span-4 flex items-center gap-3 min-w-0">
                     <div className="w-16 h-16 relative rounded border border-[#5a4f3d] bg-[#181410] overflow-hidden shrink-0 shadow-sm">
                       <Image
-                        src={troop.urlImagen || "https://placehold.co/80x56.png"}
+                        src={resolveConfigImageUrl(troop.urlImagen) || "https://placehold.co/80x56.png"}
                         alt={troop.nombre}
                         fill
                         className="object-cover"

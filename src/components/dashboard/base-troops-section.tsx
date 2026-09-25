@@ -3,6 +3,7 @@
 import Link from "next/link";
 import MaterialIcon from "@/components/ui/material-icon";
 import { useProperty } from "@/contexts/property-context";
+import { resolveConfigImageUrl } from "@/lib/config-images";
 
 const troopIconByType: { [key: string]: string } = {
   ATAQUE: 'swords',
@@ -48,7 +49,7 @@ export function BaseTroopsSection() {
               <div key={t.id} className="badge-unit">
                 {t.configuracion.urlImagen ? (
                   <img
-                    src={t.configuracion.urlImagen}
+                    src={resolveConfigImageUrl(t.configuracion.urlImagen)}
                     alt={t.configuracion.nombre}
                     className="w-8 h-8 object-contain mb-0.5"
                   />
@@ -72,7 +73,7 @@ export function BaseTroopsSection() {
                 <div className="w-9 h-9 rounded bg-[#d0c7af] border border-[#7e735d] flex items-center justify-center text-xl shrink-0">
                   {t.configuracion.urlImagen ? (
                     <img
-                      src={t.configuracion.urlImagen}
+                      src={resolveConfigImageUrl(t.configuracion.urlImagen)}
                       alt={t.configuracion.nombre}
                       className="w-6 h-6 object-contain"
                     />

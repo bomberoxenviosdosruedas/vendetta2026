@@ -1,6 +1,7 @@
 'use client';
 
 import Image from "next/image";
+import { resolveConfigImageUrl } from "@/lib/config-images";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import MaterialIcon from "@/components/ui/material-icon";
@@ -189,7 +190,7 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
                   <div className="lg:col-span-4 flex items-center gap-3 min-w-0">
                     <div className="w-16 h-16 relative rounded border border-[#5a4f3d] bg-[#181410] overflow-hidden shrink-0 shadow-sm">
                       <Image
-                        src={room.urlImagen || "https://placehold.co/80x56.png"}
+                        src={resolveConfigImageUrl(room.urlImagen) || "https://placehold.co/80x56.png"}
                         alt={room.nombre}
                         fill
                         className="object-cover"

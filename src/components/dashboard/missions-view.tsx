@@ -6,6 +6,7 @@ import MaterialIcon from '@/components/ui/material-icon';
 import { getPropertyOwner, UserWithProgress } from '@/lib/data';
 import { debounce } from 'lodash';
 import Image from 'next/image';
+import { resolveConfigImageUrl } from '@/lib/config-images';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { enviarMision } from '@/lib/actions/mission.actions';
 import { useToast } from '@/hooks/use-toast';
@@ -289,7 +290,7 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
               {availableTroops.length > 0 ? availableTroops.map(tropa => (
                 <div key={tropa.configuracionTropaId} className="p-1.5 flex items-center justify-between text-xs font-['JetBrains_Mono'] gap-2">
                   <div className="flex items-center gap-2 truncate">
-                    <Image src={tropa.configuracion.urlImagen} alt={tropa.configuracion.nombre} width={24} height={20} className="object-contain shrink-0" />
+                    <Image src={resolveConfigImageUrl(tropa.configuracion.urlImagen)} alt={tropa.configuracion.nombre} width={24} height={20} className="object-contain shrink-0" />
                     <span className="truncate text-[#111] font-bold">{tropa.configuracion.nombre}</span>
                     <span className="text-[#695d48] text-[10px]">({tropa.cantidad})</span>
                   </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import Image from "next/image";
+import { resolveConfigImageUrl } from "@/lib/config-images";
 import MaterialIcon from "@/components/ui/material-icon";
 import { iniciarEntrenamiento } from "@/lib/actions/training.actions";
 import type { FullConfiguracionEntrenamiento, UserWithProgress } from "@/lib/data";
@@ -184,7 +185,7 @@ export function TrainingView({ user, trainingsData }: TrainingViewProps) {
                 <div className="lg:col-span-4 flex items-center gap-3 min-w-0">
                   <div className="w-16 h-16 relative rounded border border-[#5a4f3d] bg-[#181410] overflow-hidden shrink-0 shadow-sm">
                     <Image
-                      src={training.urlImagen || "https://placehold.co/80x56.png"}
+                      src={resolveConfigImageUrl(training.urlImagen) || "https://placehold.co/80x56.png"}
                       alt={training.nombre}
                       fill
                       className="object-cover"

@@ -3,6 +3,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FullConfiguracionHabitacion, FullConfiguracionTropa, FullConfiguracionEntrenamiento } from "@/lib/data";
 import { TechItemCard } from "./tech-item-card";
+import { resolveConfigImageUrl } from "@/lib/config-images";
 
 interface TechnologyTreeViewProps {
     rooms: FullConfiguracionHabitacion[];
@@ -43,7 +44,7 @@ export function TechnologyTreeView({ rooms, trainings, troops }: TechnologyTreeV
                                 key={room.id}
                                 name={room.nombre}
                                 description={room.descripcion}
-                                imageUrl={room.urlImagen}
+                                imageUrl={resolveConfigImageUrl(room.urlImagen)}
                                 requirements={room.requirements.map(req => ({
                                     id: req.requiredRoomId,
                                     name: roomMap.get(req.requiredRoomId) || req.requiredRoomId,
@@ -61,7 +62,7 @@ export function TechnologyTreeView({ rooms, trainings, troops }: TechnologyTreeV
                                 key={training.id}
                                 name={training.nombre}
                                 description={null}
-                                imageUrl={training.urlImagen}
+                                imageUrl={resolveConfigImageUrl(training.urlImagen)}
                                 requirements={training.requirements.map(req => ({
                                     id: req.requiredTrainingId,
                                     name: trainingMap.get(req.requiredTrainingId) || req.requiredTrainingId,
@@ -79,7 +80,7 @@ export function TechnologyTreeView({ rooms, trainings, troops }: TechnologyTreeV
                                 key={troop.id}
                                 name={troop.nombre}
                                 description={troop.descripcion}
-                                imageUrl={troop.urlImagen}
+                                imageUrl={resolveConfigImageUrl(troop.urlImagen)}
                                 requirements={troop.requisitos.map(reqId => ({
                                     id: reqId,
                                     name: troopMap.get(reqId) || reqId,
