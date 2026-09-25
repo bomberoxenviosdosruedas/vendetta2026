@@ -2,10 +2,11 @@
 
 "use server"
 
-import { User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember, TrainingRequirement, RoomRequirement, TropaBonusContrincante, Message, MessageCategory, ColaEntrenamiento, FamilyInvitation, InvitationStatus, InvitationType, Prisma } from '@prisma/client'
+import { User, HabitacionUsuario, EntrenamientoUsuario, TropaUsuario, ConfiguracionHabitacion, ConfiguracionEntrenamiento, ColaConstruccion, ColaReclutamiento, ConfiguracionTropa, Propiedad, PuntuacionUsuario, ColaMisiones, Family, FamilyMember, TrainingRequirement, RoomRequirement, TropaBonusContrincante, Message, MessageCategory, ColaEntrenamiento, FamilyInvitation, InvitationStatus, InvitationType } from '@prisma/client'
 import { cache } from 'react';
 import { calculateStorageCapacity } from './formulas/room-formulas';
 import prisma from './prisma/prisma';
+import { userInclude } from './prisma/user-include';
 
 export type FullConfiguracionHabitacion = ConfiguracionHabitacion & {
   requirements: RoomRequirement[];
@@ -334,77 +335,6 @@ export const getUsers = cache(async () => {
         return [];
     }
 });
-
-const userInclude = {
-    propiedades: {
-        include: {
-            habitaciones: {
-                include: {
-                    configuracion: {
-                      include: {
-                        requirements: true
-                      }
-                    }
-                },
-                 orderBy: {
-                    configuracionHabitacionId: 'asc' as Prisma.SortOrder
-                }
-            },
-            TropaUsuario: {
-                include: {
-                    configuracion: true
-                }
-            },
-            colaConstruccion: {
-                orderBy: {
-                    createdAt: 'asc' as Prisma.SortOrder
-                }
-            },
-            colaReclutamiento: {
-                include: {
-                    tropaConfig: true
-                }
-            }
-        }
-    },
-    entrenamientos: {
-        include: {
-            configuracion: true
-        },
-        orderBy: {
-            configuracionEntrenamientoId: 'asc' as Prisma.SortOrder
-        }
-    },
-    puntuacion: true,
-    misiones: {
-        orderBy: {
-            fechaLlegada: 'asc' as Prisma.SortOrder
-        }
-    },
-    colaEntrenamientos: {
-        include: {
-            entrenamiento: true,
-            propiedad: {
-                select: { nombre: true }
-            }
-        },
-        orderBy: {
-            fechaFinalizacion: 'asc' as Prisma.SortOrder
-        }
-    },
-    familyMember: {
-        include: {
-            family: true
-        }
-    },
-    _count: {
-        select: {
-            receivedMessages: {
-                where: { isRead: false }
-            }
-        }
-    }
-};
 
 export const getUserProfileById = cache(async (userId: string): Promise<UserProfileData | null> => {
     try {

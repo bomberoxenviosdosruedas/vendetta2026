@@ -71,6 +71,7 @@ export default async function AdminPanelPage({
                     <TabsTrigger value="entrenamientos" asChild><Link href="?tab=entrenamientos">Entrenamientos</Link></TabsTrigger>
                     <TabsTrigger value="tropas" asChild><Link href="/admin/panel/troops">Tropas</Link></TabsTrigger>
                      <TabsTrigger value="bonus" asChild><Link href="/admin/panel/bonus">Bonus de Ataque</Link></TabsTrigger>
+                    <TabsTrigger value="jugadores" asChild><Link href="/admin/panel/users">Jugadores</Link></TabsTrigger>
                 </TabsList>
                 <TabsContent value="habitaciones">
                     <Suspense fallback={<TableSkeleton />}>
