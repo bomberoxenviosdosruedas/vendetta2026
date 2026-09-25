@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import type { UserWithProgress } from "@/lib/data";
 import { useProperty } from "@/contexts/property-context";
@@ -20,11 +21,20 @@ const resourceIcons: { [key: string]: string } = {
 
 type ResourceKey = 'armas' | 'municion' | 'alcohol' | 'dolares';
 
+/** Iconos svg de cada recurso (public/img/recursos/*.svg), usados en el panel de escritorio. */
+const resourceIconFiles: Record<ResourceKey, string> = {
+  armas: 'armas.svg',
+  municion: 'municion.svg',
+  alcohol: 'alcohol.svg',
+  dolares: 'dolares.svg',
+};
+
 interface ResourceEntry {
   key: ResourceKey;
   name: string;
   nameShort: string;
   icon: string;
+  iconFile: string;
   value: number;
   capacity: number;
   fill: string;
@@ -105,64 +115,79 @@ function getResourceStatus(res: ResourceEntry) {
   };
 }
 
-/** Celda de valor con contador animado (escritorio) */
-function ResourceValueCell({ res }: { res: ResourceEntry }) {
+/** Unidad de recurso del panel de escritorio: cabecera carmesí (icono svg + etiqueta), barra de relleno y valor animado. */
+function DesktopResourceUnit({ res, booted, index }: { res: ResourceEntry; booted: boolean; index: number }) {
   const animated = useAnimatedNumber(res.value);
-  const { isFull, isLow } = getResourceStatus(res);
+  const { percentage, isFull, isLow } = getResourceStatus(res);
+
   return (
-    <td
-      className={cn(
-        "vb-cell border border-[#000] text-[14px] !py-1.5 px-1.5 whitespace-nowrap text-center font-['JetBrains_Mono'] font-bold tabular-nums transition-colors",
-        isFull ? "text-[#ff4545] vb-blink" : isLow && "text-[#ffb84d]"
-      )}
-      title={isFull ? 'Almacén lleno' : isLow ? 'Stock bajo' : undefined}
-    >
-      {res.key === 'dolares' ? `$${formatNumber(animated)}` : formatNumber(animated)}
-      <MaterialIcon name={res.icon} size={15} className="ml-0.5 align-middle" />
-    </td>
+    <div className="flex-1 min-w-0 flex flex-col border border-[#000]">
+      {/* Cabecera carmesí clásica con icono del recurso */}
+      <div className="vb-crimson-cell flex items-center justify-center gap-1.5 px-1.5 py-1 text-[12px] font-['Chivo'] font-bold uppercase tracking-wider whitespace-nowrap overflow-hidden">
+        <Image src={`/img/recursos/${res.iconFile}`} alt={res.name} width={16} height={16} className="object-contain shrink-0" />
+        <span className="truncate">{res.name}</span>
+      </div>
+
+      {/* Barra de relleno (clásica de 5px) */}
+      <div className="vb-track h-[7px] border-x border-[#000]">
+        <div
+          className={cn("vb-fill h-full transition-[width] duration-700 ease-out", isFull && "vb-full-pulse")}
+          style={{
+            width: booted ? `${percentage}%` : '0%',
+            backgroundColor: res.fill,
+            transitionDelay: !booted ? `${index * 90}ms` : '0ms',
+          }}
+        />
+      </div>
+
+      {/* Valor animado */}
+      <div
+        className={cn(
+          "vb-cell border border-t-0 border-[#000] text-[14px] !py-1.5 px-1.5 whitespace-nowrap text-center font-['JetBrains_Mono'] font-bold tabular-nums transition-colors",
+          isFull ? "text-[#ff4545] vb-blink" : isLow && "text-[#ffb84d]"
+        )}
+        title={isFull ? 'Almacén lleno' : isLow ? 'Stock bajo' : undefined}
+      >
+        {res.key === 'dolares' ? `$${formatNumber(animated)}` : formatNumber(animated)}
+      </div>
+    </div>
   );
 }
 
-/** Cabecera carmesí de la columna CAPO (nombre del jugador) */
-function CapoHeaderCell() {
+/** Unidad CAPO del panel de escritorio: nombre del jugador, chevron del expediente y salida. */
+function DesktopCapoUnit({ name, open, onLogout }: { name: string; open: boolean; onLogout: () => void }) {
   return (
-    <th
-      scope="col"
-      className="vb-crimson-cell text-center text-[13px] font-['Chivo'] font-bold uppercase tracking-wider !py-1.5 px-1.5 whitespace-nowrap w-[20%] border border-t-0"
-    >
-      <span className="inline-flex items-center gap-1">
+    <div className="flex-1 min-w-0 flex flex-col border border-[#000]">
+      <div className="vb-crimson-cell flex items-center justify-center gap-1 px-1.5 py-1 text-[12px] font-['Chivo'] font-bold uppercase tracking-wider whitespace-nowrap">
         <MaterialIcon name="person" size={13} className="align-middle" />
         CAPO
-      </span>
-    </th>
-  );
-}
+      </div>
 
-/** Celda CAPO con el nombre del jugador y salida (reutiliza las clases del panel) */
-function CapoValueCell({ name, open, onLogout }: { name: string; open: boolean; onLogout: () => void }) {
-  return (
-    <td className="vb-cell border border-[#000] text-[13px] !py-1.5 px-1.5 whitespace-nowrap text-center font-['JetBrains_Mono']">
-      <span className="flex items-center justify-center gap-1 min-w-0">
-        <span className="text-[#f1ebd8] font-bold truncate max-w-[110px] min-[420px]:max-w-[150px] lg:max-w-[260px]" title={name}>
-          {name}
+      <div className="vb-track h-[7px] border-x border-[#000]" />
+
+      <div className="vb-cell border border-t-0 border-[#000] text-[13px] !py-1.5 px-1.5 whitespace-nowrap text-center font-['JetBrains_Mono']">
+        <span className="flex items-center justify-center gap-1 min-w-0">
+          <span className="text-[#f1ebd8] font-bold truncate max-w-[90px] min-[420px]:max-w-[130px] lg:max-w-[200px]" title={name}>
+            {name}
+          </span>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onLogout();
+            }}
+            title="Cerrar Sesión"
+            aria-label={`Cerrar sesión de ${name}`}
+            className="ml-0.5 text-[#e53935] hover:text-white transition-colors shrink-0"
+          >
+            <MaterialIcon name="logout" size={16} />
+          </button>
+          <span className={cn("text-[#ffe569] transition-transform", open ? "rotate-180" : "")}>
+            <MaterialIcon name="expand_more" size={14} />
+          </span>
         </span>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onLogout();
-          }}
-          title="Cerrar Sesión"
-          aria-label={`Cerrar sesión de ${name}`}
-          className="ml-0.5 text-[#e53935] hover:text-white transition-colors"
-        >
-          <MaterialIcon name="logout" size={16} />
-        </button>
-        <span className={cn("text-[#ffe569] transition-transform", open ? "rotate-180" : "")}>
-          <MaterialIcon name="expand_more" size={14} />
-        </span>
-      </span>
-    </td>
+      </div>
+    </div>
   );
 }
 
@@ -308,6 +333,7 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
       name: 'ARMAS',
       nameShort: 'Armas',
       icon: resourceIcons.armas,
+      iconFile: resourceIconFiles.armas,
       value: Number(selectedProperty.armas),
       capacity: capacity.armas,
       fill: '#ff9800',
@@ -320,6 +346,7 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
       name: 'MUNICIÓN',
       nameShort: 'Munición',
       icon: resourceIcons.municion,
+      iconFile: resourceIconFiles.municion,
       value: Number(selectedProperty.municion),
       capacity: capacity.municion,
       fill: '#ff9800',
@@ -332,6 +359,7 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
       name: 'ALCOHOL',
       nameShort: 'Alcohol',
       icon: resourceIcons.alcohol,
+      iconFile: resourceIconFiles.alcohol,
       value: Number(selectedProperty.alcohol),
       capacity: capacity.alcohol,
       fill: '#e53935',
@@ -344,6 +372,7 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
       name: 'DÓLARES',
       nameShort: 'Dólares',
       icon: resourceIcons.dolares,
+      iconFile: resourceIconFiles.dolares,
       value: Number(selectedProperty.dolares),
       capacity: capacity.dolares,
       fill: '#4caf50',
@@ -437,163 +466,129 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
   }
 
   /* ------------------------------------------------------------------ */
-  /* VARIANTE ESCRITORIO                                                  */
+  /* VARIANTE ESCRITORIO (estructura del ejemplo: sticky + flex + chips)  */
   /* ------------------------------------------------------------------ */
   return (
-    <header className="w-full h-16 min-h-16 shrink-0 z-50 flex items-center gap-4 px-4 xl:px-6 border-b-2 border-[#5a4b33] shadow-[0_4px_12px_rgba(0,0,0,0.9)] bg-[linear-gradient(180deg,#443c2c_0%,#2a2418_50%,#16120b_100%)]">
-      {/* Logo */}
-      <Link href="/overview" className="flex items-center gap-2.5 shrink-0">
-        <MaterialIcon name="gavel" size={28} className="text-[#f1ebd8]" />
-        <div className="hidden md:flex flex-col leading-none">
-          <span className="text-[18px] font-bold text-[#f1ebd8] tracking-wider uppercase font-['Chivo'] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-            Vendetta <span className="text-[#ffe569]">2006</span>
-          </span>
-          <span className="text-[11px] text-[#a39a82]">MMORPG Mafia Clásico</span>
-        </div>
-      </Link>
-
-      {/* Panel de instrumentos: ticker + expediente expandible (el CAPO vive aquí) */}
-      <div className="relative flex-1 max-w-6xl mx-auto px-1.5 min-w-0 group">
-        <div
-          role="button"
-          tabIndex={0}
-          aria-expanded={open}
-          aria-controls="resource-dossier"
-          aria-label={open ? 'Ocultar detalle de producción' : 'Ver detalle de producción (capacidad, producción y tiempo hasta llenar)'}
-          onClick={toggle}
-          onKeyDown={onKeyDown}
-          className="cursor-pointer select-none focus:outline-none focus-visible:ring-1 focus-visible:ring-[#ffe569]"
-          title="Clic para ver el detalle de producción"
-        >
-          <table className="w-full border-collapse border-spacing-0">
-            <tbody>
-              {/* Cabecera carmesí (td.c del clásico) */}
-              <tr>
-                {resources.map((res) => (
-                  <th
-                    key={res.key}
-                    scope="col"
-                    className="vb-crimson-cell text-center text-[13px] font-['Chivo'] font-bold uppercase tracking-wider !py-1.5 px-1.5 whitespace-nowrap w-[20%] border border-t-0"
-                  >
-                    {res.name}
-                  </th>
-                ))}
-                {/* Columna CAPO: el nombre del jugador vive dentro del mismo panel */}
-                <CapoHeaderCell />
-              </tr>
-
-              {/* Relleno (barra clásica de 5px) */}
-              <tr>
-                {resources.map((res, i) => {
-                  const { percentage, isFull } = getResourceStatus(res);
-                  return (
-                    <td key={res.key} className="vb-track !p-0 h-[9px] border border-[#000]">
-                      <div
-                        className={cn("vb-fill h-full transition-[width] duration-700 ease-out", isFull && "vb-full-pulse")}
-                        style={{
-                          width: booted ? `${percentage}%` : '0%',
-                          backgroundColor: res.fill,
-                          transitionDelay: !booted ? `${i * 90}ms` : '0ms',
-                        }}
-                      />
-                    </td>
-                  );
-                })}
-                <td className="vb-track !p-0 h-[9px] border border-[#000]" />
-              </tr>
-
-              {/* Valores */}
-              <tr>
-                {resources.map((res) => (
-                  <ResourceValueCell key={res.key} res={res} />
-                ))}
-                <CapoValueCell name={user.name} open={open} onLogout={handleLogout} />
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        {/* Expediente de producción (toggle estilo Vendetta 2X) */}
-        <div
-          id="resource-dossier"
-          aria-hidden={!open}
-          className={cn(
-            "absolute left-0 right-0 top-full z-50 grid transition-[grid-template-rows] duration-300 ease-out",
-            open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-          )}
-        >
-          <div className="overflow-hidden">
-            <table className="w-full border-collapse border-spacing-0 border-b-2 border-[#5a4b33] shadow-[0_10px_20px_rgba(0,0,0,0.8)]">
-              <tbody>
-                {[
-                  {
-                    label: 'Capacidad',
-                    render: (res: ResourceEntry) => <span className="text-[#9a8d74]">({formatNumber(res.capacity)})</span>,
-                  },
-                  {
-                    label: 'Producción',
-                    render: (res: ResourceEntry) => <span className="text-[#00c000] font-['Verdana'] font-bold">+{formatNumber(res.prodH)}/h</span>,
-                  },
-                  {
-                    label: 'Por día',
-                    render: (res: ResourceEntry) => <span className="text-[#00c000] font-['Verdana'] font-bold">+{formatNumber(res.prodD)}/d</span>,
-                  },
-                  {
-                    label: 'Hasta llenar',
-                    render: (res: ResourceEntry) => {
-                      const { isFull } = getResourceStatus(res);
-                      const ttl = timeToFill(res.value, res.capacity, res.prodS);
-                      return <span className={cn("font-['JetBrains_Mono'] font-bold", isFull ? "text-[#ff4545]" : ttl === '—' ? "text-[#8a7d63]" : "text-[#ffe569]")}>{ttl}</span>;
-                    },
-                  },
-                ].map((row, rowIdx) => (
-                  <tr key={row.label}>
-                    {resources.map((res) => (
-                      <td
-                        key={res.key}
-                        className={cn(
-                          "vb-cell border border-[#000] text-[12px] !py-1.5 px-1.5 whitespace-nowrap text-center font-['JetBrains_Mono']",
-                          rowIdx % 2 === 1 && "bg-[linear-gradient(180deg,#16120b_0%,#0f0c07_100%)]"
-                        )}
-                        data-label={row.label}
-                      >
-                        {row.render(res)}
-                      </td>
-                    ))}
-                    {rowIdx === 0 && (
-                      <td className="vb-cell border border-[#000] text-[12px] px-3 align-middle text-left" rowSpan={4}>
-                        <div className="space-y-0.5">
-                          <div className="flex items-center justify-between gap-2">
-                            <div>
-                              <div className="text-[10px] text-[#8a7d63] font-['JetBrains_Mono'] uppercase tracking-wider">Coordenadas</div>
-                              <div className="text-[#dfcca0] font-['JetBrains_Mono'] font-bold">{coords}</div>
-                            </div>
-                            <button
-                              type="button"
-                              onClick={handleLogout}
-                              title="Cerrar Sesión"
-                              aria-label={`Cerrar sesión de ${user.name}`}
-                              className="text-[#e53935] hover:text-white transition-colors"
-                            >
-                              <MaterialIcon name="logout" size={16} />
-                            </button>
-                          </div>
-                          <div className="text-[10px] text-[#8a7d63] font-['JetBrains_Mono'] uppercase tracking-wider">Hora servidor</div>
-                          <LiveClock />
-                          <div className="mt-1 flex items-center justify-between border-t border-[#000] pt-1">
-                            <span className="text-[#c9bea5] font-['Chivo'] font-bold uppercase tracking-wider text-[12px]">{user.name}</span>
-                            <span className="text-[10px] text-[#ffe569]/80 font-['JetBrains_Mono'] uppercase tracking-wider">
-                              <MaterialIcon name="expand_less" size={11} className="align-middle" /> Ocultar
-                            </span>
-                          </div>
-                        </div>
-                      </td>
-                    )}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+    <header className="sticky top-0 z-50 w-full border-b-2 border-[#5a4b33] shadow-[0_4px_12px_rgba(0,0,0,0.9)] bg-[linear-gradient(180deg,#443c2c_0%,#2a2418_50%,#16120b_100%)]">
+      <div className="flex h-16 items-center justify-between gap-3 xl:gap-4 px-4 xl:px-6">
+        {/* Logo */}
+        <Link href="/overview" className="flex items-center gap-2.5 shrink-0">
+          <MaterialIcon name="gavel" size={28} className="text-[#f1ebd8]" />
+          <div className="hidden md:flex flex-col leading-none">
+            <span className="text-[18px] font-bold text-[#f1ebd8] tracking-wider uppercase font-['Chivo'] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+              Vendetta <span className="text-[#ffe569]">2006</span>
+            </span>
+            <span className="text-[11px] text-[#a39a82]">MMORPG Mafia Clásico</span>
           </div>
+        </Link>
+
+        {/* Panel de instrumentos: unidades por recurso + CAPO (clic: expediente) */}
+        <div className="relative flex-1 min-w-0 max-w-6xl">
+          <div
+            role="button"
+            tabIndex={0}
+            aria-expanded={open}
+            aria-controls="resource-dossier"
+            aria-label={open ? 'Ocultar detalle de producción' : 'Ver detalle de producción (capacidad, producción y tiempo hasta llenar)'}
+            onClick={toggle}
+            onKeyDown={onKeyDown}
+            className="flex h-full items-center gap-[1px] cursor-pointer select-none focus:outline-none focus-visible:ring-1 focus-visible:ring-[#ffe569]"
+            title="Clic para ver el detalle de producción"
+          >
+            {resources.map((res, i) => (
+              <DesktopResourceUnit key={res.key} res={res} booted={booted} index={i} />
+            ))}
+            <DesktopCapoUnit name={user.name} open={open} onLogout={handleLogout} />
+          </div>
+
+          {/* Expediente de producción (toggle estilo Vendetta 2X) */}
+          <div
+            id="resource-dossier"
+            aria-hidden={!open}
+            className={cn(
+              "absolute left-0 right-0 top-full z-50 grid transition-[grid-template-rows] duration-300 ease-out",
+              open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+            )}
+          >
+            <div className="overflow-hidden">
+              <table className="w-full border-collapse border-spacing-0 border-b-2 border-[#5a4b33] shadow-[0_10px_20px_rgba(0,0,0,0.8)]">
+                <tbody>
+                  {[
+                    {
+                      label: 'Capacidad',
+                      render: (res: ResourceEntry) => <span className="text-[#9a8d74]">({formatNumber(res.capacity)})</span>,
+                    },
+                    {
+                      label: 'Producción',
+                      render: (res: ResourceEntry) => <span className="text-[#00c000] font-['Verdana'] font-bold">+{formatNumber(res.prodH)}/h</span>,
+                    },
+                    {
+                      label: 'Por día',
+                      render: (res: ResourceEntry) => <span className="text-[#00c000] font-['Verdana'] font-bold">+{formatNumber(res.prodD)}/d</span>,
+                    },
+                    {
+                      label: 'Hasta llenar',
+                      render: (res: ResourceEntry) => {
+                        const { isFull } = getResourceStatus(res);
+                        const ttl = timeToFill(res.value, res.capacity, res.prodS);
+                        return <span className={cn("font-['JetBrains_Mono'] font-bold", isFull ? "text-[#ff4545]" : ttl === '—' ? "text-[#8a7d63]" : "text-[#ffe569]")}>{ttl}</span>;
+                      },
+                    },
+                  ].map((row, rowIdx) => (
+                    <tr key={row.label}>
+                      {resources.map((res) => (
+                        <td
+                          key={res.key}
+                          className={cn(
+                            "vb-cell border border-[#000] text-[12px] !py-1.5 px-1.5 whitespace-nowrap text-center font-['JetBrains_Mono']",
+                            rowIdx % 2 === 1 && "bg-[linear-gradient(180deg,#16120b_0%,#0f0c07_100%)]"
+                          )}
+                          data-label={row.label}
+                        >
+                          {row.render(res)}
+                        </td>
+                      ))}
+                      {rowIdx === 0 && (
+                        <td className="vb-cell border border-[#000] text-[12px] px-3 align-middle text-left" rowSpan={4}>
+                          <div className="space-y-0.5">
+                            <div className="flex items-center justify-between gap-2">
+                              <div>
+                                <div className="text-[10px] text-[#8a7d63] font-['JetBrains_Mono'] uppercase tracking-wider">Coordenadas</div>
+                                <div className="text-[#dfcca0] font-['JetBrains_Mono'] font-bold">{coords}</div>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={handleLogout}
+                                title="Cerrar Sesión"
+                                aria-label={`Cerrar sesión de ${user.name}`}
+                                className="text-[#e53935] hover:text-white transition-colors"
+                              >
+                                <MaterialIcon name="logout" size={16} />
+                              </button>
+                            </div>
+                            <div className="text-[10px] text-[#8a7d63] font-['JetBrains_Mono'] uppercase tracking-wider">Hora servidor</div>
+                            <LiveClock />
+                            <div className="mt-1 flex items-center justify-between border-t border-[#000] pt-1">
+                              <span className="text-[#c9bea5] font-['Chivo'] font-bold uppercase tracking-wider text-[12px]">{user.name}</span>
+                              <span className="text-[10px] text-[#ffe569]/80 font-['JetBrains_Mono'] uppercase tracking-wider">
+                                <MaterialIcon name="expand_less" size={11} className="align-middle" /> Ocultar
+                              </span>
+                            </div>
+                          </div>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        {/* Chip con reloj del servidor (solo escritorio) */}
+        <div className="hidden lg:flex items-center gap-2 bg-[#241d11] border border-[#4a3822] px-3 py-1.5 rounded-[3px] shadow-[inset_0_0_4px_rgba(0,0,0,0.6)] shrink-0" title="Hora del servidor">
+          <MaterialIcon name="schedule" size={16} className="text-[#ffe569]" />
+          <LiveClock />
         </div>
       </div>
     </header>
