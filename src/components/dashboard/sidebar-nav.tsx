@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -24,6 +25,8 @@ interface NavSection {
 
 interface SidebarNavProps {
   user: UserWithProgress | null;
+  /** Selector de base actual; se renderiza entre las secciones Principal y Táctico & Familia. */
+  propertySelector?: React.ReactNode;
 }
 
 const navSections: NavSection[] = [
@@ -63,7 +66,7 @@ const navSections: NavSection[] = [
   },
 ];
 
-export function SidebarNav({ user }: SidebarNavProps) {
+export function SidebarNav({ user, propertySelector }: SidebarNavProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { selectedProperty } = useProperty();
@@ -123,7 +126,8 @@ export function SidebarNav({ user }: SidebarNavProps) {
   return (
     <div className="flex flex-col gap-1 w-full text-[13px]">
       {navSections.map((section) => (
-        <div key={section.id} className="w-full p-0">
+        <Fragment key={section.id}>
+        <div className="w-full p-0">
           <div className="bronze-th text-white font-['Chivo'] text-[12px] font-bold uppercase px-2.5 py-[6px] tracking-wider shadow-sm mb-[2px]">
             {section.label}
           </div>
@@ -174,6 +178,8 @@ export function SidebarNav({ user }: SidebarNavProps) {
             })}
           </div>
         </div>
+        {section.id === "principal" && propertySelector}
+        </Fragment>
       ))}
     </div>
   );

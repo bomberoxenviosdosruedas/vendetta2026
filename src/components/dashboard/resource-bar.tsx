@@ -112,13 +112,13 @@ function ResourceValueCell({ res }: { res: ResourceEntry }) {
   return (
     <td
       className={cn(
-        "vb-cell border border-[#000] text-[11px] !py-1 px-1.5 whitespace-nowrap text-center font-['JetBrains_Mono'] font-bold tabular-nums transition-colors",
+        "vb-cell border border-[#000] text-[14px] !py-1.5 px-1.5 whitespace-nowrap text-center font-['JetBrains_Mono'] font-bold tabular-nums transition-colors",
         isFull ? "text-[#ff4545] vb-blink" : isLow && "text-[#ffb84d]"
       )}
       title={isFull ? 'Almacén lleno' : isLow ? 'Stock bajo' : undefined}
     >
       {res.key === 'dolares' ? `$${formatNumber(animated)}` : formatNumber(animated)}
-      <MaterialIcon name={res.icon} size={13} className="ml-0.5 align-middle" />
+      <MaterialIcon name={res.icon} size={15} className="ml-0.5 align-middle" />
     </td>
   );
 }
@@ -128,10 +128,10 @@ function CapoHeaderCell() {
   return (
     <th
       scope="col"
-      className="vb-crimson-cell text-center text-[11px] font-['Chivo'] font-bold uppercase tracking-wider !py-1 px-1.5 whitespace-nowrap w-[20%] border border-t-0"
+      className="vb-crimson-cell text-center text-[13px] font-['Chivo'] font-bold uppercase tracking-wider !py-1.5 px-1.5 whitespace-nowrap w-[20%] border border-t-0"
     >
       <span className="inline-flex items-center gap-1">
-        <MaterialIcon name="person" size={11} className="align-middle" />
+        <MaterialIcon name="person" size={13} className="align-middle" />
         CAPO
       </span>
     </th>
@@ -141,9 +141,9 @@ function CapoHeaderCell() {
 /** Celda CAPO con el nombre del jugador y salida (reutiliza las clases del panel) */
 function CapoValueCell({ name, open, onLogout }: { name: string; open: boolean; onLogout: () => void }) {
   return (
-    <td className="vb-cell border border-[#000] text-[11px] !py-1 px-1.5 whitespace-nowrap text-center font-['JetBrains_Mono']">
+    <td className="vb-cell border border-[#000] text-[13px] !py-1.5 px-1.5 whitespace-nowrap text-center font-['JetBrains_Mono']">
       <span className="flex items-center justify-center gap-1 min-w-0">
-        <span className="text-[#f1ebd8] font-bold truncate max-w-[110px] min-[420px]:max-w-[150px] lg:max-w-[220px]" title={name}>
+        <span className="text-[#f1ebd8] font-bold truncate max-w-[110px] min-[420px]:max-w-[150px] lg:max-w-[260px]" title={name}>
           {name}
         </span>
         <button
@@ -156,10 +156,10 @@ function CapoValueCell({ name, open, onLogout }: { name: string; open: boolean; 
           aria-label={`Cerrar sesión de ${name}`}
           className="ml-0.5 text-[#e53935] hover:text-white transition-colors"
         >
-          <MaterialIcon name="logout" size={14} />
+          <MaterialIcon name="logout" size={16} />
         </button>
         <span className={cn("text-[#ffe569] transition-transform", open ? "rotate-180" : "")}>
-          <MaterialIcon name="expand_more" size={12} />
+          <MaterialIcon name="expand_more" size={14} />
         </span>
       </span>
     </td>
@@ -289,8 +289,8 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
 
   if (!user || !selectedProperty) {
     return variant === 'desktop' ? (
-      <header className="w-full h-14 min-h-14 shrink-0 flex items-center justify-center px-3 border-b-2 border-[#5a4b33] bg-[linear-gradient(180deg,#443c2c_0%,#2a2418_50%,#16120b_100%)]">
-        <p className="text-[#a39a82] text-xs font-mono text-center">Selecciona una propiedad para ver tus recursos.</p>
+      <header className="w-full h-16 min-h-16 shrink-0 flex items-center justify-center px-3 border-b-2 border-[#5a4b33] bg-[linear-gradient(180deg,#443c2c_0%,#2a2418_50%,#16120b_100%)]">
+        <p className="text-[#a39a82] text-sm font-mono text-center">Selecciona una propiedad para ver tus recursos.</p>
       </header>
     ) : (
       <div className="bg-[#dfdbc9] border-b border-[#63553f] px-2 py-1.5 shadow-sm">
@@ -440,20 +440,20 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
   /* VARIANTE ESCRITORIO                                                  */
   /* ------------------------------------------------------------------ */
   return (
-    <header className="w-full h-14 min-h-14 shrink-0 z-50 flex items-center gap-3 px-3 xl:px-4 border-b-2 border-[#5a4b33] shadow-[0_4px_12px_rgba(0,0,0,0.9)] bg-[linear-gradient(180deg,#443c2c_0%,#2a2418_50%,#16120b_100%)]">
+    <header className="w-full h-16 min-h-16 shrink-0 z-50 flex items-center gap-4 px-4 xl:px-6 border-b-2 border-[#5a4b33] shadow-[0_4px_12px_rgba(0,0,0,0.9)] bg-[linear-gradient(180deg,#443c2c_0%,#2a2418_50%,#16120b_100%)]">
       {/* Logo */}
-      <Link href="/overview" className="flex items-center gap-2 shrink-0">
-        <MaterialIcon name="gavel" size={24} className="text-[#f1ebd8]" />
+      <Link href="/overview" className="flex items-center gap-2.5 shrink-0">
+        <MaterialIcon name="gavel" size={28} className="text-[#f1ebd8]" />
         <div className="hidden md:flex flex-col leading-none">
-          <span className="text-[15px] font-bold text-[#f1ebd8] tracking-wider uppercase font-['Chivo'] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+          <span className="text-[18px] font-bold text-[#f1ebd8] tracking-wider uppercase font-['Chivo'] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
             Vendetta <span className="text-[#ffe569]">2006</span>
           </span>
-          <span className="text-[10px] text-[#a39a82]">MMORPG Mafia Clásico</span>
+          <span className="text-[11px] text-[#a39a82]">MMORPG Mafia Clásico</span>
         </div>
       </Link>
 
       {/* Panel de instrumentos: ticker + expediente expandible (el CAPO vive aquí) */}
-      <div className="relative flex-1 max-w-5xl mx-auto px-1 min-w-0 group">
+      <div className="relative flex-1 max-w-6xl mx-auto px-1.5 min-w-0 group">
         <div
           role="button"
           tabIndex={0}
@@ -473,7 +473,7 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
                   <th
                     key={res.key}
                     scope="col"
-                    className="vb-crimson-cell text-center text-[11px] font-['Chivo'] font-bold uppercase tracking-wider !py-1 px-1.5 whitespace-nowrap w-[20%] border border-t-0"
+                    className="vb-crimson-cell text-center text-[13px] font-['Chivo'] font-bold uppercase tracking-wider !py-1.5 px-1.5 whitespace-nowrap w-[20%] border border-t-0"
                   >
                     {res.name}
                   </th>
@@ -487,7 +487,7 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
                 {resources.map((res, i) => {
                   const { percentage, isFull } = getResourceStatus(res);
                   return (
-                    <td key={res.key} className="vb-track !p-0 h-[7px] border border-[#000]">
+                    <td key={res.key} className="vb-track !p-0 h-[9px] border border-[#000]">
                       <div
                         className={cn("vb-fill h-full transition-[width] duration-700 ease-out", isFull && "vb-full-pulse")}
                         style={{
@@ -499,7 +499,7 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
                     </td>
                   );
                 })}
-                <td className="vb-track !p-0 h-[7px] border border-[#000]" />
+                <td className="vb-track !p-0 h-[9px] border border-[#000]" />
               </tr>
 
               {/* Valores */}
@@ -552,7 +552,7 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
                       <td
                         key={res.key}
                         className={cn(
-                          "vb-cell border border-[#000] text-[10px] !py-1 px-1.5 whitespace-nowrap text-center font-['JetBrains_Mono']",
+                          "vb-cell border border-[#000] text-[12px] !py-1.5 px-1.5 whitespace-nowrap text-center font-['JetBrains_Mono']",
                           rowIdx % 2 === 1 && "bg-[linear-gradient(180deg,#16120b_0%,#0f0c07_100%)]"
                         )}
                         data-label={row.label}
@@ -561,11 +561,11 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
                       </td>
                     ))}
                     {rowIdx === 0 && (
-                      <td className="vb-cell border border-[#000] text-[10px] px-2.5 align-middle text-left" rowSpan={4}>
+                      <td className="vb-cell border border-[#000] text-[12px] px-3 align-middle text-left" rowSpan={4}>
                         <div className="space-y-0.5">
                           <div className="flex items-center justify-between gap-2">
                             <div>
-                              <div className="text-[9px] text-[#8a7d63] font-['JetBrains_Mono'] uppercase tracking-wider">Coordenadas</div>
+                              <div className="text-[10px] text-[#8a7d63] font-['JetBrains_Mono'] uppercase tracking-wider">Coordenadas</div>
                               <div className="text-[#dfcca0] font-['JetBrains_Mono'] font-bold">{coords}</div>
                             </div>
                             <button
@@ -575,15 +575,15 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
                               aria-label={`Cerrar sesión de ${user.name}`}
                               className="text-[#e53935] hover:text-white transition-colors"
                             >
-                              <MaterialIcon name="logout" size={14} />
+                              <MaterialIcon name="logout" size={16} />
                             </button>
                           </div>
-                          <div className="text-[9px] text-[#8a7d63] font-['JetBrains_Mono'] uppercase tracking-wider">Hora servidor</div>
+                          <div className="text-[10px] text-[#8a7d63] font-['JetBrains_Mono'] uppercase tracking-wider">Hora servidor</div>
                           <LiveClock />
                           <div className="mt-1 flex items-center justify-between border-t border-[#000] pt-1">
-                            <span className="text-[#c9bea5] font-['Chivo'] font-bold uppercase tracking-wider text-[10px]">{user.name}</span>
-                            <span className="text-[9px] text-[#ffe569]/80 font-['JetBrains_Mono'] uppercase tracking-wider">
-                              <MaterialIcon name="expand_less" size={10} className="align-middle" /> Ocultar
+                            <span className="text-[#c9bea5] font-['Chivo'] font-bold uppercase tracking-wider text-[12px]">{user.name}</span>
+                            <span className="text-[10px] text-[#ffe569]/80 font-['JetBrains_Mono'] uppercase tracking-wider">
+                              <MaterialIcon name="expand_less" size={11} className="align-middle" /> Ocultar
                             </span>
                           </div>
                         </div>

@@ -26,48 +26,46 @@ function PropertySelectorHeader({ properties, selectedProperty, onSelectProperty
   };
 
   return (
-    <div className="mb-2 px-1.5 py-2 bg-[#c5c0ad] border border-[#5a4f3d] shadow-[inset_0_1px_3px_rgba(0,0,0,0.35)]">
-      <div className="text-center text-[10px] font-bold text-[#554b3c] tracking-[0.2em] uppercase mb-1.5">
-        Base Actual
-      </div>
-      {hasMultiple && (
-        <div className="flex justify-center mb-1">
+    <div
+      className="mb-1.5 px-1 py-1 bg-[#c5c0ad] border border-[#5a4f3d] shadow-[inset_0_1px_3px_rgba(0,0,0,0.35)]"
+      title="Base Actual"
+    >
+      <div className="flex items-center gap-1">
+        {hasMultiple && (
           <button
             type="button"
-            className="nav-btn flex items-center justify-center"
+            className="shrink-0 w-[26px] h-[26px] flex items-center justify-center bg-[#c8c3b0] border border-[#444] text-[#1a160f] font-bold cursor-pointer hover:bg-[#dfdbc9] transition-colors"
             onClick={() => cycle(-1)}
-            title="Anterior"
+            title="Base anterior"
             aria-label="Base anterior"
           >
-            <MaterialIcon name="expand_less" size={16} />
+            <MaterialIcon name="expand_less" size={15} />
           </button>
-        </div>
-      )}
-      <select
-        className="nav-select"
-        value={selectedProperty.id}
-        onChange={(e) => onSelectProperty(e.target.value)}
-        aria-label="Seleccionar base"
-      >
-        {properties.map(p => (
-          <option key={p.id} value={p.id}>
-            {p.nombre} ({p.ciudad}:{p.barrio}:{p.edificio})
-          </option>
-        ))}
-      </select>
-      {hasMultiple && (
-        <div className="flex justify-center mt-1">
+        )}
+        <select
+          className="nav-select flex-1 min-w-0"
+          value={selectedProperty.id}
+          onChange={(e) => onSelectProperty(e.target.value)}
+          aria-label="Seleccionar base"
+        >
+          {properties.map(p => (
+            <option key={p.id} value={p.id}>
+              {p.nombre} ({p.ciudad}:{p.barrio}:{p.edificio})
+            </option>
+          ))}
+        </select>
+        {hasMultiple && (
           <button
             type="button"
-            className="nav-btn flex items-center justify-center"
+            className="shrink-0 w-[26px] h-[26px] flex items-center justify-center bg-[#c8c3b0] border border-[#444] text-[#1a160f] font-bold cursor-pointer hover:bg-[#dfdbc9] transition-colors"
             onClick={() => cycle(1)}
-            title="Siguiente"
+            title="Base siguiente"
             aria-label="Base siguiente"
           >
-            <MaterialIcon name="expand_more" size={16} />
+            <MaterialIcon name="expand_more" size={15} />
           </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
@@ -98,13 +96,17 @@ export function DashboardClientLayout({
       <div className="flex flex-1 min-h-0">
         {/* Menú de Navegación docked a la izquierda (altura total del dispositivo, fijo) */}
         <aside className="hidden lg:flex w-[248px] shrink-0 flex-col bg-[#050505] border-r-2 border-[#332d20] overflow-hidden p-2 shadow-[2px_0_10px_rgba(0,0,0,0.8)]">
-          <PropertySelectorHeader
-            properties={user?.propiedades || []}
-            selectedProperty={selectedProperty}
-            onSelectProperty={setSelectedPropertyById}
-          />
           <div className="flex-1 min-h-0 overflow-y-auto">
-            <SidebarNav user={user} />
+            <SidebarNav
+              user={user}
+              propertySelector={
+                <PropertySelectorHeader
+                  properties={user?.propiedades || []}
+                  selectedProperty={selectedProperty}
+                  onSelectProperty={setSelectedPropertyById}
+                />
+              }
+            />
           </div>
           <div className="mt-auto pt-3 border-t border-[#332d20] flex flex-col items-center text-center">
             <span className="text-[10px] text-[#786c52] font-semibold tracking-widest uppercase">Vendetta 2006</span>
