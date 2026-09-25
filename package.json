@@ -85,7 +85,8 @@
     "tailwindcss": "^4.3.3",
     "tsx": "^4.23.15",
     "typescript": "npm:@typescript/typescript6@6.0.2",
-    "typescript7": "npm:typescript@7.0.2"
+    "typescript7": "npm:typescript@7.0.2",
+    "vercel": "^59.26.0"
   },
   "trustedDependencies": [
     "@firebase/util",

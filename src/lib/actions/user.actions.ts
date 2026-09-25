@@ -3,8 +3,9 @@
 'use server';
 
 import prisma from "../prisma/prisma";
+import { getUserWithProgressById } from "../data";
 import type { FullPropiedad, UserWithProgress } from "../data";
-import { MessageCategory } from "@prisma/client";
+import { MessageCategory, Prisma } from "@prisma/client";
 import { calculateStorageCapacity, calcularProduccionTotalPorSegundo } from "../formulas/room-formulas";
 import { revalidatePath } from "next/cache";
 import { calcularPuntosEntrenamientos, calcularPuntosHabitaciones, calcularPuntosTropas } from "../formulas/score-formulas";
@@ -103,8 +104,19 @@ async function actualizarRecursosPropiedad(propiedad: FullPropiedad): Promise<Fu
 }
 
 
-export async function obtenerEstadoJuegoActualizado(user: UserWithProgress): Promise<UserWithProgress> {
-    await updateUserLastSeen(user.id);
+export interface GameTickOptions {
+    /**
+     * Si es `false` no se actualiza `lastSeen` del usuario.
+     * El tick automático (cron) pasa `false` para no marcar como "visto" a
+     * usuarios que no iniciaron sesión.
+     */
+    marcarVisto?: boolean;
+}
+
+export async function obtenerEstadoJuegoActualizado(user: UserWithProgress, options?: GameTickOptions): Promise<UserWithProgress> {
+    if (options?.marcarVisto !== false) {
+        await updateUserLastSeen(user.id);
+    }
 
     const propiedadesActualizadas = await Promise.all(
         user.propiedades.map(propiedad => actualizarRecursosPropiedad(propiedad))
@@ -129,6 +141,13 @@ async function verificarYFinalizarConstruccionDePropiedad(propiedad: FullPropied
     try {
         await prisma.$transaction(async (tx) => {
             for (const terminada of construccionesTerminadas) {
+                // Guarda idempotente: si otro tick (p. ej. el cron automático) ya
+                // finalizó esta construcción, se omiten las mutaciones.
+                const eliminada = await tx.colaConstruccion.deleteMany({
+                    where: { id: terminada.id },
+                });
+                if (eliminada.count === 0) continue;
+
                 await tx.habitacionUsuario.update({
                     where: {
                         propiedadId_configuracionHabitacionId: {
@@ -139,9 +158,6 @@ async function verificarYFinalizarConstruccionDePropiedad(propiedad: FullPropied
                     data: {
                         nivel: terminada.nivelDestino,
                     },
-                });
-                await tx.colaConstruccion.delete({
-                    where: { id: terminada.id },
                 });
 
                 const habitacionNombre = propiedad.habitaciones?.find(h => h.configuracionHabitacionId === terminada.habitacionId)?.configuracion?.nombre || terminada.habitacionId.replace(/_/g, ' ');
@@ -161,13 +177,15 @@ async function verificarYFinalizarConstruccionDePropiedad(propiedad: FullPropied
     }
   }
 
-  const propiedadPostFinalizacion = seHizoUnCambio 
-    ? await prisma.propiedad.findUnique({ where: { id: propiedad.id }, include: { colaConstruccion: { orderBy: { createdAt: 'asc' } } } })
-    : { ...propiedad, colaConstruccion: cola };
-  
-  if (!propiedadPostFinalizacion) return propiedad;
+  // Siempre releer la cola fresca cuando hubo construcciones finalizadas: el tick
+  // automático pudo haberlas procesado en paralelo y la vista local quedó obsoleta.
+  const colaActual = construccionesTerminadas.length > 0
+    ? await prisma.colaConstruccion.findMany({
+        where: { propiedadId: propiedad.id },
+        orderBy: { createdAt: 'asc' as Prisma.SortOrder },
+      })
+    : cola;
 
-  const colaActual = propiedadPostFinalizacion.colaConstruccion;
   const construccionActiva = colaActual.find(c => c.fechaFinalizacion);
   
   if (!construccionActiva && colaActual.length > 0) {
@@ -234,6 +252,13 @@ async function verificarYFinalizarReclutamientoDePropiedad(propiedad: FullPropie
 
     try {
         await prisma.$transaction(async (tx) => {
+            // Guarda idempotente: si otro tick ya finalizó este reclutamiento,
+            // se omite todo el resto (evita tropas duplicadas o mensajes repetidos).
+            const eliminado = await tx.colaReclutamiento.deleteMany({
+                where: { id: reclutamientoActivo.id },
+            });
+            if (eliminado.count === 0) return;
+
             const esTropaDeDefensa = reclutamientoActivo.tropaConfig.tipo === 'DEFENSA';
             
             if (esTropaDeDefensa) {
@@ -290,8 +315,6 @@ async function verificarYFinalizarReclutamientoDePropiedad(propiedad: FullPropie
                 }
             }
 
-            await tx.colaReclutamiento.delete({ where: { id: reclutamientoActivo.id } });
-
             await tx.message.create({
                 data: {
                     recipientId: propiedad.userId,
@@ -342,6 +365,13 @@ export async function verificarYFinalizarEntrenamientos(user: UserWithProgress):
         try {
             await prisma.$transaction(async (tx) => {
                 for (const terminado of entrenamientosTerminados) {
+                    // Guarda idempotente: si otro tick ya finalizó este entrenamiento,
+                    // se omite (evita subir nivel dos veces o mensajes duplicados).
+                    const eliminado = await tx.colaEntrenamiento.deleteMany({
+                        where: { id: terminado.id }
+                    });
+                    if (eliminado.count === 0) continue;
+
                     await tx.entrenamientoUsuario.update({
                         where: {
                             userId_configuracionEntrenamientoId: {
@@ -352,9 +382,6 @@ export async function verificarYFinalizarEntrenamientos(user: UserWithProgress):
                         data: {
                             nivel: terminado.nivelDestino,
                         },
-                    });
-                    await tx.colaEntrenamiento.delete({
-                        where: { id: terminado.id }
                     });
 
                     const nombreEntrenamiento = terminado.entrenamiento?.nombre || terminado.entrenamientoId.replace(/_/g, ' ');
@@ -413,6 +440,13 @@ export async function verificarYFinalizarMisiones(user: UserWithProgress): Promi
         try {
             await prisma.$transaction(async (tx) => {
                 for (const mision of misionesFinalizadas) {
+                    // Guarda idempotente: si el tick automático ya devolvió las tropas,
+                    // se omite para no duplicar unidades.
+                    const eliminada = await tx.colaMisiones.deleteMany({
+                        where: { id: mision.id }
+                    });
+                    if (eliminada.count === 0) continue;
+
                     if (mision.tipoMision !== 'OCUPAR' && mision.propiedadOrigenId) {
                         const tropas: { id: string; cantidad: number }[] = JSON.parse(mision.tropas);
                         
@@ -430,7 +464,6 @@ export async function verificarYFinalizarMisiones(user: UserWithProgress): Promi
                             }
                         }
                     }
-                    await tx.colaMisiones.delete({ where: { id: mision.id } });
 
                     await tx.message.create({
                         data: {
@@ -478,7 +511,7 @@ export async function verificarYFinalizarMisiones(user: UserWithProgress): Promi
  * Unified game tick processor - runs all checks sequentially with proper data flow
  * This ensures each step sees the updates from previous steps
  */
-export async function processGameTick(user: UserWithProgress): Promise<UserWithProgress> {
+export async function processGameTick(user: UserWithProgress, options?: GameTickOptions): Promise<UserWithProgress> {
     console.log('[GameTick] processGameTick - START for user:', user.id);
     
     // Step 1: Construction queue
@@ -498,7 +531,7 @@ export async function processGameTick(user: UserWithProgress): Promise<UserWithP
     console.log('[GameTick] After trainings:', updatedUser.colaEntrenamientos?.length, 'trainings');
     
     // Step 5: Update resources based on time elapsed (sees all queue updates)
-    updatedUser = await obtenerEstadoJuegoActualizado(updatedUser);
+    updatedUser = await obtenerEstadoJuegoActualizado(updatedUser, options);
     console.log('[GameTick] After resource update');
     
     // Step 6: Recalculate score (sees everything)
@@ -545,4 +578,83 @@ export async function actualizarPuntuacionUsuario(user: UserWithProgress): Promi
     console.error("Error actualizando la puntuación del usuario:", error);
     return user;
   }
+}
+
+export interface ResultadoTickMasivo {
+    procesados: number;
+    usuarios: string[];
+}
+
+/**
+ * Ejecuta el game tick completo para un usuario SIN requerir que tenga sesión activa.
+ * Se usa desde el cron automático y es reutilizable por cualquier server action.
+ */
+export async function procesarTickUsuario(userId: string, options?: GameTickOptions): Promise<UserWithProgress | null> {
+    const user = await getUserWithProgressById(userId);
+    if (!user) {
+        console.error('[TickAutomatico] Usuario no encontrado:', userId);
+        return null;
+    }
+    return processGameTick(user, options);
+}
+
+/**
+ * Tick automático global: detecta usuarios con eventos pendientes de finalizar
+ * (construcciones, reclutamientos, entrenamientos y misiones cuyo tiempo ya venció)
+ * y los procesa sin necesidad de login. Así la puntuación, las tropas y los recursos
+ * se mantienen al día aunque el jugador no haya iniciado sesión.
+ *
+ * Pensado para ejecutarse periódicamente (Vercel Cron → /api/cron/game-tick).
+ */
+export async function procesarTickMasivo(options?: GameTickOptions): Promise<ResultadoTickMasivo> {
+    const ahora = new Date();
+
+    const [construcciones, reclutamientos, entrenamientos, misiones] = await Promise.all([
+        prisma.colaConstruccion.findMany({
+            where: { fechaFinalizacion: { lte: ahora } },
+            select: { propiedad: { select: { userId: true } } },
+        }),
+        prisma.colaReclutamiento.findMany({
+            where: { fechaFinalizacion: { lte: ahora } },
+            select: { propiedad: { select: { userId: true } } },
+        }),
+        prisma.colaEntrenamiento.findMany({
+            where: { fechaFinalizacion: { lte: ahora } },
+            select: { userId: true },
+        }),
+        prisma.colaMisiones.findMany({
+            where: {
+                OR: [
+                    { fechaRegreso: { lte: ahora } },
+                    { fechaRegreso: null, fechaLlegada: { lte: ahora } },
+                ],
+            },
+            select: { userId: true },
+        }),
+    ]);
+
+    const userIds = new Set<string>();
+    for (const c of construcciones) if (c.propiedad?.userId) userIds.add(c.propiedad.userId);
+    for (const r of reclutamientos) if (r.propiedad?.userId) userIds.add(r.propiedad.userId);
+    for (const e of entrenamientos) userIds.add(e.userId);
+    for (const m of misiones) userIds.add(m.userId);
+
+    const ids = Array.from(userIds);
+    const procesados: string[] = [];
+    const CHUNK = 5;
+
+    for (let i = 0; i < ids.length; i += CHUNK) {
+        const chunk = ids.slice(i, i + CHUNK);
+        await Promise.all(chunk.map(async (userId) => {
+            try {
+                await procesarTickUsuario(userId, options);
+                procesados.push(userId);
+            } catch (error) {
+                console.error(`[TickAutomatico] Error procesando usuario ${userId}:`, error);
+            }
+        }));
+    }
+
+    console.log(`[TickAutomatico] Tick masivo completado: ${procesados.length} usuario(s) procesado(s)`);
+    return { procesados: procesados.length, usuarios: procesados };
 }

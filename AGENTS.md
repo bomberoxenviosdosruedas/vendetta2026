@@ -188,7 +188,10 @@ await prisma.$transaction(async (tx) => {
 
 ## 6. Game Loop - Lazy Server-Authoritative Tick
 
-**No hay daemon de fondo**. El tick se ejecuta en `(dashboard)/layout.tsx` en cada navegación:
+**No hay daemon de fondo**. El tick se ejecuta en dos capas:
+
+1. **Automática (sin login)**: Vercel Cron (`vercel.json` → `/api/cron/game-tick`, cada minuto) ejecuta `procesarTickMasivo()`, que descubre usuarios con eventos vencidos (construcción, reclutamiento, entrenamiento, misiones) y los finaliza actualizando tropas, recursos y puntuación **sin requerir sesión**. Esta ruta exige `x-vercel-cron: 1` o `Authorization: Bearer <CRON_SECRET>`.
+2. **Al navegar**: `(dashboard)/layout.tsx` ejecuta `processGameTick(sessionUser)` para el usuario activo:
 
 ```typescript
 // En layout.tsx - EJECUCIÓN PARALELA
@@ -204,6 +207,8 @@ const combinedUser = { ...sessionUser, ...afterConstruction, ...afterRecruitment
 const userWithResources = await obtenerEstadoJuegoActualizado(combinedUser);  // Cálculo diferencial Date.now() - ultimaActualizacion
 const finalUser = await actualizarPuntuacionUsuario(userWithResources);
 ```
+
+**Idempotencia obligatoria**: toda finalización (construcción, reclutamiento, entrenamiento, misión) usa `deleteMany` como guarda — el cron y el tick de navegación pueden correr en paralelo sin duplicar tropas, niveles o mensajes. El cron pasa `{ marcarVisto: false }` para NO tocar `lastSeen` de usuarios inactivos.
 
 **Fórmulas Puras** (`src/lib/formulas/`): Sin Prisma, sin side-effects, testeables unitariamente. Incluyen:
 - `room-formulas.ts`: costos, tiempos, producción, capacidad almacenamiento

@@ -605,6 +605,19 @@ export async function getUserWithProgressByUsername(username: string): Promise<U
     }
 }
 
+export const getUserWithProgressById = cache(async (userId: string): Promise<UserWithProgress | null> => {
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            include: userInclude
+        });
+        return user as UserWithProgress | null;
+    } catch (error) {
+        console.error(`Error fetching user ${userId} with progress:`, error);
+        return null;
+    }
+})
+
 export type ActivityType = 'CONSTRUCCION' | 'RECLUTAMIENTO' | 'ATAQUE' | 'ENTRENAMIENTO' | 'SISTEMA';
 export type ActivityStatus = 'COMPLETADO' | 'EN_CURSO' | 'DESPLEGADO';
 
