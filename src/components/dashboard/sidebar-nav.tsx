@@ -121,10 +121,10 @@ export function SidebarNav({ user }: SidebarNavProps) {
   };
 
   return (
-    <div className="flex flex-col gap-1 w-full text-[11px]">
+    <div className="flex flex-col gap-1 w-full text-[13px]">
       {navSections.map((section) => (
         <div key={section.id} className="w-full p-0">
-          <div className="bronze-th text-white font-['Chivo'] text-[10px] font-bold uppercase px-2 py-1 tracking-wider shadow-sm mb-[2px]">
+          <div className="bronze-th text-white font-['Chivo'] text-[12px] font-bold uppercase px-2.5 py-[6px] tracking-wider shadow-sm mb-[2px]">
             {section.label}
           </div>
           <div className="flex flex-col gap-[2px]">
@@ -143,7 +143,7 @@ export function SidebarNav({ user }: SidebarNavProps) {
                     handleNavigate(finalHref);
                   }}
                   className={cn(
-                    "w-full px-2 py-1 flex items-center justify-between gap-1 text-[11px] font-medium transition-colors min-h-[28px] border border-[#1a1712]",
+                    "w-full px-2.5 py-1 flex items-center justify-between gap-1 text-[13px] font-medium transition-colors min-h-[30px] border border-[#1a1712]",
                     isActive
                       ? "bg-[#ebe5d3] text-[#8b1a10] font-bold border-l-2 border-l-[#8b1a10]"
                       : "bg-[#dfdbc9] text-[#111111] hover:bg-[#efeadd] hover:text-[#8b0000]"
@@ -152,7 +152,7 @@ export function SidebarNav({ user }: SidebarNavProps) {
                   <div className="flex items-center gap-1.5 truncate">
                     <MaterialIcon
                       name={item.iconName}
-                      size={14}
+                      size={16}
                       className={isActive ? "text-[#8b1a10]" : "text-[#6b5c40]"}
                     />
                     <span className="truncate">{item.label}</span>
@@ -160,14 +160,14 @@ export function SidebarNav({ user }: SidebarNavProps) {
                   {badge !== undefined && badge !== null && badge !== 0 && badge !== "" ? (
                     <span
                       className={cn(
-                        "shrink-0 text-[9px] font-['JetBrains_Mono'] font-bold px-1 rounded-[2px]",
+                        "shrink-0 text-[10px] font-['JetBrains_Mono'] font-bold px-1.5 rounded-[2px]",
                         badgeClass ?? "bg-[#d8d2bf] text-[#554b3c] border border-[#b3aa92]"
                       )}
                     >
                       {badge}
                     </span>
                   ) : isActive ? (
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#8b1a10] shrink-0" />
+                    <span className="w-2 h-2 rounded-full bg-[#8b1a10] shrink-0" />
                   ) : null}
                 </Link>
               );

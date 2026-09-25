@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import MaterialIcon from "@/components/ui/material-icon";
 import { QueueStatusCard } from "./queue-status-card";
 import { BaseTroopsSection } from "./base-troops-section";
-import { getRoomConfigurations } from "@/lib/data";
+import { getRoomConfigurations, type FullPropiedad } from "@/lib/data";
 import { ErrorBoundary, DashboardSectionErrorFallback } from "./error-boundary";
 import Link from "next/link";
 
@@ -34,7 +34,7 @@ export async function OverviewView() {
     (puntuacion?.puntosEntrenamientos || 0);
 
   const mainProperty = user.propiedades[0];
-  const roomsBuilt = user.propiedades.reduce((sum, p) => sum + p.habitaciones.length, 0);
+  const roomsBuilt = user.propiedades.reduce((sum: number, p: FullPropiedad) => sum + p.habitaciones.length, 0);
   const roomsTotal = user.propiedades.length * 5;
   const mainCoords = mainProperty
     ? `${mainProperty.ciudad}:${mainProperty.barrio}:${mainProperty.edificio}`
@@ -49,52 +49,52 @@ export async function OverviewView() {
     <div className="w-full space-y-2.5">
       {/* 1. VISIÓN GENERAL DEL IMPERIO */}
       <section className="v-outer-frame">
-        <div className="v-header-c flex items-center justify-between px-2.5 py-2">
-          <span className="font-bold text-[11px] tracking-wide">VISIÓN GENERAL DEL IMPERIO</span>
-          <Link href="/map" className="text-[#ffe569] text-[10px] underline hover:text-white flex items-center gap-1">
-            <MaterialIcon name="visibility" size={12} />
+        <div className="v-header-c flex items-center justify-between px-3 py-2.5">
+          <span className="font-bold text-[14px] tracking-wide">VISIÓN GENERAL DEL IMPERIO</span>
+          <Link href="/map" className="text-[#ffe569] text-xs underline hover:text-white flex items-center gap-1">
+            <MaterialIcon name="visibility" size={14} />
             [Todo el Imperio]
           </Link>
         </div>
 
         {/* Desktop: avatar-box + columna de accesos */}
-        <div className="hidden md:grid md:grid-cols-[1fr_1fr_1fr_86px] divide-x divide-[#c4bdab] border-b border-[#a89e87] bg-[#f1ebda]">
+        <div className="hidden md:grid md:grid-cols-[1fr_1fr_1fr_96px] divide-x divide-[#c4bdab] border-b border-[#a89e87] bg-[#f1ebda]">
           {/* Jugador */}
-          <div className="p-2">
-            <div className="text-[9px] text-[#695d48] font-bold uppercase text-center mb-1">Jugador</div>
+          <div className="p-2.5">
+            <div className="text-[10px] text-[#695d48] font-bold uppercase text-center mb-1.5">Jugador</div>
             <div className="avatar-box">
-              <Avatar className="w-10 h-10 rounded-sm border border-[#5e5138] bg-[#181410] mb-1">
+              <Avatar className="w-12 h-12 rounded-sm border border-[#5e5138] bg-[#181410] mb-1.5">
                 <AvatarImage src={user.avatarUrl || ''} alt={user.name} className="object-cover" />
                 <AvatarFallback className="bg-[#181410] text-[#ffe569] font-['Chivo'] font-bold rounded-sm">
                   {user.name?.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              <strong className="text-xs text-[#ece6d5] truncate w-full px-1">{user.name}</strong>
-              <span className="text-[9px] text-[#a49a83] mt-0.5 truncate w-full px-1">
+              <strong className="text-sm text-[#ece6d5] truncate w-full px-1">{user.name}</strong>
+              <span className="text-[10px] text-[#a49a83] mt-1 truncate w-full px-1">
                 {user.title || "Capo"}
               </span>
             </div>
           </div>
 
           {/* Base */}
-          <div className="p-2">
-            <div className="text-[9px] text-[#695d48] font-bold uppercase text-center mb-1">Base Actual</div>
+          <div className="p-2.5">
+            <div className="text-[10px] text-[#695d48] font-bold uppercase text-center mb-1.5">Base Actual</div>
             <div className="avatar-box">
-              <MaterialIcon name="home" size={26} className="text-[#e2cca2] mb-1" />
-              <strong className="text-xs text-[#ece6d5] truncate w-full px-1">
+              <MaterialIcon name="home" size={30} className="text-[#e2cca2] mb-1.5" />
+              <strong className="text-sm text-[#ece6d5] truncate w-full px-1">
                 {mainProperty?.nombre || "SIN PROPIEDAD"}
               </strong>
-              <span className="text-[9px] text-[#a49a83] mt-0.5 font-['JetBrains_Mono']">{mainCoords}</span>
+              <span className="text-[10px] text-[#a49a83] mt-1 font-['JetBrains_Mono']">{mainCoords}</span>
             </div>
           </div>
 
           {/* Familia */}
-          <div className="p-2">
-            <div className="text-[9px] text-[#695d48] font-bold uppercase text-center mb-1">Familia</div>
+          <div className="p-2.5">
+            <div className="text-[10px] text-[#695d48] font-bold uppercase text-center mb-1.5">Familia</div>
             <div className="avatar-box">
-              <MaterialIcon name="shield" size={26} className="text-[#e2cca2] mb-1" />
-              <strong className="text-xs text-[#ece6d5] truncate w-full px-1">{familyName}</strong>
-              <span className="text-[9px] text-[#a49a83] mt-0.5 truncate w-full px-1">{familySub}</span>
+              <MaterialIcon name="shield" size={30} className="text-[#e2cca2] mb-1.5" />
+              <strong className="text-sm text-[#ece6d5] truncate w-full px-1">{familyName}</strong>
+              <span className="text-[10px] text-[#a49a83] mt-1 truncate w-full px-1">{familySub}</span>
             </div>
           </div>
 
@@ -193,12 +193,12 @@ export async function OverviewView() {
 
       {/* 6. PUNTOS DEL JUGADOR */}
       <section className="v-outer-frame">
-        <div className="v-header-c flex items-center justify-between px-2.5 py-2">
+        <div className="v-header-c flex items-center justify-between px-3 py-2.5">
           <div className="flex items-center gap-1.5">
-            <MaterialIcon name="leaderboard" size={13} className="text-[#e2ca92]" />
-            <span className="font-bold text-[11px] tracking-wide">PUNTOS DEL JUGADOR</span>
+            <MaterialIcon name="leaderboard" size={15} className="text-[#e2ca92]" />
+            <span className="font-bold text-[14px] tracking-wide">PUNTOS DEL JUGADOR</span>
           </div>
-          <span className="text-[10px] text-[#e0cfab]">Clasificación Global</span>
+          <span className="text-xs text-[#e0cfab]">Clasificación Global</span>
         </div>
 
         {/* Desktop: tabla clásica 6 columnas */}
@@ -206,42 +206,42 @@ export async function OverviewView() {
           <table className="w-full border-collapse">
             <tbody>
               <tr>
-                <th className="bg-[#dfdbc9] border border-black text-[#201a11] text-[10px] font-bold uppercase px-2 py-1">
+                <th className="bg-[#dfdbc9] border border-black text-[#201a11] text-[11px] font-bold uppercase px-2.5 py-1.5">
                   Puntos (Entrenamiento)
                 </th>
-                <th className="bg-[#dfdbc9] border border-black text-[#201a11] text-[10px] font-bold uppercase px-2 py-1">
+                <th className="bg-[#dfdbc9] border border-black text-[#201a11] text-[11px] font-bold uppercase px-2.5 py-1.5">
                   Puntos (Edificios)
                 </th>
-                <th className="bg-[#dfdbc9] border border-black text-[#201a11] text-[10px] font-bold uppercase px-2 py-1">
+                <th className="bg-[#dfdbc9] border border-black text-[#201a11] text-[11px] font-bold uppercase px-2.5 py-1.5">
                   Puntos (Tropas)
                 </th>
-                <th className="bg-[#dfdbc9] border border-black text-[#201a11] text-[10px] font-bold uppercase px-2 py-1">
+                <th className="bg-[#dfdbc9] border border-black text-[#201a11] text-[11px] font-bold uppercase px-2.5 py-1.5">
                   Total
                 </th>
-                <th className="bg-[#dfdbc9] border border-black text-[#201a11] text-[10px] font-bold uppercase px-2 py-1">
+                <th className="bg-[#dfdbc9] border border-black text-[#201a11] text-[11px] font-bold uppercase px-2.5 py-1.5">
                   Edificios
                 </th>
-                <th className="bg-[#dfdbc9] border border-black text-[#201a11] text-[10px] font-bold uppercase px-2 py-1">
+                <th className="bg-[#dfdbc9] border border-black text-[#201a11] text-[11px] font-bold uppercase px-2.5 py-1.5">
                   Lealtad
                 </th>
               </tr>
               <tr>
-                <td className="bg-[#f1ebda] border border-black font-['JetBrains_Mono'] text-[11px] text-center py-1.5">
+                <td className="bg-[#f1ebda] border border-black font-['JetBrains_Mono'] text-[13px] text-center py-2">
                   {formatPoints(puntuacion?.puntosEntrenamientos)}
                 </td>
-                <td className="bg-[#e9e3d2] border border-black font-['JetBrains_Mono'] text-[11px] text-center py-1.5">
+                <td className="bg-[#e9e3d2] border border-black font-['JetBrains_Mono'] text-[13px] text-center py-2">
                   {formatPoints(puntuacion?.puntosHabitaciones)}
                 </td>
-                <td className="bg-[#f1ebda] border border-black font-['JetBrains_Mono'] text-[11px] text-center py-1.5">
+                <td className="bg-[#f1ebda] border border-black font-['JetBrains_Mono'] text-[13px] text-center py-2">
                   {formatPoints(puntuacion?.puntosTropas)}
                 </td>
-                <td className="bg-[#ffe569] border border-black font-['JetBrains_Mono'] text-[11px] text-center py-1.5 font-bold text-stone-900">
+                <td className="bg-[#ffe569] border border-black font-['JetBrains_Mono'] text-[13px] text-center py-2 font-bold text-stone-900">
                   {formatPoints(puntosTotales)}
                 </td>
-                <td className="bg-[#e9e3d2] border border-black font-['JetBrains_Mono'] text-[11px] text-center py-1.5">
+                <td className="bg-[#e9e3d2] border border-black font-['JetBrains_Mono'] text-[13px] text-center py-2">
                   {roomsBuilt} / {roomsTotal}
                 </td>
-                <td className="bg-[#f1ebda] border border-black font-['JetBrains_Mono'] text-[11px] text-center py-1.5">
+                <td className="bg-[#f1ebda] border border-black font-['JetBrains_Mono'] text-[13px] text-center py-2">
                   [--]
                 </td>
               </tr>
