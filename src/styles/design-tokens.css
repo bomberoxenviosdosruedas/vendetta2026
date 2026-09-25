@@ -444,3 +444,74 @@
 .glow-border-gold {
   box-shadow: 0 0 15px -3px rgba(234, 179, 8, 0.35);
 }
+
+/* ==========================================================================
+   RESOURCE BAR — Instrument Cluster (Vendetta 2X clásico)
+   Cabecera carmesí (#6C0000), celdas oscuras, track con ranura interna
+   ========================================================================== */
+
+/* Cabecera carmesí del ticker (equivalente a td.c del clásico) */
+.vb-crimson-cell {
+  background: linear-gradient(180deg, #8a1515 0%, #6c0000 46%, #400000 100%);
+  border-color: #9c2b2b;
+  color: #ffcccc;
+  text-shadow: 1px 1px 0 #000;
+}
+
+/* Celda de valor del panel de instrumentos */
+.vb-cell {
+  background: linear-gradient(180deg, #1c1710 0%, #120e08 100%);
+  border-color: #000000;
+  color: #e8e2cf;
+}
+
+/* Ranura de la barra de recurso (hueco interno) */
+.vb-track {
+  background: #0c0a06;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.9);
+}
+
+/* Relleno de barra con brillo bevel (como el bar clásico) */
+.vb-fill {
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 -1px 1px rgba(0, 0, 0, 0.45);
+}
+
+.vb-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.05) 45%, rgba(0, 0, 0, 0.35) 100%);
+  pointer-events: none;
+}
+
+/* Barra llena: pulso carmesí (estado crítico) */
+@keyframes vb-full-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+.vb-full-pulse {
+  animation: vb-full-pulse 1.1s ease-in-out infinite;
+}
+
+/* Etiqueta [LLENO] / estado crítico parpadeando (como el rojo del clásico) */
+@keyframes vb-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+.vb-blink {
+  animation: vb-blink 0.9s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vb-full-pulse,
+  .vb-blink {
+    animation: none;
+  }
+  .vb-fill::after {
+    display: none;
+  }
+}
