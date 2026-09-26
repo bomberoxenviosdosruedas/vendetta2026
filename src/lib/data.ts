@@ -391,9 +391,6 @@ export const getGlobalStatistics = cache(async () => {
             prisma.habitacionUsuario.findMany(),
             prisma.entrenamientoUsuario.findMany(),
             prisma.tropaUsuario.findMany({
-                where: {
-                    propiedadId: { not: null }
-                },
                 include: {
                     propiedad: {
                         select: {

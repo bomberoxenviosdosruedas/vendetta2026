@@ -166,8 +166,8 @@ export function TrainingView({ user, trainingsData }: TrainingViewProps) {
   return (
     <div className="space-y-3 w-full">
       <section className="v-outer-frame">
-        <div className="crimson-th p-2 flex items-center justify-between">
-          <span className="font-['Chivo'] font-bold text-xs uppercase tracking-wider">
+        <div className="crimson-th p-2.5 flex items-center justify-between">
+          <span className="font-['Chivo'] font-bold text-sm uppercase tracking-wider">
             CENTRO DE ENTRENAMIENTO // {selectedProperty.nombre}
           </span>
         </div>
@@ -181,9 +181,9 @@ export function TrainingView({ user, trainingsData }: TrainingViewProps) {
             const isAlt = idx % 2 === 1;
             const isTrainingInQueue = user.colaEntrenamientos.some(c => c.entrenamientoId === training.id);
             return (
-              <div key={training.id} className={`p-2.5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-center ${isAlt ? 'bg-[#e5dfcb]' : 'bg-[#f1ebda]'} hover:bg-[#efeadd] transition-colors`}>
-                <div className="lg:col-span-4 flex items-center gap-3 min-w-0">
-                  <div className="w-16 h-16 relative rounded border border-[#5a4f3d] bg-[#181410] overflow-hidden shrink-0 shadow-sm">
+              <div key={training.id} className={`p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 items-start ${isAlt ? 'bg-[#e5dfcb]' : 'bg-[#f1ebda]'} hover:bg-[#efeadd] transition-colors`}>
+                <div className="lg:col-span-4 flex items-center gap-4 min-w-0">
+                  <div className="w-20 h-20 relative rounded border-2 border-[#5a4f3d] bg-[#181410] overflow-hidden shrink-0 shadow-sm flex-shrink-0">
                     <Image
                       src={resolveConfigImageUrl(training.urlImagen) || "https://placehold.co/80x56.png"}
                       alt={training.nombre}
@@ -192,37 +192,54 @@ export function TrainingView({ user, trainingsData }: TrainingViewProps) {
                     />
                   </div>
                   <div className="min-w-0">
-                    <div className="font-bold font-['Chivo'] text-[#801e00] text-sm uppercase truncate">
+                    <div className="font-bold font-['Chivo'] text-[#801e00] text-base uppercase truncate">
                       {training.nombre}
                     </div>
-                    <div className="text-xs font-['JetBrains_Mono'] font-bold text-[#008800]">
+                    <div className="text-sm font-['JetBrains_Mono'] font-bold text-[#008800] mt-0.5">
                       NIVEL {training.nivel}
                     </div>
                     {isTrainingInQueue && (
-                      <div className="text-[11px] text-[#b35900] font-['JetBrains_Mono'] flex items-center gap-1 font-bold">
-                        <MaterialIcon name="hourglass_top" size={12} /> EN COLA
+                      <div className="text-sm text-[#b35900] font-['JetBrains_Mono'] flex items-center gap-1.5 font-bold mt-1">
+                        <MaterialIcon name="hourglass_top" size={14} /> EN COLA
+                      </div>
+                    )}
+                    {!training.meetsRequirements && training.requirementsText && (
+                      <div className="text-xs text-[#c0392b] font-['JetBrains_Mono'] mt-1">
+                        Requiere: {training.requirementsText}
                       </div>
                     )}
                   </div>
                 </div>
 
                 <div className="lg:col-span-4 min-w-0">
-                  <p className="text-xs text-[#4a4031] line-clamp-2 leading-tight">
+                  <p className="text-sm text-[#4a4031] leading-relaxed line-clamp-3">
                     Especialización operativa de {training.nombre.toLowerCase()} para perfeccionar tu organización.
                   </p>
                 </div>
 
-                <div className="lg:col-span-4 flex flex-col gap-1 sm:items-end">
-                  <div className="text-[11px] font-['Chivo'] text-[#221c13] uppercase font-bold">
+                <div className="lg:col-span-4 flex flex-col gap-2 sm:items-end">
+                  <div className="text-sm font-['Chivo'] text-[#221c13] uppercase font-bold tracking-wide">
                     SIGUIENTE: NIVEL {training.nivel + 1}
                   </div>
-                  <div className="flex flex-wrap gap-2 text-xs font-['JetBrains_Mono'] tabular-nums font-bold">
-                    {training.costos.armas > 0 && <span className="text-[#a84e00]">ARMAS: {formatNumber(training.costos.armas)}</span>}
-                    {training.costos.municion > 0 && <span className="text-[#8f6d00]">MUN: {formatNumber(training.costos.municion)}</span>}
-                    {training.costos.dolares > 0 && <span className="text-[#007000]">$ {formatNumber(training.costos.dolares)}</span>}
+                  <div className="flex flex-wrap gap-2.5 text-sm font-['JetBrains_Mono'] tabular-nums font-bold">
+                    {training.costos.armas > 0 && (
+                      <span className="text-[#a84e00] flex items-center gap-1">
+                        <MaterialIcon name="swords" size={12} /> ARMAS: {formatNumber(training.costos.armas)}
+                      </span>
+                    )}
+                    {training.costos.municion > 0 && (
+                      <span className="text-[#8f6d00] flex items-center gap-1">
+                        <MaterialIcon name="av_timer" size={12} /> MUN: {formatNumber(training.costos.municion)}
+                      </span>
+                    )}
+                    {training.costos.dolares > 0 && (
+                      <span className="text-[#007000] flex items-center gap-1">
+                        <MaterialIcon name="attach_money" size={12} /> $ {formatNumber(training.costos.dolares)}
+                      </span>
+                    )}
                   </div>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="timer-pill px-2 py-0.5 text-[11px]">
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className="timer-pill px-3 py-0.5 text-sm">
                       {formatDuration(training.tiempo)}
                     </span>
                     <TrainingForm
