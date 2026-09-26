@@ -43,55 +43,64 @@ export function BaseTroopsSection() {
         </p>
       ) : (
         <div className="p-2 bg-[#f1ebda] border-t border-[#a89e87]">
-          {/* Desktop: badge-units estampados */}
+          {/* Desktop: badge-units full bleed */}
           <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-2">
             {troops.map(t => (
               <div key={t.id} className="badge-unit">
                 {t.configuracion.urlImagen ? (
-                  <img
-                    src={resolveConfigImageUrl(t.configuracion.urlImagen)}
-                    alt={t.configuracion.nombre}
-                    className="w-8 h-8 object-contain mb-0.5"
-                  />
+                  <>
+                    <img
+                      src={resolveConfigImageUrl(t.configuracion.urlImagen)}
+                      alt={t.configuracion.nombre}
+                      className="badge-unit__image"
+                    />
+                    <div className="badge-unit__overlay">
+                      <span className="badge-unit__name truncate">{t.configuracion.nombre}</span>
+                      <span className="badge-unit__quantity">{formatNumber(t.cantidad)}</span>
+                    </div>
+                  </>
                 ) : (
-                  <MaterialIcon
-                    name={troopIconByType[t.configuracion.tipo] || 'military_tech'}
-                    size={28}
-                    className="mb-0.5 text-[#e2cca2]"
-                  />
+                  <div className="badge-unit badge-unit--fallback">
+                    <MaterialIcon
+                      name={troopIconByType[t.configuracion.tipo] || 'military_tech'}
+                      size={28}
+                      className="badge-unit__icon text-[#e2cca2] mb-1"
+                    />
+                    <b className="text-xs text-[#ece6d5]">{t.configuracion.nombre}</b>
+                    <span className="footna text-amber-300 font-['JetBrains_Mono']">( {formatNumber(t.cantidad)} )</span>
+                  </div>
                 )}
-                <b className="text-xs text-[#ece6d5]">{t.configuracion.nombre}</b>
-                <span className="footna text-amber-300 font-['JetBrains_Mono']">( {formatNumber(t.cantidad)} )</span>
               </div>
             ))}
           </div>
 
-          {/* Mobile: cuadrícula táctil 2x2 */}
+          {/* Mobile: cuadrícula táctil 2x2 full bleed */}
           <div className="md:hidden grid grid-cols-2 gap-2">
             {troops.map(t => (
-              <div key={t.id} className="bg-[#e4ddc8] border border-[#a69c84] rounded p-2 flex items-center gap-2 shadow-sm">
-                <div className="w-9 h-9 rounded bg-[#d0c7af] border border-[#7e735d] flex items-center justify-center text-xl shrink-0">
-                  {t.configuracion.urlImagen ? (
+              <div key={t.id} className="badge-unit h-24 max-w-full">
+                {t.configuracion.urlImagen ? (
+                  <>
                     <img
                       src={resolveConfigImageUrl(t.configuracion.urlImagen)}
                       alt={t.configuracion.nombre}
-                      className="w-6 h-6 object-contain"
+                      className="badge-unit__image"
                     />
-                  ) : (
+                    <div className="badge-unit__overlay">
+                      <span className="badge-unit__name truncate">{t.configuracion.nombre}</span>
+                      <span className="badge-unit__quantity">{formatNumber(t.cantidad)} disp.</span>
+                    </div>
+                  </>
+                ) : (
+                  <div className="badge-unit badge-unit--fallback h-full">
                     <MaterialIcon
                       name={troopIconByType[t.configuracion.tipo] || 'military_tech'}
-                      size={18}
-                      className="text-[#5c4b2e]"
+                      size={24}
+                      className="badge-unit__icon text-[#e2cca2] mb-1"
                     />
-                  )}
-                </div>
-                <div className="overflow-hidden">
-                  <div className="font-bold text-[#1b1710] text-[11px] truncate">{t.configuracion.nombre}</div>
-                  <div className="text-[12px] font-mono font-bold text-[#8f2100]">
-                    {formatNumber(t.cantidad)}{' '}
-                    <span className="text-[9px] text-[#554b3c] font-normal">disp.</span>
+                    <b className="text-xs text-[#ece6d5] truncate">{t.configuracion.nombre}</b>
+                    <span className="footna text-amber-300 font-['JetBrains_Mono']">{formatNumber(t.cantidad)} disp.</span>
                   </div>
-                </div>
+                )}
               </div>
             ))}
           </div>

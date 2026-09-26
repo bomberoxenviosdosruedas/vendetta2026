@@ -6,6 +6,7 @@ import { BaseTroopsSection } from "./base-troops-section";
 import { getRoomConfigurations, type FullPropiedad } from "@/lib/data";
 import { ErrorBoundary, DashboardSectionErrorFallback } from "./error-boundary";
 import Link from "next/link";
+import { resolveConfigImageUrl } from "@/lib/config-images";
 
 function formatPoints(points: number | null | undefined): string {
   if (points === null || points === undefined) return "0";
@@ -40,10 +41,17 @@ export async function OverviewView() {
     ? `${mainProperty.ciudad}:${mainProperty.barrio}:${mainProperty.edificio}`
     : "-:-:-";
 
+  // Get image for base - use first room's image or fallback
+  const baseImageUrl = mainProperty?.habitaciones[0]?.configuracion?.urlImagen
+    ? resolveConfigImageUrl(mainProperty.habitaciones[0].configuracion.urlImagen)
+    : '';
+
   const familyName = familyMember ? familyMember.family.name : "SIN FAMILIA";
   const familySub = familyMember
     ? `[${familyMember.family.tag}] · ${familyMember.role}`
     : "ÚNETE A UNA FAMILIA";
+
+  const familyImageUrl = familyMember?.family?.avatarUrl || '';
 
   return (
     <div className="w-full space-y-2.5">
@@ -62,40 +70,78 @@ export async function OverviewView() {
           {/* Jugador */}
           <div className="p-2.5">
             <div className="text-[10px] text-[#695d48] font-bold uppercase text-center mb-1.5">Jugador</div>
-            <div className="avatar-box">
-              <Avatar className="w-12 h-12 rounded-sm border border-[#5e5138] bg-[#181410] mb-1.5">
-                <AvatarImage src={user.avatarUrl || ''} alt={user.name} className="object-cover" />
-                <AvatarFallback className="bg-[#181410] text-[#ffe569] font-['Chivo'] font-bold rounded-sm">
-                  {user.name?.charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <strong className="text-sm text-[#ece6d5] truncate w-full px-1">{user.name}</strong>
-              <span className="text-[10px] text-[#a49a83] mt-1 truncate w-full px-1">
-                {user.title || "Capo"}
-              </span>
-            </div>
+            {user.avatarUrl ? (
+              <div className="avatar-box">
+                <img
+                  src={user.avatarUrl}
+                  alt={user.name}
+                  className="avatar-box__image"
+                />
+                <div className="avatar-box__overlay">
+                  <strong className="avatar-box__name truncate w-full">{user.name}</strong>
+                  <span className="avatar-box__subtitle truncate w-full">{user.title || "Capo"}</span>
+                </div>
+              </div>
+            ) : (
+              <div className="avatar-box avatar-box--fallback">
+                <Avatar className="w-12 h-12 rounded-sm border border-[#5e5138] bg-[#181410] avatar-box__icon mb-1.5">
+                  <AvatarImage src={user.avatarUrl || ''} alt={user.name} className="object-cover" />
+                  <AvatarFallback className="bg-[#181410] text-[#ffe569] font-['Chivo'] font-bold rounded-sm">
+                    {user.name?.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <strong className="text-sm text-[#ece6d5] truncate w-full px-1">{user.name}</strong>
+                <span className="text-[10px] text-[#a49a83] mt-1 truncate w-full px-1">{user.title || "Capo"}</span>
+              </div>
+            )}
           </div>
 
           {/* Base */}
           <div className="p-2.5">
             <div className="text-[10px] text-[#695d48] font-bold uppercase text-center mb-1.5">Base Actual</div>
-            <div className="avatar-box">
-              <MaterialIcon name="home" size={30} className="text-[#e2cca2] mb-1.5" />
-              <strong className="text-sm text-[#ece6d5] truncate w-full px-1">
-                {mainProperty?.nombre || "SIN PROPIEDAD"}
-              </strong>
-              <span className="text-[10px] text-[#a49a83] mt-1 font-['JetBrains_Mono']">{mainCoords}</span>
-            </div>
+            {baseImageUrl ? (
+              <div className="avatar-box">
+                <img
+                  src={baseImageUrl}
+                  alt={mainProperty?.nombre || "Base"}
+                  className="avatar-box__image"
+                />
+                <div className="avatar-box__overlay">
+                  <strong className="avatar-box__name truncate w-full">{mainProperty?.nombre || "SIN PROPIEDAD"}</strong>
+                  <span className="avatar-box__subtitle font-['JetBrains_Mono'] truncate w-full">{mainCoords}</span>
+                </div>
+              </div>
+            ) : (
+              <div className="avatar-box avatar-box--fallback">
+                <MaterialIcon name="home" size={30} className="avatar-box__icon text-[#e2cca2] mb-1.5" />
+                <strong className="text-sm text-[#ece6d5] truncate w-full px-1">{mainProperty?.nombre || "SIN PROPIEDAD"}</strong>
+                <span className="text-[10px] text-[#a49a83] mt-1 font-['JetBrains_Mono']">{mainCoords}</span>
+              </div>
+            )}
           </div>
 
           {/* Familia */}
           <div className="p-2.5">
             <div className="text-[10px] text-[#695d48] font-bold uppercase text-center mb-1.5">Familia</div>
-            <div className="avatar-box">
-              <MaterialIcon name="shield" size={30} className="text-[#e2cca2] mb-1.5" />
-              <strong className="text-sm text-[#ece6d5] truncate w-full px-1">{familyName}</strong>
-              <span className="text-[10px] text-[#a49a83] mt-1 truncate w-full px-1">{familySub}</span>
-            </div>
+            {familyImageUrl ? (
+              <div className="avatar-box">
+                <img
+                  src={familyImageUrl}
+                  alt={familyName}
+                  className="avatar-box__image"
+                />
+                <div className="avatar-box__overlay">
+                  <strong className="avatar-box__name truncate w-full">{familyName}</strong>
+                  <span className="avatar-box__subtitle truncate w-full">{familySub}</span>
+                </div>
+              </div>
+            ) : (
+              <div className="avatar-box avatar-box--fallback">
+                <MaterialIcon name="shield" size={30} className="avatar-box__icon text-[#e2cca2] mb-1.5" />
+                <strong className="text-sm text-[#ece6d5] truncate w-full px-1">{familyName}</strong>
+                <span className="text-[10px] text-[#a49a83] mt-1 truncate w-full px-1">{familySub}</span>
+              </div>
+            )}
           </div>
 
           {/* Columna de botones de mensajes */}
@@ -122,38 +168,76 @@ export async function OverviewView() {
         {/* Mobile: bloque 3 columnas compacto + accesos rápidos */}
         <div className="md:hidden">
           <div className="grid grid-cols-3 divide-x divide-[#c4bdab] border-b border-[#a89e87] bg-[#f1ebda]">
-            <div className="p-2 text-center flex flex-col items-center justify-between">
-              <div className="text-[10px] font-bold text-[#72644e] uppercase mb-0.5">Jugador</div>
-              <div className="w-10 h-10 rounded border border-[#695d47] bg-[#ded8c4] flex items-center justify-center shadow-inner my-1 overflow-hidden">
-                <Avatar className="w-full h-full rounded-none">
-                  <AvatarImage src={user.avatarUrl || ''} alt={user.name} className="object-cover" />
-                  <AvatarFallback className="bg-[#ded8c4] text-[#801e00] font-['Chivo'] font-bold text-sm rounded-none">
-                    {user.name?.charAt(0).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-              </div>
-              <div className="text-[12px] font-bold text-[#801e00] leading-tight truncate w-full">{user.name}</div>
-              <span className="text-[9px] text-[#4b4334] font-semibold">{user.title || "Capo"}</span>
+            <div className="p-1.5">
+              <div className="text-[9px] font-bold text-[#72644e] uppercase mb-1 text-center">Jugador</div>
+              {user.avatarUrl ? (
+                <div className="avatar-box h-28 max-w-full mx-auto">
+                  <img
+                    src={user.avatarUrl}
+                    alt={user.name}
+                    className="avatar-box__image"
+                  />
+                  <div className="avatar-box__overlay">
+                    <strong className="avatar-box__name truncate w-full text-center">{user.name}</strong>
+                    <span className="avatar-box__subtitle truncate w-full text-center">{user.title || "Capo"}</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="avatar-box avatar-box--fallback h-28 max-w-full mx-auto">
+                  <Avatar className="w-9 h-9 rounded-sm border border-[#5e5138] bg-[#181410] avatar-box__icon mb-1">
+                    <AvatarImage src={user.avatarUrl || ''} alt={user.name} className="object-cover" />
+                    <AvatarFallback className="bg-[#181410] text-[#ffe569] font-['Chivo'] font-bold rounded-sm">
+                      {user.name?.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <strong className="text-xs text-[#ece6d5] truncate w-full">{user.name}</strong>
+                  <span className="text-[8px] text-[#a49a83] truncate w-full">{user.title || "Capo"}</span>
+                </div>
+              )}
             </div>
-            <div className="p-2 text-center flex flex-col items-center justify-between">
-              <div className="text-[10px] font-bold text-[#72644e] uppercase mb-0.5">Base Actual</div>
-              <div className="w-10 h-10 rounded border border-[#695d47] bg-[#ded8c4] flex items-center justify-center shadow-inner my-1">
-                <MaterialIcon name="home" size={20} className="text-[#4b4334]" />
-              </div>
-              <div className="text-[12px] font-bold text-[#1e1911] leading-tight truncate w-full">
-                {mainProperty?.nombre || "SIN PROPIEDAD"}
-              </div>
-              <span className="text-[10px] text-[#912d00] font-['JetBrains_Mono'] font-bold">{mainCoords}</span>
+            <div className="p-1.5">
+              <div className="text-[9px] font-bold text-[#72644e] uppercase mb-1 text-center">Base Actual</div>
+              {baseImageUrl ? (
+                <div className="avatar-box h-28 max-w-full mx-auto">
+                  <img
+                    src={baseImageUrl}
+                    alt={mainProperty?.nombre || "Base"}
+                    className="avatar-box__image"
+                  />
+                  <div className="avatar-box__overlay">
+                    <strong className="avatar-box__name truncate w-full text-center">{mainProperty?.nombre || "SIN PROPIEDAD"}</strong>
+                    <span className="avatar-box__subtitle font-['JetBrains_Mono'] truncate w-full text-center">{mainCoords}</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="avatar-box avatar-box--fallback h-28 max-w-full mx-auto">
+                  <MaterialIcon name="home" size={24} className="avatar-box__icon text-[#e2cca2] mb-1" />
+                  <strong className="text-xs text-[#ece6d5] truncate w-full">{mainProperty?.nombre || "SIN PROPIEDAD"}</strong>
+                  <span className="text-[8px] text-[#a49a83] font-['JetBrains_Mono']">{mainCoords}</span>
+                </div>
+              )}
             </div>
-            <div className="p-2 text-center flex flex-col items-center justify-between">
-              <div className="text-[10px] font-bold text-[#72644e] uppercase mb-0.5">Familia</div>
-              <div className="w-10 h-10 rounded border border-[#695d47] bg-[#ded8c4] flex items-center justify-center shadow-inner my-1">
-                <MaterialIcon name="shield" size={20} className="text-[#4b4334]" />
-              </div>
-              <div className="text-[11px] font-bold text-[#144766] leading-tight truncate w-full">{familyName}</div>
-              <span className="text-[9px] bg-[#d5cfbe] border border-[#a29881] text-[#701e00] font-bold px-1 rounded mt-0.5">
-                {familyMember ? familyMember.family.tag : "SIN TAG"}
-              </span>
+            <div className="p-1.5">
+              <div className="text-[9px] font-bold text-[#72644e] uppercase mb-1 text-center">Familia</div>
+              {familyImageUrl ? (
+                <div className="avatar-box h-28 max-w-full mx-auto">
+                  <img
+                    src={familyImageUrl}
+                    alt={familyName}
+                    className="avatar-box__image"
+                  />
+                  <div className="avatar-box__overlay">
+                    <strong className="avatar-box__name truncate w-full text-center">{familyName}</strong>
+                    <span className="avatar-box__subtitle truncate w-full text-center">{familyMember ? familyMember.family.tag : "SIN TAG"}</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="avatar-box avatar-box--fallback h-28 max-w-full mx-auto">
+                  <MaterialIcon name="shield" size={24} className="avatar-box__icon text-[#e2cca2] mb-1" />
+                  <strong className="text-xs text-[#ece6d5] truncate w-full">{familyName}</strong>
+                  <span className="text-[8px] text-[#a49a83] truncate w-full">{familyMember ? familyMember.family.tag : "SIN TAG"}</span>
+                </div>
+              )}
             </div>
           </div>
           <div className="grid grid-cols-4 gap-1 p-1.5 bg-[#dfdbc9]">
