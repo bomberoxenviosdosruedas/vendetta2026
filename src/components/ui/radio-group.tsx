@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
-import { MaterialIcon } from "@/components/ui/material-icon"
 
 import { cn } from "@/lib/utils"
 
@@ -28,14 +27,13 @@ const RadioGroupItem = React.memo(React.forwardRef<
     <RadioGroupPrimitive.Item
       ref={ref}
       className={cn(
-        "aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        // Square brass, per the no-curves rule
+        "v-radio disabled:cursor-not-allowed disabled:opacity-50",
         className
       )}
       {...props}
     >
-      <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-        <MaterialIcon name="circle" size={10} fill />
-      </RadioGroupPrimitive.Indicator>
+      <RadioGroupPrimitive.Indicator className="flex items-center justify-center" />
     </RadioGroupPrimitive.Item>
   )
 }))

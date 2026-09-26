@@ -25,7 +25,7 @@ interface NavSection {
 
 interface SidebarNavProps {
   user: UserWithProgress | null;
-  /** Selector de base actual; se renderiza entre las secciones Principal y Táctico & Familia. */
+  /** Selector de base actual; se renderiza entre las secciones Principal y TÃ¡ctico & Familia. */
   propertySelector?: React.ReactNode;
 }
 
@@ -34,7 +34,7 @@ const navSections: NavSection[] = [
     id: "principal",
     label: "PRINCIPAL",
     items: [
-      { href: "/overview", label: "Visión General", iconName: "home" },
+      { href: "/overview", label: "VisiÃ³n General", iconName: "home" },
       { href: "/rooms", label: "Habitaciones", iconName: "meeting_room" },
       { href: "/recruitment", label: "Reclutamiento", iconName: "groups" },
       { href: "/security", label: "Seguridad", iconName: "shield" },
@@ -44,16 +44,16 @@ const navSections: NavSection[] = [
   },
   {
     id: "tactico",
-    label: "TÁCTICO & FAMILIA",
+    label: "TÃCTICO & FAMILIA",
     items: [
-      { href: "/technologies", label: "Tecnologías", iconName: "psychology" },
+      { href: "/technologies", label: "TecnologÃ­as", iconName: "psychology" },
       { href: "/family", label: "Familia", iconName: "shield" },
       { href: "/resources", label: "Recursos", iconName: "inventory_2" },
       { href: "/map", label: "Mapa", iconName: "public" },
       { href: "/missions", label: "Misiones", iconName: "radar" },
       { href: "/simulator", label: "Simulador", iconName: "calculate" },
       { href: "/messages", label: "Mensajes", iconName: "mail" },
-      { href: "/statistics", label: "Estadísticas", iconName: "analytics" },
+      { href: "/statistics", label: "EstadÃ­sticas", iconName: "analytics" },
       { href: "/rankings", label: "Clasificaciones", iconName: "leaderboard" },
     ],
   },
@@ -115,9 +115,9 @@ export function SidebarNav({ user, propertySelector }: SidebarNavProps) {
   const resolveBadgeClass = (item: NavItem): string | undefined => {
     switch (item.href) {
       case "/missions":
-        return "bg-[#003800] border border-[#00c000] text-[#4caf50]";
+        return "bg-[#003800] border border-[#5fe06e] text-[#5fe06e]";
       case "/messages":
-        return "bg-[#b32400] text-white";
+        return "bg-[#a02020] text-white";
       default:
         return item.badgeClass;
     }
@@ -164,14 +164,14 @@ export function SidebarNav({ user, propertySelector }: SidebarNavProps) {
                   {badge !== undefined && badge !== null && badge !== 0 && badge !== "" ? (
                     <span
                       className={cn(
-                        "shrink-0 text-[10px] font-['JetBrains_Mono'] font-bold px-1.5 rounded-[2px]",
+                        "shrink-0 text-[10px] font-['JetBrains_Mono'] font-bold px-1.5",
                         badgeClass ?? "bg-[#d8d2bf] text-[#554b3c] border border-[#b3aa92]"
                       )}
                     >
                       {badge}
                     </span>
                   ) : isActive ? (
-                    <span className="w-2 h-2 rounded-full bg-[#8b1a10] shrink-0" />
+                    <span className="w-2 h-2 bg-[#a02020] shrink-0" />
                   ) : null}
                 </Link>
               );

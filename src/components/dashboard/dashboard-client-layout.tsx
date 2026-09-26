@@ -81,7 +81,7 @@ export function DashboardClientLayout({
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-[100dvh] flex flex-col bg-[#080808] text-[#dfdbc9] text-[12px] antialiased lg:h-[100dvh] lg:overflow-hidden">
+    <div className="min-h-[100dvh] flex flex-col bg-[#0a0806] text-[#eee0d7] text-[12px] antialiased lg:h-[100dvh] lg:overflow-hidden">
       {/* Barra de Recursos Desktop (docked, estática) */}
       <div className="hidden md:block shrink-0">
         <ResourceBar user={user} variant="desktop" />
@@ -94,8 +94,8 @@ export function DashboardClientLayout({
 
       {/* Viewport: sidebar docked + lienzo central scrollable */}
       <div className="flex flex-1 min-h-0">
-        {/* Menú de Navegación docked a la izquierda (altura total del dispositivo, fijo) */}
-        <aside className="hidden lg:flex w-[248px] shrink-0 flex-col bg-[#050505] border-r-2 border-[#332d20] overflow-hidden p-2 shadow-[2px_0_10px_rgba(0,0,0,0.8)]">
+        {/* Menú de Navegación docked — cured walnut carcass with a bronze rim */}
+        <aside className="hidden lg:flex w-[260px] shrink-0 flex-col bg-[#1f1813] border-r-2 border-[#332d20] overflow-hidden p-2 shadow-[2px_0_10px_rgba(0,0,0,0.8)]">
           <div className="flex-1 min-h-0 overflow-y-auto">
             <SidebarNav
               user={user}
@@ -108,14 +108,15 @@ export function DashboardClientLayout({
               }
             />
           </div>
-          <div className="mt-auto pt-3 border-t border-[#332d20] flex flex-col items-center text-center">
-            <span className="text-[10px] text-[#786c52] font-semibold tracking-widest uppercase">Vendetta 2006</span>
-            <span className="text-[9px] text-[#554d3a] mt-0.5">Servidor Latino v1.4</span>
+          {/* Double-line score divider, then the frame stamp */}
+          <div className="mt-auto pt-2.5 v-divider flex flex-col items-center text-center">
+            <span className="text-[10px] text-[#a89e87] font-semibold tracking-widest uppercase">Vendetta 2006</span>
+            <span className="text-[9px] text-[#948868] mt-0.5">Servidor Latino v1.4</span>
           </div>
         </aside>
 
         {/* Área central de juego */}
-        <main className="flex-1 min-w-0 bg-[radial-gradient(circle_at_50%_10%,#161410_0%,#080808_80%)] lg:overflow-y-auto">
+        <main className="flex-1 min-w-0 bg-[radial-gradient(circle_at_50%_10%,#211a15_0%,#0a0806_80%)] lg:overflow-y-auto">
           <div className="w-full max-w-[440px] md:max-w-[960px] xl:max-w-[1280px] 2xl:max-w-[1400px] mx-auto px-2 md:px-6 xl:px-8 py-3 md:py-4 space-y-2.5">
             {children}
           </div>

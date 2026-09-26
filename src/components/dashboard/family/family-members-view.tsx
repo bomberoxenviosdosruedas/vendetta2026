@@ -93,7 +93,7 @@ export function FamilyMembersView({ family }: FamilyMembersViewProps) {
                                         <td className="p-2 text-right font-mono font-bold text-[#801e00]">
                                             {formatPoints(user.puntuacion?.puntosTotales)}
                                         </td>
-                                        <td className={`p-2 text-right font-mono font-bold ${status.isOnline ? 'text-[#008800]' : 'text-[#695d48]'}`}>
+                                        <td className={`p-2 text-right font-mono font-bold ${status.isOnline ? 'text-[#1e6b28]' : 'text-[#695d48]'}`}>
                                             {status.text}
                                         </td>
                                     </tr>

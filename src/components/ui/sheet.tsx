@@ -31,7 +31,7 @@ const SheetOverlay = React.forwardRef<
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName
 
 const sheetVariants = cva(
-  "fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
+  "v-dossier fixed z-50 gap-3 p-3 transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
   {
     variants: {
       side: {
@@ -65,7 +65,7 @@ const SheetContent = React.forwardRef<
       {...props}
     >
       {children}
-      <SheetPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+      <SheetPrimitive.Close className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center border border-[#4a3a2c] bg-[#1b1612] text-[#dfcca0] opacity-80 transition-colors hover:border-[#a02020] hover:text-[#ffe569] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#a02020] disabled:pointer-events-none">
         <MaterialIcon name="close" size={18} />
         <span className="sr-only">Close</span>
       </SheetPrimitive.Close>
@@ -120,7 +120,7 @@ const SheetDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SheetPrimitive.Description
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("text-[12px] leading-[16px] text-[#cec5b8]", className)}
     {...props}
   />
 ))

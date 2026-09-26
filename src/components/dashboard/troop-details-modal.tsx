@@ -24,9 +24,9 @@ function formatNumber(num: number): string {
 export function TroopDetailsModal({ troop, user, ataqueActual, defensaActual, capacidadActual, velocidadActual }: TroopDetailsModalProps) {
   const stats = [
     { label: 'Ataque', base: troop.ataque, actual: ataqueActual, color: 'text-[#c00000]' },
-    { label: 'Defensa', base: troop.defensa, actual: defensaActual, color: 'text-[#008800]' },
-    { label: 'Capacidad', base: troop.capacidad, actual: capacidadActual, color: 'text-[#8f6d00]' },
-    { label: 'Velocidad', base: Number(troop.velocidad), actual: velocidadActual, color: 'text-[#a84e00]' },
+    { label: 'Defensa', base: troop.defensa, actual: defensaActual, color: 'text-[#1e6b28]' },
+    { label: 'Capacidad', base: troop.capacidad, actual: capacidadActual, color: 'text-[#6b5210]' },
+    { label: 'Velocidad', base: Number(troop.velocidad), actual: velocidadActual, color: 'text-[#8f4200]' },
     { label: 'Salario', base: troop.salario, actual: troop.salario, color: 'text-[#ffe569]' },
     { label: 'Puntos', base: troop.puntos, actual: troop.puntos, color: 'text-[#221c13]' },
   ];

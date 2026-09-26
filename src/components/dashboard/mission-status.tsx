@@ -140,7 +140,7 @@ function MissionCountdown({ mission, index }: { mission: ColaMisiones; index: nu
       )}
     >
       {/* Timer pill */}
-      <span className="timer-pill text-[11px] px-1.5 py-0.5 rounded text-center min-w-[62px] shrink-0 text-[#44dd55]">
+      <span className="timer-pill text-[11px] px-1.5 py-0.5 rounded text-center min-w-[62px] shrink-0 text-[#5fe06e]">
         {status.timeLeft || "00:00:00"}
       </span>
 
@@ -206,7 +206,7 @@ export function MissionStatus({ missions }: MissionStatusProps) {
           <span className="font-bold text-[11px] tracking-wide">MISIONES ACTIVAS</span>
           <span className="text-[#e2ca92] text-[10px] font-mono">({missions.length})</span>
         </div>
-        <span className="text-[9px] bg-[#231b11] border border-[#5d4d33] text-[#4caf50] px-1.5 py-0.5 rounded font-mono font-bold">
+        <span className="text-[9px] bg-[#231b11] border border-[#5d4d33] text-[#5fe06e] px-1.5 py-0.5 rounded font-mono font-bold">
           {missions.length > 0 ? `${missions.length} EN RUTA` : 'SIN FLOTAS'}
         </span>
       </div>
@@ -217,7 +217,7 @@ export function MissionStatus({ missions }: MissionStatusProps) {
           ))}
         </div>
       ) : (
-        <p className="p-3 text-center text-[11px] text-[#6d6148] font-mono bg-[#f1ebda] border-t border-[#a89e87]">
+        <p className="p-3 text-center text-[11px] text-[#4a4031] font-mono bg-[#f1ebda] border-t border-[#a89e87]">
           Sin flotas ni misiones activas
         </p>
       )}

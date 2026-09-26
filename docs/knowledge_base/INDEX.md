@@ -10,12 +10,12 @@
 | Archivo | Descripción | Prioridad |
 |---------|-------------|-----------|
 | [`AGENTS-full.md`](AGENTS-full.md) | Reglas completas: arquitectura, patrones Next.js 16, Prisma, Server Actions, DAL, fórmulas puras, transacciones | 🔴 Crítica |
-| [`DESIGN-system.md`](DESIGN-system.md) | Design system completo: paleta bronce/pergamino, tipografía Chivo/Arimo/JetBrains Mono, componentes, layout master frame, responsive, motion | 🔴 Crítica |
+| [`DESIGN-system.md`](DESIGN-system.md) | Design system completo: paleta bronce/pergamino cálida, tipografía Chivo/Arimo/JetBrains Mono, componentes, layout master frame, responsive, motion, **radio 0 obligatorio** y **variantes de acento por superficie** | 🔴 Crítica |
 | [`GAME-LOOP.md`](GAME-LOOP.md) | Lazy Server-Authoritative Tick: Vercel Cron + navegación, ejecución paralela, idempotencia, fórmulas puras | 🔴 Crítica |
 | [`ARCHITECTURE.md`](ARCHITECTURE.md) | Estructura `src/`, DAL con `React.cache()`, Server Actions, path aliases, modelos Prisma clave | 🟡 Alta |
 | [`VISUAL-design-tokens.md`](VISUAL-design-tokens.md) | Tokens YAML (colores, tipografía, spacing) + specs visuales desde mockup | 🟡 Alta |
 | [`PROMPTS/`](PROMPTS/) | Prompts de auditoría/ajuste a design system (referencia histórica) | 🟢 Media |
-| [`MOCKUPS/`](MOCKUPS/) | HTML/PNG de referencia: overview escritorio/móvil | 🟢 Media |
+| [`MOCKUPS/`](MOCKUPS/) | HTML/PNG de referencia: overview escritorio/móvil · **`dashboard_overview_unificado.html`** (layout global + overview fundidos en 1 archivo, Tailwind CDN + Vanilla JS) | 🟢 Media |
 | [`ARCHIVE-blueprint-legacy.md`](ARCHIVE-blueprint-legacy.md) | **OBSOLETO** — specs v0 (Inter, crimson #8B0000) — **NO USAR** | ⚫ Archivado |
 | [`ARCHIVE-ejemplo-legacy.html`](ARCHIVE-ejemplo-legacy.html) | **OBSOLETO** — referencia histórica diseño anterior | ⚫ Archivado |
 | [`errores_imagenes/`](errores_imagenes/) | Capturas de error visual para debugging | 🟢 Media |

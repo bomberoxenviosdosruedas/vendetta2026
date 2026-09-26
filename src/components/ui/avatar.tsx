@@ -12,7 +12,7 @@ const Avatar = React.memo(React.forwardRef<
   <AvatarPrimitive.Root
     ref={ref}
     className={cn(
-      "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full",
+      "relative flex h-10 w-10 shrink-0 overflow-hidden border border-[#3a2e24] shadow-[inset_0_0_0_1px_#5a4f3d]",
       className
     )}
     {...props}
@@ -39,7 +39,7 @@ const AvatarFallback = React.memo(React.forwardRef<
   <AvatarPrimitive.Fallback
     ref={ref}
     className={cn(
-      "flex h-full w-full items-center justify-center rounded-full bg-muted",
+      "flex h-full w-full items-center justify-center bg-[#1f1813] text-[10px] font-bold uppercase text-[#dfcca0]",
       className
     )}
     {...props}

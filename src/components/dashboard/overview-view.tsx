@@ -254,7 +254,7 @@ export async function OverviewView() {
             <Link href="/missions" className="quick-action-badge py-1.5 px-1 rounded flex flex-col items-center justify-center text-center shadow-sm">
               <MaterialIcon name="sync_alt" size={14} className="text-[#e0d6c1]" />
               <div className="text-[9px] text-[#e0d6c1] font-bold">Misiones</div>
-              <span className="text-[10px] font-bold text-[#44dd55] font-mono">{user.misiones.length}</span>
+              <span className="text-[10px] font-bold text-[#5fe06e] font-mono">{user.misiones.length}</span>
             </Link>
             <Link href="/simulator" className="quick-action-badge py-1.5 px-1 rounded flex flex-col items-center justify-center text-center shadow-sm">
               <MaterialIcon name="swords" size={14} className="text-[#e0d6c1]" />
@@ -310,22 +310,22 @@ export async function OverviewView() {
                 </th>
               </tr>
               <tr>
-                <td className="bg-[#f1ebda] border border-black font-['JetBrains_Mono'] text-[13px] text-center py-2">
+                <td className="bg-[#f1ebda] border border-black font-['JetBrains_Mono'] text-[13px] text-center py-2 text-[#221c13]">
                   {formatPoints(puntuacion?.puntosEntrenamientos)}
                 </td>
-                <td className="bg-[#e9e3d2] border border-black font-['JetBrains_Mono'] text-[13px] text-center py-2">
+                <td className="bg-[#e9e3d2] border border-black font-['JetBrains_Mono'] text-[13px] text-center py-2 text-[#221c13]">
                   {formatPoints(puntuacion?.puntosHabitaciones)}
                 </td>
-                <td className="bg-[#f1ebda] border border-black font-['JetBrains_Mono'] text-[13px] text-center py-2">
+                <td className="bg-[#f1ebda] border border-black font-['JetBrains_Mono'] text-[13px] text-center py-2 text-[#221c13]">
                   {formatPoints(puntuacion?.puntosTropas)}
                 </td>
-                <td className="bg-[#ffe569] border border-black font-['JetBrains_Mono'] text-[13px] text-center py-2 font-bold text-stone-900">
+                <td className="bg-[#ffe569] border border-black font-['JetBrains_Mono'] text-[13px] text-center py-2 font-bold text-[#1a150f]">
                   {formatPoints(puntosTotales)}
                 </td>
-                <td className="bg-[#e9e3d2] border border-black font-['JetBrains_Mono'] text-[13px] text-center py-2">
+                <td className="bg-[#e9e3d2] border border-black font-['JetBrains_Mono'] text-[13px] text-center py-2 text-[#221c13]">
                   {roomsBuilt} / {roomsTotal}
                 </td>
-                <td className="bg-[#f1ebda] border border-black font-['JetBrains_Mono'] text-[13px] text-center py-2">
+                <td className="bg-[#f1ebda] border border-black font-['JetBrains_Mono'] text-[13px] text-center py-2 text-[#221c13]">
                   [--]
                 </td>
               </tr>

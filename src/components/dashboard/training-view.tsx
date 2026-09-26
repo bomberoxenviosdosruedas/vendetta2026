@@ -63,12 +63,12 @@ function TrainingQueueAlert({ user }: { user: UserWithProgress }) {
   return (
     <div className="v-outer-frame p-2.5 flex items-center justify-between text-sm font-['JetBrains_Mono'] bg-[#f1ebda]">
       <div className="flex items-center gap-2 text-[#221c13] font-bold">
-        <MaterialIcon name="psychology" size={18} className="text-[#008800]" />
+        <MaterialIcon name="psychology" size={18} className="text-[#1e6b28]" />
         <span>
           Entrenando {colaEntrenamiento.entrenamiento.nombre} a Nivel {colaEntrenamiento.nivelDestino}
         </span>
       </div>
-      <span className="timer-pill px-3 py-0.5 text-sm text-[#44dd55]">{tiempoRestante}</span>
+      <span className="timer-pill px-3 py-0.5 text-sm text-[#5fe06e]">{tiempoRestante}</span>
     </div>
   );
 }
@@ -195,11 +195,11 @@ export function TrainingView({ user, trainingsData }: TrainingViewProps) {
                     <div className="font-bold font-['Chivo'] text-[#801e00] text-base uppercase truncate">
                       {training.nombre}
                     </div>
-                    <div className="text-sm font-['JetBrains_Mono'] font-bold text-[#008800] mt-0.5">
+                    <div className="text-sm font-['JetBrains_Mono'] font-bold text-[#1e6b28] mt-0.5">
                       NIVEL {training.nivel}
                     </div>
                     {isTrainingInQueue && (
-                      <div className="text-sm text-[#b35900] font-['JetBrains_Mono'] flex items-center gap-1.5 font-bold mt-1">
+                      <div className="text-sm text-[#8f4200] font-['JetBrains_Mono'] flex items-center gap-1.5 font-bold mt-1">
                         <MaterialIcon name="hourglass_top" size={14} /> EN COLA
                       </div>
                     )}
@@ -223,17 +223,17 @@ export function TrainingView({ user, trainingsData }: TrainingViewProps) {
                   </div>
                   <div className="flex flex-wrap gap-2.5 text-sm font-['JetBrains_Mono'] tabular-nums font-bold">
                     {training.costos.armas > 0 && (
-                      <span className="text-[#a84e00] flex items-center gap-1">
+                      <span className="text-[#8f4200] flex items-center gap-1">
                         <MaterialIcon name="swords" size={12} /> ARMAS: {formatNumber(training.costos.armas)}
                       </span>
                     )}
                     {training.costos.municion > 0 && (
-                      <span className="text-[#8f6d00] flex items-center gap-1">
+                      <span className="text-[#6b5210] flex items-center gap-1">
                         <MaterialIcon name="av_timer" size={12} /> MUN: {formatNumber(training.costos.municion)}
                       </span>
                     )}
                     {training.costos.dolares > 0 && (
-                      <span className="text-[#007000] flex items-center gap-1">
+                      <span className="text-[#256e2e] flex items-center gap-1">
                         <MaterialIcon name="attach_money" size={12} /> $ {formatNumber(training.costos.dolares)}
                       </span>
                     )}

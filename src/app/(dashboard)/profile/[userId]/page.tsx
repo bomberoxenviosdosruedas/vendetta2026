@@ -10,7 +10,7 @@ function ProfileLoading() {
     return (
         <div className="space-y-6">
             <div className="flex items-center gap-6">
-                <Skeleton className="h-24 w-24 rounded-full" />
+                <Skeleton className="h-24 w-24 border-2 border-[#3a2e24]" />
                 <div className="space-y-2">
                     <Skeleton className="h-8 w-48" />
                     <Skeleton className="h-4 w-32" />

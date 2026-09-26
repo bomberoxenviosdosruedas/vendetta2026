@@ -20,7 +20,7 @@ const resourceColors: { [key: string]: string } = {
     armas: "text-[#ee7000]",
     municion: "text-[#fabd00]",
     alcohol: "text-[#ff3f3f]",
-    dolares: "text-[#008800]",
+    dolares: "text-[#1e6b28]",
 };
 
 function formatProduction(num: number): string {

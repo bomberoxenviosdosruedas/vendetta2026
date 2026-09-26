@@ -48,7 +48,7 @@ function formatNumber(num: number): string {
 }
 
 function formatDurationFull(seconds: number): string {
-  if (!Number.isFinite(seconds) || seconds < 0) return '—';
+  if (!Number.isFinite(seconds) || seconds < 0) return 'â€”';
   const d = Math.floor(seconds / 86400);
   const h = Math.floor((seconds % 86400) / 3600);
   const m = Math.floor((seconds % 3600) / 60);
@@ -56,13 +56,13 @@ function formatDurationFull(seconds: number): string {
 }
 
 function timeToFill(value: number, capacity: number, prodPerSecond: number): string {
-  if (prodPerSecond <= 0) return '—';
+  if (prodPerSecond <= 0) return 'â€”';
   return formatDurationFull(Math.max(0, capacity - value) / prodPerSecond);
 }
 
 /**
- * Contador animado tipo odómetro: arranca desde 0 en el boot (900ms)
- * y hace count-up suave (500ms) en cada actualización del servidor.
+ * Contador animado tipo odÃ³metro: arranca desde 0 en el boot (900ms)
+ * y hace count-up suave (500ms) en cada actualizaciÃ³n del servidor.
  * Respeta prefers-reduced-motion.
  */
 function useAnimatedNumber(target: number): number {
@@ -115,20 +115,20 @@ function getResourceStatus(res: ResourceEntry) {
   };
 }
 
-/** Unidad de recurso del panel de escritorio: cabecera carmesí (icono svg + etiqueta), barra de relleno y valor animado. */
+/** Unidad de recurso del panel de escritorio: cabecera carmesÃ­ (icono svg + etiqueta), barra de relleno y valor animado. */
 function DesktopResourceUnit({ res, booted, index }: { res: ResourceEntry; booted: boolean; index: number }) {
   const animated = useAnimatedNumber(res.value);
   const { percentage, isFull, isLow } = getResourceStatus(res);
 
   return (
     <div className="flex-1 min-w-0 flex flex-col border border-[#000]">
-      {/* Cabecera carmesí clásica con icono del recurso */}
+      {/* Cabecera carmesÃ­ clÃ¡sica con icono del recurso */}
       <div className="vb-crimson-cell flex items-center justify-center gap-1.5 px-1.5 py-1 text-[12px] font-['Chivo'] font-bold uppercase tracking-wider whitespace-nowrap overflow-hidden">
         <Image src={`/img/recursos/${res.iconFile}`} alt={res.name} width={16} height={16} className="object-contain shrink-0" />
         <span className="truncate">{res.name}</span>
       </div>
 
-      {/* Barra de relleno (clásica de 5px) */}
+      {/* Barra de relleno (clÃ¡sica de 5px) */}
       <div className="vb-track h-[7px] border-x border-[#000]">
         <div
           className={cn("vb-fill h-full transition-[width] duration-700 ease-out", isFull && "vb-full-pulse")}
@@ -146,7 +146,7 @@ function DesktopResourceUnit({ res, booted, index }: { res: ResourceEntry; boote
           "vb-cell border border-t-0 border-[#000] text-[14px] !py-1.5 px-1.5 whitespace-nowrap text-center font-['JetBrains_Mono'] font-bold tabular-nums transition-colors",
           isFull ? "text-[#ff4545] vb-blink" : isLow && "text-[#ffb84d]"
         )}
-        title={isFull ? 'Almacén lleno' : isLow ? 'Stock bajo' : undefined}
+        title={isFull ? 'AlmacÃ©n lleno' : isLow ? 'Stock bajo' : undefined}
       >
         {res.key === 'dolares' ? `$${formatNumber(animated)}` : formatNumber(animated)}
       </div>
@@ -176,9 +176,9 @@ function DesktopCapoUnit({ name, open, onLogout }: { name: string; open: boolean
               e.stopPropagation();
               onLogout();
             }}
-            title="Cerrar Sesión"
-            aria-label={`Cerrar sesión de ${name}`}
-            className="ml-0.5 text-[#e53935] hover:text-white transition-colors shrink-0"
+            title="Cerrar SesiÃ³n"
+            aria-label={`Cerrar sesiÃ³n de ${name}`}
+            className="ml-0.5 text-[#f0706a] hover:text-white transition-colors shrink-0"
           >
             <MaterialIcon name="logout" size={16} />
           </button>
@@ -191,7 +191,7 @@ function DesktopCapoUnit({ name, open, onLogout }: { name: string; open: boolean
   );
 }
 
-/** Tile móvil con contador animado y expediente expandible */
+/** Tile mÃ³vil con contador animado y expediente expandible */
 function MobileResourceTile({ res, index, booted, isOpen, onToggle }: {
   res: ResourceEntry;
   index: number;
@@ -217,7 +217,7 @@ function MobileResourceTile({ res, index, booted, isOpen, onToggle }: {
       }}
       className="border border-[#3a3020] bg-[#17130d] shadow-[inset_0_0_6px_rgba(0,0,0,0.7)] cursor-pointer select-none focus:outline-none focus-visible:ring-1 focus-visible:ring-[#ffe569] transition-colors"
     >
-      {/* Mini cabecera carmesí */}
+      {/* Mini cabecera carmesÃ­ */}
       <div className="vb-crimson-cell flex items-center justify-between px-1.5 py-0.5 text-[10px] font-['Chivo'] font-bold uppercase tracking-wider">
         <span className="flex items-center gap-1">
           <MaterialIcon name={res.icon} size={11} />
@@ -247,11 +247,11 @@ function MobileResourceTile({ res, index, booted, isOpen, onToggle }: {
             "text-xs font-['JetBrains_Mono'] font-bold tabular-nums leading-none",
             isFull ? "text-[#ff4545] vb-blink" : isLow ? "text-[#ffb84d]" : "text-[#e8e2cf]"
           )}
-          title={isFull ? 'Almacén lleno' : isLow ? 'Stock bajo' : undefined}
+          title={isFull ? 'AlmacÃ©n lleno' : isLow ? 'Stock bajo' : undefined}
         >
           {res.key === 'dolares' ? `$${formatNumber(animated)}` : formatNumber(animated)}
         </span>
-        <span className="text-[9px] text-[#8a7d63] font-['JetBrains_Mono']">
+        <span className="text-[9px] text-[#a49a83] font-['JetBrains_Mono']">
           {isFull ? '[LLENO]' : `${percentage.toFixed(0)}%`}
         </span>
       </div>
@@ -264,19 +264,19 @@ function MobileResourceTile({ res, index, booted, isOpen, onToggle }: {
         <div className="overflow-hidden">
           <div className="px-1.5 py-1 border-t border-[#2c2418] bg-[#120e09] text-[9px] font-['JetBrains_Mono'] leading-relaxed">
             <div className="flex justify-between gap-1">
-              <span className="text-[#8a7d63]">Capacidad</span>
+              <span className="text-[#a49a83]">Capacidad</span>
               <span className="text-[#c9bea5]">({formatNumber(res.capacity)})</span>
             </div>
             <div className="flex justify-between gap-1">
-              <span className="text-[#8a7d63]">Por hora</span>
-              <span className="text-[#00c000] font-['Verdana'] font-bold">+{formatNumber(res.prodH)}/h</span>
+              <span className="text-[#a49a83]">Por hora</span>
+              <span className="text-[#5fe06e] font-['Verdana'] font-bold">+{formatNumber(res.prodH)}/h</span>
             </div>
             <div className="flex justify-between gap-1">
-              <span className="text-[#8a7d63]">Por día</span>
-              <span className="text-[#00c000] font-['Verdana'] font-bold">+{formatNumber(res.prodD)}/d</span>
+              <span className="text-[#a49a83]">Por dÃ­a</span>
+              <span className="text-[#5fe06e] font-['Verdana'] font-bold">+{formatNumber(res.prodD)}/d</span>
             </div>
             <div className="flex justify-between gap-1">
-              <span className="text-[#8a7d63]">Hasta llenar</span>
+              <span className="text-[#a49a83]">Hasta llenar</span>
               <span className={cn(isFull ? "text-[#ff4545]" : "text-[#ffe569]")}>
                 {timeToFill(res.value, res.capacity, res.prodS)}
               </span>
@@ -319,7 +319,7 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
       </header>
     ) : (
       <div className="bg-[#dfdbc9] border-b border-[#63553f] px-2 py-1.5 shadow-sm">
-        <p className="text-[#6d6148] text-xs font-mono text-center">Selecciona una propiedad para ver tus recursos.</p>
+        <p className="text-[#4a4031] text-xs font-mono text-center">Selecciona una propiedad para ver tus recursos.</p>
       </div>
     );
   }
@@ -343,8 +343,8 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
     },
     {
       key: 'municion',
-      name: 'MUNICIÓN',
-      nameShort: 'Munición',
+      name: 'MUNICIÃ“N',
+      nameShort: 'MuniciÃ³n',
       icon: resourceIcons.municion,
       iconFile: resourceIconFiles.municion,
       value: Number(selectedProperty.municion),
@@ -369,8 +369,8 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
     },
     {
       key: 'dolares',
-      name: 'DÓLARES',
-      nameShort: 'Dólares',
+      name: 'DÃ“LARES',
+      nameShort: 'DÃ³lares',
       icon: resourceIcons.dolares,
       iconFile: resourceIconFiles.dolares,
       value: Number(selectedProperty.dolares),
@@ -393,7 +393,7 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
   };
 
   /* ------------------------------------------------------------------ */
-  /* VARIANTE MÓVIL                                                       */
+  /* VARIANTE MÃ“VIL                                                       */
   /* ------------------------------------------------------------------ */
   if (variant === 'mobile') {
     return (
@@ -406,7 +406,7 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
             className="retro-btn px-2.5 py-1.5 text-xs flex items-center gap-1 font-bold"
           >
             <MaterialIcon name="menu" size={15} />
-            Menú
+            MenÃº
           </button>
           <div className="flex items-center justify-center flex-1 px-2">
             <span className="text-[#e8dec8] font-['Chivo'] font-bold text-[13px] tracking-wider uppercase">
@@ -414,16 +414,16 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
             </span>
           </div>
           <div className="flex items-center gap-1 px-2 py-0.5 bg-[#2a2215] border border-[#524128] rounded text-[11px] min-w-0">
-            <span className="inline-block w-2 h-2 rounded-full bg-[#00ff00] animate-pulse shrink-0" />
+            <span className="inline-block w-2 h-2 bg-[#5fe06e] animate-pulse shrink-0" />
             <span className="text-[#e8dec8] font-bold font-['JetBrains_Mono'] truncate max-w-[84px] min-[420px]:max-w-[120px]" title={user.name}>
               {user.name}
             </span>
             <button
               type="button"
               onClick={handleLogout}
-              title="Cerrar Sesión"
-              aria-label={`Cerrar sesión de ${user.name}`}
-              className="ml-0.5 text-[#e53935] hover:text-white transition-colors"
+              title="Cerrar SesiÃ³n"
+              aria-label={`Cerrar sesiÃ³n de ${user.name}`}
+              className="ml-0.5 text-[#f0706a] hover:text-white transition-colors"
             >
               <MaterialIcon name="logout" size={14} />
             </button>
@@ -433,7 +433,7 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
         {/* Realtime Server Status Strip */}
         <div className="flex items-center justify-between bg-[#2d2417] text-[#c9bea5] px-2.5 py-0.5 text-[10px] border-b border-[#4a3a22]">
           <div className="flex items-center gap-1">
-            <span className="text-[#96866b] flex items-center gap-0.5">
+            <span className="text-[#a2927a] flex items-center gap-0.5">
               <MaterialIcon name="schedule" size={12} /> Servidor:
             </span>
             <LiveClock />
@@ -441,7 +441,7 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
           <div className="flex items-center gap-2">
             <span className="text-[#dfcca0] font-['JetBrains_Mono'] font-bold">{coords}</span>
             <Link href="/resources" className="text-[#ffd777] underline hover:text-white">
-              Producción
+              ProducciÃ³n
             </Link>
           </div>
         </div>
@@ -478,7 +478,7 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
             <span className="text-[18px] font-bold text-[#f1ebd8] tracking-wider uppercase font-['Chivo'] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
               Vendetta <span className="text-[#ffe569]">2006</span>
             </span>
-            <span className="text-[11px] text-[#a39a82]">MMORPG Mafia Clásico</span>
+            <span className="text-[11px] text-[#a39a82]">MMORPG Mafia ClÃ¡sico</span>
           </div>
         </Link>
 
@@ -489,11 +489,11 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
             tabIndex={0}
             aria-expanded={open}
             aria-controls="resource-dossier"
-            aria-label={open ? 'Ocultar detalle de producción' : 'Ver detalle de producción (capacidad, producción y tiempo hasta llenar)'}
+            aria-label={open ? 'Ocultar detalle de producciÃ³n' : 'Ver detalle de producciÃ³n (capacidad, producciÃ³n y tiempo hasta llenar)'}
             onClick={toggle}
             onKeyDown={onKeyDown}
             className="flex h-full items-center gap-[1px] cursor-pointer select-none focus:outline-none focus-visible:ring-1 focus-visible:ring-[#ffe569]"
-            title="Clic para ver el detalle de producción"
+            title="Clic para ver el detalle de producciÃ³n"
           >
             {resources.map((res, i) => (
               <DesktopResourceUnit key={res.key} res={res} booted={booted} index={i} />
@@ -501,7 +501,7 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
             <DesktopCapoUnit name={user.name} open={open} onLogout={handleLogout} />
           </div>
 
-          {/* Expediente de producción (toggle estilo Vendetta 2X) */}
+          {/* Expediente de producciÃ³n (toggle estilo Vendetta 2X) */}
           <div
             id="resource-dossier"
             aria-hidden={!open}
@@ -519,19 +519,19 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
                       render: (res: ResourceEntry) => <span className="text-[#9a8d74]">({formatNumber(res.capacity)})</span>,
                     },
                     {
-                      label: 'Producción',
-                      render: (res: ResourceEntry) => <span className="text-[#00c000] font-['Verdana'] font-bold">+{formatNumber(res.prodH)}/h</span>,
+                      label: 'ProducciÃ³n',
+                      render: (res: ResourceEntry) => <span className="text-[#5fe06e] font-['Verdana'] font-bold">+{formatNumber(res.prodH)}/h</span>,
                     },
                     {
-                      label: 'Por día',
-                      render: (res: ResourceEntry) => <span className="text-[#00c000] font-['Verdana'] font-bold">+{formatNumber(res.prodD)}/d</span>,
+                      label: 'Por dÃ­a',
+                      render: (res: ResourceEntry) => <span className="text-[#5fe06e] font-['Verdana'] font-bold">+{formatNumber(res.prodD)}/d</span>,
                     },
                     {
                       label: 'Hasta llenar',
                       render: (res: ResourceEntry) => {
                         const { isFull } = getResourceStatus(res);
                         const ttl = timeToFill(res.value, res.capacity, res.prodS);
-                        return <span className={cn("font-['JetBrains_Mono'] font-bold", isFull ? "text-[#ff4545]" : ttl === '—' ? "text-[#8a7d63]" : "text-[#ffe569]")}>{ttl}</span>;
+                        return <span className={cn("font-['JetBrains_Mono'] font-bold", isFull ? "text-[#ff4545]" : ttl === 'â€”' ? "text-[#a49a83]" : "text-[#ffe569]")}>{ttl}</span>;
                       },
                     },
                   ].map((row, rowIdx) => (
@@ -553,20 +553,20 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
                           <div className="space-y-0.5">
                             <div className="flex items-center justify-between gap-2">
                               <div>
-                                <div className="text-[10px] text-[#8a7d63] font-['JetBrains_Mono'] uppercase tracking-wider">Coordenadas</div>
+                                <div className="text-[10px] text-[#a49a83] font-['JetBrains_Mono'] uppercase tracking-wider">Coordenadas</div>
                                 <div className="text-[#dfcca0] font-['JetBrains_Mono'] font-bold">{coords}</div>
                               </div>
                               <button
                                 type="button"
                                 onClick={handleLogout}
-                                title="Cerrar Sesión"
-                                aria-label={`Cerrar sesión de ${user.name}`}
-                                className="text-[#e53935] hover:text-white transition-colors"
+                                title="Cerrar SesiÃ³n"
+                                aria-label={`Cerrar sesiÃ³n de ${user.name}`}
+                                className="text-[#f0706a] hover:text-white transition-colors"
                               >
                                 <MaterialIcon name="logout" size={16} />
                               </button>
                             </div>
-                            <div className="text-[10px] text-[#8a7d63] font-['JetBrains_Mono'] uppercase tracking-wider">Hora servidor</div>
+                            <div className="text-[10px] text-[#a49a83] font-['JetBrains_Mono'] uppercase tracking-wider">Hora servidor</div>
                             <LiveClock />
                             <div className="mt-1 flex items-center justify-between border-t border-[#000] pt-1">
                               <span className="text-[#c9bea5] font-['Chivo'] font-bold uppercase tracking-wider text-[12px]">{user.name}</span>
@@ -586,7 +586,7 @@ export function ResourceBar({ user, variant, onOpenMenu }: ResourceBarProps) {
         </div>
 
         {/* Chip con reloj del servidor (solo escritorio) */}
-        <div className="hidden lg:flex items-center gap-2 bg-[#241d11] border border-[#4a3822] px-3 py-1.5 rounded-[3px] shadow-[inset_0_0_4px_rgba(0,0,0,0.6)] shrink-0" title="Hora del servidor">
+        <div className="hidden lg:flex items-center gap-2 bg-[#241d11] border border-[#4a3822] px-3 py-1.5 shadow-[inset_0_0_4px_rgba(0,0,0,0.6)] shrink-0" title="Hora del servidor">
           <MaterialIcon name="schedule" size={16} className="text-[#ffe569]" />
           <LiveClock />
         </div>

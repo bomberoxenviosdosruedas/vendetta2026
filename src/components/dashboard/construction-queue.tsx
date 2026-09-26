@@ -81,16 +81,16 @@ export function ConstructionQueue({ propiedad, allRooms }: ConstructionQueueProp
                         <div key={colaItem.id} className={`p-2.5 flex items-center justify-between ${esActiva ? 'bg-[#f1ebda]' : 'bg-[#e5dfcb]'} hover:bg-[#efeadd] transition-colors`}>
                             <div className="flex items-center gap-3 min-w-0">
                                 {esActiva ? (
-                                    <MaterialIcon name="check_circle" size={18} className="text-[#008800] animate-pulse flex-shrink-0" />
+                                    <MaterialIcon name="check_circle" size={18} className="text-[#1e6b28] animate-pulse flex-shrink-0" />
                                 ) : (
-                                    <MaterialIcon name="hourglass_empty" size={18} className="text-[#b35900] flex-shrink-0" />
+                                    <MaterialIcon name="hourglass_empty" size={18} className="text-[#8f4200] flex-shrink-0" />
                                 )}
                                 <p className="font-['Chivo'] text-sm font-bold text-[#801e00] truncate">
                                     {index + 1}. {roomConfig?.nombre || 'Habitación'} Nivel {colaItem.nivelDestino}
                                 </p>
                             </div>
                             <div className="flex items-center gap-2">
-                                <span className="font-['JetBrains_Mono'] text-sm font-bold text-[#a84e00]">
+                                <span className="font-['JetBrains_Mono'] text-sm font-bold text-[#8f4200]">
                                     {formatTime(colaItem.duracion)}
                                 </span>
                                 <button className="retro-btn-dark p-1.5 rounded-sm min-h-[40px] min-w-[40px] flex items-center justify-center" title="Cancelar construcción">

@@ -147,7 +147,7 @@ export function SecurityView({ user, defenseTroops }: SecurityViewProps) {
                         {troop.nombre}
                       </div>
                       <div className="text-sm font-['JetBrains_Mono'] font-bold text-[#221c13] mt-0.5">
-                        INSTALADOS: <span className="text-[#008800] font-bold">( {troop.count} )</span>
+                        INSTALADOS: <span className="text-[#1e6b28] font-bold">( {troop.count} )</span>
                       </div>
                     </div>
                   </div>
@@ -158,21 +158,21 @@ export function SecurityView({ user, defenseTroops }: SecurityViewProps) {
 
                   <div className="lg:col-span-4 flex flex-col gap-2 sm:items-end">
                     <div className="flex flex-wrap gap-2 text-sm font-['JetBrains_Mono'] tabular-nums font-bold">
-                      <span className="text-[#008800] flex items-center gap-1">
+                      <span className="text-[#1e6b28] flex items-center gap-1">
                         <MaterialIcon name="shield" size={12} /> DEF: {formatNumber(troop.defensaActual)}
                       </span>
                       {troop.costoArmas > 0 && (
-                        <span className="text-[#a84e00] flex items-center gap-1">
+                        <span className="text-[#8f4200] flex items-center gap-1">
                           <MaterialIcon name="swords" size={12} /> ARMAS: {formatNumber(troop.costoArmas)}
                         </span>
                       )}
                       {troop.costoMunicion > 0 && (
-                        <span className="text-[#8f6d00] flex items-center gap-1">
+                        <span className="text-[#6b5210] flex items-center gap-1">
                           <MaterialIcon name="av_timer" size={12} /> MUN: {formatNumber(troop.costoMunicion)}
                         </span>
                       )}
                       {troop.costoDolares > 0 && (
-                        <span className="text-[#007000] flex items-center gap-1">
+                        <span className="text-[#256e2e] flex items-center gap-1">
                           <MaterialIcon name="attach_money" size={12} /> $ {formatNumber(troop.costoDolares)}
                         </span>
                       )}

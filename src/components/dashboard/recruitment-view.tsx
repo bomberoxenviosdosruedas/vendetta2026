@@ -87,7 +87,7 @@ function RecruitmentQueueAlert() {
           Reclutando {colaReclutamiento.cantidad}x {colaReclutamiento.tropaConfig.nombre}
         </span>
       </div>
-      <span className="timer-pill px-3 py-0.5 text-sm text-[#44dd55]">{tiempoRestante}</span>
+      <span className="timer-pill px-3 py-0.5 text-sm text-[#5fe06e]">{tiempoRestante}</span>
     </div>
   );
 }
@@ -189,7 +189,7 @@ export function RecruitmentView({ user, troopConfigsWithStats }: RecruitmentView
                         {troop.nombre}
                       </div>
                       <div className="text-sm font-['JetBrains_Mono'] font-bold text-[#221c13] mt-0.5">
-                        EN BASE: <span className="text-[#a84e00] font-bold">( {troop.count} )</span>
+                        EN BASE: <span className="text-[#8f4200] font-bold">( {troop.count} )</span>
                       </div>
                     </div>
                   </div>
@@ -203,10 +203,10 @@ export function RecruitmentView({ user, troopConfigsWithStats }: RecruitmentView
                       <span className="text-[#c00000] flex items-center gap-1">
                         <MaterialIcon name="swords" size={12} /> ATQ: {formatNumber(troop.ataqueActual)}
                       </span>
-                      <span className="text-[#008800] flex items-center gap-1">
+                      <span className="text-[#1e6b28] flex items-center gap-1">
                         <MaterialIcon name="shield" size={12} /> DEF: {formatNumber(troop.defensaActual)}
                       </span>
-                      <span className="text-[#8f6d00] flex items-center gap-1">
+                      <span className="text-[#6b5210] flex items-center gap-1">
                         <MaterialIcon name="inventory" size={12} /> CAP: {formatNumber(troop.capacidadActual)}
                       </span>
                     </div>

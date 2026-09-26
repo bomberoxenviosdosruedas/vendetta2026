@@ -54,7 +54,7 @@ function CountdownTimer({ label, endDate, onFinish }: { label: string, endDate: 
   }, [endDate, onFinish]);
 
   return (
-    <span className="timer-pill text-[10px] px-1.5 py-0.5 rounded text-[#44dd55] shrink-0">
+    <span className="timer-pill text-[10px] px-1.5 py-0.5 rounded text-[#5fe06e] shrink-0">
       {timeLeft}
     </span>
   );
@@ -130,7 +130,7 @@ export function ConstructionStatus({ constructions, totalSlots, allRooms }: Cons
             </div>
           </>
         ) : (
-          <p className="p-3 text-center text-[11px] text-[#6d6148] font-mono bg-[#f1ebda]">
+          <p className="p-3 text-center text-[11px] text-[#4a4031] font-mono bg-[#f1ebda]">
             Sin obras activas
           </p>
         )}

@@ -52,7 +52,7 @@ export function TechItemCard({ name, description, imageUrl, requirements }: Tech
                         {hasRequirements ? (
                             <MaterialIcon name="lock" size={14} className="text-[#c00000]" />
                         ) : (
-                            <MaterialIcon name="lock_open" size={14} className="text-[#008800]" />
+                            <MaterialIcon name="lock_open" size={14} className="text-[#1e6b28]" />
                         )}
                         <span>{hasRequirements ? "Requisitos para desbloquear:" : "Disponible desde inicio"}</span>
                     </div>

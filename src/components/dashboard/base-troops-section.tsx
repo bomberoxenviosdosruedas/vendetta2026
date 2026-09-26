@@ -38,7 +38,7 @@ export function BaseTroopsSection() {
       </div>
 
       {troops.length === 0 ? (
-        <p className="p-3 text-center text-[11px] text-[#6d6148] font-mono bg-[#f1ebda] border-t border-[#a89e87]">
+        <p className="p-3 text-center text-[11px] text-[#4a4031] font-mono bg-[#f1ebda] border-t border-[#a89e87]">
           Sin tropas estacionadas en esta base
         </p>
       ) : (

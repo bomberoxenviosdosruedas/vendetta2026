@@ -33,9 +33,9 @@ function getBenefitText(roomId: string, level: number): string {
 function CostList({ costos }: { costos: { armas: number, municion: number, dolares: number } }) {
   return (
     <div className="flex flex-wrap gap-2 text-xs font-['JetBrains_Mono'] tabular-nums font-bold">
-      {costos.armas > 0 && <span className="text-[#a84e00]">ARMAS: {formatNumber(costos.armas)}</span>}
-      {costos.municion > 0 && <span className="text-[#8f6d00]">MUN: {formatNumber(costos.municion)}</span>}
-      {costos.dolares > 0 && <span className="text-[#007000]">$ {formatNumber(costos.dolares)}</span>}
+      {costos.armas > 0 && <span className="text-[#8f4200]">ARMAS: {formatNumber(costos.armas)}</span>}
+      {costos.municion > 0 && <span className="text-[#6b5210]">MUN: {formatNumber(costos.municion)}</span>}
+      {costos.dolares > 0 && <span className="text-[#256e2e]">$ {formatNumber(costos.dolares)}</span>}
     </div>
   );
 }
@@ -77,7 +77,7 @@ export function RoomDetailsModal({ room }: RoomDetailsModalProps) {
               return (
                 <div key={level} className="p-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="font-['JetBrains_Mono'] font-bold text-[#008800] text-xs">
+                    <span className="font-['JetBrains_Mono'] font-bold text-[#1e6b28] text-xs">
                       NVL {level}
                     </span>
                     <CostList costos={costos} />

@@ -316,7 +316,7 @@ export function MissionsView({ user, troopConfigs }: { user: UserWithProgress, t
         <div className="p-2.5 space-y-2 border-t border-[#cbc4b0] bg-[#dfdbc9]">
           <div className="flex items-center justify-between text-xs font-['JetBrains_Mono']">
             <span className="text-[#554a37] font-bold">DURACIÓN ESTIMADA:</span>
-            <span className="timer-pill px-2 py-0.5 text-xs text-[#44dd55]">{formatDuration(travelTime)}</span>
+            <span className="timer-pill px-2 py-0.5 text-xs text-[#5fe06e]">{formatDuration(travelTime)}</span>
           </div>
 
           <button

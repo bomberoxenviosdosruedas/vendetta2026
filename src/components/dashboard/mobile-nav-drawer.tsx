@@ -34,7 +34,7 @@ export function MobileNavDrawer({ user, open, onClose }: MobileNavDrawerProps) {
   const searchParams = useSearchParams();
   const { properties, selectedProperty, setSelectedPropertyById } = useProperty();
 
-  // Bloquear scroll del body mientras el drawer está abierto
+  // Bloquear scroll del body mientras el drawer estÃƒÂ¡ abierto
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
@@ -61,7 +61,7 @@ export function MobileNavDrawer({ user, open, onClose }: MobileNavDrawerProps) {
       id: "operaciones",
       label: "Operaciones",
       items: [
-        { href: "/overview", label: "Visión General" },
+        { href: "/overview", label: "VisiÃƒÂ³n General" },
         { href: "/rooms", label: "Habitaciones", badge: `${roomsBuilt}/${roomsTotal}` },
         { href: "/recruitment", label: "Reclutamiento", badge: `${activeRecruitments}/${propertyCount}` },
         { href: "/security", label: "Seguridad" },
@@ -73,7 +73,7 @@ export function MobileNavDrawer({ user, open, onClose }: MobileNavDrawerProps) {
       id: "imperio",
       label: "Imperio & Alianzas",
       items: [
-        { href: "/technologies", label: "Tecnologías" },
+        { href: "/technologies", label: "TecnologÃƒÂ­as" },
         { href: "/family", label: "Familia" },
         { href: "/resources", label: "Recursos & Finanzas" },
         { href: "/map", label: "Mapa del Distrito" },
@@ -81,7 +81,7 @@ export function MobileNavDrawer({ user, open, onClose }: MobileNavDrawerProps) {
           href: "/missions",
           label: "Misiones Activas",
           badge: activeMissions,
-          badgeClass: "bg-[#1a7e28] text-white rounded-full",
+          badgeClass: "bg-[#0c7017] text-[#5fe06e] border border-[#5fe06e]",
         },
         { href: "/simulator", label: "Simulador de Combate" },
       ],
@@ -94,9 +94,9 @@ export function MobileNavDrawer({ user, open, onClose }: MobileNavDrawerProps) {
           href: "/messages",
           label: "Mensajes",
           badge: unreadMessages,
-          badgeClass: "bg-[#b32400] text-white rounded-full",
+          badgeClass: "bg-[#6d1414] text-white border border-[#a02020]",
         },
-        { href: "/statistics", label: "Estadísticas" },
+        { href: "/statistics", label: "EstadÃƒÂ­sticas" },
         { href: "/rankings", label: "Clasificaciones" },
         { href: "/settings", label: "Opciones" },
       ],
@@ -136,7 +136,7 @@ export function MobileNavDrawer({ user, open, onClose }: MobileNavDrawerProps) {
 
   return (
     <>
-      {/* Overlay para cerrar el menú */}
+      {/* Overlay para cerrar el menÃƒÂº */}
       <div
         className={cn(
           "fixed inset-0 z-40 bg-black/75 backdrop-blur-[1px] transition-opacity duration-300",
@@ -154,26 +154,26 @@ export function MobileNavDrawer({ user, open, onClose }: MobileNavDrawerProps) {
         )}
         role="dialog"
         aria-modal="true"
-        aria-label="Menú principal"
+        aria-label="MenÃƒÂº principal"
       >
         <div>
           {/* Cabecera del Drawer */}
           <div className="v-header-c flex items-center justify-between !py-2 !px-2.5">
             <div className="flex items-center gap-2">
               <MaterialIcon name="gavel" size={14} className="text-[#e2ca92]" />
-              <span className="text-[#e2ca92] font-bold text-xs tracking-wider">MENÚ PRINCIPAL</span>
+              <span className="text-[#e2ca92] font-bold text-xs tracking-wider">MENÃƒÅ¡ PRINCIPAL</span>
             </div>
             <button
               type="button"
               className="retro-btn px-2 py-0.5 text-black font-bold flex items-center justify-center"
               onClick={onClose}
-              aria-label="Cerrar menú"
+              aria-label="Cerrar menÃƒÂº"
             >
               <MaterialIcon name="close" size={14} />
             </button>
           </div>
 
-          {/* Selector de Base Móvil */}
+          {/* Selector de Base MÃƒÂ³vil */}
           <div className="p-2 bg-[#d2cca9] border-b border-[#a89f88]">
             <div className="text-[10px] text-[#5c523f] uppercase font-bold text-center mb-1">
               Base Actual Seleccionada:
@@ -207,11 +207,11 @@ export function MobileNavDrawer({ user, open, onClose }: MobileNavDrawerProps) {
             </div>
           </div>
 
-          {/* Enlaces del menú clásico */}
+          {/* Enlaces del menÃƒÂº clÃƒÂ¡sico */}
           <nav className="p-2 space-y-[3px]">
             {groups.map(group => (
               <div key={group.id}>
-                <div className="text-[9px] uppercase tracking-wider font-bold text-[#6d6148] px-1 pt-1 pb-0.5">
+                <div className="text-[9px] uppercase tracking-wider font-bold text-[#4a4031] px-1 pt-1 pb-0.5">
                   {group.label}
                 </div>
                 {group.items.map(item => {
@@ -242,7 +242,7 @@ export function MobileNavDrawer({ user, open, onClose }: MobileNavDrawerProps) {
                           </span>
                         )
                       ) : (
-                        <span className="text-[10px] text-[#70644e] shrink-0">►</span>
+                        <span className="text-[10px] text-[#70644e] shrink-0">Ã¢â€“Âº</span>
                       )}
                     </Link>
                   );
@@ -255,7 +255,7 @@ export function MobileNavDrawer({ user, open, onClose }: MobileNavDrawerProps) {
               onClick={handleLogout}
               className="w-full py-1.5 text-center font-bold text-[11px] text-white bg-[#8b1a10] border border-[#4d0c07] shadow-sm rounded-sm mt-2"
             >
-              Cerrar Sesión (Logout)
+              Cerrar SesiÃƒÂ³n (Logout)
             </button>
           </nav>
         </div>
@@ -263,7 +263,7 @@ export function MobileNavDrawer({ user, open, onClose }: MobileNavDrawerProps) {
         {/* Footer del drawer */}
         <div className="p-2.5 text-center border-t border-[#9c927c] bg-[#cec7b2]">
           <div className="text-[10px] font-bold text-[#443725]">VENDETTA 2006 RETRO MOBILE</div>
-          <div className="text-[9px] text-[#635742]">Servidor Latino v1.4</div>
+          <div className="text-[9px] text-[#4a4031]">Servidor Latino v1.4</div>
         </div>
       </aside>
     </>
