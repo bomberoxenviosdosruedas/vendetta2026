@@ -121,8 +121,8 @@ export function SecurityView({ user, defenseTroops }: SecurityViewProps) {
   return (
     <div className="space-y-3 w-full">
       <section className="v-outer-frame">
-        <div className="crimson-th p-2 flex items-center justify-between">
-          <span className="font-['Chivo'] font-bold text-xs uppercase tracking-wider">
+        <div className="crimson-th p-2.5 flex items-center justify-between">
+          <span className="font-['Chivo'] font-bold text-sm uppercase tracking-wider">
             SISTEMAS DE SEGURIDAD Y DEFENSA // {selectedProperty.nombre}
           </span>
         </div>
@@ -132,9 +132,9 @@ export function SecurityView({ user, defenseTroops }: SecurityViewProps) {
             const isAlt = idx % 2 === 1;
             return (
               <Dialog key={troop.id}>
-                <div className={`p-2.5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-center ${isAlt ? 'bg-[#e5dfcb]' : 'bg-[#f1ebda]'} hover:bg-[#efeadd] transition-colors`}>
-                  <div className="lg:col-span-4 flex items-center gap-3 min-w-0">
-                    <div className="w-16 h-16 relative rounded border border-[#5a4f3d] bg-[#181410] overflow-hidden shrink-0 shadow-sm">
+                <div className={`p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 items-start ${isAlt ? 'bg-[#e5dfcb]' : 'bg-[#f1ebda]'} hover:bg-[#efeadd] transition-colors`}>
+                  <div className="lg:col-span-4 flex items-center gap-4 min-w-0">
+                    <div className="w-20 h-20 relative rounded border-2 border-[#5a4f3d] bg-[#181410] overflow-hidden shrink-0 shadow-sm flex-shrink-0">
                       <Image
                         src={resolveConfigImageUrl(troop.urlImagen) || "https://placehold.co/80x56.png"}
                         alt={troop.nombre}
@@ -143,33 +143,47 @@ export function SecurityView({ user, defenseTroops }: SecurityViewProps) {
                       />
                     </div>
                     <div className="min-w-0">
-                      <div className="font-bold font-['Chivo'] text-[#801e00] text-sm uppercase truncate">
+                      <div className="font-bold font-['Chivo'] text-[#801e00] text-base uppercase truncate">
                         {troop.nombre}
                       </div>
-                      <div className="text-xs font-['JetBrains_Mono'] font-bold text-[#221c13]">
+                      <div className="text-sm font-['JetBrains_Mono'] font-bold text-[#221c13] mt-0.5">
                         INSTALADOS: <span className="text-[#008800] font-bold">( {troop.count} )</span>
                       </div>
                     </div>
                   </div>
 
                   <div className="lg:col-span-4 min-w-0">
-                    <p className="text-xs text-[#4a4031] line-clamp-2 leading-tight">{troop.descripcion}</p>
+                    <p className="text-sm text-[#4a4031] leading-relaxed line-clamp-3">{troop.descripcion}</p>
                   </div>
 
-                  <div className="lg:col-span-4 flex flex-col gap-1 sm:items-end">
-                    <div className="flex flex-wrap gap-2 text-xs font-['JetBrains_Mono'] tabular-nums font-bold">
-                      <span className="text-[#008800]">DEF: {formatNumber(troop.defensaActual)}</span>
-                      {troop.costoArmas > 0 && <span className="text-[#a84e00]">ARMAS: {formatNumber(troop.costoArmas)}</span>}
-                      {troop.costoMunicion > 0 && <span className="text-[#8f6d00]">MUN: {formatNumber(troop.costoMunicion)}</span>}
-                      {troop.costoDolares > 0 && <span className="text-[#007000]">$ {formatNumber(troop.costoDolares)}</span>}
+                  <div className="lg:col-span-4 flex flex-col gap-2 sm:items-end">
+                    <div className="flex flex-wrap gap-2 text-sm font-['JetBrains_Mono'] tabular-nums font-bold">
+                      <span className="text-[#008800] flex items-center gap-1">
+                        <MaterialIcon name="shield" size={12} /> DEF: {formatNumber(troop.defensaActual)}
+                      </span>
+                      {troop.costoArmas > 0 && (
+                        <span className="text-[#a84e00] flex items-center gap-1">
+                          <MaterialIcon name="swords" size={12} /> ARMAS: {formatNumber(troop.costoArmas)}
+                        </span>
+                      )}
+                      {troop.costoMunicion > 0 && (
+                        <span className="text-[#8f6d00] flex items-center gap-1">
+                          <MaterialIcon name="av_timer" size={12} /> MUN: {formatNumber(troop.costoMunicion)}
+                        </span>
+                      )}
+                      {troop.costoDolares > 0 && (
+                        <span className="text-[#007000] flex items-center gap-1">
+                          <MaterialIcon name="attach_money" size={12} /> $ {formatNumber(troop.costoDolares)}
+                        </span>
+                      )}
                     </div>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="timer-pill px-2 py-0.5 text-[11px]">
+                    <div className="flex items-center gap-2 mt-2">
+                      <span className="timer-pill px-3 py-0.5 text-sm">
                         {formatDuration(troop.duracion)}/u
                       </span>
                       <DialogTrigger asChild>
-                        <button className="retro-btn-dark p-2 rounded-sm min-h-[44px] min-w-[44px] flex items-center justify-center">
-                          <MaterialIcon name="info" size={16} />
+                        <button className="retro-btn-dark p-2.5 rounded-sm min-h-[44px] min-w-[44px] flex items-center justify-center" title="Ver detalles">
+                          <MaterialIcon name="info" size={18} />
                         </button>
                       </DialogTrigger>
                       <TroopForm troopId={troop.id} />

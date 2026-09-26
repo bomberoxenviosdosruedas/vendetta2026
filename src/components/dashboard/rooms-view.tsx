@@ -162,11 +162,11 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
       <ConstructionQueue propiedad={selectedProperty} allRooms={simpleRoomConfigs} />
 
       <section className="v-outer-frame">
-        <div className="crimson-th p-2 flex items-center justify-between">
-          <span className="font-['Chivo'] font-bold text-xs uppercase tracking-wider">
+        <div className="crimson-th p-2.5 flex items-center justify-between">
+          <span className="font-['Chivo'] font-bold text-sm uppercase tracking-wider">
             HABITACIONES // {selectedProperty.nombre}
           </span>
-          <span className="timer-pill px-2 py-0.5 text-xs text-[#ffe569]">
+          <span className="timer-pill px-2.5 py-0.5 text-sm text-[#ffe569]">
             COLA: {construccionEnCola.length}/5
           </span>
         </div>
@@ -178,7 +178,7 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
               <button
                 type="submit"
                 disabled={isQueueFull || isSubmitting === room.id || !room.meetsRequirements}
-                className="retro-btn text-xs px-3 py-1.5 rounded-sm min-h-[44px] disabled:opacity-50"
+                className="retro-btn text-sm px-4 py-2 rounded-sm min-h-[44px] disabled:opacity-50"
               >
                 {isSubmitting === room.id ? 'AMPLIANDO...' : isQueueFull ? 'COLA LLENA' : 'AMPLIAR'}
               </button>
@@ -186,9 +186,10 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
 
             return (
               <Dialog key={room.id}>
-                <div className={`p-2.5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-center ${isAlt ? 'bg-[#e5dfcb]' : 'bg-[#f1ebda]'} hover:bg-[#efeadd] transition-colors`}>
-                  <div className="lg:col-span-4 flex items-center gap-3 min-w-0">
-                    <div className="w-16 h-16 relative rounded border border-[#5a4f3d] bg-[#181410] overflow-hidden shrink-0 shadow-sm">
+                <div className={`p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 items-start ${isAlt ? 'bg-[#e5dfcb]' : 'bg-[#f1ebda]'} hover:bg-[#efeadd] transition-colors`}>
+                  {/* Imagen + Nombre + Nivel */}
+                  <div className="lg:col-span-4 flex items-center gap-4 min-w-0">
+                    <div className="w-20 h-20 relative rounded border-2 border-[#5a4f3d] bg-[#181410] overflow-hidden shrink-0 shadow-sm flex-shrink-0">
                       <Image
                         src={resolveConfigImageUrl(room.urlImagen) || "https://placehold.co/80x56.png"}
                         alt={room.nombre}
@@ -197,40 +198,59 @@ export function RoomsView({ user, allRoomConfigs }: RoomsViewProps) {
                       />
                     </div>
                     <div className="min-w-0">
-                      <div className="font-bold font-['Chivo'] text-[#801e00] text-sm uppercase truncate">
+                      <div className="font-bold font-['Chivo'] text-[#801e00] text-base uppercase truncate">
                         {room.nombre}
                       </div>
-                      <div className="text-xs font-['JetBrains_Mono'] font-bold text-[#008800]">
+                      <div className="text-sm font-['JetBrains_Mono'] font-bold text-[#008800] mt-0.5">
                         NIVEL {room.nivelProyectado}
                       </div>
                       {room.enConstruccion && (
-                        <div className="text-[11px] text-[#b35900] font-['JetBrains_Mono'] flex items-center gap-1 font-bold">
-                          <MaterialIcon name="hourglass_top" size={12} /> EN COLA
+                        <div className="text-sm text-[#b35900] font-['JetBrains_Mono'] flex items-center gap-1.5 font-bold mt-1">
+                          <MaterialIcon name="hourglass_top" size={14} /> EN COLA
+                        </div>
+                      )}
+                      {!room.meetsRequirements && room.requirementsText && (
+                        <div className="text-xs text-[#c0392b] font-['JetBrains_Mono'] mt-1">
+                          Requiere: {room.requirementsText}
                         </div>
                       )}
                     </div>
                   </div>
 
+                  {/* Descripción */}
                   <div className="lg:col-span-4 min-w-0">
-                    <p className="text-xs text-[#4a4031] line-clamp-2 leading-tight">{room.descripcion}</p>
+                    <p className="text-sm text-[#4a4031] leading-relaxed line-clamp-3">{room.descripcion}</p>
                   </div>
 
-                  <div className="lg:col-span-4 flex flex-col gap-1 sm:items-end">
-                    <div className="text-[11px] font-['Chivo'] text-[#221c13] uppercase font-bold">
+                  {/* Costos, tiempo y botones */}
+                  <div className="lg:col-span-4 flex flex-col gap-2 sm:items-end">
+                    <div className="text-sm font-['Chivo'] text-[#221c13] uppercase font-bold tracking-wide">
                       SIGUIENTE: NIVEL {room.nivelSiguiente}
                     </div>
-                    <div className="flex flex-wrap gap-2 text-xs font-['JetBrains_Mono'] tabular-nums font-bold">
-                      {room.costos.armas > 0 && <span className="text-[#a84e00]">ARMAS: {formatNumber(room.costos.armas)}</span>}
-                      {room.costos.municion > 0 && <span className="text-[#8f6d00]">MUN: {formatNumber(room.costos.municion)}</span>}
-                      {room.costos.dolares > 0 && <span className="text-[#007000]">$ {formatNumber(room.costos.dolares)}</span>}
+                    <div className="flex flex-wrap gap-2.5 text-sm font-['JetBrains_Mono'] tabular-nums font-bold">
+                      {room.costos.armas > 0 && (
+                        <span className="text-[#a84e00] flex items-center gap-1">
+                          <MaterialIcon name="swords" size={12} /> ARMAS: {formatNumber(room.costos.armas)}
+                        </span>
+                      )}
+                      {room.costos.municion > 0 && (
+                        <span className="text-[#8f6d00] flex items-center gap-1">
+                          <MaterialIcon name="av_timer" size={12} /> MUN: {formatNumber(room.costos.municion)}
+                        </span>
+                      )}
+                      {room.costos.dolares > 0 && (
+                        <span className="text-[#007000] flex items-center gap-1">
+                          <MaterialIcon name="attach_money" size={12} /> $ {formatNumber(room.costos.dolares)}
+                        </span>
+                      )}
                     </div>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="timer-pill px-2 py-0.5 text-[11px]">
+                    <div className="flex items-center gap-2 mt-2">
+                      <span className="timer-pill px-3 py-0.5 text-sm">
                         {formatDuration(room.tiempo)}
                       </span>
                       <DialogTrigger asChild>
-                        <button className="retro-btn-dark p-2 rounded-sm min-h-[44px] min-w-[44px] flex items-center justify-center">
-                          <MaterialIcon name="info" size={16} />
+                        <button className="retro-btn-dark p-2.5 rounded-sm min-h-[44px] min-w-[44px] flex items-center justify-center" title="Ver detalles">
+                          <MaterialIcon name="info" size={18} />
                         </button>
                       </DialogTrigger>
                       <form action={() => handleAmpliacion(room.id)}>

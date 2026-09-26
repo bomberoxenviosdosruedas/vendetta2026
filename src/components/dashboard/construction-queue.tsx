@@ -1,8 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { MaterialIcon } from '@/components/ui/material-icon';
 import type { FullPropiedad } from '@/lib/data';
 import { useRouter } from 'next/navigation';
@@ -65,40 +63,44 @@ export function ConstructionQueue({ propiedad, allRooms }: ConstructionQueueProp
     const construccionActiva = construccionesEnCola.find(c => c.fechaFinalizacion && new Date(c.fechaFinalizacion) > new Date());
 
     return (
-        <Card className="mb-4">
-            <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-primary">Cola de Construcción ({propiedad.nombre})</CardTitle>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <MaterialIcon name="schedule" size={18} />
-                    <span>Total:</span>
-                    <span className="font-mono font-bold text-foreground">{formatTime(tiempoRestanteTotal)}</span>
+        <section className="v-outer-frame mb-3">
+            <div className="crimson-th p-2.5 flex items-center justify-between">
+                <span className="font-bold text-xs tracking-wide">Cola de Construcción ({propiedad.nombre})</span>
+                <div className="flex items-center gap-1.5">
+                    <MaterialIcon name="schedule" size={14} className="text-[#ffe569]" />
+                    <span className="text-xs text-[#ffe569]">Total:</span>
+                    <span className="timer-pill px-2 py-0.5 text-xs">{formatTime(tiempoRestanteTotal)}</span>
                 </div>
-            </CardHeader>
-            <CardContent className="space-y-2">
+            </div>
+
+            <div className="divide-y divide-[#cbc4b0]">
                 {construccionesEnCola.map((colaItem, index) => {
                     const roomConfig = allRooms.find(r => r.id === colaItem.habitacionId);
                     const esActiva = colaItem.id === construccionActiva?.id;
                     return (
-                         <div key={colaItem.id} className={`flex items-center justify-between p-3 rounded-lg ${esActiva ? 'bg-muted/50' : 'bg-muted/20'}`}>
-                            <div className="flex items-center gap-3">
-                                {esActiva ? <MaterialIcon name="check_circle" size={20} className="text-green-500 animate-pulse" /> : <MaterialIcon name="hourglass_empty" size={20} className="text-amber-500" />}
-                                <p className="font-semibold">
+                        <div key={colaItem.id} className={`p-2.5 flex items-center justify-between ${esActiva ? 'bg-[#f1ebda]' : 'bg-[#e5dfcb]'} hover:bg-[#efeadd] transition-colors`}>
+                            <div className="flex items-center gap-3 min-w-0">
+                                {esActiva ? (
+                                    <MaterialIcon name="check_circle" size={18} className="text-[#008800] animate-pulse flex-shrink-0" />
+                                ) : (
+                                    <MaterialIcon name="hourglass_empty" size={18} className="text-[#b35900] flex-shrink-0" />
+                                )}
+                                <p className="font-['Chivo'] text-sm font-bold text-[#801e00] truncate">
                                     {index + 1}. {roomConfig?.nombre || 'Habitación'} Nivel {colaItem.nivelDestino}
                                 </p>
                             </div>
-                            <div className="flex items-center gap-4">
-                                <span className="font-mono text-sm font-bold text-primary">
+                            <div className="flex items-center gap-2">
+                                <span className="font-['JetBrains_Mono'] text-sm font-bold text-[#a84e00]">
                                     {formatTime(colaItem.duracion)}
                                 </span>
-                                <Button variant="ghost" size="icon" className="h-8 w-8 min-h-[44px] min-w-[44px] text-muted-foreground hover:text-destructive">
-                                   <MaterialIcon name="close" size={20} />
-                                   <span className="sr-only">Cancelar</span>
-                                </Button>
+                                <button className="retro-btn-dark p-1.5 rounded-sm min-h-[40px] min-w-[40px] flex items-center justify-center" title="Cancelar construcción">
+                                    <MaterialIcon name="close" size={16} />
+                                </button>
                             </div>
                         </div>
                     );
                 })}
-            </CardContent>
-        </Card>
+            </div>
+        </section>
     );
 }

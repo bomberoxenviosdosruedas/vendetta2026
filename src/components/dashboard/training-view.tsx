@@ -61,14 +61,14 @@ function TrainingQueueAlert({ user }: { user: UserWithProgress }) {
   if (!selectedProperty || !colaEntrenamiento) return null;
 
   return (
-    <div className="v-outer-frame p-2 flex items-center justify-between text-xs font-['JetBrains_Mono'] bg-[#f1ebda]">
-      <div className="flex items-center gap-1.5 text-[#221c13] font-bold">
-        <MaterialIcon name="psychology" size={16} className="text-[#008800]" />
+    <div className="v-outer-frame p-2.5 flex items-center justify-between text-sm font-['JetBrains_Mono'] bg-[#f1ebda]">
+      <div className="flex items-center gap-2 text-[#221c13] font-bold">
+        <MaterialIcon name="psychology" size={18} className="text-[#008800]" />
         <span>
           Entrenando {colaEntrenamiento.entrenamiento.nombre} a Nivel {colaEntrenamiento.nivelDestino}
         </span>
       </div>
-      <span className="timer-pill px-2 py-0.5 text-xs text-[#44dd55]">{tiempoRestante}</span>
+      <span className="timer-pill px-3 py-0.5 text-sm text-[#44dd55]">{tiempoRestante}</span>
     </div>
   );
 }
