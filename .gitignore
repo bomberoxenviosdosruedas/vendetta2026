@@ -64,4 +64,39 @@ Thumbs.db
 /src/generated/prisma
 /vendetta/
 /vendetta
-.env*
+
+# Multimedia y Assets Binarios Pesados (también en .aiexclude)
+public/img/
+public/nuevas/
+public/icons/
+public/*.gif
+public/*.jpg
+public/*.jpeg
+public/*.png
+public/*.webp
+public/*.svg
+public/*.ico
+*.mp4
+*.mp3
+*.wav
+*.pdf
+
+# Volcados y Semillas de Datos Masivos (también en .aiexclude)
+prisma/datosactuales/
+prisma/export/
+prisma/importar/
+prisma/*.json
+*.sql
+*.sqlite
+*.sqlite3
+*.dump
+*.csv
+*.tsv
+*.xlsx
+
+# Lockfiles (opcional - descomenta si no quieres commitearlos)
+# pnpm-lock.yaml
+# package-lock.json
+
+# TypeScript build info
+*.tsbuildinfo

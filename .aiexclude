@@ -1,96 +1,59 @@
 # .aiexclude - Filtro de contexto para herramientas y agentes IA
 # Reduce drásticamente el consumo de tokens y omite archivos binarios, volcados pesados y artefactos de compilación.
+#
+# REGLA MAESTRA: Ver .gitignore para reglas base completas.
+# Este archivo SOLO añade exclusiones específicas para IA que no aplican a Git.
 
 # ----------------------------------------------------
-# 1. Dependencias y Entornos de Ejecución
+# 1. Referencia a .gitignore (reglas base sincronizadas)
 # ----------------------------------------------------
-node_modules/
-.pnp/
-.pnp.*
-.yarn/
-vendor/
+# Las siguientes reglas YA están en .gitignore y aplican aquí por referencia:
+# - node_modules/, .pnp/, .yarn/
+# - .next/, out/, build/, dist/, *.tsbuildinfo, next-env.d.ts
+# - .env, .env*.local, .env.development, .env.production, .env.test
+# - logs, *.log, npm-debug.log*, yarn-debug.log*, etc.
+# - coverage/, .nyc_output/
+# - .vercel/, .idx/, .genkit/*
+# - .DS_Store, Thumbs.db, *.pem, *.key, *.cert, .idea/, *.sublime-*
+# - *.sqlite, *.sqlite3, *.db, /src/generated/prisma, /vendetta/
+# - public/img/, public/nuevas/, public/icons/, public/*.{gif,jpg,jpeg,png,webp,svg,ico}
+# - *.mp4, *.mp3, *.wav, *.pdf
+# - prisma/datosactuales/, prisma/export/, prisma/importar/, prisma/*.json
+# - *.sql, *.sqlite, *.sqlite3, *.dump, *.csv, *.tsv, *.xlsx
 
 # ----------------------------------------------------
-# 2. Artefactos de Compilación y Cache
+# 2. Exclusiones ESPECÍFICAS para IA (no en .gitignore)
 # ----------------------------------------------------
-.next/
-out/
-build/
-dist/
+
+# Directorios de tooling IA internos
+.agents/
+.claude/
+.hermes/
+.stitch/
+
+# Archivos de configuración IA locales
+.aiexclude
+.geminiignore
+.antigravityignore
+.cursorignore
+.copilotignore
+
+# Lockfiles masivos (commiteados en Git pero inútiles para contexto IA)
+pnpm-lock.yaml
+package-lock.json
+
+# Documentación legacy archivada (movida a docs/knowledge_base/)
+docs/knowledge_base/ARCHIVE-*
+docs/knowledge_base/errores_imagenes/
+docs/knowledge_base/MOCKUPS/*.png
+
+# Archivos de build TypeScript
+*.tsbuildinfo
+
+# Cache de Turbo/Next
 .turbo/
 .cache/
-.vercel/
-*.tsbuildinfo
-next-env.d.ts
 
-# ----------------------------------------------------
-# 3. Multimedia y Assets Binarios Pesados
-# ----------------------------------------------------
-public/img/
-public/nuevas/
-public/icons/
-public/*.gif
-public/*.jpg
-public/*.jpeg
-public/*.png
-public/*.webp
-public/*.svg
-public/*.ico
-*.mp4
-*.mp3
-*.wav
-*.pdf
-
-# ----------------------------------------------------
-# 4. Volcados y Semillas de Datos Masivos de Base de Datos
-# (Grandes listas JSON que agotan la ventana de contexto de IA)
-# ----------------------------------------------------
-prisma/datosactuales/
-prisma/export/
-prisma/importar/
-prisma/*.json
-*.sql
-*.sqlite
-*.sqlite3
-*.dump
-*.csv
-*.tsv
-*.xlsx
-
-# ----------------------------------------------------
-# 5. Registros, Métricas y Depuración
-# ----------------------------------------------------
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-firebase-debug.log*
-firestore-debug.log*
-coverage/
-.nyc_output/
-
-# ----------------------------------------------------
-# 6. Secretos y Entornos Locales
-# ----------------------------------------------------
-.env
-.env*.local
-.env.development
-.env.production
-.env.test
-*.pem
-*.key
-*.cert
-
-# ----------------------------------------------------
-# 7. Control de Versiones y Metadatos de IDE
-# ----------------------------------------------------
-.git/
-.svn/
-.hg/
-.idea/
-.vscode/*
-!.vscode/settings.json
-!.vscode/extensions.json
-.DS_Store
-Thumbs.db
+# Datos de Prisma Studio / exports locales
+prisma/studio/
+prisma/migrations/.migration_lock.toml

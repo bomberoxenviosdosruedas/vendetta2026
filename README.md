@@ -2,25 +2,10 @@
 
 > Plataforma web de estrategia militar, expansión territorial y gestión de recursos en tiempo real inspirada en los clásicos juegos de navegador de la mafia. Construye propiedades, investiga tecnologías criminales, recluta sicarios y compite con tu familia por el control de la ciudad.
 
-[![Next.js](https://img.shields.io/badge/Next.js-15%2F16_App_Router-black?style=flat&logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?style=flat&logo=typescript)](https://www.typescriptlang.org/)
-[![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?style=flat&logo=prisma)](https://www.prisma.io/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
-
----
-
-## 📑 Tabla de Contenidos
-
-1. [Visión General y Mecánicas Core](#-visión-general-y-mecánicas-core)
-2. [Stack Tecnológico](#-stack-tecnológico)
-3. [Estructura del Proyecto](#-estructura-del-proyecto)
-4. [Instalación y Puesta en Marcha](#-instalación-y-puesta-en-marcha)
-5. [Variables de Entorno](#-variables-de-entorno)
-6. [Flujo de Base de Datos con Prisma](#-flujo-de-base-de-datos-con-prisma)
-7. [Arquitectura del Motor de Juego (Game Tick)](#-arquitectura-del-motor-de-juego-game-tick)
-8. [Panel de Administración y Control](#-panel-de-administración-y-control)
-9. [Scripts Disponibles](#-scripts-disponibles)
-10. [Desarrollo Asistido por IA](#-desarrollo-asistido-por-ia)
+[![Next.js](https://img.shields.io/badge/Next.js-16_App_Router-black?style=flat&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-7-blue?style=flat&logo=typescript)](https://www.typescriptlang.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-7_ORM-2D3748?style=flat&logo=prisma)](https://www.prisma.io/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=flat&logo=tailwindcss)](https://tailwindcss.com/)
 
 ---
 
@@ -41,11 +26,12 @@ En **Vendetta**, cada jugador administra una organización criminal con múltipl
 
 | Capa | Tecnología | Propósito |
 | :--- | :--- | :--- |
-| **Framework Web** | Next.js 15+ (App Router) | Renderizado del lado del servidor (RSC), Server Actions y rutas dinámicas |
-| **Lenguaje** | TypeScript 5.8+ | Tipado estricto en todo el flujo de datos y lógica de dominio |
-| **Base de Datos & ORM**| PostgreSQL + Prisma ORM | Modelado relacional, migraciones declarativas y consultas transaccionales |
-| **Estilos & UI** | Tailwind CSS + Shadcn UI | Diseño visual oscuro de mafia, accesible, responsivo y ultra optimizado |
+| **Framework Web** | Next.js 16 (App Router) | Renderizado del lado del servidor (RSC), Server Actions y rutas dinámicas |
+| **Lenguaje** | TypeScript 7 | Tipado estricto en todo el flujo de datos y lógica de dominio |
+| **Base de Datos & ORM** | PostgreSQL + Prisma 7 | Modelado relacional, migraciones declarativas y consultas transaccionales |
+| **Estilos & UI** | Tailwind CSS 4 + Shadcn UI (Radix) | Diseño visual oscuro de mafia, accesible, responsivo y ultra optimizado |
 | **Iconografía** | Lucide React | Paquete estándar de iconos SVG |
+| **Animaciones** | Motion (Framer) + GSAP | Micro-interacciones y transiciones fluidas |
 | **Validación** | Zod | Validación de entradas en Server Actions y esquemas de API |
 
 ---
@@ -84,7 +70,8 @@ En **Vendetta**, cada jugador administra una organización criminal con múltipl
 │   ├── schema.prisma             # Esquema integral de entidades y relaciones
 │   ├── seed.ts                   # Orquestador maestro de seeding
 │   └── datosactuales/            # Datasets base de prueba y configuración inicial
-├── AGENTS.md                     # Directrices de arquitectura para Agentes IA
+├── docs/knowledge_base/          # Documentación técnica completa (Single Source of Truth)
+├── AGENTS.md                     # Puntero normativo para agentes IA
 ├── .aiexclude                    # Filtro de archivos para optimización de tokens IA
 └── .gitignore                    # Reglas de exclusión para Git
 ```
@@ -94,8 +81,8 @@ En **Vendetta**, cada jugador administra una organización criminal con múltipl
 ## 🚀 Instalación y Puesta en Marcha
 
 ### Prerrequisitos
-- **Node.js**: v18.18+ o v20+ (recomendado v22 LTS)
-- **npm** o **pnpm**
+- **Node.js**: v20+ (recomendado v22 LTS)
+- **pnpm** (gestor de paquetes oficial)
 - Instancia de **PostgreSQL** accesible
 
 ### Pasos de Instalación
@@ -103,12 +90,12 @@ En **Vendetta**, cada jugador administra una organización criminal con múltipl
 1. **Clonar el repositorio**:
    ```bash
    git clone <URL_DEL_REPOSITORIO>
-   cd vendetta
+   cd vendetta2026
    ```
 
 2. **Instalar dependencias**:
    ```bash
-   npm install
+   pnpm install
    ```
 
 3. **Configurar el entorno**:
@@ -119,18 +106,18 @@ En **Vendetta**, cada jugador administra una organización criminal con múltipl
 
 4. **Generar el cliente Prisma y sincronizar la base de datos**:
    ```bash
-   npx prisma generate
-   npx prisma db push
+   pnpm prisma generate
+   pnpm prisma db push
    ```
 
 5. **Poblar la base de datos con las configuraciones y datos iniciales**:
    ```bash
-   npm run prisma:seed
+   pnpm run prisma:seed
    ```
 
 6. **Iniciar el servidor de desarrollo**:
    ```bash
-   npm run dev
+   pnpm run dev
    ```
    La aplicación estará disponible en `http://localhost:3000`.
 
@@ -157,23 +144,23 @@ NODE_ENV="development"
 
 El esquema (`prisma/schema.prisma`) modela la interacción entre entidades estáticas del juego y datos de progreso de los jugadores:
 
-- **Comandos Principales**:
-  ```bash
-  # Regenerar tipos TypeScript tras modificar schema.prisma
-  npx prisma generate
+### Comandos Principales
+```bash
+# Regenerar tipos TypeScript tras modificar schema.prisma
+pnpm prisma generate
 
-  # Sincronizar esquema directamente con la base de datos (modo desarrollo)
-  npx prisma db push
+# Sincronizar esquema directamente con la base de datos (modo desarrollo)
+pnpm prisma db push
 
-  # Crear y aplicar una migración SQL formal
-  npx prisma migrate dev --name <nombre_migracion>
+# Crear y aplicar una migración SQL formal
+pnpm prisma migrate dev --name <nombre_migracion>
 
-  # Ejecutar script de seeding maestro
-  npm run prisma:seed
+# Ejecutar script de seeding maestro
+pnpm run prisma:seed
 
-  # Abrir Prisma Studio para inspección visual de tablas
-  npx prisma studio
-  ```
+# Abrir Prisma Studio para inspección visual de tablas
+pnpm prisma studio
+```
 
 ---
 
@@ -182,12 +169,15 @@ El esquema (`prisma/schema.prisma`) modela la interacción entre entidades está
 A diferencia de los MMO tradicionales que dependen de costosos daemons en segundo plano, Vendetta implementa un motor **Lazy Server-Authoritative Tick**:
 
 1. **Cálculo Diferencial en Cada Request**: Cuando el usuario interactúa o navega por el layout `(dashboard)`, el servidor evalúa el tiempo transcurrido desde la última actualización (`Date.now() - ultimaConexion`).
+
 2. **Resolución de Colas en Paralelo**:
    - `verificarYFinalizarConstruccion`: Sube de nivel las habitaciones finalizadas y activa la siguiente orden en cola.
    - `verificarYFinalizarReclutamiento`: Agrega tropas completadas al ejército de la propiedad.
    - `verificarYFinalizarMisiones`: Calcula los resultados de viajes (ataques, transportes) y el retorno de tropas.
    - `verificarYFinalizarEntrenamientos`: Aplica las nuevas tecnologías al árbol del usuario.
+
 3. **Generación de Recursos**: La función `obtenerEstadoJuegoActualizado` suma la producción horaria proporcional calculada por las fórmulas puras de `src/lib/formulas/produccion-formulas.ts`.
+
 4. **Actualización de Puntuación**: Los puntos de edificios, tropas e investigaciones se recalculan y actualizan en `PuntuacionUsuario`.
 
 ---
@@ -208,26 +198,33 @@ El sistema incluye herramientas internas para el equipo de desarrollo y balance 
 
 ```bash
 # Servidor de desarrollo en puerto 3000
-npm run dev
+pnpm run dev
 
 # Compilación de producción (Next.js standalone)
-npm run build
+pnpm run build
 
 # Ejecución en producción
-npm run start
+pnpm run start
 
 # Verificación de linting de código
-npm run lint
+pnpm run lint
+
+# Type checking
+pnpm run typecheck
 
 # Seeding de base de datos
-npm run prisma:seed
+pnpm run prisma:seed
 ```
 
 ---
 
-## 🤖 Desarrollo Asistido por IA
+## 📚 Documentación Técnica
 
-Este repositorio está preparado para agentes de desarrollo y asistentes inteligentes (Claude, Gemini, Cursor, Copilot, Antigravity):
+Toda la documentación detallada para desarrolladores y agentes IA reside en **`docs/knowledge_base/`**:
 
-- **[AGENTS.md](./AGENTS.md)**: Manual estricto de convenciones de arquitectura, patrones Next.js 15+, transacciones Prisma y manejo de dependencias.
-- **[.aiexclude](./.aiexclude)**: Excluye automáticamente directorios masivos (`public/img/`, `datosactuales/*.json`, binarios y logs) para maximizar la ventana de contexto y reducir drásticamente el consumo de tokens.
+- [`INDEX.md`](docs/knowledge_base/INDEX.md) — Tabla de contenidos maestra
+- [`AGENTS-full.md`](docs/knowledge_base/AGENTS-full.md) — Reglas completas de arquitectura
+- [`DESIGN-system.md`](docs/knowledge_base/DESIGN-system.md) — Design system completo
+- [`GAME-LOOP.md`](docs/knowledge_base/GAME-LOOP.md) — Motor de tick perezoso
+- [`ARCHITECTURE.md`](docs/knowledge_base/ARCHITECTURE.md) — Estructura de código y patrones
+- [`VISUAL-design-tokens.md`](docs/knowledge_base/VISUAL-design-tokens.md) — Tokens visuales YAML
